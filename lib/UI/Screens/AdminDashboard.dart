@@ -32,6 +32,13 @@ class AdminDashboard extends StatelessWidget {
               },
               child: Text("Teams Management"),
             ),
+            ElevatedButton(
+              onPressed: () {
+                FirebaseAuth.instance.signOut();
+                Navigator.pushNamed(context, '/event-mgmt');
+              },
+              child: Text("Events Management"),
+            ),
           ],
         ),
       ),
