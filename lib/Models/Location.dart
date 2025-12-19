@@ -27,21 +27,24 @@ class Location {
 
   //4- From Datasnapshot
   factory Location.fromDataSnapshot(DataSnapshot snapshot) {
-    Map<String, dynamic> data = Map<String, dynamic>.from(snapshot.value as Map);
     List<Location>? subLocations;
-    if (data['subLocations'] != null) {
+
+    // Check if subLocations child exists
+    DataSnapshot subLocsSnapshot = snapshot.child('subLocations');
+    if (subLocsSnapshot.exists) {
       subLocations = [];
-      data['subLocations'].forEach((key, value) {
-        subLocations!.add(Location.fromDataSnapshot(value));
-      });
+      for (DataSnapshot d1 in subLocsSnapshot.children) {
+        subLocations.add(Location.fromDataSnapshot(d1));
+      }
     }
+
     return Location(
-      id: data['id'],
-      name: data['name'],
-      description: data['description'],
-      imageUrl: data['imageUrl'],
-      longitude: data['longitude'],
-      latitude: data['latitude'],
+      id: snapshot.child('id').value as String,
+      name: snapshot.child('name').value as String,
+      description: snapshot.child('description').value as String,
+      imageUrl: snapshot.child('imageUrl').value as String?,
+      longitude: snapshot.child('longitude').value as String,
+      latitude: snapshot.child('latitude').value as String,
       subLocations: subLocations,
     );
   }

@@ -1,83 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:azimuth_vms/Models/Location.dart';
-import 'package:azimuth_vms/Helpers/LocationHelperFirebase.dart';
+import 'package:azimuth_vms/Providers/LocationsProvider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
-class LocationsMgmt extends StatefulWidget {
+class LocationsMgmt extends StatelessWidget {
   const LocationsMgmt({super.key});
 
   @override
-  State<LocationsMgmt> createState() => _LocationsMgmtState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(create: (_) => LocationsProvider()..loadLocations(), child: const LocationsMgmtView());
+  }
 }
 
-class _LocationsMgmtState extends State<LocationsMgmt> {
-  final LocationHelperFirebase _locationHelper = LocationHelperFirebase();
-  List<Location> _locations = [];
-  bool _isLoading = false;
+class LocationsMgmtView extends StatelessWidget {
+  const LocationsMgmtView({super.key});
 
-  @override
-  void initState() {
-    super.initState();
-    _loadLocations();
-  }
-
-  Future<void> _loadLocations() async {
-    setState(() => _isLoading = true);
-    try {
-      final locations = await _locationHelper.GetAllLocations();
-      setState(() {
-        _locations = locations;
-        _isLoading = false;
-      });
-    } catch (e) {
-      print('Error loading locations: $e');
-      setState(() => _isLoading = false);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error loading locations: $e')));
-      }
-    }
-  }
-
-  void _showLocationForm({Location? location}) async {
+  void _showLocationForm(BuildContext context, {Location? location}) async {
     final result = await showDialog<Location>(
       context: context,
-      builder: (context) => LocationFormDialog(location: location),
+      builder: (context) => ChangeNotifierProvider(
+        create: (_) => LocationFormProvider()..initializeForm(location),
+        child: LocationFormDialog(isEdit: location != null),
+      ),
     );
 
     if (result != null) {
+      final provider = context.read<LocationsProvider>();
       if (location == null) {
-        _locationHelper.CreateLocation(result);
+        provider.createLocation(result);
       } else {
-        _locationHelper.UpdateLocation(result);
+        provider.updateLocation(result);
       }
-      _loadLocations();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Locations Management'),
-        actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _loadLocations)],
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _locations.isEmpty
-          ? const Center(child: Text('No locations found.\nTap + to add a new location.', textAlign: TextAlign.center))
-          : ListView.builder(
-              itemCount: _locations.length,
-              itemBuilder: (context, index) {
-                final location = _locations[index];
-                return LocationTile(
-                  location: location,
-                  onEdit: () => _showLocationForm(location: location),
-                  onRefresh: _loadLocations,
-                );
-              },
-            ),
-      floatingActionButton: FloatingActionButton(onPressed: () => _showLocationForm(), child: const Icon(Icons.add)),
+    return Consumer<LocationsProvider>(
+      builder: (context, provider, child) {
+        if (provider.errorMessage != null) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(provider.errorMessage!)));
+          });
+        }
+
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Locations Management'),
+            actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: () => provider.loadLocations())],
+          ),
+          body: provider.isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : provider.locations.isEmpty
+              ? const Center(child: Text('No locations found.\nTap + to add a new location.', textAlign: TextAlign.center))
+              : ListView.builder(
+                  itemCount: provider.locations.length,
+                  itemBuilder: (context, index) {
+                    final location = provider.locations[index];
+                    return LocationTile(
+                      location: location,
+                      onEdit: () => _showLocationForm(context, location: location),
+                    );
+                  },
+                ),
+          floatingActionButton: FloatingActionButton(onPressed: () => _showLocationForm(context), child: const Icon(Icons.add)),
+        );
+      },
     );
   }
 }
@@ -85,9 +75,8 @@ class _LocationsMgmtState extends State<LocationsMgmt> {
 class LocationTile extends StatelessWidget {
   final Location location;
   final VoidCallback onEdit;
-  final VoidCallback onRefresh;
 
-  const LocationTile({super.key, required this.location, required this.onEdit, required this.onRefresh});
+  const LocationTile({super.key, required this.location, required this.onEdit});
 
   @override
   Widget build(BuildContext context) {
@@ -141,67 +130,56 @@ class LocationTile extends StatelessWidget {
   }
 }
 
-class LocationFormDialog extends StatefulWidget {
-  final Location? location;
+class LocationFormDialog extends StatelessWidget {
+  final bool isEdit;
 
-  const LocationFormDialog({super.key, this.location});
+  const LocationFormDialog({super.key, required this.isEdit});
 
-  @override
-  State<LocationFormDialog> createState() => _LocationFormDialogState();
-}
-
-class _LocationFormDialogState extends State<LocationFormDialog> {
-  final _formKey = GlobalKey<FormState>();
-  late TextEditingController _nameController;
-  late TextEditingController _descriptionController;
-  late TextEditingController _imageUrlController;
-  late TextEditingController _latitudeController;
-  late TextEditingController _longitudeController;
-
-  @override
-  void initState() {
-    super.initState();
-    _nameController = TextEditingController(text: widget.location?.name ?? '');
-    _descriptionController = TextEditingController(text: widget.location?.description ?? '');
-    _imageUrlController = TextEditingController(text: widget.location?.imageUrl ?? '');
-    _latitudeController = TextEditingController(text: widget.location?.latitude ?? '0.0');
-    _longitudeController = TextEditingController(text: widget.location?.longitude ?? '0.0');
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _descriptionController.dispose();
-    _imageUrlController.dispose();
-    _latitudeController.dispose();
-    _longitudeController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _pickLocationOnMap() async {
+  void _pickLocationOnMap(BuildContext context) async {
+    final provider = context.read<LocationFormProvider>();
     final LatLng? pickedLocation = await showDialog<LatLng>(
       context: context,
-      builder: (context) => MapPickerDialog(initialLocation: LatLng(double.tryParse(_latitudeController.text) ?? 0.0, double.tryParse(_longitudeController.text) ?? 0.0)),
+      builder: (context) => MapPickerDialog(initialLocation: LatLng(provider.latitude, provider.longitude)),
     );
 
     if (pickedLocation != null) {
-      setState(() {
-        _latitudeController.text = pickedLocation.latitude.toString();
-        _longitudeController.text = pickedLocation.longitude.toString();
-      });
+      provider.updateCoordinates(pickedLocation.latitude, pickedLocation.longitude);
     }
   }
 
-  void _save() {
-    if (_formKey.currentState!.validate()) {
+  void _addSubLocation(BuildContext context) async {
+    final result = await showDialog<Location>(
+      context: context,
+      builder: (context) => ChangeNotifierProvider(create: (_) => SubLocationFormProvider(), child: const SubLocationFormDialog(isEdit: false)),
+    );
+
+    if (result != null) {
+      context.read<LocationFormProvider>().addSubLocation(result);
+    }
+  }
+
+  void _editSubLocation(BuildContext context, int index, Location subLocation) async {
+    final result = await showDialog<Location>(
+      context: context,
+      builder: (context) => ChangeNotifierProvider(create: (_) => SubLocationFormProvider()..initializeForm(subLocation), child: const SubLocationFormDialog(isEdit: true)),
+    );
+
+    if (result != null) {
+      context.read<LocationFormProvider>().updateSubLocation(index, result);
+    }
+  }
+
+  void _save(BuildContext context, GlobalKey<FormState> formKey) {
+    if (formKey.currentState!.validate()) {
+      final provider = context.read<LocationFormProvider>();
       final location = Location(
-        id: widget.location?.id ?? const Uuid().v4(),
-        name: _nameController.text.trim(),
-        description: _descriptionController.text.trim(),
-        imageUrl: _imageUrlController.text.trim().isEmpty ? null : _imageUrlController.text.trim(),
-        latitude: _latitudeController.text.trim(),
-        longitude: _longitudeController.text.trim(),
-        subLocations: widget.location?.subLocations,
+        id: isEdit ? provider.editingLocation?.id ?? const Uuid().v4() : const Uuid().v4(),
+        name: provider.name,
+        description: provider.description,
+        imageUrl: provider.imageUrl.isEmpty ? null : provider.imageUrl,
+        latitude: provider.latitude.toString(),
+        longitude: provider.longitude.toString(),
+        subLocations: provider.subLocations.isEmpty ? null : provider.subLocations,
       );
 
       Navigator.of(context).pop(location);
@@ -210,111 +188,171 @@ class _LocationFormDialogState extends State<LocationFormDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.9,
-        constraints: const BoxConstraints(maxWidth: 600),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(widget.location == null ? 'Add New Location' : 'Edit Location', style: Theme.of(context).textTheme.headlineSmall),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _nameController,
-                    decoration: const InputDecoration(labelText: 'Name *', border: OutlineInputBorder(), prefixIcon: Icon(Icons.label)),
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return 'Please enter a name';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _descriptionController,
-                    decoration: const InputDecoration(labelText: 'Description *', border: OutlineInputBorder(), prefixIcon: Icon(Icons.description)),
-                    maxLines: 3,
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return 'Please enter a description';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _imageUrlController,
-                    decoration: const InputDecoration(labelText: 'Image URL (optional)', border: OutlineInputBorder(), prefixIcon: Icon(Icons.image)),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
+    final formKey = GlobalKey<FormState>();
+
+    return Consumer<LocationFormProvider>(
+      builder: (context, provider, child) {
+        return Dialog(
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.9,
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: _latitudeController,
-                          decoration: const InputDecoration(labelText: 'Latitude *', border: OutlineInputBorder(), prefixIcon: Icon(Icons.gps_fixed)),
-                          keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: true),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Required';
-                            }
-                            if (double.tryParse(value) == null) {
-                              return 'Invalid number';
-                            }
-                            return null;
-                          },
+                      Text(isEdit ? 'Edit Location' : 'Add New Location', style: Theme.of(context).textTheme.headlineSmall),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        initialValue: provider.name,
+                        decoration: const InputDecoration(labelText: 'Name *', border: OutlineInputBorder(), prefixIcon: Icon(Icons.label)),
+                        onChanged: provider.updateName,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Please enter a name';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        initialValue: provider.description,
+                        decoration: const InputDecoration(labelText: 'Description *', border: OutlineInputBorder(), prefixIcon: Icon(Icons.description)),
+                        maxLines: 3,
+                        onChanged: provider.updateDescription,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Please enter a description';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        initialValue: provider.imageUrl,
+                        decoration: const InputDecoration(labelText: 'Image URL (optional)', border: OutlineInputBorder(), prefixIcon: Icon(Icons.image)),
+                        onChanged: provider.updateImageUrl,
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              key: ValueKey(provider.latitude),
+                              initialValue: provider.latitude.toString(),
+                              decoration: const InputDecoration(labelText: 'Latitude *', border: OutlineInputBorder(), prefixIcon: Icon(Icons.gps_fixed)),
+                              keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: true),
+                              onChanged: (value) {
+                                final lat = double.tryParse(value);
+                                if (lat != null) provider.updateLatitude(lat);
+                              },
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Required';
+                                }
+                                if (double.tryParse(value) == null) {
+                                  return 'Invalid number';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: TextFormField(
+                              key: ValueKey(provider.longitude),
+                              initialValue: provider.longitude.toString(),
+                              decoration: const InputDecoration(labelText: 'Longitude *', border: OutlineInputBorder(), prefixIcon: Icon(Icons.gps_fixed)),
+                              keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: true),
+                              onChanged: (value) {
+                                final lon = double.tryParse(value);
+                                if (lon != null) provider.updateLongitude(lon);
+                              },
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Required';
+                                }
+                                if (double.tryParse(value) == null) {
+                                  return 'Invalid number';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(
+                          onPressed: () => _pickLocationOnMap(context),
+                          icon: const Icon(Icons.map),
+                          label: const Text('Pick Location on Map'),
+                          style: OutlinedButton.styleFrom(padding: const EdgeInsets.all(16)),
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: TextFormField(
-                          controller: _longitudeController,
-                          decoration: const InputDecoration(labelText: 'Longitude *', border: OutlineInputBorder(), prefixIcon: Icon(Icons.gps_fixed)),
-                          keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: true),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Required';
-                            }
-                            if (double.tryParse(value) == null) {
-                              return 'Invalid number';
-                            }
-                            return null;
-                          },
-                        ),
+                      const SizedBox(height: 24),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Sub-locations', style: Theme.of(context).textTheme.titleMedium),
+                          IconButton(icon: const Icon(Icons.add_circle), onPressed: () => _addSubLocation(context), tooltip: 'Add Sub-location'),
+                        ],
+                      ),
+                      if (provider.subLocations.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('No sub-locations added', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey)),
+                        )
+                      else
+                        ...provider.subLocations.asMap().entries.map((entry) {
+                          final index = entry.key;
+                          final subLoc = entry.value;
+                          return Card(
+                            margin: const EdgeInsets.only(bottom: 8),
+                            child: ListTile(
+                              leading: const Icon(Icons.subdirectory_arrow_right),
+                              title: Text(subLoc.name),
+                              subtitle: Text(subLoc.description),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.edit, color: Colors.blue),
+                                    onPressed: () => _editSubLocation(context, index, subLoc),
+                                    tooltip: 'Edit',
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete, color: Colors.red),
+                                    onPressed: () => provider.removeSubLocation(index),
+                                    tooltip: 'Delete',
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }),
+                      const SizedBox(height: 24),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+                          const SizedBox(width: 8),
+                          ElevatedButton(onPressed: () => _save(context, formKey), child: Text(isEdit ? 'Update' : 'Create')),
+                        ],
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
-                      onPressed: _pickLocationOnMap,
-                      icon: const Icon(Icons.map),
-                      label: const Text('Pick Location on Map'),
-                      style: OutlinedButton.styleFrom(padding: const EdgeInsets.all(16)),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
-                      const SizedBox(width: 8),
-                      ElevatedButton(onPressed: _save, child: Text(widget.location == null ? 'Create' : 'Update')),
-                    ],
-                  ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -349,12 +387,6 @@ class _MapPickerDialogState extends State<MapPickerDialog> {
             AppBar(
               title: const Text('Pick Location'),
               leading: IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.of(context).pop()),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(_selectedLocation),
-                  child: const Text('CONFIRM', style: TextStyle(color: Colors.white)),
-                ),
-              ],
             ),
             Expanded(
               child: GoogleMap(
@@ -391,12 +423,181 @@ class _MapPickerDialogState extends State<MapPickerDialog> {
                     'Lon: ${_selectedLocation.longitude.toStringAsFixed(6)}',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                   ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ElevatedButton(onPressed: () => Navigator.of(context).pop(_selectedLocation), child: const Text('Confirm Location')),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class SubLocationFormDialog extends StatelessWidget {
+  final bool isEdit;
+
+  const SubLocationFormDialog({super.key, required this.isEdit});
+
+  void _pickLocationOnMap(BuildContext context) async {
+    final provider = context.read<SubLocationFormProvider>();
+    final LatLng? pickedLocation = await showDialog<LatLng>(
+      context: context,
+      builder: (context) => MapPickerDialog(initialLocation: LatLng(provider.latitude, provider.longitude)),
+    );
+
+    if (pickedLocation != null) {
+      provider.updateCoordinates(pickedLocation.latitude, pickedLocation.longitude);
+    }
+  }
+
+  void _save(BuildContext context, GlobalKey<FormState> formKey) {
+    if (formKey.currentState!.validate()) {
+      final provider = context.read<SubLocationFormProvider>();
+      final subLocation = Location(
+        id: isEdit ? provider.editingSubLocation?.id ?? const Uuid().v4() : const Uuid().v4(),
+        name: provider.name,
+        description: provider.description,
+        imageUrl: null,
+        latitude: provider.latitude.toString(),
+        longitude: provider.longitude.toString(),
+        subLocations: null,
+      );
+
+      Navigator.of(context).pop(subLocation);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
+
+    return Consumer<SubLocationFormProvider>(
+      builder: (context, provider, child) {
+        return Dialog(
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            constraints: const BoxConstraints(maxWidth: 500),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(isEdit ? 'Edit Sub-location' : 'Add Sub-location', style: Theme.of(context).textTheme.titleLarge),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        initialValue: provider.name,
+                        decoration: const InputDecoration(labelText: 'Name *', border: OutlineInputBorder(), prefixIcon: Icon(Icons.label)),
+                        onChanged: provider.updateName,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Please enter a name';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        initialValue: provider.description,
+                        decoration: const InputDecoration(labelText: 'Description *', border: OutlineInputBorder(), prefixIcon: Icon(Icons.description)),
+                        maxLines: 2,
+                        onChanged: provider.updateDescription,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Please enter a description';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              key: ValueKey(provider.latitude),
+                              initialValue: provider.latitude.toString(),
+                              decoration: const InputDecoration(labelText: 'Latitude *', border: OutlineInputBorder()),
+                              keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: true),
+                              onChanged: (value) {
+                                final lat = double.tryParse(value);
+                                if (lat != null) {
+                                  provider.updateCoordinates(lat, provider.longitude);
+                                }
+                              },
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Required';
+                                }
+                                if (double.tryParse(value) == null) {
+                                  return 'Invalid';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: TextFormField(
+                              key: ValueKey(provider.longitude),
+                              initialValue: provider.longitude.toString(),
+                              decoration: const InputDecoration(labelText: 'Longitude *', border: OutlineInputBorder()),
+                              keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: true),
+                              onChanged: (value) {
+                                final lon = double.tryParse(value);
+                                if (lon != null) {
+                                  provider.updateCoordinates(provider.latitude, lon);
+                                }
+                              },
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Required';
+                                }
+                                if (double.tryParse(value) == null) {
+                                  return 'Invalid';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(onPressed: () => _pickLocationOnMap(context), icon: const Icon(Icons.map), label: const Text('Pick on Map')),
+                      ),
+                      const SizedBox(height: 24),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+                          const SizedBox(width: 8),
+                          ElevatedButton(onPressed: () => _save(context, formKey), child: Text(isEdit ? 'Update' : 'Add')),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
