@@ -21,14 +21,16 @@ class Team {
     DataSnapshot membersSnapshot = snapshot.child('memberIds');
     if (membersSnapshot.exists) {
       for (DataSnapshot member in membersSnapshot.children) {
-        members.add(member.value as String);
+        if (member.value != null) {
+          members.add(member.value as String);
+        }
       }
     }
 
     return Team(
-      id: snapshot.child('id').value as String,
-      name: snapshot.child('name').value as String,
-      teamLeaderId: snapshot.child('teamLeaderId').value as String,
+      id: snapshot.child('id').value?.toString() ?? '',
+      name: snapshot.child('name').value?.toString() ?? '',
+      teamLeaderId: snapshot.child('teamLeaderId').value?.toString() ?? '',
       memberIds: members,
     );
   }

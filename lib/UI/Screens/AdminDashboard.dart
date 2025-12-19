@@ -25,6 +25,13 @@ class AdminDashboard extends StatelessWidget {
               },
               child: Text("Location Management"),
             ),
+            ElevatedButton(
+              onPressed: () {
+                FirebaseAuth.instance.signOut();
+                Navigator.pushNamed(context, '/teams-mgmt');
+              },
+              child: Text("Teams Management"),
+            ),
           ],
         ),
       ),

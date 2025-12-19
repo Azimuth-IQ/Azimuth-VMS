@@ -4,7 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 
 class TeamHelperFirebase {
   //Root Reference
-  DatabaseReference rootRef = FirebaseDatabase.instance.ref().child(FirebaseHelperStatics.AppRoot).child("systemusers");
+  DatabaseReference rootRef = FirebaseDatabase.instance.ref().child(FirebaseHelperStatics.AppRoot).child("teams");
 
   //Basic CRUD
   //1- Create

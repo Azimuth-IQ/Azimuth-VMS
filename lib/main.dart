@@ -2,6 +2,7 @@ import 'package:azimuth_vms/Providers/AppProvider.dart';
 import 'package:azimuth_vms/UI/Screens/AdminDashboard.dart';
 import 'package:azimuth_vms/UI/Screens/LocationsMgmt.dart';
 import 'package:azimuth_vms/UI/Screens/SignInScreen.dart';
+import 'package:azimuth_vms/UI/Screens/TeamsMgmt.dart';
 import 'package:azimuth_vms/firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -27,8 +28,9 @@ class MyApp extends StatelessWidget {
         home: SignInScreen(),
         routes: {
           '/sign-in': (context) => SignInScreen(),
-          '/admin-dashboard': (context) => AdminDashboard(), // Placeholder
-          '/locations-mgmt': (context) => LocationsMgmt(), // Placeholder
+          '/admin-dashboard': (context) => AdminDashboard(),
+          '/locations-mgmt': (context) => LocationsMgmt(),
+          '/teams-mgmt': (context) => TeamsMgmt(),
         },
       ),
     );
