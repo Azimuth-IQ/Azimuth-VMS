@@ -18,6 +18,9 @@ class _FormMgmtState extends State<FormMgmt> {
   bool _isLoading = false;
   String? _errorMessage;
 
+  // Stepper state
+  int _currentStep = 0;
+
   // Form data model
   final VolunteerForm _formData = VolunteerForm();
 
@@ -312,10 +315,186 @@ class _FormMgmtState extends State<FormMgmt> {
                 ],
               ),
             )
-          : _buildForm(),
-      floatingActionButton: _document != null
-          ? FloatingActionButton.extended(onPressed: _fillAndFlattenForm, icon: const Icon(Icons.picture_as_pdf), label: const Text('إنشاء PDF'))
-          : null,
+          : _buildStepperForm(),
+    );
+  }
+
+  Widget _buildStepperForm() {
+    return Form(
+      key: _formKey,
+      child: Stepper(
+        currentStep: _currentStep,
+        onStepContinue: () {
+          if (_currentStep < 4) {
+            setState(() => _currentStep++);
+          } else {
+            _fillAndFlattenForm();
+          }
+        },
+        onStepCancel: () {
+          if (_currentStep > 0) {
+            setState(() => _currentStep--);
+          }
+        },
+        controlsBuilder: (context, details) {
+          return Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: Row(
+              children: [
+                ElevatedButton(onPressed: details.onStepContinue, child: Text(_currentStep == 4 ? 'إنشاء PDF' : 'التالي')),
+                const SizedBox(width: 12),
+                if (_currentStep > 0) TextButton(onPressed: details.onStepCancel, child: const Text('السابق')),
+              ],
+            ),
+          );
+        },
+        steps: [
+          Step(
+            title: const Text('المعلومات الأساسية'),
+            content: _buildBasicInfoStep(),
+            isActive: _currentStep >= 0,
+            state: _currentStep > 0 ? StepState.complete : StepState.indexed,
+          ),
+          Step(
+            title: const Text('معلومات الاتصال'),
+            content: _buildContactInfoStep(),
+            isActive: _currentStep >= 1,
+            state: _currentStep > 1 ? StepState.complete : StepState.indexed,
+          ),
+          Step(
+            title: const Text('المعلومات المهنية'),
+            content: _buildProfessionalInfoStep(),
+            isActive: _currentStep >= 2,
+            state: _currentStep > 2 ? StepState.complete : StepState.indexed,
+          ),
+          Step(
+            title: const Text('معلومات الوثائق'),
+            content: _buildDocumentInfoStep(),
+            isActive: _currentStep >= 3,
+            state: _currentStep > 3 ? StepState.complete : StepState.indexed,
+          ),
+          Step(title: const Text('المرفقات'), content: _buildAttachmentsStep(), isActive: _currentStep >= 4, state: _currentStep > 4 ? StepState.complete : StepState.indexed),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBasicInfoStep() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(child: _buildTextField('formNumber', 'رقم الاستمارة')),
+            const SizedBox(width: 16),
+            Expanded(child: _buildTextField('groupNameAndCode', 'اسم المجموعة والرمز')),
+          ],
+        ),
+        _buildTextField('fullName', 'الاسم الرباعي واللقب', required: true),
+        Row(
+          children: [
+            Expanded(child: _buildTextField('education', 'التحصيل الدراسي')),
+            const SizedBox(width: 16),
+            Expanded(child: _buildTextField('birthDate', 'المواليد')),
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(child: _buildTextField('maritalStatus', 'الحالة الاجتماعية')),
+            const SizedBox(width: 16),
+            Expanded(child: _buildTextField('numberOfChildren', 'عدد الابناء')),
+          ],
+        ),
+        _buildTextField('motherName', 'اسم الام الثلاثي واللقب'),
+      ],
+    );
+  }
+
+  Widget _buildContactInfoStep() {
+    return Column(
+      children: [
+        _buildTextField('mobileNumber', 'رقم الموبايل', required: true),
+        _buildTextField('currentAddress', 'العنوان الحالي'),
+        _buildTextField('nearestLandmark', 'اقرب نقطة دالة'),
+        _buildTextField('mukhtarName', 'اسم المختار ومسؤول المجلس البلدي'),
+        Row(
+          children: [
+            Expanded(child: _buildTextField('civilStatusDirectorate', 'دائرة الاحوال')),
+            const SizedBox(width: 16),
+            Expanded(child: _buildTextField('previousAddress', 'العنوان السابق')),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProfessionalInfoStep() {
+    return Column(
+      children: [
+        _buildTextField('volunteerParticipationCount', 'عدد المشاركات في الخدمة التطوعية'),
+        Row(
+          children: [
+            Expanded(child: _buildTextField('profession', 'المهنة')),
+            const SizedBox(width: 16),
+            Expanded(child: _buildTextField('jobTitle', 'العنوان الوظيفي')),
+          ],
+        ),
+        _buildTextField('departmentName', 'اسم الدائرة'),
+        _buildTextField('politicalAffiliation', 'الانتماء السياسي'),
+        _buildTextField('talentAndExperience', 'الموهبة والخبرة', maxLines: 2),
+        _buildTextField('languages', 'اللغات التي يجيدها'),
+      ],
+    );
+  }
+
+  Widget _buildDocumentInfoStep() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(child: _buildTextField('idCardNumber', 'رقم الهوية او البطاقة الوطنية')),
+            const SizedBox(width: 16),
+            Expanded(child: _buildTextField('recordNumber', 'السجل')),
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(child: _buildTextField('pageNumber', 'الصحيفة')),
+            const SizedBox(width: 16),
+            Expanded(child: _buildTextField('rationCardNumber', 'رقم البطاقة التموينية')),
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(child: _buildTextField('agentName', 'اسم الوكيل')),
+            const SizedBox(width: 16),
+            Expanded(child: _buildTextField('supplyCenterNumber', 'رقم مركز التموين')),
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(child: _buildTextField('residenceCardNumber', 'رقم بطاقة السكن')),
+            const SizedBox(width: 16),
+            Expanded(child: _buildTextField('issuer', 'جهة اصدارها')),
+          ],
+        ),
+        _buildTextField('no', 'NO'),
+      ],
+    );
+  }
+
+  Widget _buildAttachmentsStep() {
+    return Column(
+      children: [
+        _buildImageUploadCard('الصورة الشخصية', _userPhoto, () => _pickImage((image) => setState(() => _userPhoto = image)), Icons.person),
+        const SizedBox(height: 20),
+        _buildImageUploadCard('الهوية الوطنية - الوجه الأمامي', _nationalIdFront, () => _pickImage((image) => setState(() => _nationalIdFront = image)), Icons.credit_card),
+        const SizedBox(height: 20),
+        _buildImageUploadCard('الهوية الوطنية - الوجه الخلفي', _nationalIdBack, () => _pickImage((image) => setState(() => _nationalIdBack = image)), Icons.credit_card),
+        const SizedBox(height: 20),
+        _buildImageUploadCard('بطاقة السكن - الوجه الأمامي', _residencyCardFront, () => _pickImage((image) => setState(() => _residencyCardFront = image)), Icons.home),
+        const SizedBox(height: 20),
+        _buildImageUploadCard('بطاقة السكن - الوجه الخلفي', _residencyCardBack, () => _pickImage((image) => setState(() => _residencyCardBack = image)), Icons.home),
+      ],
     );
   }
 
@@ -326,7 +505,15 @@ class _FormMgmtState extends State<FormMgmt> {
         padding: const EdgeInsets.all(16),
         children: [
           _buildSectionTitle('الصور والمستندات'),
-          _buildImageUploadSection(),
+          _buildImageUploadCard('الصورة الشخصية', _userPhoto, () => _pickImage((image) => setState(() => _userPhoto = image)), Icons.person),
+          const SizedBox(height: 20),
+          _buildImageUploadCard('الهوية الوطنية - الوجه الأمامي', _nationalIdFront, () => _pickImage((image) => setState(() => _nationalIdFront = image)), Icons.credit_card),
+          const SizedBox(height: 20),
+          _buildImageUploadCard('الهوية الوطنية - الوجه الخلفي', _nationalIdBack, () => _pickImage((image) => setState(() => _nationalIdBack = image)), Icons.credit_card),
+          const SizedBox(height: 20),
+          _buildImageUploadCard('بطاقة السكن - الوجه الأمامي', _residencyCardFront, () => _pickImage((image) => setState(() => _residencyCardFront = image)), Icons.home),
+          const SizedBox(height: 20),
+          _buildImageUploadCard('بطاقة السكن - الوجه الخلفي', _residencyCardBack, () => _pickImage((image) => setState(() => _residencyCardBack = image)), Icons.home),
           const SizedBox(height: 24),
 
           _buildSectionTitle('المعلومات الأساسية'),
@@ -388,10 +575,10 @@ class _FormMgmtState extends State<FormMgmt> {
 
   Widget _buildTextField(String key, String label, {bool required = false, int maxLines = 1}) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.only(bottom: 12),
       child: TextFormField(
         controller: _controllers[key],
-        decoration: InputDecoration(labelText: label, border: const OutlineInputBorder(), prefixIcon: const Icon(Icons.edit)),
+        decoration: InputDecoration(labelText: label, border: const OutlineInputBorder(), contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12)),
         maxLines: maxLines,
         validator: required
             ? (value) {
@@ -405,107 +592,55 @@ class _FormMgmtState extends State<FormMgmt> {
     );
   }
 
-  Widget _buildImageUploadSection() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildImageUploadCard(
-              'الصورة الشخصية',
-              _userPhoto,
-              () => _pickImage((image) {
-                setState(() => _userPhoto = image);
-              }),
-              Icons.person,
+  Widget _buildImageUploadCard(String label, Uint8List? imageData, VoidCallback onTap, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade300),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(icon, size: 20, color: Colors.blue),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                ElevatedButton.icon(
+                  onPressed: onTap,
+                  icon: Icon(imageData == null ? Icons.upload_file : Icons.check_circle, size: 18),
+                  label: Text(imageData == null ? 'رفع الصورة' : 'تم الرفع'),
+                  style: ElevatedButton.styleFrom(backgroundColor: imageData == null ? null : Colors.green, foregroundColor: imageData == null ? null : Colors.white),
+                ),
+              ],
             ),
-            const Divider(height: 32),
-
-            _buildImageUploadCard(
-              'الهوية الوطنية - الوجه الأمامي',
-              _nationalIdFront,
-              () => _pickImage((image) {
-                setState(() => _nationalIdFront = image);
-              }),
-              Icons.credit_card,
-            ),
-            const SizedBox(height: 16),
-
-            _buildImageUploadCard(
-              'الهوية الوطنية - الوجه الخلفي',
-              _nationalIdBack,
-              () => _pickImage((image) {
-                setState(() => _nationalIdBack = image);
-              }),
-              Icons.credit_card,
-            ),
-            const Divider(height: 32),
-
-            _buildImageUploadCard(
-              'بطاقة السكن - الوجه الأمامي',
-              _residencyCardFront,
-              () => _pickImage((image) {
-                setState(() => _residencyCardFront = image);
-              }),
-              Icons.home,
-            ),
-            const SizedBox(height: 16),
-
-            _buildImageUploadCard(
-              'بطاقة السكن - الوجه الخلفي',
-              _residencyCardBack,
-              () => _pickImage((image) {
-                setState(() => _residencyCardBack = image);
-              }),
-              Icons.home,
+          ),
+          if (imageData != null) ...[
+            const SizedBox(width: 16),
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade400),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.memory(imageData, fit: BoxFit.cover),
+              ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildImageUploadCard(String label, Uint8List? imageData, VoidCallback onTap, IconData icon) {
-    return Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(icon, size: 20, color: Colors.blue),
-                  const SizedBox(width: 8),
-                  Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
-                ],
-              ),
-              const SizedBox(height: 8),
-              ElevatedButton.icon(
-                onPressed: onTap,
-                icon: Icon(imageData == null ? Icons.upload : Icons.check),
-                label: Text(imageData == null ? 'رفع الصورة' : 'تم الرفع'),
-                style: ElevatedButton.styleFrom(backgroundColor: imageData == null ? null : Colors.green.shade100),
-              ),
-            ],
-          ),
-        ),
-        if (imageData != null) ...[
-          const SizedBox(width: 16),
-          Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.memory(imageData, fit: BoxFit.cover),
-            ),
-          ),
         ],
-      ],
+      ),
     );
   }
 }
