@@ -1,11 +1,9 @@
 import 'dart:typed_data';
+import 'package:azimuth_vms/Models/VolunteerForm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'dart:html' as html;
-import 'dart:ui' as ui;
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:ui_web' as ui_web;
 
 class FormMgmt extends StatefulWidget {
   const FormMgmt({super.key});
@@ -20,21 +18,64 @@ class _FormMgmtState extends State<FormMgmt> {
   bool _isLoading = false;
   String? _errorMessage;
 
-  // Form field controllers
-  final Map<String, TextEditingController> _fieldControllers = {};
-  final Map<String, bool> _checkboxValues = {};
-  final Map<String, String> _radioButtonValues = {};
+  // Form data model
+  final VolunteerForm _formData = VolunteerForm();
+
+  // Form controllers
+  final _formKey = GlobalKey<FormState>();
+  final Map<String, TextEditingController> _controllers = {};
+
+  // Image data
+  Uint8List? _userPhoto;
+  Uint8List? _nationalIdFront;
+  Uint8List? _nationalIdBack;
+  Uint8List? _residencyCardFront;
+  Uint8List? _residencyCardBack;
 
   @override
   void initState() {
     super.initState();
+    _initializeControllers();
     _loadPdfForm();
+  }
+
+  void _initializeControllers() {
+    // Initialize all text controllers based on VolunteerForm model
+    _controllers['formNumber'] = TextEditingController();
+    _controllers['groupNameAndCode'] = TextEditingController();
+    _controllers['fullName'] = TextEditingController();
+    _controllers['education'] = TextEditingController();
+    _controllers['birthDate'] = TextEditingController();
+    _controllers['maritalStatus'] = TextEditingController();
+    _controllers['numberOfChildren'] = TextEditingController();
+    _controllers['motherName'] = TextEditingController();
+    _controllers['mobileNumber'] = TextEditingController();
+    _controllers['currentAddress'] = TextEditingController();
+    _controllers['nearestLandmark'] = TextEditingController();
+    _controllers['mukhtarName'] = TextEditingController();
+    _controllers['civilStatusDirectorate'] = TextEditingController();
+    _controllers['previousAddress'] = TextEditingController();
+    _controllers['volunteerParticipationCount'] = TextEditingController();
+    _controllers['profession'] = TextEditingController();
+    _controllers['jobTitle'] = TextEditingController();
+    _controllers['departmentName'] = TextEditingController();
+    _controllers['politicalAffiliation'] = TextEditingController();
+    _controllers['talentAndExperience'] = TextEditingController();
+    _controllers['languages'] = TextEditingController();
+    _controllers['idCardNumber'] = TextEditingController();
+    _controllers['recordNumber'] = TextEditingController();
+    _controllers['pageNumber'] = TextEditingController();
+    _controllers['rationCardNumber'] = TextEditingController();
+    _controllers['agentName'] = TextEditingController();
+    _controllers['supplyCenterNumber'] = TextEditingController();
+    _controllers['residenceCardNumber'] = TextEditingController();
+    _controllers['issuer'] = TextEditingController();
+    _controllers['no'] = TextEditingController();
   }
 
   @override
   void dispose() {
-    // Dispose all controllers
-    for (var controller in _fieldControllers.values) {
+    for (var controller in _controllers.values) {
       controller.dispose();
     }
     _document?.dispose();
@@ -48,15 +89,9 @@ class _FormMgmtState extends State<FormMgmt> {
     });
 
     try {
-      // Load the PDF from assets
       final ByteData data = await rootBundle.load('assets/pdfs/form1.pdf');
       final Uint8List bytes = data.buffer.asUint8List();
-
-      // Load the PDF document
       _document = PdfDocument(inputBytes: bytes);
-
-      // Extract form fields and initialize controllers
-      _extractFormFields();
 
       setState(() {
         _isLoading = false;
@@ -70,26 +105,33 @@ class _FormMgmtState extends State<FormMgmt> {
     }
   }
 
-  void _extractFormFields() {
-    if (_document == null) return;
+  Future<void> _pickImage(Function(Uint8List?) onImagePicked) async {
+    try {
+      final html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
+      uploadInput.accept = 'image/*';
+      uploadInput.click();
 
-    final PdfForm form = _document!.form;
+      await uploadInput.onChange.first;
+      final files = uploadInput.files;
+      if (files!.isEmpty) return;
 
-    for (int i = 0; i < form.fields.count; i++) {
-      final PdfField field = form.fields[i];
+      final reader = html.FileReader();
+      reader.readAsArrayBuffer(files[0]);
+      await reader.onLoad.first;
 
-      if (field is PdfTextBoxField) {
-        _fieldControllers[field.name ?? 'field_$i'] = TextEditingController(text: field.text ?? '');
-      } else if (field is PdfCheckBoxField) {
-        _checkboxValues[field.name ?? 'checkbox_$i'] = field.isChecked ?? false;
-      } else if (field is PdfRadioButtonListField) {
-        _radioButtonValues[field.name ?? 'radio_$i'] = field.selectedIndex.toString();
+      final Uint8List imageData = reader.result as Uint8List;
+      onImagePicked(imageData);
+    } catch (e) {
+      print('Error picking image: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error picking image: $e')));
       }
     }
   }
 
   Future<void> _fillAndFlattenForm() async {
     if (_document == null) return;
+    if (!_formKey.currentState!.validate()) return;
 
     setState(() {
       _isLoading = true;
@@ -97,34 +139,93 @@ class _FormMgmtState extends State<FormMgmt> {
     });
 
     try {
-      final PdfForm form = _document!.form;
+      final PdfPage page = _document!.pages[0];
+      final PdfGraphics graphics = page.graphics;
 
-      // Fill text fields
-      for (int i = 0; i < form.fields.count; i++) {
-        final PdfField field = form.fields[i];
+      final PdfFont font = PdfStandardFont(PdfFontFamily.helvetica, 10);
+      final PdfFont boldFont = PdfStandardFont(PdfFontFamily.helvetica, 10, style: PdfFontStyle.bold);
 
-        if (field is PdfTextBoxField) {
-          final controller = _fieldControllers[field.name];
-          if (controller != null) {
-            field.text = controller.text;
-          }
-        } else if (field is PdfCheckBoxField) {
-          final value = _checkboxValues[field.name];
-          if (value != null) {
-            field.isChecked = value;
-          }
-        } else if (field is PdfRadioButtonListField) {
-          final value = _radioButtonValues[field.name];
-          if (value != null) {
-            field.selectedIndex = int.tryParse(value) ?? 0;
-          }
+      double yPos = 50;
+      final double leftMargin = 50;
+      final double lineHeight = 20;
+
+      void drawField(String label, String? value, {bool bold = false}) {
+        if (value != null && value.isNotEmpty) {
+          graphics.drawString('$label: $value', bold ? boldFont : font, bounds: Rect.fromLTWH(leftMargin, yPos, 500, lineHeight));
+          yPos += lineHeight;
         }
       }
 
-      // Flatten the form
-      form.flattenAllFields();
+      if (_userPhoto != null) {
+        final PdfBitmap image = PdfBitmap(_userPhoto!);
+        graphics.drawImage(image, Rect.fromLTWH(450, 50, 100, 120));
+      }
 
-      // Save the document
+      drawField('رقم الاستمارة', _controllers['formNumber']?.text);
+      drawField('اسم المجموعة والرمز', _controllers['groupNameAndCode']?.text);
+      drawField('الاسم الرباعي واللقب', _controllers['fullName']?.text, bold: true);
+      drawField('التحصيل الدراسي', _controllers['education']?.text);
+      drawField('المواليد', _controllers['birthDate']?.text);
+      drawField('الحالة الاجتماعية', _controllers['maritalStatus']?.text);
+      drawField('عدد الابناء', _controllers['numberOfChildren']?.text);
+      drawField('اسم الام الثلاثي واللقب', _controllers['motherName']?.text);
+      drawField('رقم الموبايل', _controllers['mobileNumber']?.text);
+      drawField('العنوان الحالي', _controllers['currentAddress']?.text);
+      drawField('اقرب نقطة دالة', _controllers['nearestLandmark']?.text);
+      drawField('اسم المختار ومسؤول المجلس البلدي', _controllers['mukhtarName']?.text);
+      drawField('دائرة الاحوال', _controllers['civilStatusDirectorate']?.text);
+      drawField('العنوان السابق', _controllers['previousAddress']?.text);
+      drawField('عدد المشاركات في الخدمة التطوعية', _controllers['volunteerParticipationCount']?.text);
+      drawField('المهنة', _controllers['profession']?.text);
+      drawField('العنوان الوظيفي', _controllers['jobTitle']?.text);
+      drawField('اسم الدائرة', _controllers['departmentName']?.text);
+      drawField('الانتماء السياسي', _controllers['politicalAffiliation']?.text);
+      drawField('الموهبة والخبرة', _controllers['talentAndExperience']?.text);
+      drawField('اللغات التي يجيدها', _controllers['languages']?.text);
+      drawField('رقم الهوية او البطاقة الوطنية', _controllers['idCardNumber']?.text);
+      drawField('السجل', _controllers['recordNumber']?.text);
+      drawField('الصحيفة', _controllers['pageNumber']?.text);
+      drawField('رقم البطاقة التموينية', _controllers['rationCardNumber']?.text);
+      drawField('اسم الوكيل', _controllers['agentName']?.text);
+      drawField('رقم مركز التموين', _controllers['supplyCenterNumber']?.text);
+      drawField('رقم بطاقة السكن', _controllers['residenceCardNumber']?.text);
+      drawField('جهة اصدارها', _controllers['issuer']?.text);
+
+      if (_nationalIdFront != null || _nationalIdBack != null || _residencyCardFront != null || _residencyCardBack != null) {
+        final PdfPage docsPage = _document!.pages.add();
+        final PdfGraphics docsGraphics = docsPage.graphics;
+        double docYPos = 50;
+
+        docsGraphics.drawString('المستندات المرفقة', PdfStandardFont(PdfFontFamily.helvetica, 16, style: PdfFontStyle.bold), bounds: Rect.fromLTWH(leftMargin, 20, 500, 30));
+
+        if (_nationalIdFront != null) {
+          docsGraphics.drawString('الهوية الوطنية - الوجه الأمامي', boldFont, bounds: Rect.fromLTWH(leftMargin, docYPos, 300, 20));
+          final PdfBitmap img = PdfBitmap(_nationalIdFront!);
+          docsGraphics.drawImage(img, Rect.fromLTWH(leftMargin, docYPos + 25, 250, 150));
+          docYPos += 185;
+        }
+
+        if (_nationalIdBack != null) {
+          docsGraphics.drawString('الهوية الوطنية - الوجه الخلفي', boldFont, bounds: Rect.fromLTWH(leftMargin, docYPos, 300, 20));
+          final PdfBitmap img = PdfBitmap(_nationalIdBack!);
+          docsGraphics.drawImage(img, Rect.fromLTWH(leftMargin, docYPos + 25, 250, 150));
+          docYPos += 185;
+        }
+
+        if (_residencyCardFront != null) {
+          docsGraphics.drawString('بطاقة السكن - الوجه الأمامي', boldFont, bounds: Rect.fromLTWH(leftMargin, docYPos, 300, 20));
+          final PdfBitmap img = PdfBitmap(_residencyCardFront!);
+          docsGraphics.drawImage(img, Rect.fromLTWH(leftMargin, docYPos + 25, 250, 150));
+          docYPos += 185;
+        }
+
+        if (_residencyCardBack != null && docYPos < 600) {
+          docsGraphics.drawString('بطاقة السكن - الوجه الخلفي', boldFont, bounds: Rect.fromLTWH(leftMargin, docYPos, 300, 20));
+          final PdfBitmap img = PdfBitmap(_residencyCardBack!);
+          docsGraphics.drawImage(img, Rect.fromLTWH(leftMargin, docYPos + 25, 250, 150));
+        }
+      }
+
       final List<int> bytes = await _document!.save();
       _pdfBytes = Uint8List.fromList(bytes);
 
@@ -133,10 +234,10 @@ class _FormMgmtState extends State<FormMgmt> {
       });
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Form filled and flattened successfully!')));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تم ملء وإنشاء النموذج بنجاح!')));
       }
     } catch (e) {
-      print('Error filling and flattening form: $e');
+      print('Error filling form: $e');
       setState(() {
         _errorMessage = 'Error processing form: $e';
         _isLoading = false;
@@ -155,11 +256,11 @@ class _FormMgmtState extends State<FormMgmt> {
       final blob = html.Blob([_pdfBytes!], 'application/pdf');
       final url = html.Url.createObjectUrlFromBlob(blob);
       final anchor = html.AnchorElement(href: url)
-        ..setAttribute('download', 'filled_form_${DateTime.now().millisecondsSinceEpoch}.pdf')
+        ..setAttribute('download', 'volunteer_form_${DateTime.now().millisecondsSinceEpoch}.pdf')
         ..click();
       html.Url.revokeObjectUrl(url);
 
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('PDF downloaded successfully!')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تم تحميل ملف PDF بنجاح!')));
     } catch (e) {
       print('Error downloading PDF: $e');
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error downloading: $e')));
@@ -180,55 +281,15 @@ class _FormMgmtState extends State<FormMgmt> {
     }
   }
 
-  void _previewPdf() {
-    if (_pdfBytes == null) return;
-
-    final String viewId = 'pdf-preview-${DateTime.now().millisecondsSinceEpoch}';
-    final iframe = html.IFrameElement()
-      ..src = html.Url.createObjectUrlFromBlob(html.Blob([_pdfBytes!], 'application/pdf'))
-      ..style.border = 'none'
-      ..style.width = '100%'
-      ..style.height = '100%';
-
-    // Register the view factory
-    // ignore: undefined_prefixed_name
-    ui_web.platformViewRegistry.registerViewFactory(viewId, (int viewId) => iframe);
-
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.8,
-          height: MediaQuery.of(context).size.height * 0.8,
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('PDF Preview', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
-                ],
-              ),
-              const Divider(),
-              Expanded(child: HtmlElementView(viewType: viewId)),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Form Management'),
+        title: const Text('استمارة المتطوع'),
         actions: [
           if (_pdfBytes != null) ...[
-            IconButton(icon: const Icon(Icons.visibility), tooltip: 'Preview PDF', onPressed: _previewPdf),
-            IconButton(icon: const Icon(Icons.download), tooltip: 'Download PDF', onPressed: _downloadPdf),
-            IconButton(icon: const Icon(Icons.print), tooltip: 'Print PDF', onPressed: _printPdf),
+            IconButton(icon: const Icon(Icons.download), tooltip: 'تحميل PDF', onPressed: _downloadPdf),
+            IconButton(icon: const Icon(Icons.print), tooltip: 'طباعة', onPressed: _printPdf),
           ],
         ],
       ),
@@ -247,172 +308,204 @@ class _FormMgmtState extends State<FormMgmt> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
-                  ElevatedButton(onPressed: _loadPdfForm, child: const Text('Retry')),
+                  ElevatedButton(onPressed: _loadPdfForm, child: const Text('إعادة المحاولة')),
                 ],
               ),
             )
-          : _buildFormFields(),
+          : _buildForm(),
       floatingActionButton: _document != null
-          ? FloatingActionButton.extended(onPressed: _fillAndFlattenForm, icon: const Icon(Icons.check), label: const Text('Fill & Flatten'))
+          ? FloatingActionButton.extended(onPressed: _fillAndFlattenForm, icon: const Icon(Icons.picture_as_pdf), label: const Text('إنشاء PDF'))
           : null,
     );
   }
 
-  Widget _buildFormFields() {
-    if (_document == null) return const SizedBox.shrink();
-
-    final form = _document!.form;
-
-    if (form.fields.count == 0) {
-      return const Center(child: Text('No form fields found in the PDF'));
-    }
-
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildForm() {
+    return Form(
+      key: _formKey,
+      child: ListView(
+        padding: const EdgeInsets.all(16),
         children: [
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('Fill Form Fields', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  Text('Found ${form.fields.count} form fields', style: TextStyle(color: Colors.grey[600])),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          ...List.generate(form.fields.count, (index) {
-            final field = form.fields[index];
-            return _buildFieldWidget(field, index);
-          }),
-          const SizedBox(height: 80), // Space for FAB
+          _buildSectionTitle('الصور والمستندات'),
+          _buildImageUploadSection(),
+          const SizedBox(height: 24),
+
+          _buildSectionTitle('المعلومات الأساسية'),
+          _buildTextField('formNumber', 'رقم الاستمارة'),
+          _buildTextField('groupNameAndCode', 'اسم المجموعة والرمز'),
+          _buildTextField('fullName', 'الاسم الرباعي واللقب', required: true),
+          _buildTextField('education', 'التحصيل الدراسي'),
+          _buildTextField('birthDate', 'المواليد'),
+          _buildTextField('maritalStatus', 'الحالة الاجتماعية'),
+          _buildTextField('numberOfChildren', 'عدد الابناء'),
+          _buildTextField('motherName', 'اسم الام الثلاثي واللقب'),
+          const SizedBox(height: 24),
+
+          _buildSectionTitle('معلومات الاتصال'),
+          _buildTextField('mobileNumber', 'رقم الموبايل', required: true),
+          _buildTextField('currentAddress', 'العنوان الحالي'),
+          _buildTextField('nearestLandmark', 'اقرب نقطة دالة'),
+          _buildTextField('mukhtarName', 'اسم المختار ومسؤول المجلس البلدي'),
+          _buildTextField('civilStatusDirectorate', 'دائرة الاحوال'),
+          _buildTextField('previousAddress', 'العنوان السابق'),
+          const SizedBox(height: 24),
+
+          _buildSectionTitle('المعلومات المهنية'),
+          _buildTextField('volunteerParticipationCount', 'عدد المشاركات في الخدمة التطوعية'),
+          _buildTextField('profession', 'المهنة'),
+          _buildTextField('jobTitle', 'العنوان الوظيفي'),
+          _buildTextField('departmentName', 'اسم الدائرة'),
+          _buildTextField('politicalAffiliation', 'الانتماء السياسي'),
+          _buildTextField('talentAndExperience', 'الموهبة والخبرة', maxLines: 3),
+          _buildTextField('languages', 'اللغات التي يجيدها'),
+          const SizedBox(height: 24),
+
+          _buildSectionTitle('معلومات الوثائق'),
+          _buildTextField('idCardNumber', 'رقم الهوية او البطاقة الوطنية'),
+          _buildTextField('recordNumber', 'السجل'),
+          _buildTextField('pageNumber', 'الصحيفة'),
+          _buildTextField('rationCardNumber', 'رقم البطاقة التموينية'),
+          _buildTextField('agentName', 'اسم الوكيل'),
+          _buildTextField('supplyCenterNumber', 'رقم مركز التموين'),
+          _buildTextField('residenceCardNumber', 'رقم بطاقة السكن'),
+          _buildTextField('issuer', 'جهة اصدارها'),
+          _buildTextField('no', 'NO'),
+
+          const SizedBox(height: 80),
         ],
       ),
     );
   }
 
-  Widget _buildFieldWidget(PdfField field, int index) {
-    if (field is PdfTextBoxField) {
-      return Card(
-        margin: const EdgeInsets.only(bottom: 16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const Icon(Icons.text_fields, size: 20),
-                  const SizedBox(width: 8),
-                  Text(field.name ?? 'Text Field $index', style: const TextStyle(fontWeight: FontWeight.bold)),
-                ],
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: _fieldControllers[field.name ?? 'field_$index'],
-                decoration: InputDecoration(hintText: 'Enter ${field.name ?? 'value'}', border: const OutlineInputBorder()),
-                maxLines: field.multiline ? 3 : 1,
-              ),
-            ],
-          ),
-        ),
-      );
-    } else if (field is PdfCheckBoxField) {
-      return Card(
-        margin: const EdgeInsets.only(bottom: 16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: CheckboxListTile(
-            title: Row(
-              children: [
-                const Icon(Icons.check_box_outlined, size: 20),
-                const SizedBox(width: 8),
-                Text(field.name ?? 'Checkbox $index', style: const TextStyle(fontWeight: FontWeight.bold)),
-              ],
-            ),
-            value: _checkboxValues[field.name ?? 'checkbox_$index'] ?? false,
-            onChanged: (value) {
-              setState(() {
-                _checkboxValues[field.name ?? 'checkbox_$index'] = value ?? false;
-              });
-            },
-          ),
-        ),
-      );
-    } else if (field is PdfRadioButtonListField) {
-      return Card(
-        margin: const EdgeInsets.only(bottom: 16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const Icon(Icons.radio_button_checked, size: 20),
-                  const SizedBox(width: 8),
-                  Text(field.name ?? 'Radio Button $index', style: const TextStyle(fontWeight: FontWeight.bold)),
-                ],
-              ),
-              const SizedBox(height: 12),
-              ...List.generate(field.items.count, (itemIndex) {
-                return RadioListTile<String>(
-                  title: Text('Option ${itemIndex + 1}'),
-                  value: itemIndex.toString(),
-                  groupValue: _radioButtonValues[field.name ?? 'radio_$index'],
-                  onChanged: (value) {
-                    setState(() {
-                      _radioButtonValues[field.name ?? 'radio_$index'] = value ?? '0';
-                    });
-                  },
-                );
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Text(
+        title,
+        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue),
+      ),
+    );
+  }
+
+  Widget _buildTextField(String key, String label, {bool required = false, int maxLines = 1}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: TextFormField(
+        controller: _controllers[key],
+        decoration: InputDecoration(labelText: label, border: const OutlineInputBorder(), prefixIcon: const Icon(Icons.edit)),
+        maxLines: maxLines,
+        validator: required
+            ? (value) {
+                if (value == null || value.isEmpty) {
+                  return 'هذا الحقل مطلوب';
+                }
+                return null;
+              }
+            : null,
+      ),
+    );
+  }
+
+  Widget _buildImageUploadSection() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildImageUploadCard(
+              'الصورة الشخصية',
+              _userPhoto,
+              () => _pickImage((image) {
+                setState(() => _userPhoto = image);
               }),
-            ],
-          ),
+              Icons.person,
+            ),
+            const Divider(height: 32),
+
+            _buildImageUploadCard(
+              'الهوية الوطنية - الوجه الأمامي',
+              _nationalIdFront,
+              () => _pickImage((image) {
+                setState(() => _nationalIdFront = image);
+              }),
+              Icons.credit_card,
+            ),
+            const SizedBox(height: 16),
+
+            _buildImageUploadCard(
+              'الهوية الوطنية - الوجه الخلفي',
+              _nationalIdBack,
+              () => _pickImage((image) {
+                setState(() => _nationalIdBack = image);
+              }),
+              Icons.credit_card,
+            ),
+            const Divider(height: 32),
+
+            _buildImageUploadCard(
+              'بطاقة السكن - الوجه الأمامي',
+              _residencyCardFront,
+              () => _pickImage((image) {
+                setState(() => _residencyCardFront = image);
+              }),
+              Icons.home,
+            ),
+            const SizedBox(height: 16),
+
+            _buildImageUploadCard(
+              'بطاقة السكن - الوجه الخلفي',
+              _residencyCardBack,
+              () => _pickImage((image) {
+                setState(() => _residencyCardBack = image);
+              }),
+              Icons.home,
+            ),
+          ],
         ),
-      );
-    } else if (field is PdfComboBoxField) {
-      return Card(
-        margin: const EdgeInsets.only(bottom: 16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
+      ),
+    );
+  }
+
+  Widget _buildImageUploadCard(String label, Uint8List? imageData, VoidCallback onTap, IconData icon) {
+    return Row(
+      children: [
+        Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  const Icon(Icons.arrow_drop_down_circle, size: 20),
+                  Icon(icon, size: 20, color: Colors.blue),
                   const SizedBox(width: 8),
-                  Text(field.name ?? 'Combo Box $index', style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
                 ],
               ),
-              const SizedBox(height: 12),
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(border: OutlineInputBorder()),
-                items: List.generate(field.items.count, (itemIndex) => DropdownMenuItem(value: itemIndex.toString(), child: Text(field.items[itemIndex].text))),
-                onChanged: (value) {
-                  if (value != null) {
-                    field.selectedIndex = int.parse(value);
-                  }
-                },
+              const SizedBox(height: 8),
+              ElevatedButton.icon(
+                onPressed: onTap,
+                icon: Icon(imageData == null ? Icons.upload : Icons.check),
+                label: Text(imageData == null ? 'رفع الصورة' : 'تم الرفع'),
+                style: ElevatedButton.styleFrom(backgroundColor: imageData == null ? null : Colors.green.shade100),
               ),
             ],
           ),
         ),
-      );
-    } else {
-      return Card(
-        margin: const EdgeInsets.only(bottom: 16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Text('${field.name ?? 'Field $index'} (${field.runtimeType})', style: const TextStyle(fontStyle: FontStyle.italic)),
-        ),
-      );
-    }
+        if (imageData != null) ...[
+          const SizedBox(width: 16),
+          Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.memory(imageData, fit: BoxFit.cover),
+            ),
+          ),
+        ],
+      ],
+    );
   }
 }
