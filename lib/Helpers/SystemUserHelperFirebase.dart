@@ -1,14 +1,18 @@
 import 'package:azimuth_vms/Models/SystemUser.dart';
 import 'package:azimuth_vms/Static/FirebaseHelperStatics.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class SystemUserHelperFirebase {
   DatabaseReference rootRef = FirebaseDatabase.instance.ref().child(FirebaseHelperStatics.AppRoot).child("systemusers");
+  FirebaseAuth auth = FirebaseAuth.instance;
 
   //Basic CRUD
   //1- Create
   void CreateSystemUser(SystemUser user) {
     rootRef.child(user.phone).set(user.toJson());
+    //Create Auth User
+    auth.createUserWithEmailAndPassword(email: user.phone + "@azimuth-vms.com", password: user.password!);
   }
 
   //2- Read

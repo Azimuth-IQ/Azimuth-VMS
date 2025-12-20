@@ -1,6 +1,8 @@
 import 'package:azimuth_vms/Providers/AppProvider.dart';
+import 'package:azimuth_vms/Providers/EventsProvider.dart';
 import 'package:azimuth_vms/UI/Screens/AdminDashboard.dart';
 import 'package:azimuth_vms/UI/Screens/EventsMgmt.dart';
+import 'package:azimuth_vms/UI/Screens/FormMgmt.dart';
 import 'package:azimuth_vms/UI/Screens/LocationsMgmt.dart';
 import 'package:azimuth_vms/UI/Screens/SignInScreen.dart';
 import 'package:azimuth_vms/UI/Screens/TeamsMgmt.dart';
@@ -24,7 +26,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider<AppProvider>(create: (_) => AppProvider())],
+      providers: [
+        ChangeNotifierProvider<AppProvider>(create: (_) => AppProvider()),
+        ChangeNotifierProvider<EventsProvider>(create: (_) => EventsProvider()),
+      ],
       child: MaterialApp(
         title: 'Azimuth VMS',
         debugShowCheckedModeBanner: false,
@@ -74,6 +79,7 @@ class MyApp extends StatelessWidget {
           '/event-mgmt': (context) => EventsMgmt(),
           '/volunteers-mgmt': (context) => VolunteersMgmt(),
           '/team-leaders-mgmt': (context) => TeamLeadersMgmt(),
+          // '/form-test': (context) => FormMgmt(),
         },
       ),
     );
