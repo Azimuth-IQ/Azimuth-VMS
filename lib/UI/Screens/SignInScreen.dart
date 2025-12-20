@@ -63,43 +63,95 @@ class SignInScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     checkAuthStatus(context);
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F7FA),
       body: Center(
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width / 2,
-          height: MediaQuery.of(context).size.height / 2,
-          child: Card(
-            elevation: 8,
-            child: Container(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  Text("Sign In Screen"),
-                  TextField(
-                    controller: phoneController,
-                    decoration: InputDecoration(labelText: 'Phone'),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 480),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Logo/Title Section
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, 4))],
                   ),
-                  TextField(
-                    controller: passwordController,
-                    decoration: InputDecoration(labelText: 'Password'),
-                    obscureText: true,
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(color: Colors.blue.withOpacity(0.1), shape: BoxShape.circle),
+                        child: const Icon(Icons.volunteer_activism, size: 48, color: Colors.blue),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Azimuth VMS',
+                        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFF1A1F36)),
+                      ),
+                      const SizedBox(height: 8),
+                      Text('Volunteer Management System', style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                    ],
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Handle sign-in logic here
-                      signIn(context, phoneController.text, passwordController.text);
-                    },
-                    child: Text('Sign In'),
+                ),
+                const SizedBox(height: 32),
+
+                // Sign In Card
+                Container(
+                  padding: const EdgeInsets.all(32),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, 4))],
                   ),
-                  SizedBox(height: 50),
-                  ElevatedButton(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const Text(
+                        'Sign In',
+                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Color(0xFF1A1F36)),
+                      ),
+                      const SizedBox(height: 24),
+                      TextField(
+                        controller: phoneController,
+                        decoration: const InputDecoration(labelText: 'Phone Number', prefixIcon: Icon(Icons.phone)),
+                      ),
+                      const SizedBox(height: 16),
+                      TextField(
+                        controller: passwordController,
+                        decoration: const InputDecoration(labelText: 'Password', prefixIcon: Icon(Icons.lock)),
+                        obscureText: true,
+                      ),
+                      const SizedBox(height: 24),
+                      ElevatedButton(
+                        onPressed: () {
+                          signIn(context, phoneController.text, passwordController.text);
+                        },
+                        style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
+                        child: const Text('Sign In', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                // Development Tools
+                if (true) // Set to false in production
+                  TextButton.icon(
                     onPressed: () {
                       Seed().seedSystemUsers();
                       Seed().seedLocations();
                     },
-                    child: Text("Seed Data"),
+                    icon: const Icon(Icons.storage, size: 18),
+                    label: const Text('Seed Development Data'),
+                    style: TextButton.styleFrom(foregroundColor: Colors.grey),
                   ),
-                ],
-              ),
+              ],
             ),
           ),
         ),
