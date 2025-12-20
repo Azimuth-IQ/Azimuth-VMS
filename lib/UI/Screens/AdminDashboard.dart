@@ -93,6 +93,14 @@ class AdminDashboard extends StatelessWidget {
                     ),
                     _buildManagementCard(
                       context,
+                      title: 'Team Leaders',
+                      subtitle: 'Manage team leader profiles',
+                      icon: Icons.person_pin_circle,
+                      color: Colors.indigo,
+                      onTap: () => Navigator.pushNamed(context, '/team-leaders-mgmt'),
+                    ),
+                    _buildManagementCard(
+                      context,
                       title: 'Locations',
                       subtitle: 'Manage locations and zones',
                       icon: Icons.location_on,
