@@ -2,9 +2,66 @@ import 'package:firebase_database/firebase_database.dart';
 
 enum RecurrenceType { NONE, DAILY, WEEKLY, MONTHLY, YEARLY }
 
-enum DayOfWeek { MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY }
+enum DayOfWeek {
+  MONDAY,
+  TUESDAY,
+  WEDNESDAY,
+  THURSDAY,
+  FRIDAY,
+  SATURDAY,
+  SUNDAY,
+}
 
-enum Month { JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER }
+enum Month {
+  JANUARY,
+  FEBRUARY,
+  MARCH,
+  APRIL,
+  MAY,
+  JUNE,
+  JULY,
+  AUGUST,
+  SEPTEMBER,
+  OCTOBER,
+  NOVEMBER,
+  DECEMBER,
+}
+
+// Temporary team that exists only within the event (not saved to teams collection)
+class TempTeam {
+  String id;
+  String teamLeaderId;
+  List<String> memberIds;
+
+  TempTeam({
+    required this.id,
+    required this.teamLeaderId,
+    required this.memberIds,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'teamLeaderId': teamLeaderId, 'memberIds': memberIds};
+  }
+
+  factory TempTeam.fromDataSnapshot(DataSnapshot snapshot) {
+    List<String> memberIds = [];
+    DataSnapshot membersSnapshot = snapshot.child('memberIds');
+    if (membersSnapshot.exists) {
+      for (DataSnapshot d1 in membersSnapshot.children) {
+        String? memberId = d1.value?.toString();
+        if (memberId != null) {
+          memberIds.add(memberId);
+        }
+      }
+    }
+
+    return TempTeam(
+      id: snapshot.child('id').value?.toString() ?? '',
+      teamLeaderId: snapshot.child('teamLeaderId').value?.toString() ?? '',
+      memberIds: memberIds,
+    );
+  }
+}
 
 class Event {
   String id;
@@ -18,7 +75,8 @@ class Event {
   // Date range
   String startDate; // "DD-MM-YYYY"
   String endDate; // "DD-MM-YYYY"
-  String? recurrenceEndDate; // "DD-MM-YYYY" - optional, for when recurring stops
+  String?
+  recurrenceEndDate; // "DD-MM-YYYY" - optional, for when recurring stops
 
   // Recurrence rules (optional based on type)
   String? weeklyDays; // "MONDAY,WEDNESDAY,FRIDAY" - comma-separated enum names
@@ -77,7 +135,8 @@ class Event {
       name: snapshot.child('name').value?.toString() ?? '',
       description: snapshot.child('description').value?.toString() ?? '',
       isRecurring: snapshot.child('isRecurring').value as bool? ?? false,
-      recurrenceType: snapshot.child('recurrenceType').value?.toString() ?? 'NONE',
+      recurrenceType:
+          snapshot.child('recurrenceType').value?.toString() ?? 'NONE',
       startDate: snapshot.child('startDate').value?.toString() ?? '',
       endDate: snapshot.child('endDate').value?.toString() ?? '',
       recurrenceEndDate: snapshot.child('recurrenceEndDate').value?.toString(),
@@ -97,15 +156,33 @@ class EventShift {
 
   // Main location
   String locationId;
-  String? teamId; // Optional team for main location
+  String? teamId; // Optional existing team ID
+  TempTeam?
+  tempTeam; // Optional temporary team (either teamId or tempTeam, not both)
 
   // Sublocations
   List<ShiftSubLocation> subLocations;
 
-  EventShift({required this.id, required this.startTime, required this.endTime, required this.locationId, this.teamId, required this.subLocations});
+  EventShift({
+    required this.id,
+    required this.startTime,
+    required this.endTime,
+    required this.locationId,
+    this.teamId,
+    this.tempTeam,
+    required this.subLocations,
+  });
 
   Map<String, dynamic> toJson() {
-    return {'id': id, 'startTime': startTime, 'endTime': endTime, 'locationId': locationId, 'teamId': teamId, 'subLocations': subLocations.map((s) => s.toJson()).toList()};
+    return {
+      'id': id,
+      'startTime': startTime,
+      'endTime': endTime,
+      'locationId': locationId,
+      'teamId': teamId,
+      'tempTeam': tempTeam?.toJson(),
+      'subLocations': subLocations.map((s) => s.toJson()).toList(),
+    };
   }
 
   factory EventShift.fromDataSnapshot(DataSnapshot snapshot) {
@@ -117,12 +194,19 @@ class EventShift {
       }
     }
 
+    TempTeam? tempTeam;
+    DataSnapshot tempTeamSnapshot = snapshot.child('tempTeam');
+    if (tempTeamSnapshot.exists) {
+      tempTeam = TempTeam.fromDataSnapshot(tempTeamSnapshot);
+    }
+
     return EventShift(
       id: snapshot.child('id').value?.toString() ?? '',
       startTime: snapshot.child('startTime').value?.toString() ?? '',
       endTime: snapshot.child('endTime').value?.toString() ?? '',
       locationId: snapshot.child('locationId').value?.toString() ?? '',
       teamId: snapshot.child('teamId').value?.toString(),
+      tempTeam: tempTeam,
       subLocations: subLocations,
     );
   }
@@ -131,19 +215,38 @@ class EventShift {
 class ShiftSubLocation {
   String id;
   String subLocationId;
-  String? teamId; // Optional team for this sublocation
+  String? teamId; // Optional existing team ID
+  TempTeam?
+  tempTeam; // Optional temporary team (either teamId or tempTeam, not both)
 
-  ShiftSubLocation({required this.id, required this.subLocationId, this.teamId});
+  ShiftSubLocation({
+    required this.id,
+    required this.subLocationId,
+    this.teamId,
+    this.tempTeam,
+  });
 
   Map<String, dynamic> toJson() {
-    return {'id': id, 'subLocationId': subLocationId, 'teamId': teamId};
+    return {
+      'id': id,
+      'subLocationId': subLocationId,
+      'teamId': teamId,
+      'tempTeam': tempTeam?.toJson(),
+    };
   }
 
   factory ShiftSubLocation.fromDataSnapshot(DataSnapshot snapshot) {
+    TempTeam? tempTeam;
+    DataSnapshot tempTeamSnapshot = snapshot.child('tempTeam');
+    if (tempTeamSnapshot.exists) {
+      tempTeam = TempTeam.fromDataSnapshot(tempTeamSnapshot);
+    }
+
     return ShiftSubLocation(
       id: snapshot.child('id').value?.toString() ?? '',
       subLocationId: snapshot.child('subLocationId').value?.toString() ?? '',
       teamId: snapshot.child('teamId').value?.toString(),
+      tempTeam: tempTeam,
     );
   }
 }
@@ -156,7 +259,9 @@ extension DayOfWeekExtension on DayOfWeek {
 
   static DayOfWeek? fromString(String value) {
     try {
-      return DayOfWeek.values.firstWhere((e) => e.toString().split('.').last == value);
+      return DayOfWeek.values.firstWhere(
+        (e) => e.toString().split('.').last == value,
+      );
     } catch (e) {
       return null;
     }
@@ -170,7 +275,9 @@ extension MonthExtension on Month {
 
   static Month? fromString(String value) {
     try {
-      return Month.values.firstWhere((e) => e.toString().split('.').last == value);
+      return Month.values.firstWhere(
+        (e) => e.toString().split('.').last == value,
+      );
     } catch (e) {
       return null;
     }
@@ -188,7 +295,9 @@ extension RecurrenceTypeExtension on RecurrenceType {
 
   static RecurrenceType? fromString(String value) {
     try {
-      return RecurrenceType.values.firstWhere((e) => e.toString().split('.').last == value);
+      return RecurrenceType.values.firstWhere(
+        (e) => e.toString().split('.').last == value,
+      );
     } catch (e) {
       return null;
     }

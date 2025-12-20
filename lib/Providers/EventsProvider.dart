@@ -2,25 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:azimuth_vms/Models/Event.dart';
 import 'package:azimuth_vms/Models/Location.dart';
 import 'package:azimuth_vms/Models/Team.dart';
+import 'package:azimuth_vms/Models/SystemUser.dart';
 import 'package:azimuth_vms/Helpers/EventHelperFirebase.dart';
 import 'package:azimuth_vms/Helpers/LocationHelperFirebase.dart';
 import 'package:azimuth_vms/Helpers/TeamHelperFirebase.dart';
+import 'package:azimuth_vms/Helpers/SystemUserHelperFirebase.dart';
 import 'package:uuid/uuid.dart';
 
 class EventsProvider with ChangeNotifier {
   final EventHelperFirebase _eventHelper = EventHelperFirebase();
   final LocationHelperFirebase _locationHelper = LocationHelperFirebase();
   final TeamHelperFirebase _teamHelper = TeamHelperFirebase();
+  final SystemUserHelperFirebase _userHelper = SystemUserHelperFirebase();
 
   List<Event> _events = [];
   List<Location> _locations = [];
   List<Team> _teams = [];
+  List<SystemUser> _systemUsers = [];
   bool _isLoading = false;
   String? _errorMessage;
 
   List<Event> get events => _events;
   List<Location> get locations => _locations;
   List<Team> get teams => _teams;
+  List<SystemUser> get systemUsers => _systemUsers;
+  List<SystemUser> get teamLeaders =>
+      _systemUsers.where((u) => u.role == SystemUserRole.TEAMLEADER).toList();
+  List<SystemUser> get volunteers =>
+      _systemUsers.where((u) => u.role == SystemUserRole.VOLUNTEER).toList();
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
@@ -56,6 +65,15 @@ class EventsProvider with ChangeNotifier {
       notifyListeners();
     } catch (e) {
       print('Error loading teams: $e');
+    }
+  }
+
+  Future<void> loadSystemUsers() async {
+    try {
+      _systemUsers = await _userHelper.GetAllSystemUsers();
+      notifyListeners();
+    } catch (e) {
+      print('Error loading system users: $e');
     }
   }
 
@@ -232,6 +250,8 @@ class ShiftFormProvider with ChangeNotifier {
   String _endTime = '';
   String _locationId = '';
   String? _teamId;
+  TempTeam? _tempTeam;
+  bool _useExistingTeam = true; // true = use teamId, false = use tempTeam
   List<ShiftSubLocation> _subLocations = [];
 
   EventShift? get editingShift => _editingShift;
@@ -239,6 +259,8 @@ class ShiftFormProvider with ChangeNotifier {
   String get endTime => _endTime;
   String get locationId => _locationId;
   String? get teamId => _teamId;
+  TempTeam? get tempTeam => _tempTeam;
+  bool get useExistingTeam => _useExistingTeam;
   List<ShiftSubLocation> get subLocations => _subLocations;
 
   void initializeForm(EventShift? shift) {
@@ -247,6 +269,8 @@ class ShiftFormProvider with ChangeNotifier {
     _endTime = shift?.endTime ?? '';
     _locationId = shift?.locationId ?? '';
     _teamId = shift?.teamId;
+    _tempTeam = shift?.tempTeam;
+    _useExistingTeam = shift?.teamId != null || shift?.tempTeam == null;
     _subLocations = List.from(shift?.subLocations ?? []);
     notifyListeners();
   }
@@ -273,6 +297,21 @@ class ShiftFormProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void updateUseExistingTeam(bool value) {
+    _useExistingTeam = value;
+    if (value) {
+      _tempTeam = null;
+    } else {
+      _teamId = null;
+    }
+    notifyListeners();
+  }
+
+  void updateTempTeam(TempTeam? team) {
+    _tempTeam = team;
+    notifyListeners();
+  }
+
   void addSubLocation(ShiftSubLocation subLocation) {
     _subLocations.add(subLocation);
     notifyListeners();
@@ -289,7 +328,15 @@ class ShiftFormProvider with ChangeNotifier {
   }
 
   EventShift buildShift() {
-    return EventShift(id: _editingShift?.id ?? const Uuid().v4(), startTime: _startTime, endTime: _endTime, locationId: _locationId, teamId: _teamId, subLocations: _subLocations);
+    return EventShift(
+      id: _editingShift?.id ?? const Uuid().v4(),
+      startTime: _startTime,
+      endTime: _endTime,
+      locationId: _locationId,
+      teamId: _useExistingTeam ? _teamId : null,
+      tempTeam: !_useExistingTeam ? _tempTeam : null,
+      subLocations: _subLocations,
+    );
   }
 
   void reset() {
@@ -298,6 +345,8 @@ class ShiftFormProvider with ChangeNotifier {
     _endTime = '';
     _locationId = '';
     _teamId = null;
+    _tempTeam = null;
+    _useExistingTeam = true;
     _subLocations = [];
     notifyListeners();
   }
