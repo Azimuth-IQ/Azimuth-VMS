@@ -4,6 +4,7 @@ import 'package:azimuth_vms/UI/Screens/EventsMgmt.dart';
 import 'package:azimuth_vms/UI/Screens/LocationsMgmt.dart';
 import 'package:azimuth_vms/UI/Screens/SignInScreen.dart';
 import 'package:azimuth_vms/UI/Screens/TeamsMgmt.dart';
+import 'package:azimuth_vms/UI/Screens/VolunteersMgmt.dart';
 import 'package:azimuth_vms/firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -70,6 +71,7 @@ class MyApp extends StatelessWidget {
           '/locations-mgmt': (context) => LocationsMgmt(),
           '/teams-mgmt': (context) => TeamsMgmt(),
           '/event-mgmt': (context) => EventsMgmt(),
+          '/volunteers-mgmt': (context) => VolunteersMgmt(),
         },
       ),
     );

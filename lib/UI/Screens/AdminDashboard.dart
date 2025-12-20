@@ -85,6 +85,14 @@ class AdminDashboard extends StatelessWidget {
                     ),
                     _buildManagementCard(
                       context,
+                      title: 'Volunteers',
+                      subtitle: 'Manage volunteer profiles',
+                      icon: Icons.volunteer_activism,
+                      color: Colors.teal,
+                      onTap: () => Navigator.pushNamed(context, '/volunteers-mgmt'),
+                    ),
+                    _buildManagementCard(
+                      context,
                       title: 'Locations',
                       subtitle: 'Manage locations and zones',
                       icon: Icons.location_on,
