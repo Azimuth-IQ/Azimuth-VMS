@@ -1,6 +1,6 @@
 import 'package:azimuth_vms/Providers/AppProvider.dart';
 import 'package:azimuth_vms/UI/Screens/AdminDashboard.dart';
-import 'package:azimuth_vms/UI/Screens/EventMgmt.dart';
+import 'package:azimuth_vms/UI/Screens/EventsMgmt.dart';
 import 'package:azimuth_vms/UI/Screens/LocationsMgmt.dart';
 import 'package:azimuth_vms/UI/Screens/SignInScreen.dart';
 import 'package:azimuth_vms/UI/Screens/TeamsMgmt.dart';
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
           '/admin-dashboard': (context) => AdminDashboard(),
           '/locations-mgmt': (context) => LocationsMgmt(),
           '/teams-mgmt': (context) => TeamsMgmt(),
-          '/event-mgmt': (context) => EventMgmt(),
+          '/event-mgmt': (context) => EventsMgmt(),
         },
       ),
     );
