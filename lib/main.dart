@@ -79,7 +79,7 @@ class MyApp extends StatelessWidget {
           '/event-mgmt': (context) => EventsMgmt(),
           '/volunteers-mgmt': (context) => VolunteersMgmt(),
           '/team-leaders-mgmt': (context) => TeamLeadersMgmt(),
-          // '/form-test': (context) => FormMgmt(),
+          '/form-test': (context) => FormMgmt(),
         },
       ),
     );

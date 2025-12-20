@@ -191,10 +191,12 @@ class AdminDashboard extends StatelessWidget {
       builder: (context, eventsProvider, _) {
         // Load events and system users if not already loaded
         if (eventsProvider.events.isEmpty && !eventsProvider.isLoading) {
-          eventsProvider.loadEvents();
-          eventsProvider.loadSystemUsers();
-          eventsProvider.loadLocations();
-          eventsProvider.loadTeams();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            eventsProvider.loadEvents();
+            eventsProvider.loadSystemUsers();
+            eventsProvider.loadLocations();
+            eventsProvider.loadTeams();
+          });
         }
 
         // Filter for active events (today's events)
