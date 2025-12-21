@@ -135,9 +135,9 @@ class AdminDashboard extends StatelessWidget {
                     ),
                     _buildManagementCard(
                       context,
-                      title: 'PDF',
-                      subtitle: 'PDF Testing',
-                      icon: Icons.picture_as_pdf,
+                      title: 'Volunteer Forms',
+                      subtitle: 'Manage volunteer forms',
+                      icon: Icons.description,
                       color: Colors.red,
                       onTap: () => Navigator.pushNamed(context, '/form-mgmt'),
                     ),
@@ -206,7 +206,7 @@ class AdminDashboard extends StatelessWidget {
 
         final activeEvents = eventsProvider.events.where((event) {
           print('Event: ${event.name}, Start Date: ${event.startDate}');
-          return event.startDate == today;
+          return today.compareTo(event.endDate) <= 0;
         }).toList();
 
         print('Active events found: ${activeEvents.length}');

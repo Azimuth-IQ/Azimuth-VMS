@@ -1,13 +1,14 @@
 import 'package:azimuth_vms/Providers/AppProvider.dart';
 import 'package:azimuth_vms/Providers/EventsProvider.dart';
-import 'package:azimuth_vms/UI/Screens/AdminDashboard.dart';
-import 'package:azimuth_vms/UI/Screens/EventsMgmt.dart';
-import 'package:azimuth_vms/UI/Screens/FormMgmt.dart';
-import 'package:azimuth_vms/UI/Screens/LocationsMgmt.dart';
-import 'package:azimuth_vms/UI/Screens/SignInScreen.dart';
-import 'package:azimuth_vms/UI/Screens/TeamsMgmt.dart';
-import 'package:azimuth_vms/UI/Screens/TeamLeadersMgmt.dart';
-import 'package:azimuth_vms/UI/Screens/VolunteersMgmt.dart';
+import 'package:azimuth_vms/UI/AdminScreens/AdminDashboard.dart';
+import 'package:azimuth_vms/UI/AdminScreens/EventsMgmt.dart';
+import 'package:azimuth_vms/UI/AdminScreens/FormFillPage.dart';
+import 'package:azimuth_vms/UI/AdminScreens/FormMgmt.dart';
+import 'package:azimuth_vms/UI/AdminScreens/LocationsMgmt.dart';
+import 'package:azimuth_vms/UI/AdminScreens/SignInScreen.dart';
+import 'package:azimuth_vms/UI/AdminScreens/TeamsMgmt.dart';
+import 'package:azimuth_vms/UI/AdminScreens/TeamLeadersMgmt.dart';
+import 'package:azimuth_vms/UI/AdminScreens/VolunteersMgmt.dart';
 import 'package:azimuth_vms/firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -78,8 +79,8 @@ class MyApp extends StatelessWidget {
           '/teams-mgmt': (context) => TeamsMgmt(),
           '/event-mgmt': (context) => EventsMgmt(),
           '/volunteers-mgmt': (context) => VolunteersMgmt(),
-          '/team-leaders-mgmt': (context) => TeamLeadersMgmt(),
           '/form-mgmt': (context) => FormMgmt(),
+          '/form-fill': (context) => FormFillPage(),
         },
       ),
     );
