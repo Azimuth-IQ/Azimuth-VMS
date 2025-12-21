@@ -104,6 +104,35 @@ git commit -m "Pre-edit checkpoint: [brief description of upcoming changes]"
 
 ---
 
+## 📝 CRITICAL: Documentation Requirements
+
+**⚠️ The README.md file is the ONLY project documentation**
+
+After every configuration, feature implementation, or significant change, **you MUST update README.md** to include:
+
+### Required README Sections:
+
+1. **Business Models** - Complete description of all data models and their relationships
+2. **Technical Capabilities** - All features, integrations, and technical implementations
+3. **Current Project State** - What works, what's configured, what's pending
+4. **Setup Instructions** - Step-by-step guide for Firebase, APIs, and dependencies
+5. **User Manual** - How to use each feature with screenshots/examples where applicable
+6. **API Documentation** - All Firebase paths, data structures, and helper functions
+7. **Troubleshooting** - Common issues and solutions
+
+### Documentation Rules:
+
+- **NO separate documentation files** (delete FIREBASE_STORAGE_SETUP.md, API_DOCS.md, etc.)
+- **Everything goes in README.md** - Keep it comprehensive but organized
+- **Update after every major change** - README should always reflect current state
+- **Write for non-technical users** - Assume reader has no prior knowledge
+- **Include code examples** - Show actual usage patterns
+- **Keep it current** - Remove outdated information immediately
+
+Think of README.md as the **complete product manual** that anyone can use to understand, set up, and operate the entire system.
+
+---
+
 ## UI/UX Preferences
 
 - Show loading indicators during async operations
