@@ -436,17 +436,31 @@ class _FormFillPageState extends State<FormFillPage> {
       if (url != null) _formData!.residenceBackPath = url;
     }
 
-    // Save to database
+    // Save to database and update status
     final VolunteerFormHelperFirebase formHelper = VolunteerFormHelperFirebase();
+
     if (_isEditMode) {
+      // Update existing form and set status to Pending
+      _formData!.status = VolunteerFormStatus.Pending;
       formHelper.UpdateForm(_formData!);
+
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Form updated successfully!')));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Form submitted for review!')));
+        // Navigate back to dashboard with success result
+        Navigator.pop(context, true);
       }
     } else {
+      // Create new form (status will be set to Sent by CreateForm)
       formHelper.CreateForm(_formData!);
+
+      // Now update status to Pending
+      _formData!.status = VolunteerFormStatus.Pending;
+      formHelper.UpdateForm(_formData!);
+
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Form created successfully!')));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Form submitted for review!')));
+        // Navigate back to dashboard with success result
+        Navigator.pop(context, true);
       }
     }
   }

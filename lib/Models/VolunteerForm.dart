@@ -83,43 +83,61 @@ class VolunteerForm {
 
   //3- From DataSnapshot
   factory VolunteerForm.fromDataSnapshot(DataSnapshot snapshot) {
+    // Helper function to safely get string value
+    String? getStringValue(String key) {
+      final value = snapshot.child(key).value;
+      return value?.toString();
+    }
+
+    // Helper function to get status enum from string
+    VolunteerFormStatus? getStatus() {
+      final statusValue = snapshot.child('status').value?.toString();
+      if (statusValue == null) return null;
+      try {
+        return VolunteerFormStatus.values.firstWhere((e) => e.toString().split('.').last == statusValue, orElse: () => VolunteerFormStatus.Pending);
+      } catch (e) {
+        return null;
+      }
+    }
+
     return VolunteerForm(
       id: snapshot.child('id').value as int?,
-      formNumber: snapshot.child('formNumber').value.toString(),
-      groupNameAndCode: snapshot.child('groupNameAndCode').value.toString(),
-      fullName: snapshot.child('fullName').value.toString(),
-      education: snapshot.child('education').value.toString(),
-      birthDate: snapshot.child('birthDate').value.toString(),
-      maritalStatus: snapshot.child('maritalStatus').value.toString(),
-      numberOfChildren: snapshot.child('numberOfChildren').value.toString(),
-      motherName: snapshot.child('motherName').value.toString(),
-      mobileNumber: snapshot.child('mobileNumber').value.toString(),
-      currentAddress: snapshot.child('currentAddress').value.toString(),
-      nearestLandmark: snapshot.child('nearestLandmark').value.toString(),
-      mukhtarName: snapshot.child('mukhtarName').value.toString(),
-      civilStatusDirectorate: snapshot.child('civilStatusDirectorate').value.toString(),
-      previousAddress: snapshot.child('previousAddress').value.toString(),
-      volunteerParticipationCount: snapshot.child('volunteerParticipationCount').value.toString(),
-      profession: snapshot.child('profession').value.toString(),
-      jobTitle: snapshot.child('jobTitle').value.toString(),
-      departmentName: snapshot.child('departmentName').value.toString(),
-      politicalAffiliation: snapshot.child('politicalAffiliation').value.toString(),
-      talentAndExperience: snapshot.child('talentAndExperience').value.toString(),
-      languages: snapshot.child('languages').value.toString(),
-      idCardNumber: snapshot.child('idCardNumber').value.toString(),
-      recordNumber: snapshot.child('recordNumber').value.toString(),
-      pageNumber: snapshot.child('pageNumber').value.toString(),
-      rationCardNumber: snapshot.child('rationCardNumber').value.toString(),
-      agentName: snapshot.child('agentName').value.toString(),
-      supplyCenterNumber: snapshot.child('supplyCenterNumber').value.toString(),
-      residenceCardNumber: snapshot.child('residenceCardNumber').value.toString(),
-      issuer: snapshot.child('issuer').value.toString(),
-      no: snapshot.child('no').value.toString(),
-      photoPath: snapshot.child('photoPath').value.toString(),
-      idFrontPath: snapshot.child('idFrontPath').value.toString(),
-      idBackPath: snapshot.child('idBackPath').value.toString(),
-      residenceFrontPath: snapshot.child('residenceFrontPath').value.toString(),
-      residenceBackPath: snapshot.child('residenceBackPath').value.toString(),
+      formNumber: getStringValue('formNumber'),
+      groupNameAndCode: getStringValue('groupNameAndCode'),
+      fullName: getStringValue('fullName'),
+      education: getStringValue('education'),
+      birthDate: getStringValue('birthDate'),
+      maritalStatus: getStringValue('maritalStatus'),
+      numberOfChildren: getStringValue('numberOfChildren'),
+      motherName: getStringValue('motherName'),
+      mobileNumber: getStringValue('mobileNumber'),
+      currentAddress: getStringValue('currentAddress'),
+      nearestLandmark: getStringValue('nearestLandmark'),
+      mukhtarName: getStringValue('mukhtarName'),
+      civilStatusDirectorate: getStringValue('civilStatusDirectorate'),
+      previousAddress: getStringValue('previousAddress'),
+      volunteerParticipationCount: getStringValue('volunteerParticipationCount'),
+      profession: getStringValue('profession'),
+      jobTitle: getStringValue('jobTitle'),
+      departmentName: getStringValue('departmentName'),
+      politicalAffiliation: getStringValue('politicalAffiliation'),
+      talentAndExperience: getStringValue('talentAndExperience'),
+      languages: getStringValue('languages'),
+      idCardNumber: getStringValue('idCardNumber'),
+      recordNumber: getStringValue('recordNumber'),
+      pageNumber: getStringValue('pageNumber'),
+      rationCardNumber: getStringValue('rationCardNumber'),
+      agentName: getStringValue('agentName'),
+      supplyCenterNumber: getStringValue('supplyCenterNumber'),
+      residenceCardNumber: getStringValue('residenceCardNumber'),
+      issuer: getStringValue('issuer'),
+      no: getStringValue('no'),
+      photoPath: getStringValue('photoPath'),
+      idFrontPath: getStringValue('idFrontPath'),
+      idBackPath: getStringValue('idBackPath'),
+      residenceFrontPath: getStringValue('residenceFrontPath'),
+      residenceBackPath: getStringValue('residenceBackPath'),
+      status: getStatus(),
     );
   }
 
@@ -162,6 +180,7 @@ class VolunteerForm {
       'idBackPath': idBackPath,
       'residenceFrontPath': residenceFrontPath,
       'residenceBackPath': residenceBackPath,
+      'status': status?.toString().split('.').last,
     };
   }
 }

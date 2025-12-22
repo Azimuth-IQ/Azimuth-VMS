@@ -76,7 +76,7 @@ class _FormMgmtState extends State<FormMgmt> {
       appBar: AppBar(title: const Text('Volunteer Forms Management'), elevation: 0),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Navigator.pushNamed(context, '/form-fill').then((_) => _loadForms());
+          Navigator.pushNamed(context, '/admin-form-fill').then((_) => _loadForms());
         },
         icon: const Icon(Icons.add),
         label: const Text('New Form'),
@@ -193,7 +193,7 @@ class _FormMgmtState extends State<FormMgmt> {
       child: InkWell(
         onTap: () {
           // Navigate to form details or edit page
-          Navigator.pushNamed(context, '/form-fill', arguments: form).then((_) => _loadForms());
+          Navigator.pushNamed(context, '/admin-form-fill', arguments: form).then((_) => _loadForms());
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(

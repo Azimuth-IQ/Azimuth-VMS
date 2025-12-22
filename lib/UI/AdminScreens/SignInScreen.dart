@@ -27,10 +27,16 @@ class SignInScreen extends StatelessWidget {
         //TODO: Implement Teamleader and Volunteer Dashboards
         //TODO: Implement Current User Provider
         if (systemUser.role == SystemUserRole.ADMIN) {
-          Navigator.pushNamed(context, '/admin-dashboard');
+          Navigator.pushReplacementNamed(context, '/admin-dashboard');
+        } else if (systemUser.role == SystemUserRole.TEAMLEADER) {
+          // Navigator.pushReplacementNamed(context, '/teamleaders-mgmt');
+        } else if (systemUser.role == SystemUserRole.VOLUNTEER) {
+          Navigator.pushReplacementNamed(context, '/volunteer-dashboard');
         }
       }
-    } else {}
+    } else {
+      print("No user is signed in.");
+    }
   }
 
   //SignIn
@@ -45,9 +51,12 @@ class SignInScreen extends StatelessWidget {
       print("Fetched user: ${systemUser?.name}");
       print("User role: ${systemUser?.role}");
       if (systemUser != null) {
-        //TODO: Implement Teamleader and Volunteer Dashboards
         if (systemUser.role == SystemUserRole.ADMIN) {
-          Navigator.pushNamed(context, '/admin-dashboard');
+          Navigator.pushReplacementNamed(context, '/admin-dashboard');
+        } else if (systemUser.role == SystemUserRole.TEAMLEADER) {
+          // Navigator.pushReplacementNamed(context, '/teamleaders-dashboard');
+        } else if (systemUser.role == SystemUserRole.VOLUNTEER) {
+          Navigator.pushReplacementNamed(context, '/volunteer-dashboard');
         }
       }
     } on FirebaseAuthException catch (e) {

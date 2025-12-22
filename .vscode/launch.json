@@ -14,7 +14,8 @@
       "name": "azimuth_vms (profile mode)",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "profile"
+      "flutterMode": "profile",
+      "args": ["--web-port=9090"]
     },
     {
       "name": "azimuth_vms (release mode)",

@@ -2,13 +2,15 @@ import 'package:azimuth_vms/Providers/AppProvider.dart';
 import 'package:azimuth_vms/Providers/EventsProvider.dart';
 import 'package:azimuth_vms/UI/AdminScreens/AdminDashboard.dart';
 import 'package:azimuth_vms/UI/AdminScreens/EventsMgmt.dart';
-import 'package:azimuth_vms/UI/AdminScreens/FormFillPage.dart';
+import 'package:azimuth_vms/UI/AdminScreens/FormFillPage.dart' as Admin;
 import 'package:azimuth_vms/UI/AdminScreens/FormMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/LocationsMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/SignInScreen.dart';
 import 'package:azimuth_vms/UI/AdminScreens/TeamsMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/TeamLeadersMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/VolunteersMgmt.dart';
+import 'package:azimuth_vms/UI/VolunteerScreens/VolunteersDashboard.dart';
+import 'package:azimuth_vms/UI/VolunteerScreens/FormFillPage.dart' as Volunteer;
 import 'package:azimuth_vms/firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -75,12 +77,15 @@ class MyApp extends StatelessWidget {
         routes: {
           '/sign-in': (context) => SignInScreen(),
           '/admin-dashboard': (context) => AdminDashboard(),
+          // '/teamleaders-dashboard': (context) => TeamLeadersDashboard(),
+          '/volunteer-dashboard': (context) => VolunteersDashboard(),
           '/locations-mgmt': (context) => LocationsMgmt(),
           '/teams-mgmt': (context) => TeamsMgmt(),
           '/event-mgmt': (context) => EventsMgmt(),
           '/volunteers-mgmt': (context) => VolunteersMgmt(),
           '/form-mgmt': (context) => FormMgmt(),
-          '/form-fill': (context) => FormFillPage(),
+          '/admin-form-fill': (context) => Admin.FormFillPage(),
+          '/form-fill': (context) => Volunteer.FormFillPage(),
         },
       ),
     );

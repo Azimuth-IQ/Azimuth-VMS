@@ -17,6 +17,7 @@ class AdminDashboard extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text('Admin Dashboard'),
         actions: [
           IconButton(
@@ -24,7 +25,7 @@ class AdminDashboard extends StatelessWidget {
             tooltip: 'Sign Out',
             onPressed: () {
               FirebaseAuth.instance.signOut();
-              Navigator.pushNamed(context, '/sign-in');
+              Navigator.pushReplacementNamed(context, '/sign-in');
             },
           ),
         ],
