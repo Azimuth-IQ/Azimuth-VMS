@@ -853,7 +853,7 @@ class _FormFillPageState extends State<FormFillPage> {
       } else if (label.contains('Residence Card - Back') || label.contains('بطاقة السكن - الوجه الخلفي')) {
         existingImageUrl = _formData!.residenceBackPath;
       }
-      
+
       hasExistingImage = existingImageUrl != null && existingImageUrl.isNotEmpty && existingImageUrl != 'null';
     }
 
@@ -943,9 +943,7 @@ class _FormFillPageState extends State<FormFillPage> {
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                                : null,
+                            value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes! : null,
                           ),
                         ),
                       );
