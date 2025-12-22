@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "224418209100",
+    "firebase_url": "https://volunteer-management-sys-1fedf-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "volunteer-management-sys-1fedf",
+    "storage_bucket": "volunteer-management-sys-1fedf.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:224418209100:android:d1447fb16facbccdfd03e9",
+        "android_client_info": {
+          "package_name": "com.example.azimuth_vms"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBz8FtgyV_WVoupy7BZilD_DwGNKlcLytA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

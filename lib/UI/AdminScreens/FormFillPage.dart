@@ -460,6 +460,8 @@ class _FormFillPageState extends State<FormFillPage> {
       final downloadUrl = await snapshot.ref.getDownloadURL();
 
       print('✓ Image uploaded successfully: $imageName -> $downloadUrl');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Image uploaded: $imageName')));
+
       return downloadUrl;
     } catch (e) {
       print('Error uploading image $imageName: $e');
@@ -837,18 +839,22 @@ class _FormFillPageState extends State<FormFillPage> {
   Widget _buildImageUploadCard(String label, Uint8List? imageData, VoidCallback onTap, IconData icon) {
     // Check if we're in edit mode and have an image path for this field
     bool hasExistingImage = false;
+    String? existingImageUrl;
+
     if (_isEditMode && _formData != null) {
       if (label.contains('User Photo') || label.contains('الصورة الشخصية')) {
-        hasExistingImage = _formData!.photoPath != null && _formData!.photoPath!.isNotEmpty && _formData!.photoPath != 'null';
+        existingImageUrl = _formData!.photoPath;
       } else if (label.contains('ID - Front') || label.contains('الهوية الوطنية - الوجه الأمامي')) {
-        hasExistingImage = _formData!.idFrontPath != null && _formData!.idFrontPath!.isNotEmpty && _formData!.idFrontPath != 'null';
+        existingImageUrl = _formData!.idFrontPath;
       } else if (label.contains('ID - Back') || label.contains('الهوية الوطنية - الوجه الخلفي')) {
-        hasExistingImage = _formData!.idBackPath != null && _formData!.idBackPath!.isNotEmpty && _formData!.idBackPath != 'null';
+        existingImageUrl = _formData!.idBackPath;
       } else if (label.contains('Residence Card - Front') || label.contains('بطاقة السكن - الوجه الأمامي')) {
-        hasExistingImage = _formData!.residenceFrontPath != null && _formData!.residenceFrontPath!.isNotEmpty && _formData!.residenceFrontPath != 'null';
+        existingImageUrl = _formData!.residenceFrontPath;
       } else if (label.contains('Residence Card - Back') || label.contains('بطاقة السكن - الوجه الخلفي')) {
-        hasExistingImage = _formData!.residenceBackPath != null && _formData!.residenceBackPath!.isNotEmpty && _formData!.residenceBackPath != 'null';
+        existingImageUrl = _formData!.residenceBackPath;
       }
+      
+      hasExistingImage = existingImageUrl != null && existingImageUrl.isNotEmpty && existingImageUrl != 'null';
     }
 
     return Container(
@@ -909,23 +915,53 @@ class _FormFillPageState extends State<FormFillPage> {
                 child: Image.memory(imageData, fit: BoxFit.cover),
               ),
             ),
-          ] else if (hasExistingImage) ...[
+          ] else if (hasExistingImage && existingImageUrl != null) ...[
             const SizedBox(width: 16),
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.blue.shade200),
-                borderRadius: BorderRadius.circular(8),
-                color: Colors.blue.shade50,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.image, color: Colors.blue.shade400, size: 32),
-                  const SizedBox(height: 4),
-                  Text('Saved', style: TextStyle(fontSize: 10, color: Colors.blue.shade700)),
-                ],
+            InkWell(
+              onTap: () {
+                // Open image in new tab
+                html.window.open(existingImageUrl!, '_blank');
+              },
+              child: Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blue.shade200),
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.blue.shade50,
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    existingImageUrl!,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Center(
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                                : null,
+                          ),
+                        ),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.broken_image, color: Colors.red.shade400, size: 24),
+                          const SizedBox(height: 4),
+                          Text('Error', style: TextStyle(fontSize: 8, color: Colors.red.shade700)),
+                        ],
+                      );
+                    },
+                  ),
+                ),
               ),
             ),
           ],

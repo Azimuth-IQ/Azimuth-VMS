@@ -49,5 +49,15 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(apiKey: 'AIzaSyC38DQ8KDYrnfChkVejZ8SDhBRaDlRKAyY', appId: '1:224418209100:web:cdb2150c84e7f4f8fd03e9', messagingSenderId: '224418209100', projectId: 'volunteer-management-sys-1fedf', authDomain: 'volunteer-management-sys-1fedf.firebaseapp.com', databaseURL: 'https://volunteer-management-sys-1fedf-default-rtdb.europe-west1.firebasedatabase.app', storageBucket: 'volunteer-management-sys-1fedf.firebasestorage.app', measurementId: 'G-XM1CDER018');
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyC38DQ8KDYrnfChkVejZ8SDhBRaDlRKAyY',
+    appId: '1:224418209100:web:cdb2150c84e7f4f8fd03e9',
+    messagingSenderId: '224418209100',
+    projectId: 'volunteer-management-sys-1fedf',
+    authDomain: 'volunteer-management-sys-1fedf.firebaseapp.com',
+    databaseURL: 'https://volunteer-management-sys-1fedf-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'volunteer-management-sys-1fedf.firebasestorage.app',
+    measurementId: 'G-XM1CDER018',
+  );
+
 }
