@@ -61,14 +61,6 @@ class _FormMgmtState extends State<FormMgmt> {
     return path != null && path.isNotEmpty && path != 'null';
   }
 
-  bool _hasAllDocuments(VolunteerForm form) {
-    return _hasDocument(form.photoPath) &&
-        _hasDocument(form.idFrontPath) &&
-        _hasDocument(form.idBackPath) &&
-        _hasDocument(form.residenceFrontPath) &&
-        _hasDocument(form.residenceBackPath);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -184,8 +176,6 @@ class _FormMgmtState extends State<FormMgmt> {
   }
 
   Widget _buildFormCard(VolunteerForm form) {
-    final hasAllDocs = _hasAllDocuments(form);
-
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 2,

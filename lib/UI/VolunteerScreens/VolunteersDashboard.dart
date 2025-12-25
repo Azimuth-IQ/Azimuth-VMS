@@ -74,9 +74,6 @@ class VolunteersDashboard extends StatelessWidget {
 
           case VolunteerFormStatus.Rejected2:
             return _buildRejectedScreen(context, 'Application Rejected', 'Your application was rejected at the final review stage.');
-
-          default:
-            return _buildErrorScreen(context, 'Unknown status. Please contact support.');
         }
       },
     );

@@ -54,10 +54,10 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
         eventId: widget.event.id,
         reason: _reasonController.text.trim(),
         status: LeaveRequestStatus.PENDING,
-        requestedAt: DateTime.now(),
+        requestedAt: DateTime.now().toIso8601String(),
       );
 
-      await LeaveRequestHelperFirebase.CreateLeaveRequest(leaveRequest);
+      LeaveRequestHelperFirebase().CreateLeaveRequest(leaveRequest);
 
       // Send notification to team leader
       String? teamLeaderId;
@@ -71,11 +71,10 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
       }
 
       if (teamLeaderId != null) {
-        await NotificationHelperFirebase.sendLeaveRequestNotificationToTeamLeader(
-          teamLeaderId: teamLeaderId,
-          volunteerName: volunteerPhone,
-          eventName: widget.event.name,
-          shiftTime: '${widget.shift.startTime} - ${widget.shift.endTime}',
+        NotificationHelperFirebase().sendLeaveRequestNotificationToTeamLeader(
+          teamLeaderId,
+          volunteerPhone,
+          widget.event.name,
         );
       }
 

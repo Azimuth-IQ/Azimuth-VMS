@@ -483,8 +483,10 @@ class _FormFillPageState extends State<FormFillPage> {
       final blob = html.Blob([_pdfBytes!], 'application/pdf');
       final url = html.Url.createObjectUrlFromBlob(blob);
       final anchor = html.AnchorElement(href: url)
-        ..setAttribute('download', 'volunteer_form_${DateTime.now().millisecondsSinceEpoch}.pdf')
-        ..click();
+        ..setAttribute('download', 'volunteer_form_${DateTime.now().millisecondsSinceEpoch}.pdf');
+      html.document.body?.append(anchor);
+      anchor.click();
+      anchor.remove();
       html.Url.revokeObjectUrl(url);
 
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تم تحميل ملف PDF بنجاح!')));
@@ -746,6 +748,7 @@ class _FormFillPageState extends State<FormFillPage> {
     );
   }
 
+  // ignore: unused_element
   Widget _buildForm() {
     return Form(
       key: _formKey,

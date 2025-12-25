@@ -368,7 +368,6 @@ class MapPickerDialog extends StatefulWidget {
 
 class _MapPickerDialogState extends State<MapPickerDialog> {
   late LatLng _selectedLocation;
-  GoogleMapController? _mapController;
 
   @override
   void initState() {
@@ -391,7 +390,7 @@ class _MapPickerDialogState extends State<MapPickerDialog> {
             Expanded(
               child: GoogleMap(
                 initialCameraPosition: CameraPosition(target: _selectedLocation, zoom: 14),
-                onMapCreated: (controller) => _mapController = controller,
+                onMapCreated: (controller) {},
                 onTap: (latLng) {
                   setState(() {
                     _selectedLocation = latLng;

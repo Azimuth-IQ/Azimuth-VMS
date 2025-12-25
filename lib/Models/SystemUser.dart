@@ -43,13 +43,6 @@ class SystemUser {
       vRating = VolunteerRating.fromDataSnapshot(snapshot.child('volunteerRating'));
     }
 
-    List<Notification>? notifications;
-    if (snapshot.child('notifications').exists) {
-      notifications = (snapshot.child('notifications').value as List<dynamic>?)
-          ?.map((n) => Notification.fromDataSnapshot(snapshot.child('notifications').child(n.toString())))
-          .toList();
-    }
-
     return SystemUser(
       id: snapshot.key ?? '',
       name: snapshot.child('name').value.toString(),
