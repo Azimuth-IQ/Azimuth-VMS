@@ -36,10 +36,12 @@ class ShiftAssignmentView extends StatefulWidget {
 class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
   Event? _selectedEvent;
   EventShift? _selectedShift;
+  String? _selectedLocationId; // Can be main locationId or sublocationId
+  bool _isMainLocation = true; // Track if it's main location or sublocation
 
-  void _assignVolunteersToShift(BuildContext context) async {
-    if (_selectedEvent == null || _selectedShift == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select an event and shift first')));
+  void _assignVolunteersToLocation(BuildContext context) async {
+    if (_selectedEvent == null || _selectedShift == null || _selectedLocationId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select an event, shift, and location first')));
       return;
     }
 
@@ -51,13 +53,33 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
       return;
     }
 
-    // Get team members from the shift
+    // Get team members based on selected location (main or sublocation)
     List<String> teamMemberIds = [];
-    if (_selectedShift!.teamId != null) {
-      final team = provider.teams.firstWhere((t) => t.id == _selectedShift!.teamId, orElse: () => throw Exception('Team not found'));
-      teamMemberIds = team.memberIds;
-    } else if (_selectedShift!.tempTeam != null) {
-      teamMemberIds = _selectedShift!.tempTeam!.memberIds;
+    if (_isMainLocation) {
+      // Main location team
+      if (_selectedShift!.teamId != null) {
+        try {
+          final team = provider.teams.firstWhere((t) => t.id == _selectedShift!.teamId);
+          teamMemberIds = team.memberIds;
+        } catch (e) {
+          print('Error finding team: $e');
+        }
+      } else if (_selectedShift!.tempTeam != null) {
+        teamMemberIds = _selectedShift!.tempTeam!.memberIds;
+      }
+    } else {
+      // Sublocation team
+      final subLoc = _selectedShift!.subLocations.firstWhere((sl) => sl.subLocationId == _selectedLocationId);
+      if (subLoc.teamId != null) {
+        try {
+          final team = provider.teams.firstWhere((t) => t.id == subLoc.teamId);
+          teamMemberIds = team.memberIds;
+        } catch (e) {
+          print('Error finding team: $e');
+        }
+      } else if (subLoc.tempTeam != null) {
+        teamMemberIds = subLoc.tempTeam!.memberIds;
+      }
     }
 
     // Show volunteer selection dialog
@@ -67,11 +89,11 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
     );
 
     if (selectedVolunteers != null && selectedVolunteers.isNotEmpty) {
-      await _createAssignments(context, selectedVolunteers, _selectedEvent!, _selectedShift!);
+      await _createAssignments(context, selectedVolunteers, _selectedEvent!, _selectedShift!, _isMainLocation ? null : _selectedLocationId);
     }
   }
 
-  Future<void> _createAssignments(BuildContext context, List<SystemUser> volunteers, Event event, EventShift shift) async {
+  Future<void> _createAssignments(BuildContext context, List<SystemUser> volunteers, Event event, EventShift shift, String? sublocationId) async {
     try {
       final user = FirebaseAuth.instance.currentUser;
       final currentUserPhone = user?.email?.split('@').first ?? '';
@@ -84,6 +106,7 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
           volunteerId: volunteer.phone,
           shiftId: shift.id,
           eventId: event.id,
+          sublocationId: sublocationId, // Include sublocation if selected
           status: ShiftAssignmentStatus.ASSIGNED,
           assignedBy: currentUserPhone,
           timestamp: DateTime.now().toIso8601String(),
@@ -91,15 +114,19 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
 
         helper.CreateShiftAssignment(assignment);
 
-        // Send notification to volunteer
-        notifHelper.sendVolunteerAssignmentNotification(volunteer.phone, event.name, '${shift.startTime} - ${shift.endTime}');
+        // Send notification to volunteer with location info
+        final locationInfo = sublocationId != null ? ' (Sublocation)' : '';
+        notifHelper.sendVolunteerAssignmentNotification(volunteer.phone, event.name, '${shift.startTime} - ${shift.endTime}$locationInfo');
       }
 
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Assigned ${volunteers.length} volunteers successfully')));
+      final locationMsg = sublocationId != null ? ' to sublocation' : '';
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Assigned ${volunteers.length} volunteers$locationMsg successfully')));
       setState(() {
         _selectedEvent = null;
         _selectedShift = null;
+        _selectedLocationId = null;
+        _isMainLocation = true;
       });
     } catch (e) {
       print('Error creating assignments: $e');
@@ -228,11 +255,79 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                             const Divider(),
                             Padding(
                               padding: const EdgeInsets.all(16),
-                              child: ElevatedButton.icon(
-                                onPressed: () => _assignVolunteersToShift(context),
-                                icon: const Icon(Icons.person_add),
-                                label: const Text('Assign Volunteers'),
-                                style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12)),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Text('Select Location', style: Theme.of(context).textTheme.titleMedium),
+                                  const SizedBox(height: 12),
+                                  Consumer<EventsProvider>(
+                                    builder: (context, provider, child) {
+                                      // Build location options
+                                      final mainLocation = provider.locations.firstWhere(
+                                        (loc) => loc.id == _selectedShift!.locationId,
+                                        orElse: () => Location(id: '', name: 'Unknown', description: '', latitude: '0', longitude: '0'),
+                                      );
+                                      
+                                      return DropdownButtonFormField<String>(
+                                        value: _selectedLocationId,
+                                        decoration: const InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                          labelText: 'Choose location to assign volunteers',
+                                        ),
+                                        hint: const Text('Select a location'),
+                                        items: [
+                                          // Main location
+                                          DropdownMenuItem(
+                                            value: _selectedShift!.locationId,
+                                            child: Row(
+                                              children: [
+                                                const Icon(Icons.location_on, size: 18, color: Colors.blue),
+                                                const SizedBox(width: 8),
+                                                Text('${mainLocation.name} (Main)'),
+                                              ],
+                                            ),
+                                          ),
+                                          // Sublocations
+                                          ..._selectedShift!.subLocations.map((subLoc) {
+                                            final subLocation = provider.locations
+                                                .expand((loc) => loc.subLocations ?? [])
+                                                .firstWhere(
+                                                  (sl) => sl.id == subLoc.subLocationId,
+                                                  orElse: () => Location(id: '', name: 'Unknown', description: '', latitude: '0', longitude: '0'),
+                                                );
+                                            return DropdownMenuItem(
+                                              value: subLoc.subLocationId,
+                                              child: Row(
+                                                children: [
+                                                  const Icon(Icons.subdirectory_arrow_right, size: 18, color: Colors.green),
+                                                  const SizedBox(width: 8),
+                                                  Text(subLocation.name),
+                                                ],
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ],
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _selectedLocationId = value;
+                                            _isMainLocation = value == _selectedShift!.locationId;
+                                          });
+                                        },
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(height: 16),
+                                  ElevatedButton.icon(
+                                    onPressed: _selectedLocationId == null ? null : () => _assignVolunteersToLocation(context),
+                                    icon: const Icon(Icons.person_add),
+                                    label: const Text('Assign Volunteers to Location'),
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                                      disabledBackgroundColor: Colors.grey[300],
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                             const Divider(),
@@ -258,7 +353,7 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                                         style: TextStyle(color: Colors.grey[600], fontStyle: FontStyle.italic),
                                       ),
                                     ],
-                                    
+
                                     // Show sublocation teams
                                     if (_selectedShift!.subLocations.isNotEmpty) ...[
                                       const SizedBox(height: 24),
@@ -269,9 +364,11 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                                       ..._selectedShift!.subLocations.map((subLoc) {
                                         final subLocation = provider.locations
                                             .expand((loc) => loc.subLocations ?? [])
-                                            .firstWhere((sl) => sl.id == subLoc.subLocationId, 
-                                                orElse: () => Location(id: '', name: 'Unknown', description: '', latitude: '0', longitude: '0'));
-                                        
+                                            .firstWhere(
+                                              (sl) => sl.id == subLoc.subLocationId,
+                                              orElse: () => Location(id: '', name: 'Unknown', description: '', latitude: '0', longitude: '0'),
+                                            );
+
                                         return Padding(
                                           padding: const EdgeInsets.only(bottom: 12),
                                           child: Column(
@@ -353,13 +450,19 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                 children: [
                   const Icon(Icons.error_outline, color: Colors.orange, size: 20),
                   const SizedBox(width: 8),
-                  const Text('Team Not Found', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange)),
+                  const Text(
+                    'Team Not Found',
+                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
+                  ),
                 ],
               ),
               const SizedBox(height: 8),
               Text('Team ID: $teamId', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
               const SizedBox(height: 4),
-              Text('This team may have been deleted or the data is inconsistent.', style: TextStyle(fontSize: 12, color: Colors.grey[600], fontStyle: FontStyle.italic)),
+              Text(
+                'This team may have been deleted or the data is inconsistent.',
+                style: TextStyle(fontSize: 12, color: Colors.grey[600], fontStyle: FontStyle.italic),
+              ),
             ],
           ),
         ),
