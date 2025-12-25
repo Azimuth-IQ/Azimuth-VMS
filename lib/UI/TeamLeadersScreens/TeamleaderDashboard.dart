@@ -4,6 +4,7 @@ import 'package:azimuth_vms/Helpers/TeamHelperFirebase.dart';
 import 'package:azimuth_vms/Models/Event.dart';
 import 'package:azimuth_vms/Models/SystemUser.dart';
 import 'package:azimuth_vms/Models/Team.dart';
+import 'package:azimuth_vms/UI/Widgets/ChangePasswordScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -103,13 +104,26 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
         title: const Text('Team Leader Dashboard'),
         actions: [
           IconButton(icon: const Icon(Icons.refresh), onPressed: _loadData),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            tooltip: 'Sign Out',
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-              Navigator.pushReplacementNamed(context, '/sign-in');
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.account_circle),
+            onSelected: (value) {
+              if (value == 'change_password') {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordScreen(userPhone: _currentUserPhone ?? '')));
+              } else if (value == 'logout') {
+                FirebaseAuth.instance.signOut();
+                Navigator.pushReplacementNamed(context, '/sign-in');
+              }
             },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'change_password',
+                child: Row(children: [Icon(Icons.lock_reset, size: 20), SizedBox(width: 8), Text('Change Password')]),
+              ),
+              const PopupMenuItem(
+                value: 'logout',
+                child: Row(children: [Icon(Icons.logout, size: 20), SizedBox(width: 8), Text('Sign Out')]),
+              ),
+            ],
           ),
         ],
       ),

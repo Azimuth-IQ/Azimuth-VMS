@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:azimuth_vms/Helpers/VolunteerFormHelperFirebase.dart';
+import 'package:azimuth_vms/Helpers/SystemUserHelperFirebase.dart';
 import 'package:azimuth_vms/Models/VolunteerForm.dart';
+import 'package:azimuth_vms/Models/SystemUser.dart';
 
 class FormMgmt extends StatefulWidget {
   const FormMgmt({super.key});
@@ -11,6 +13,7 @@ class FormMgmt extends StatefulWidget {
 
 class _FormMgmtState extends State<FormMgmt> {
   final VolunteerFormHelperFirebase _formHelper = VolunteerFormHelperFirebase();
+  final SystemUserHelperFirebase _userHelper = SystemUserHelperFirebase();
   List<VolunteerForm> _allForms = [];
   List<VolunteerForm> _filteredForms = [];
   bool _isLoading = false;
@@ -357,11 +360,52 @@ class _FormMgmtState extends State<FormMgmt> {
     }
   }
 
-  void _updateFormStatus(VolunteerForm form, VolunteerFormStatus newStatus) {
+  Future<void> _updateFormStatus(VolunteerForm form, VolunteerFormStatus newStatus) async {
     setState(() {
       form.status = newStatus;
     });
     _formHelper.UpdateForm(form);
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Status updated to ${_getStatusLabel(newStatus)}'), duration: const Duration(seconds: 2)));
+
+    // When approved, create SystemUser with VOLUNTEER role
+    if (newStatus == VolunteerFormStatus.Approved1 || newStatus == VolunteerFormStatus.Approved2) {
+      try {
+        // Check if user already exists
+        final existingUser = await _userHelper.GetSystemUserByPhone(form.mobileNumber!);
+
+        if (existingUser == null) {
+          // Create new SystemUser
+          final systemUser = SystemUser(
+            id: form.mobileNumber!,
+            phone: form.mobileNumber!,
+            name: form.fullName ?? 'Volunteer',
+            role: SystemUserRole.VOLUNTEER,
+            password: form.mobileNumber!, // Use phone as password
+          );
+
+          _userHelper.CreateSystemUser(systemUser);
+          print('SystemUser created for approved volunteer: ${form.mobileNumber}');
+
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('${_getStatusLabel(newStatus)} - Volunteer account created'), backgroundColor: Colors.green, duration: const Duration(seconds: 3)),
+            );
+          }
+        } else {
+          print('SystemUser already exists for: ${form.mobileNumber}');
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Status updated to ${_getStatusLabel(newStatus)}'), duration: const Duration(seconds: 2)));
+          }
+        }
+      } catch (e) {
+        print('Error creating SystemUser: $e');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Status updated but error creating account: $e'), backgroundColor: Colors.orange));
+        }
+      }
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Status updated to ${_getStatusLabel(newStatus)}'), duration: const Duration(seconds: 2)));
+      }
+    }
   }
 }

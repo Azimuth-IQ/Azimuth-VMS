@@ -441,9 +441,9 @@ class _FormFillPageState extends State<FormFillPage> {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Form updated successfully!')));
       }
     } else {
-      formHelper.CreateForm(_formData!);
+      await formHelper.CreateForm(_formData!);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Form created successfully!')));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Form created successfully! Volunteer can now login.')));
       }
     }
   }
@@ -482,8 +482,7 @@ class _FormFillPageState extends State<FormFillPage> {
     try {
       final blob = html.Blob([_pdfBytes!], 'application/pdf');
       final url = html.Url.createObjectUrlFromBlob(blob);
-      final anchor = html.AnchorElement(href: url)
-        ..setAttribute('download', 'volunteer_form_${DateTime.now().millisecondsSinceEpoch}.pdf');
+      final anchor = html.AnchorElement(href: url)..setAttribute('download', 'volunteer_form_${DateTime.now().millisecondsSinceEpoch}.pdf');
       html.document.body?.append(anchor);
       anchor.click();
       anchor.remove();

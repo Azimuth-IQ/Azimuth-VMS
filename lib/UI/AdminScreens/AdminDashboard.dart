@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../Providers/EventsProvider.dart';
 import '../../Models/Event.dart';
 import '../../Models/Location.dart';
+import '../Widgets/ChangePasswordScreen.dart';
 
 class AdminDashboard extends StatelessWidget {
   const AdminDashboard({super.key});
@@ -20,13 +21,26 @@ class AdminDashboard extends StatelessWidget {
         automaticallyImplyLeading: false,
         title: const Text('Admin Dashboard'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            tooltip: 'Sign Out',
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-              Navigator.pushReplacementNamed(context, '/sign-in');
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.account_circle),
+            onSelected: (value) {
+              if (value == 'change_password') {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordScreen(userPhone: user?.email?.split('@').first ?? '')));
+              } else if (value == 'logout') {
+                FirebaseAuth.instance.signOut();
+                Navigator.pushReplacementNamed(context, '/sign-in');
+              }
             },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'change_password',
+                child: Row(children: [Icon(Icons.lock_reset, size: 20), SizedBox(width: 8), Text('Change Password')]),
+              ),
+              const PopupMenuItem(
+                value: 'logout',
+                child: Row(children: [Icon(Icons.logout, size: 20), SizedBox(width: 8), Text('Sign Out')]),
+              ),
+            ],
           ),
         ],
       ),

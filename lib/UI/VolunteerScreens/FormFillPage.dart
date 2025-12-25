@@ -448,7 +448,7 @@ class _FormFillPageState extends State<FormFillPage> {
       }
     } else {
       // Create new form (status will be set to Sent by CreateForm)
-      formHelper.CreateForm(_formData!);
+      await formHelper.CreateForm(_formData!);
 
       // Now update status to Pending
       _formData!.status = VolunteerFormStatus.Pending;
@@ -496,8 +496,7 @@ class _FormFillPageState extends State<FormFillPage> {
     try {
       final blob = html.Blob([_pdfBytes!], 'application/pdf');
       final url = html.Url.createObjectUrlFromBlob(blob);
-      final anchor = html.AnchorElement(href: url)
-        ..setAttribute('download', 'volunteer_form_${DateTime.now().millisecondsSinceEpoch}.pdf');
+      final anchor = html.AnchorElement(href: url)..setAttribute('download', 'volunteer_form_${DateTime.now().millisecondsSinceEpoch}.pdf');
       html.document.body?.append(anchor);
       anchor.click();
       anchor.remove();

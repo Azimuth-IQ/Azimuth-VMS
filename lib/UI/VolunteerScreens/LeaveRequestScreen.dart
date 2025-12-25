@@ -71,11 +71,7 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
       }
 
       if (teamLeaderId != null) {
-        NotificationHelperFirebase().sendLeaveRequestNotificationToTeamLeader(
-          teamLeaderId,
-          volunteerPhone,
-          widget.event.name,
-        );
+        NotificationHelperFirebase().sendLeaveRequestNotificationToTeamLeader(teamLeaderId, volunteerPhone, widget.event.name);
       }
 
       if (mounted) {

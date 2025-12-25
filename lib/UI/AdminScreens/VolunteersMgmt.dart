@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:azimuth_vms/Models/SystemUser.dart';
+import 'package:azimuth_vms/Models/Team.dart';
 import 'package:azimuth_vms/Providers/VolunteersProvider.dart';
+import 'package:azimuth_vms/Providers/TeamsProvider.dart';
 import 'package:provider/provider.dart';
 
 class VolunteersMgmt extends StatelessWidget {
@@ -8,7 +10,13 @@ class VolunteersMgmt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(create: (_) => VolunteersProvider()..loadVolunteers(), child: const VolunteersMgmtView());
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => VolunteersProvider()..loadVolunteers()),
+        ChangeNotifierProvider(create: (_) => TeamsProvider()..loadTeams()),
+      ],
+      child: const VolunteersMgmtView(),
+    );
   }
 }
 
@@ -32,6 +40,35 @@ class VolunteersMgmtView extends StatelessWidget {
         provider.updateVolunteer(result);
       }
     }
+  }
+
+  void _assignTeam(BuildContext context, SystemUser volunteer, String? teamId) {
+    final provider = context.read<VolunteersProvider>();
+    final updatedVolunteer = SystemUser(
+      id: volunteer.id,
+      name: volunteer.name,
+      phone: volunteer.phone,
+      password: volunteer.password,
+      role: volunteer.role,
+      teamId: teamId,
+      volunteerForm: volunteer.volunteerForm,
+      volunteerRating: volunteer.volunteerRating,
+      notifications: volunteer.notifications,
+    );
+    provider.updateVolunteer(updatedVolunteer);
+
+    final teamName = teamId != null
+        ? context
+              .read<TeamsProvider>()
+              .teams
+              .firstWhere(
+                (t) => t.id == teamId,
+                orElse: () => Team(id: '', name: 'Unknown', teamLeaderId: '', memberIds: []),
+              )
+              .name
+        : 'No team';
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Assigned ${volunteer.name} to $teamName'), backgroundColor: Colors.green));
   }
 
   @override
@@ -75,6 +112,7 @@ class VolunteersMgmtView extends StatelessWidget {
                     return VolunteerTile(
                       volunteer: volunteer,
                       onEdit: () => _showVolunteerForm(context, volunteer: volunteer),
+                      onTeamAssign: (teamId) => _assignTeam(context, volunteer, teamId),
                     );
                   },
                 ),
@@ -88,8 +126,9 @@ class VolunteersMgmtView extends StatelessWidget {
 class VolunteerTile extends StatelessWidget {
   final SystemUser volunteer;
   final VoidCallback onEdit;
+  final Function(String?) onTeamAssign;
 
-  const VolunteerTile({super.key, required this.volunteer, required this.onEdit});
+  const VolunteerTile({super.key, required this.volunteer, required this.onEdit, required this.onTeamAssign});
 
   @override
   Widget build(BuildContext context) {
@@ -124,12 +163,94 @@ class VolunteerTile extends StatelessWidget {
                         Text(volunteer.phone, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
                       ],
                     ),
+                    const SizedBox(height: 4),
+                    Consumer<TeamsProvider>(
+                      builder: (context, teamsProvider, child) {
+                        final team = volunteer.teamId != null
+                            ? teamsProvider.teams.firstWhere(
+                                (t) => t.id == volunteer.teamId,
+                                orElse: () => Team(id: '', name: 'Unknown', teamLeaderId: '', memberIds: []),
+                              )
+                            : null;
+                        return Row(
+                          children: [
+                            Icon(Icons.groups, size: 14, color: team != null ? Colors.green : Colors.grey[600]),
+                            const SizedBox(width: 4),
+                            Text(
+                              team != null ? team.name : 'No team assigned',
+                              style: TextStyle(fontSize: 14, color: team != null ? Colors.green : Colors.grey[600], fontStyle: team == null ? FontStyle.italic : null),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
-              IconButton(icon: const Icon(Icons.edit_outlined), onPressed: onEdit, color: Colors.blue),
+              PopupMenuButton<String>(
+                icon: const Icon(Icons.more_vert),
+                onSelected: (value) {
+                  if (value == 'edit') {
+                    onEdit();
+                  } else if (value == 'assign') {
+                    _showTeamAssignDialog(context);
+                  }
+                },
+                itemBuilder: (context) => [
+                  const PopupMenuItem(
+                    value: 'edit',
+                    child: Row(children: [Icon(Icons.edit, size: 20), SizedBox(width: 8), Text('Edit')]),
+                  ),
+                  const PopupMenuItem(
+                    value: 'assign',
+                    child: Row(children: [Icon(Icons.group_add, size: 20), SizedBox(width: 8), Text('Assign Team')]),
+                  ),
+                ],
+              ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  void _showTeamAssignDialog(BuildContext context) {
+    final teamsProvider = context.read<TeamsProvider>();
+    String? selectedTeamId = volunteer.teamId;
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: const Text('Assign Team'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Select a team for ${volunteer.name}:'),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                value: selectedTeamId,
+                decoration: const InputDecoration(labelText: 'Team', border: OutlineInputBorder()),
+                items: [
+                  const DropdownMenuItem(value: null, child: Text('No team')),
+                  ...teamsProvider.teams.map((team) => DropdownMenuItem(value: team.id, child: Text(team.name))),
+                ],
+                onChanged: (value) {
+                  setState(() => selectedTeamId = value);
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+            ElevatedButton(
+              onPressed: () {
+                onTeamAssign(selectedTeamId);
+                Navigator.pop(context);
+              },
+              child: const Text('Assign'),
+            ),
+          ],
         ),
       ),
     );

@@ -10,12 +10,23 @@ class SystemUser {
   String phone;
   String? password;
   SystemUserRole role;
+  String? teamId; // Team assignment for volunteers
   VolunteerForm? volunteerForm; // Nullable for non-volunteer roles
   VolunteerRating? volunteerRating; // Nullable for non-volunteer roles
   List<Notification>? notifications;
 
   //2- Constructor
-  SystemUser({required this.id, required this.name, required this.phone, this.password, required this.role, this.volunteerForm, this.volunteerRating, this.notifications});
+  SystemUser({
+    required this.id,
+    required this.name,
+    required this.phone,
+    this.password,
+    required this.role,
+    this.teamId,
+    this.volunteerForm,
+    this.volunteerRating,
+    this.notifications,
+  });
 
   //3- ToJson
   Map<String, dynamic> toJson() {
@@ -25,6 +36,7 @@ class SystemUser {
       'phone': phone,
       'password': password,
       'role': role.toString().split('.').last,
+      'teamId': teamId,
       'volunteerForm': volunteerForm?.toJson(),
       'volunteerRating': volunteerRating?.toJson(),
       'notifications': notifications?.map((n) => n.toJson()).toList(),
@@ -49,6 +61,7 @@ class SystemUser {
       phone: snapshot.child('phone').value.toString(),
       password: snapshot.child('password').value?.toString(),
       role: SystemUserRole.values.firstWhere((e) => e.toString() == 'SystemUserRole.${snapshot.child('role').value}', orElse: () => SystemUserRole.VOLUNTEER),
+      teamId: snapshot.child('teamId').value?.toString(),
       volunteerForm: vForm,
       volunteerRating: vRating,
     );

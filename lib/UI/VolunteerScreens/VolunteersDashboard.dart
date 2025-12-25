@@ -1,5 +1,6 @@
 import 'package:azimuth_vms/Helpers/VolunteerFormHelperFirebase.dart';
 import 'package:azimuth_vms/Models/VolunteerForm.dart';
+import 'package:azimuth_vms/UI/Widgets/ChangePasswordScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -109,18 +110,51 @@ class VolunteersDashboard extends StatelessWidget {
   }
 
   Widget _buildApprovedDashboard(BuildContext context, VolunteerForm form, String title, String message, {bool isFullyApproved = false}) {
+    final userPhone = FirebaseAuth.instance.currentUser?.email?.split('@').first ?? '';
+    
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text('Volunteer Dashboard'),
         backgroundColor: Colors.green,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-              Navigator.pushReplacementNamed(context, '/sign-in');
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.account_circle),
+            onSelected: (value) {
+              if (value == 'change_password') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChangePasswordScreen(userPhone: userPhone),
+                  ),
+                );
+              } else if (value == 'logout') {
+                FirebaseAuth.instance.signOut();
+                Navigator.pushReplacementNamed(context, '/sign-in');
+              }
             },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'change_password',
+                child: Row(
+                  children: [
+                    Icon(Icons.lock_reset, size: 20),
+                    SizedBox(width: 8),
+                    Text('Change Password'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'logout',
+                child: Row(
+                  children: [
+                    Icon(Icons.logout, size: 20),
+                    SizedBox(width: 8),
+                    Text('Sign Out'),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
