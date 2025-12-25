@@ -17,7 +17,7 @@ class VolunteerFormHelperFirebase {
     // Create Firebase Auth user so volunteer can login
     try {
       await auth.createUserWithEmailAndPassword(
-        email: "${form.mobileNumber}@azimuth_vms.com",
+        email: "${form.mobileNumber}@azimuth-vms.com",
         password: form.mobileNumber!, // Use phone as default password
       );
       print('Firebase Auth created for volunteer: ${form.mobileNumber}');

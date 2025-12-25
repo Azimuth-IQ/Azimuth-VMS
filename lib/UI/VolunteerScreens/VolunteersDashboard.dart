@@ -111,7 +111,7 @@ class VolunteersDashboard extends StatelessWidget {
 
   Widget _buildApprovedDashboard(BuildContext context, VolunteerForm form, String title, String message, {bool isFullyApproved = false}) {
     final userPhone = FirebaseAuth.instance.currentUser?.email?.split('@').first ?? '';
-    
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -122,12 +122,7 @@ class VolunteersDashboard extends StatelessWidget {
             icon: const Icon(Icons.account_circle),
             onSelected: (value) {
               if (value == 'change_password') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChangePasswordScreen(userPhone: userPhone),
-                  ),
-                );
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordScreen(userPhone: userPhone)));
               } else if (value == 'logout') {
                 FirebaseAuth.instance.signOut();
                 Navigator.pushReplacementNamed(context, '/sign-in');
@@ -136,23 +131,11 @@ class VolunteersDashboard extends StatelessWidget {
             itemBuilder: (context) => [
               const PopupMenuItem(
                 value: 'change_password',
-                child: Row(
-                  children: [
-                    Icon(Icons.lock_reset, size: 20),
-                    SizedBox(width: 8),
-                    Text('Change Password'),
-                  ],
-                ),
+                child: Row(children: [Icon(Icons.lock_reset, size: 20), SizedBox(width: 8), Text('Change Password')]),
               ),
               const PopupMenuItem(
                 value: 'logout',
-                child: Row(
-                  children: [
-                    Icon(Icons.logout, size: 20),
-                    SizedBox(width: 8),
-                    Text('Sign Out'),
-                  ],
-                ),
+                child: Row(children: [Icon(Icons.logout, size: 20), SizedBox(width: 8), Text('Sign Out')]),
               ),
             ],
           ),

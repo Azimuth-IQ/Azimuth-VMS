@@ -245,18 +245,62 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                                     Text('Team Assignment Info', style: Theme.of(context).textTheme.titleMedium),
                                     const SizedBox(height: 16),
                                     if (_selectedShift!.teamId != null) ...[
-                                      const Text('Permanent Team:'),
+                                      const Text('Main Location - Permanent Team:', style: TextStyle(fontWeight: FontWeight.w500)),
                                       const SizedBox(height: 8),
                                       _buildTeamInfo(provider, _selectedShift!.teamId!),
                                     ] else if (_selectedShift!.tempTeam != null) ...[
-                                      const Text('Temporary Team:'),
+                                      const Text('Main Location - Temporary Team:', style: TextStyle(fontWeight: FontWeight.w500)),
                                       const SizedBox(height: 8),
                                       _buildTempTeamInfo(provider, _selectedShift!.tempTeam!),
                                     ] else ...[
                                       Text(
-                                        'No team assigned to this shift',
+                                        'No team assigned to main location',
                                         style: TextStyle(color: Colors.grey[600], fontStyle: FontStyle.italic),
                                       ),
+                                    ],
+                                    
+                                    // Show sublocation teams
+                                    if (_selectedShift!.subLocations.isNotEmpty) ...[
+                                      const SizedBox(height: 24),
+                                      const Divider(),
+                                      const SizedBox(height: 16),
+                                      Text('Sub-Locations (${_selectedShift!.subLocations.length}):', style: Theme.of(context).textTheme.titleMedium),
+                                      const SizedBox(height: 12),
+                                      ..._selectedShift!.subLocations.map((subLoc) {
+                                        final subLocation = provider.locations
+                                            .expand((loc) => loc.subLocations ?? [])
+                                            .firstWhere((sl) => sl.id == subLoc.subLocationId, 
+                                                orElse: () => Location(id: '', name: 'Unknown', description: '', latitude: '0', longitude: '0'));
+                                        
+                                        return Padding(
+                                          padding: const EdgeInsets.only(bottom: 12),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  const Icon(Icons.location_on, size: 16, color: Colors.blue),
+                                                  const SizedBox(width: 4),
+                                                  Text(subLocation.name, style: const TextStyle(fontWeight: FontWeight.w500)),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 8),
+                                              if (subLoc.teamId != null)
+                                                _buildTeamInfo(provider, subLoc.teamId!)
+                                              else if (subLoc.tempTeam != null)
+                                                _buildTempTeamInfo(provider, subLoc.tempTeam!)
+                                              else
+                                                Padding(
+                                                  padding: const EdgeInsets.only(left: 20),
+                                                  child: Text(
+                                                    'No team assigned',
+                                                    style: TextStyle(color: Colors.grey[600], fontStyle: FontStyle.italic, fontSize: 12),
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
                                     ],
                                   ],
                                 ),
@@ -274,28 +318,53 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
   }
 
   Widget _buildTeamInfo(EventsProvider provider, String teamId) {
-    final team = provider.teams.firstWhere((t) => t.id == teamId, orElse: () => throw Exception('Team not found'));
+    try {
+      final team = provider.teams.firstWhere((t) => t.id == teamId);
 
-    final leader = provider.systemUsers.firstWhere(
-      (u) => u.phone == team.teamLeaderId,
-      orElse: () => SystemUser(id: '', name: 'Unknown', phone: team.teamLeaderId, role: SystemUserRole.TEAMLEADER),
-    );
+      final leader = provider.systemUsers.firstWhere(
+        (u) => u.phone == team.teamLeaderId,
+        orElse: () => SystemUser(id: '', name: 'Unknown', phone: team.teamLeaderId, role: SystemUserRole.TEAMLEADER),
+      );
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(team.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            Row(children: [const Icon(Icons.person, size: 16), const SizedBox(width: 4), Text('Leader: ${leader.name}')]),
-            const SizedBox(height: 4),
-            Row(children: [const Icon(Icons.group, size: 16), const SizedBox(width: 4), Text('Members: ${team.memberIds.length}')]),
-          ],
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(team.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Row(children: [const Icon(Icons.person, size: 16), const SizedBox(width: 4), Text('Leader: ${leader.name}')]),
+              const SizedBox(height: 4),
+              Row(children: [const Icon(Icons.group, size: 16), const SizedBox(width: 4), Text('Members: ${team.memberIds.length}')]),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    } catch (e) {
+      print('Error finding team $teamId: $e');
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.error_outline, color: Colors.orange, size: 20),
+                  const SizedBox(width: 8),
+                  const Text('Team Not Found', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange)),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text('Team ID: $teamId', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+              const SizedBox(height: 4),
+              Text('This team may have been deleted or the data is inconsistent.', style: TextStyle(fontSize: 12, color: Colors.grey[600], fontStyle: FontStyle.italic)),
+            ],
+          ),
+        ),
+      );
+    }
   }
 
   Widget _buildTempTeamInfo(EventsProvider provider, TempTeam tempTeam) {
