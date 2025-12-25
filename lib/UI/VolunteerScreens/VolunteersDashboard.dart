@@ -20,8 +20,6 @@ class VolunteersDashboard extends StatelessWidget {
   Future<void> _handleFormFill(BuildContext context, VolunteerForm form) async {
     final result = await Navigator.pushNamed(context, '/form-fill', arguments: form);
     if (result == true && context.mounted) {
-      // Form was filled successfully, refresh the dashboard
-      // Status update to Pending is handled by FormFillPage
       Navigator.pushReplacementNamed(context, '/volunteer-dashboard');
     }
   }
@@ -134,43 +132,13 @@ class VolunteersDashboard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Card(
-              color: Colors.green.shade50,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  children: [
-                    Icon(Icons.check_circle, size: 48, color: Colors.green),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 8),
-                          Text(message),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            const Text('Your Information', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 16),
-            _buildInfoCard('Full Name', form.fullName),
-            _buildInfoCard('Mobile Number', form.mobileNumber),
-            _buildInfoCard('Form Number', form.formNumber),
-            _buildInfoCard('Group', form.groupNameAndCode),
-            _buildInfoCard('Current Address', form.currentAddress),
+            _buildInfoCard('Welcome ', form.fullName),
             if (isFullyApproved) ...[
               const SizedBox(height: 24),
               const Text('Quick Actions', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
-              _buildActionCard(context, 'View Events', 'Browse and register for volunteer events', Icons.event, Colors.blue, () {
-                // TODO: Navigate to events page
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Events feature coming soon')));
+              _buildActionCard(context, 'My Events', 'View your assigned events and shifts', Icons.event, Colors.blue, () {
+                Navigator.pushNamed(context, '/volunteer/events');
               }),
               _buildActionCard(context, 'My Schedule', 'View your volunteer schedule', Icons.calendar_today, Colors.purple, () {
                 // TODO: Navigate to schedule page
@@ -192,7 +160,11 @@ class VolunteersDashboard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
         title: Text(label, style: const TextStyle(fontSize: 14, color: Colors.grey)),
-        subtitle: Text(value ?? 'N/A', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+        subtitle: Text(
+          value ?? 'N/A',
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }

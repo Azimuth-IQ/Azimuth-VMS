@@ -121,7 +121,7 @@ class _FormMgmtState extends State<FormMgmt> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: DropdownButtonFormField<VolunteerFormStatus?>(
-                        value: _selectedStatus,
+                        initialValue: _selectedStatus,
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                           border: OutlineInputBorder(

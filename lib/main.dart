@@ -7,11 +7,23 @@ import 'package:azimuth_vms/UI/AdminScreens/FormMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/LocationsMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/SignInScreen.dart';
 import 'package:azimuth_vms/UI/AdminScreens/TeamsMgmt.dart';
-import 'package:azimuth_vms/UI/AdminScreens/TeamLeadersMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/VolunteersMgmt.dart';
+import 'package:azimuth_vms/UI/AdminScreens/ShiftAssignmentScreen.dart';
+import 'package:azimuth_vms/UI/AdminScreens/PresenceCheckScreen.dart';
+import 'package:azimuth_vms/UI/TeamLeadersScreens/TeamleaderDashboard.dart';
+import 'package:azimuth_vms/UI/TeamLeadersScreens/TeamLeaderShiftManagementScreen.dart';
+import 'package:azimuth_vms/UI/TeamLeadersScreens/LeaveRequestManagementScreen.dart';
+import 'package:azimuth_vms/UI/TeamLeadersScreens/TeamLeaderPresenceCheckScreen.dart';
 import 'package:azimuth_vms/UI/VolunteerScreens/VolunteersDashboard.dart';
 import 'package:azimuth_vms/UI/VolunteerScreens/FormFillPage.dart' as Volunteer;
+import 'package:azimuth_vms/UI/VolunteerScreens/VolunteerEventDetailsScreen.dart';
+import 'package:azimuth_vms/UI/VolunteerScreens/LeaveRequestScreen.dart';
 import 'package:azimuth_vms/firebase_options.dart';
+import 'package:azimuth_vms/Helpers/SystemUserHelperFirebase.dart';
+import 'package:azimuth_vms/Models/SystemUser.dart';
+import 'package:azimuth_vms/Models/Event.dart';
+import 'package:azimuth_vms/Models/ShiftAssignment.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -74,20 +86,214 @@ class MyApp extends StatelessWidget {
           floatingActionButtonTheme: const FloatingActionButtonThemeData(elevation: 4, shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16)))),
         ),
         home: SignInScreen(),
-        routes: {
-          '/sign-in': (context) => SignInScreen(),
-          '/admin-dashboard': (context) => AdminDashboard(),
-          // '/teamleaders-dashboard': (context) => TeamLeadersDashboard(),
-          '/volunteer-dashboard': (context) => VolunteersDashboard(),
-          '/locations-mgmt': (context) => LocationsMgmt(),
-          '/teams-mgmt': (context) => TeamsMgmt(),
-          '/event-mgmt': (context) => EventsMgmt(),
-          '/volunteers-mgmt': (context) => VolunteersMgmt(),
-          '/form-mgmt': (context) => FormMgmt(),
-          '/admin-form-fill': (context) => Admin.FormFillPage(),
-          '/form-fill': (context) => Volunteer.FormFillPage(),
-        },
+        onGenerateRoute: (settings) => _generateRoute(settings),
       ),
     );
+  }
+
+  Route<dynamic>? _generateRoute(RouteSettings settings) {
+    // Public routes (no authentication required)
+    if (settings.name == '/sign-in' || settings.name == '/') {
+      return MaterialPageRoute(builder: (_) => SignInScreen());
+    }
+
+    // Protected routes - require authentication
+    return MaterialPageRoute(
+      builder: (_) => AuthGuard(routeName: settings.name ?? '', arguments: settings.arguments),
+    );
+  }
+}
+
+class AuthGuard extends StatefulWidget {
+  final String routeName;
+  final Object? arguments;
+
+  const AuthGuard({super.key, required this.routeName, this.arguments});
+
+  @override
+  State<AuthGuard> createState() => _AuthGuardState();
+}
+
+class _AuthGuardState extends State<AuthGuard> {
+  bool _isLoading = true;
+  Widget? _authorizedWidget;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAuthorization();
+  }
+
+  Future<void> _checkAuthorization() async {
+    try {
+      // Check if user is authenticated
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        print('No user authenticated, redirecting to sign-in');
+        if (mounted) {
+          setState(() {
+            _authorizedWidget = SignInScreen();
+            _isLoading = false;
+          });
+        }
+        return;
+      }
+
+      // Get user role from database
+      final phone = user.email!.split('@').first;
+      final systemUserHelper = SystemUserHelperFirebase();
+      final systemUser = await systemUserHelper.GetSystemUserByPhone(phone);
+
+      if (systemUser == null) {
+        print('User not found in database');
+        if (mounted) {
+          setState(() {
+            _authorizedWidget = _buildUnauthorizedScreen('User not found');
+            _isLoading = false;
+          });
+        }
+        return;
+      }
+
+      // Check if user has permission for this route
+      final authorizedWidget = _getAuthorizedWidget(widget.routeName, systemUser.role, widget.arguments);
+
+      if (mounted) {
+        setState(() {
+          _authorizedWidget = authorizedWidget;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      print('Error checking authorization: $e');
+      if (mounted) {
+        setState(() {
+          _authorizedWidget = _buildUnauthorizedScreen('Authorization error');
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  Widget? _getAuthorizedWidget(String routeName, SystemUserRole role, Object? arguments) {
+    // Define route permissions
+    const adminRoutes = [
+      '/admin-dashboard',
+      '/locations-mgmt',
+      '/teams-mgmt',
+      '/event-mgmt',
+      '/volunteers-mgmt',
+      '/form-mgmt',
+      '/admin-form-fill',
+      '/shift-assignment',
+      '/presence-check-admin',
+    ];
+
+    const teamLeaderRoutes = ['/teamleaders-dashboard', '/teamleader-shift-management', '/leave-request-management', '/presence-check-teamleader'];
+
+    const volunteerRoutes = ['/volunteer-dashboard', '/form-fill', '/volunteer/events', '/volunteer/leave-request'];
+
+    // Check permissions
+    bool hasPermission = false;
+
+    if (role == SystemUserRole.ADMIN && adminRoutes.contains(routeName)) {
+      hasPermission = true;
+    } else if (role == SystemUserRole.TEAMLEADER && teamLeaderRoutes.contains(routeName)) {
+      hasPermission = true;
+    } else if (role == SystemUserRole.VOLUNTEER && volunteerRoutes.contains(routeName)) {
+      hasPermission = true;
+    }
+
+    if (!hasPermission) {
+      print('User role $role does not have permission for route $routeName');
+      return _buildUnauthorizedScreen('Access denied');
+    }
+
+    // Return the appropriate widget based on route
+    switch (routeName) {
+      // Admin routes
+      case '/admin-dashboard':
+        return const AdminDashboard();
+      case '/locations-mgmt':
+        return const LocationsMgmt();
+      case '/teams-mgmt':
+        return const TeamsMgmt();
+      case '/event-mgmt':
+        return const EventsMgmt();
+      case '/volunteers-mgmt':
+        return const VolunteersMgmt();
+      case '/form-mgmt':
+        return const FormMgmt();
+      case '/admin-form-fill':
+        return Admin.FormFillPage();
+      case '/shift-assignment':
+        return const ShiftAssignmentScreen();
+      case '/presence-check-admin':
+        return const PresenceCheckScreen();
+
+      // Team Leader routes
+      case '/teamleaders-dashboard':
+        return const TeamleaderDashboard();
+      case '/teamleader-shift-management':
+        return const TeamLeaderShiftManagementScreen();
+      case '/leave-request-management':
+        return const LeaveRequestManagementScreen();
+      case '/presence-check-teamleader':
+        return const TeamLeaderPresenceCheckScreen();
+
+      // Volunteer routes
+      case '/volunteer-dashboard':
+        return const VolunteersDashboard();
+      case '/form-fill':
+        return Volunteer.FormFillPage();
+      case '/volunteer/events':
+        return const VolunteerEventDetailsScreen();
+      case '/volunteer/leave-request':
+        if (arguments is Map<String, dynamic>) {
+          return LeaveRequestScreen(event: arguments['event'] as Event, shift: arguments['shift'] as EventShift, assignment: arguments['assignment'] as ShiftAssignment);
+        }
+        return _buildUnauthorizedScreen('Invalid arguments');
+
+      default:
+        return _buildUnauthorizedScreen('Route not found');
+    }
+  }
+
+  Widget _buildUnauthorizedScreen(String message) {
+    return Scaffold(
+      appBar: AppBar(automaticallyImplyLeading: false, title: const Text('Access Denied')),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.block, size: 80, color: Colors.red),
+              const SizedBox(height: 24),
+              const Text('Access Denied', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              Text(message, style: const TextStyle(fontSize: 16), textAlign: TextAlign.center),
+              const SizedBox(height: 32),
+              ElevatedButton(
+                onPressed: () {
+                  FirebaseAuth.instance.signOut();
+                  Navigator.pushReplacementNamed(context, '/sign-in');
+                },
+                child: const Text('Sign In'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    return _authorizedWidget ?? _buildUnauthorizedScreen('Unknown error');
   }
 }

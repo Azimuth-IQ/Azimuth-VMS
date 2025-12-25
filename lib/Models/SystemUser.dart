@@ -1,3 +1,4 @@
+import 'package:azimuth_vms/Models/Notification.dart';
 import 'package:azimuth_vms/Models/VolunteerForm.dart';
 import 'package:azimuth_vms/Models/VolunteerRating.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -11,9 +12,10 @@ class SystemUser {
   SystemUserRole role;
   VolunteerForm? volunteerForm; // Nullable for non-volunteer roles
   VolunteerRating? volunteerRating; // Nullable for non-volunteer roles
+  List<Notification>? notifications;
 
   //2- Constructor
-  SystemUser({required this.id, required this.name, required this.phone, this.password, required this.role, this.volunteerForm, this.volunteerRating});
+  SystemUser({required this.id, required this.name, required this.phone, this.password, required this.role, this.volunteerForm, this.volunteerRating, this.notifications});
 
   //3- ToJson
   Map<String, dynamic> toJson() {
@@ -25,6 +27,7 @@ class SystemUser {
       'role': role.toString().split('.').last,
       'volunteerForm': volunteerForm?.toJson(),
       'volunteerRating': volunteerRating?.toJson(),
+      'notifications': notifications?.map((n) => n.toJson()).toList(),
     };
   }
 
@@ -40,12 +43,19 @@ class SystemUser {
       vRating = VolunteerRating.fromDataSnapshot(snapshot.child('volunteerRating'));
     }
 
+    List<Notification>? notifications;
+    if (snapshot.child('notifications').exists) {
+      notifications = (snapshot.child('notifications').value as List<dynamic>?)
+          ?.map((n) => Notification.fromDataSnapshot(snapshot.child('notifications').child(n.toString())))
+          .toList();
+    }
+
     return SystemUser(
       id: snapshot.key ?? '',
       name: snapshot.child('name').value.toString(),
       phone: snapshot.child('phone').value.toString(),
       password: snapshot.child('password').value?.toString(),
-      role: SystemUserRole.values.firstWhere((e) => e.toString() == 'SystemUserRole.' + snapshot.child('role').value.toString(), orElse: () => SystemUserRole.VOLUNTEER),
+      role: SystemUserRole.values.firstWhere((e) => e.toString() == 'SystemUserRole.${snapshot.child('role').value}', orElse: () => SystemUserRole.VOLUNTEER),
       volunteerForm: vForm,
       volunteerRating: vRating,
     );

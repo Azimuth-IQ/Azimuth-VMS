@@ -197,6 +197,7 @@ class EventFormDialog extends StatelessWidget {
         monthlyDay: provider.monthlyDay,
         yearlyDay: provider.yearlyDay,
         yearlyMonth: provider.yearlyMonth,
+        presenceCheckPermissions: provider.presenceCheckPermissions,
         shifts: provider.shifts,
       );
 
@@ -292,11 +293,28 @@ class EventFormDialog extends StatelessWidget {
                               ],
                             ),
                             const SizedBox(height: 16),
+                            DropdownButtonFormField<PresenceCheckPermissions>(
+                              value: provider.presenceCheckPermissions,
+                              decoration: const InputDecoration(
+                                labelText: 'Presence Check Permissions *',
+                                border: OutlineInputBorder(),
+                                prefixIcon: Icon(Icons.admin_panel_settings),
+                              ),
+                              items: PresenceCheckPermissions.values.map((perm) {
+                                return DropdownMenuItem<PresenceCheckPermissions>(value: perm, child: Text(perm.name.replaceAll('_', ' ')));
+                              }).toList(),
+                              onChanged: (value) {
+                                if (value != null) {
+                                  provider.updatePresenceCheckPermissions(value);
+                                }
+                              },
+                            ),
+                            const SizedBox(height: 16),
                             SwitchListTile(title: const Text('Recurring Event'), value: provider.isRecurring, onChanged: provider.updateIsRecurring),
                             if (provider.isRecurring) ...[
                               const SizedBox(height: 16),
                               DropdownButtonFormField<String>(
-                                value: provider.recurrenceType,
+                                initialValue: provider.recurrenceType,
                                 decoration: const InputDecoration(labelText: 'Recurrence Type *', border: OutlineInputBorder(), prefixIcon: Icon(Icons.repeat)),
                                 items: RecurrenceType.values.where((type) => type != RecurrenceType.NONE).map((type) {
                                   return DropdownMenuItem<String>(value: type.name, child: Text(type.displayName));
@@ -410,7 +428,7 @@ class EventFormDialog extends StatelessWidget {
 
   Widget _buildMonthlyDaySelector(EventFormProvider provider) {
     return DropdownButtonFormField<String>(
-      value: provider.monthlyDay,
+      initialValue: provider.monthlyDay,
       decoration: const InputDecoration(labelText: 'Day of Month *', border: OutlineInputBorder(), hintText: 'Select day (1-31)'),
       items: List.generate(31, (index) => index + 1).map((day) {
         return DropdownMenuItem<String>(value: day.toString(), child: Text('Day $day'));
@@ -429,7 +447,7 @@ class EventFormDialog extends StatelessWidget {
     return Column(
       children: [
         DropdownButtonFormField<String>(
-          value: provider.yearlyMonth,
+          initialValue: provider.yearlyMonth,
           decoration: const InputDecoration(labelText: 'Month *', border: OutlineInputBorder()),
           items: Month.values.map((month) {
             return DropdownMenuItem<String>(value: month.name, child: Text(month.displayName));
@@ -444,7 +462,7 @@ class EventFormDialog extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         DropdownButtonFormField<String>(
-          value: provider.yearlyDay,
+          initialValue: provider.yearlyDay,
           decoration: const InputDecoration(labelText: 'Day *', border: OutlineInputBorder()),
           items: List.generate(31, (index) => index + 1).map((day) {
             return DropdownMenuItem<String>(value: day.toString(), child: Text('Day $day'));
@@ -486,53 +504,185 @@ class ShiftFormDialog extends StatelessWidget {
     final eventsProvider = context.read<EventsProvider>();
     String? selectedSubLocationId = subLocation?.subLocationId;
     String? selectedTeamId = subLocation?.teamId;
+    TempTeam? selectedTempTeam = subLocation?.tempTeam;
+    bool useExistingTeam = subLocation?.teamId != null || (subLocation?.tempTeam == null && subLocation?.teamId == null);
 
     final result = await showDialog<ShiftSubLocation>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(subLocation == null ? 'Add SubLocation' : 'Edit SubLocation'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            DropdownButtonFormField<String>(
-              value: selectedSubLocationId,
-              decoration: const InputDecoration(labelText: 'SubLocation *', border: OutlineInputBorder()),
-              items: selectedLocation.subLocations!.map((subLoc) {
-                return DropdownMenuItem<String>(value: subLoc.id, child: Text(subLoc.name));
-              }).toList(),
-              onChanged: (value) => selectedSubLocationId = value,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            title: Text(subLocation == null ? 'Add SubLocation' : 'Edit SubLocation'),
+            content: SizedBox(
+              width: double.maxFinite,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DropdownButtonFormField<String>(
+                      initialValue: selectedSubLocationId,
+                      decoration: const InputDecoration(labelText: 'SubLocation *', border: OutlineInputBorder()),
+                      items: selectedLocation.subLocations!.map((subLoc) {
+                        return DropdownMenuItem<String>(value: subLoc.id, child: Text(subLoc.name));
+                      }).toList(),
+                      onChanged: (value) => setState(() => selectedSubLocationId = value),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Team Assignment', style: TextStyle(fontWeight: FontWeight.bold)),
+                        SegmentedButton<bool>(
+                          segments: const [
+                            ButtonSegment<bool>(value: true, label: Text('Existing'), icon: Icon(Icons.groups, size: 16)),
+                            ButtonSegment<bool>(value: false, label: Text('Temporary'), icon: Icon(Icons.person_add, size: 16)),
+                          ],
+                          selected: {useExistingTeam},
+                          onSelectionChanged: (Set<bool> selection) {
+                            setState(() {
+                              useExistingTeam = selection.first;
+                              if (useExistingTeam) {
+                                selectedTempTeam = null;
+                              } else {
+                                selectedTeamId = null;
+                              }
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    if (useExistingTeam)
+                      DropdownButtonFormField<String>(
+                        initialValue: selectedTeamId,
+                        decoration: const InputDecoration(labelText: 'Team (Optional)', border: OutlineInputBorder(), hintText: 'Select team'),
+                        items: [
+                          const DropdownMenuItem<String>(value: null, child: Text('None')),
+                          ...eventsProvider.teams.map((team) {
+                            return DropdownMenuItem<String>(value: team.id, child: Text(team.name));
+                          }),
+                        ],
+                        onChanged: (value) => setState(() => selectedTeamId = value),
+                      )
+                    else
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text('Temporary Team', style: TextStyle(fontWeight: FontWeight.bold)),
+                                  if (selectedTempTeam == null)
+                                    ElevatedButton.icon(
+                                      onPressed: () async {
+                                        final tempTeam = await _showTempTeamForm(context, eventsProvider);
+                                        if (tempTeam != null) {
+                                          setState(() => selectedTempTeam = tempTeam);
+                                        }
+                                      },
+                                      icon: const Icon(Icons.add, size: 16),
+                                      label: const Text('Create', style: TextStyle(fontSize: 12)),
+                                    )
+                                  else
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(Icons.edit, size: 18),
+                                          onPressed: () async {
+                                            final tempTeam = await _showTempTeamForm(context, eventsProvider, existingTempTeam: selectedTempTeam);
+                                            if (tempTeam != null) {
+                                              setState(() => selectedTempTeam = tempTeam);
+                                            }
+                                          },
+                                        ),
+                                        IconButton(icon: const Icon(Icons.delete, size: 18), onPressed: () => setState(() => selectedTempTeam = null)),
+                                      ],
+                                    ),
+                                ],
+                              ),
+                              if (selectedTempTeam != null) ...[
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    const Icon(Icons.person, size: 14),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        'Leader: ${eventsProvider.teamLeaders.where((u) => u.phone == selectedTempTeam!.teamLeaderId).firstOrNull?.name ?? selectedTempTeam!.teamLeaderId}',
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                if (selectedTempTeam!.memberIds.isNotEmpty) ...[
+                                  const SizedBox(height: 8),
+                                  const Text('Members:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
+                                  ...selectedTempTeam!.memberIds.map((memberId) {
+                                    final memberName = eventsProvider.volunteers.where((u) => u.phone == memberId).firstOrNull?.name ?? memberId;
+                                    return Padding(
+                                      padding: const EdgeInsets.only(left: 12, top: 4),
+                                      child: Row(
+                                        children: [
+                                          const Icon(Icons.person_outline, size: 12),
+                                          const SizedBox(width: 6),
+                                          Expanded(child: Text(memberName, style: const TextStyle(fontSize: 11))),
+                                        ],
+                                      ),
+                                    );
+                                  }),
+                                ] else
+                                  const Padding(
+                                    padding: EdgeInsets.only(top: 8),
+                                    child: Text(
+                                      'No members',
+                                      style: TextStyle(fontSize: 11, fontStyle: FontStyle.italic, color: Colors.grey),
+                                    ),
+                                  ),
+                              ] else
+                                const Padding(
+                                  padding: EdgeInsets.only(top: 8),
+                                  child: Text(
+                                    'No temporary team created',
+                                    style: TextStyle(fontSize: 11, fontStyle: FontStyle.italic, color: Colors.grey),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
             ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              value: selectedTeamId,
-              decoration: const InputDecoration(labelText: 'Team (Optional)', border: OutlineInputBorder(), hintText: 'Select team'),
-              items: [
-                const DropdownMenuItem<String>(value: null, child: Text('None')),
-                ...eventsProvider.teams.map((team) {
-                  return DropdownMenuItem<String>(value: team.id, child: Text(team.name));
-                }),
-              ],
-              onChanged: (value) => selectedTeamId = value,
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
-          ElevatedButton(
-            onPressed: () {
-              if (selectedSubLocationId == null || selectedSubLocationId!.isEmpty) {
-                print('Error saving sublocation: No sublocation selected');
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select a sublocation')));
-                return;
-              }
+            actions: [
+              TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+              ElevatedButton(
+                onPressed: () {
+                  if (selectedSubLocationId == null || selectedSubLocationId!.isEmpty) {
+                    print('Error saving sublocation: No sublocation selected');
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select a sublocation')));
+                    return;
+                  }
 
-              final newSubLocation = ShiftSubLocation(id: subLocation?.id ?? const Uuid().v4(), subLocationId: selectedSubLocationId!, teamId: selectedTeamId);
+                  final newSubLocation = ShiftSubLocation(
+                    id: subLocation?.id ?? const Uuid().v4(),
+                    subLocationId: selectedSubLocationId!,
+                    teamId: useExistingTeam ? selectedTeamId : null,
+                    tempTeam: useExistingTeam ? null : selectedTempTeam,
+                  );
 
-              Navigator.of(context).pop(newSubLocation);
-            },
-            child: const Text('Save'),
-          ),
-        ],
+                  Navigator.of(context).pop(newSubLocation);
+                },
+                child: const Text('Save'),
+              ),
+            ],
+          );
+        },
       ),
     );
 
@@ -566,12 +716,25 @@ class ShiftFormDialog extends StatelessWidget {
               children: [
                 const Text('Temporary Team', style: TextStyle(fontWeight: FontWeight.bold)),
                 if (provider.tempTeam == null)
-                  ElevatedButton.icon(onPressed: () => _showTempTeamForm(context, provider, eventsProvider), icon: const Icon(Icons.add), label: const Text('Create Team'))
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      final result = await _showTempTeamForm(context, eventsProvider);
+                      if (result != null) provider.updateTempTeam(result);
+                    },
+                    icon: const Icon(Icons.add),
+                    label: const Text('Create Team'),
+                  )
                 else
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      IconButton(icon: const Icon(Icons.edit), onPressed: () => _showTempTeamForm(context, provider, eventsProvider)),
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () async {
+                          final result = await _showTempTeamForm(context, eventsProvider, existingTempTeam: provider.tempTeam);
+                          if (result != null) provider.updateTempTeam(result);
+                        },
+                      ),
                       IconButton(icon: const Icon(Icons.delete), onPressed: () => provider.updateTempTeam(null)),
                     ],
                   ),
@@ -624,9 +787,9 @@ class ShiftFormDialog extends StatelessWidget {
     );
   }
 
-  void _showTempTeamForm(BuildContext context, ShiftFormProvider provider, EventsProvider eventsProvider) async {
-    String selectedLeaderId = provider.tempTeam?.teamLeaderId ?? '';
-    List<String> selectedMemberIds = List.from(provider.tempTeam?.memberIds ?? []);
+  Future<TempTeam?> _showTempTeamForm(BuildContext context, EventsProvider eventsProvider, {TempTeam? existingTempTeam}) async {
+    String selectedLeaderId = existingTempTeam?.teamLeaderId ?? '';
+    List<String> selectedMemberIds = List.from(existingTempTeam?.memberIds ?? []);
 
     final result = await showDialog<TempTeam>(
       context: context,
@@ -641,7 +804,7 @@ class ShiftFormDialog extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     DropdownButtonFormField<String>(
-                      value: selectedLeaderId.isEmpty ? null : selectedLeaderId,
+                      initialValue: selectedLeaderId.isEmpty ? null : selectedLeaderId,
                       decoration: const InputDecoration(labelText: 'Team Leader *', border: OutlineInputBorder(), prefixIcon: Icon(Icons.person)),
                       items: eventsProvider.teamLeaders.map((leader) {
                         return DropdownMenuItem<String>(value: leader.phone, child: Text('${leader.name} (${leader.phone})'));
@@ -704,7 +867,7 @@ class ShiftFormDialog extends StatelessWidget {
                     return;
                   }
 
-                  final tempTeam = TempTeam(id: provider.tempTeam?.id ?? const Uuid().v4(), teamLeaderId: selectedLeaderId, memberIds: selectedMemberIds);
+                  final tempTeam = TempTeam(id: existingTempTeam?.id ?? const Uuid().v4(), teamLeaderId: selectedLeaderId, memberIds: selectedMemberIds);
 
                   Navigator.of(context).pop(tempTeam);
                 },
@@ -716,9 +879,7 @@ class ShiftFormDialog extends StatelessWidget {
       ),
     );
 
-    if (result != null) {
-      provider.updateTempTeam(result);
-    }
+    return result;
   }
 
   Future<String?> _selectMember(BuildContext context, EventsProvider eventsProvider, List<String> alreadySelected) async {
@@ -829,7 +990,7 @@ class ShiftFormDialog extends StatelessWidget {
                             ),
                             const SizedBox(height: 16),
                             DropdownButtonFormField<String>(
-                              value: provider.locationId.isEmpty ? null : provider.locationId,
+                              initialValue: provider.locationId.isEmpty ? null : provider.locationId,
                               decoration: const InputDecoration(
                                 labelText: 'Location *',
                                 border: OutlineInputBorder(),
@@ -870,7 +1031,7 @@ class ShiftFormDialog extends StatelessWidget {
                             const SizedBox(height: 16),
                             if (provider.useExistingTeam)
                               DropdownButtonFormField<String>(
-                                value: provider.teamId,
+                                initialValue: provider.teamId,
                                 decoration: const InputDecoration(
                                   labelText: 'Team (Optional)',
                                   border: OutlineInputBorder(),

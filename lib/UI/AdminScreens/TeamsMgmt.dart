@@ -221,7 +221,7 @@ class TeamFormDialog extends StatelessWidget {
                       provider.loadingUsers
                           ? const Center(child: CircularProgressIndicator())
                           : DropdownButtonFormField<String>(
-                              value: provider.teamLeaderId.isEmpty ? null : provider.teamLeaderId,
+                              initialValue: provider.teamLeaderId.isEmpty ? null : provider.teamLeaderId,
                               decoration: const InputDecoration(
                                 labelText: 'Team Leader *',
                                 border: OutlineInputBorder(),
@@ -261,7 +261,7 @@ class TeamFormDialog extends StatelessWidget {
                           final index = entry.key;
                           final memberId = entry.value;
                           final volunteer = provider.volunteers.firstWhere((v) => v.phone == memberId, orElse: () => null as dynamic);
-                          final displayName = volunteer != null ? '${volunteer.name} (${volunteer.phone})' : memberId;
+                          final displayName = '${volunteer.name} (${volunteer.phone})';
 
                           return Card(
                             margin: const EdgeInsets.only(bottom: 8),

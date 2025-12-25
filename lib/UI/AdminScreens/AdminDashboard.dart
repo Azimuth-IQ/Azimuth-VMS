@@ -142,6 +142,22 @@ class AdminDashboard extends StatelessWidget {
                       color: Colors.red,
                       onTap: () => Navigator.pushNamed(context, '/form-mgmt'),
                     ),
+                    _buildManagementCard(
+                      context,
+                      title: 'Shift Assignment',
+                      subtitle: 'Assign volunteers to shifts',
+                      icon: Icons.assignment,
+                      color: Colors.blue,
+                      onTap: () => Navigator.pushNamed(context, '/shift-assignment'),
+                    ),
+                    _buildManagementCard(
+                      context,
+                      title: 'Presence Checks',
+                      subtitle: 'Check volunteer attendance',
+                      icon: Icons.how_to_reg,
+                      color: Colors.pink,
+                      onTap: () => Navigator.pushNamed(context, '/presence-check-admin'),
+                    ),
                   ],
                 );
               },

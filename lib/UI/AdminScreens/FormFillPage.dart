@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:azimuth_vms/Helpers/VolunteerFormHelperFirebase.dart';
 import 'package:azimuth_vms/Models/VolunteerForm.dart';
 import 'package:flutter/material.dart';
@@ -365,9 +364,7 @@ class _FormFillPageState extends State<FormFillPage> {
     if (!_formKey.currentState!.validate()) return;
 
     // Use existing form data or create new one
-    if (_formData == null) {
-      _formData = VolunteerForm();
-    }
+    _formData ??= VolunteerForm();
 
     // Populate _formData from controllers
     _formData!.formNumber = _controllers['formNumber']?.text;
@@ -940,7 +937,7 @@ class _FormFillPageState extends State<FormFillPage> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.network(
-                    existingImageUrl!,
+                    existingImageUrl,
                     fit: BoxFit.cover,
                     loadingBuilder: (context, child, loadingProgress) {
                       if (loadingProgress == null) return child;

@@ -26,10 +26,8 @@ class EventsProvider with ChangeNotifier {
   List<Location> get locations => _locations;
   List<Team> get teams => _teams;
   List<SystemUser> get systemUsers => _systemUsers;
-  List<SystemUser> get teamLeaders =>
-      _systemUsers.where((u) => u.role == SystemUserRole.TEAMLEADER).toList();
-  List<SystemUser> get volunteers =>
-      _systemUsers.where((u) => u.role == SystemUserRole.VOLUNTEER).toList();
+  List<SystemUser> get teamLeaders => _systemUsers.where((u) => u.role == SystemUserRole.TEAMLEADER).toList();
+  List<SystemUser> get volunteers => _systemUsers.where((u) => u.role == SystemUserRole.VOLUNTEER).toList();
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
@@ -101,6 +99,7 @@ class EventFormProvider with ChangeNotifier {
   String? _monthlyDay;
   String? _yearlyDay;
   String? _yearlyMonth;
+  PresenceCheckPermissions _presenceCheckPermissions = PresenceCheckPermissions.BOTH;
   List<EventShift> _shifts = [];
 
   Event? get editingEvent => _editingEvent;
@@ -115,6 +114,7 @@ class EventFormProvider with ChangeNotifier {
   String? get monthlyDay => _monthlyDay;
   String? get yearlyDay => _yearlyDay;
   String? get yearlyMonth => _yearlyMonth;
+  PresenceCheckPermissions get presenceCheckPermissions => _presenceCheckPermissions;
   List<EventShift> get shifts => _shifts;
 
   void initializeForm(Event? event) {
@@ -130,6 +130,7 @@ class EventFormProvider with ChangeNotifier {
     _monthlyDay = event?.monthlyDay;
     _yearlyDay = event?.yearlyDay;
     _yearlyMonth = event?.yearlyMonth;
+    _presenceCheckPermissions = event?.presenceCheckPermissions ?? PresenceCheckPermissions.BOTH;
     _shifts = List.from(event?.shifts ?? []);
     notifyListeners();
   }
@@ -163,6 +164,11 @@ class EventFormProvider with ChangeNotifier {
       _yearlyDay = null;
       _yearlyMonth = null;
       _recurrenceEndDate = null;
+    } else {
+      // Set default recurrence type to DAILY when enabling recurring
+      if (_recurrenceType == RecurrenceType.NONE.name) {
+        _recurrenceType = RecurrenceType.DAILY.name;
+      }
     }
     notifyListeners();
   }
@@ -193,6 +199,11 @@ class EventFormProvider with ChangeNotifier {
     } else {
       _weeklyDays.add(day);
     }
+    notifyListeners();
+  }
+
+  void updatePresenceCheckPermissions(PresenceCheckPermissions value) {
+    _presenceCheckPermissions = value;
     notifyListeners();
   }
 

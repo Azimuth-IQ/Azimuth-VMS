@@ -29,7 +29,7 @@ class SignInScreen extends StatelessWidget {
         if (systemUser.role == SystemUserRole.ADMIN) {
           Navigator.pushReplacementNamed(context, '/admin-dashboard');
         } else if (systemUser.role == SystemUserRole.TEAMLEADER) {
-          // Navigator.pushReplacementNamed(context, '/teamleaders-mgmt');
+          Navigator.pushReplacementNamed(context, '/teamleaders-dashboard');
         } else if (systemUser.role == SystemUserRole.VOLUNTEER) {
           Navigator.pushReplacementNamed(context, '/volunteer-dashboard');
         }
@@ -42,7 +42,7 @@ class SignInScreen extends StatelessWidget {
   //SignIn
   void signIn(BuildContext context, String phone, String password) async {
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: phone + "@azimuth-vms.com", password: password);
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: "$phone@azimuth-vms.com", password: password);
       print("Signed in: ${userCredential.user?.uid}");
       // Check User Role from Database
       SystemUserHelperFirebase systemUserHelperFirebase = SystemUserHelperFirebase();
@@ -54,7 +54,7 @@ class SignInScreen extends StatelessWidget {
         if (systemUser.role == SystemUserRole.ADMIN) {
           Navigator.pushReplacementNamed(context, '/admin-dashboard');
         } else if (systemUser.role == SystemUserRole.TEAMLEADER) {
-          // Navigator.pushReplacementNamed(context, '/teamleaders-dashboard');
+          Navigator.pushReplacementNamed(context, '/teamleaders-dashboard');
         } else if (systemUser.role == SystemUserRole.VOLUNTEER) {
           Navigator.pushReplacementNamed(context, '/volunteer-dashboard');
         }

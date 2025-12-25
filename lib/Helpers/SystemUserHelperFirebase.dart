@@ -12,7 +12,7 @@ class SystemUserHelperFirebase {
   void CreateSystemUser(SystemUser user) {
     rootRef.child(user.phone).set(user.toJson());
     //Create Auth User
-    auth.createUserWithEmailAndPassword(email: user.phone + "@azimuth-vms.com", password: user.password!);
+    auth.createUserWithEmailAndPassword(email: "${user.phone}@azimuth-vms.com", password: user.password!);
   }
 
   //2- Read
