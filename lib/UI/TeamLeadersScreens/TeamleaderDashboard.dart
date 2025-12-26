@@ -4,9 +4,12 @@ import 'package:azimuth_vms/Helpers/TeamHelperFirebase.dart';
 import 'package:azimuth_vms/Models/Event.dart';
 import 'package:azimuth_vms/Models/SystemUser.dart';
 import 'package:azimuth_vms/Models/Team.dart';
+import 'package:azimuth_vms/Providers/NotificationsProvider.dart';
 import 'package:azimuth_vms/UI/Widgets/ChangePasswordScreen.dart';
+import 'package:azimuth_vms/UI/Widgets/NotificationPanel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class TeamleaderDashboard extends StatefulWidget {
   const TeamleaderDashboard({super.key});
@@ -25,11 +28,22 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
   List<SystemUser> _volunteers = [];
   String? _currentUserPhone;
   bool _isLoading = true;
+  bool _hasLoadedNotifications = false;
 
   @override
   void initState() {
     super.initState();
     _loadData();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Load notifications after context is available
+    if (!_hasLoadedNotifications && _currentUserPhone != null) {
+      _hasLoadedNotifications = true;
+      context.read<NotificationsProvider>().loadNotifications(_currentUserPhone!);
+    }
   }
 
   Future<void> _loadData() async {
@@ -41,6 +55,16 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
       if (user == null) return;
 
       _currentUserPhone = user.email!.split('@').first;
+
+      // Trigger didChangeDependencies to load notifications
+      if (mounted && !_hasLoadedNotifications) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted && !_hasLoadedNotifications) {
+            _hasLoadedNotifications = true;
+            context.read<NotificationsProvider>().loadNotifications(_currentUserPhone!);
+          }
+        });
+      }
 
       // Load all volunteers
       final allUsers = await _userHelper.GetAllSystemUsers();
@@ -81,7 +105,11 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
       print('Error loading team leader data: $e');
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error loading data: $e')));
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error loading data: $e')));
+          }
+        });
       }
     }
   }
@@ -104,6 +132,43 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
         title: const Text('Team Leader Dashboard'),
         actions: [
           IconButton(icon: const Icon(Icons.refresh), onPressed: _loadData),
+          // Notification Bell
+          Consumer<NotificationsProvider>(
+            builder: (context, notifProvider, child) {
+              return Stack(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.notifications_outlined),
+                    onPressed: () {
+                      final provider = context.read<NotificationsProvider>();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ChangeNotifierProvider.value(value: provider, child: const NotificationPanel()),
+                        ),
+                      );
+                    },
+                    tooltip: 'Notifications',
+                  ),
+                  if (notifProvider.unreadCount > 0)
+                    Positioned(
+                      right: 8,
+                      top: 8,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                        constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                        child: Text(
+                          notifProvider.unreadCount > 9 ? '9+' : '${notifProvider.unreadCount}',
+                          style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
           PopupMenuButton<String>(
             icon: const Icon(Icons.account_circle),
             onSelected: (value) {

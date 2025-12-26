@@ -1,8 +1,13 @@
 import 'package:azimuth_vms/Helpers/VolunteerFormHelperFirebase.dart';
 import 'package:azimuth_vms/Models/VolunteerForm.dart';
+import 'package:azimuth_vms/Providers/NotificationsProvider.dart';
+import 'package:azimuth_vms/Providers/ShiftAssignmentProvider.dart';
 import 'package:azimuth_vms/UI/Widgets/ChangePasswordScreen.dart';
+import 'package:azimuth_vms/UI/Widgets/NotificationPanel.dart';
+import 'package:azimuth_vms/UI/VolunteerScreens/VolunteerScheduleScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class VolunteersDashboard extends StatelessWidget {
   const VolunteersDashboard({super.key});
@@ -112,108 +117,12 @@ class VolunteersDashboard extends StatelessWidget {
   Widget _buildApprovedDashboard(BuildContext context, VolunteerForm form, String title, String message, {bool isFullyApproved = false}) {
     final userPhone = FirebaseAuth.instance.currentUser?.email?.split('@').first ?? '';
 
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text('Volunteer Dashboard'),
-        backgroundColor: Colors.green,
-        actions: [
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.account_circle),
-            onSelected: (value) {
-              if (value == 'change_password') {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordScreen(userPhone: userPhone)));
-              } else if (value == 'logout') {
-                FirebaseAuth.instance.signOut();
-                Navigator.pushReplacementNamed(context, '/sign-in');
-              }
-            },
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'change_password',
-                child: Row(children: [Icon(Icons.lock_reset, size: 20), SizedBox(width: 8), Text('Change Password')]),
-              ),
-              const PopupMenuItem(
-                value: 'logout',
-                child: Row(children: [Icon(Icons.logout, size: 20), SizedBox(width: 8), Text('Sign Out')]),
-              ),
-            ],
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildInfoCard('Welcome ', form.fullName),
-            if (isFullyApproved) ...[
-              const SizedBox(height: 24),
-              const Text('Quick Actions', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 16),
-              _buildActionCard(context, 'My Events', 'View your assigned events and shifts', Icons.event, Colors.blue, () {
-                Navigator.pushNamed(context, '/volunteer/events');
-              }),
-              _buildActionCard(context, 'My Schedule', 'View your volunteer schedule', Icons.calendar_today, Colors.purple, () {
-                // TODO: Navigate to schedule page
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Schedule feature coming soon')));
-              }),
-              _buildActionCard(context, 'Profile', 'View and update your profile', Icons.person, Colors.teal, () {
-                // TODO: Navigate to profile page
-                Navigator.pushNamed(context, '/form-fill', arguments: form);
-              }),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInfoCard(String label, String? value) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: ListTile(
-        title: Text(label, style: const TextStyle(fontSize: 14, color: Colors.grey)),
-        subtitle: Text(
-          value ?? 'N/A',
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildActionCard(BuildContext context, String title, String description, IconData icon, Color color, VoidCallback onTap) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
-                child: Icon(icon, color: color, size: 32),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 4),
-                    Text(description, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
-                  ],
-                ),
-              ),
-              Icon(Icons.arrow_forward_ios, color: Colors.grey[400]),
-            ],
-          ),
-        ),
-      ),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => NotificationsProvider()..loadNotifications(userPhone)),
+        ChangeNotifierProvider(create: (_) => ShiftAssignmentProvider()..startListeningToVolunteer(userPhone)),
+      ],
+      child: _ApprovedDashboardView(form: form, title: title, message: message, isFullyApproved: isFullyApproved, userPhone: userPhone),
     );
   }
 
@@ -280,6 +189,187 @@ class VolunteersDashboard extends StatelessWidget {
                 label: const Text('Sign Out'),
                 style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12)),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ApprovedDashboardView extends StatelessWidget {
+  final VolunteerForm form;
+  final String title;
+  final String message;
+  final bool isFullyApproved;
+  final String userPhone;
+
+  const _ApprovedDashboardView({required this.form, required this.title, required this.message, required this.isFullyApproved, required this.userPhone});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text('Volunteer Dashboard'),
+        backgroundColor: Colors.green,
+        actions: [
+          // Notification Bell
+          Consumer<NotificationsProvider>(
+            builder: (context, notifProvider, child) {
+              return Stack(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.notifications_outlined),
+                    onPressed: () {
+                      final provider = context.read<NotificationsProvider>();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ChangeNotifierProvider.value(value: provider, child: const NotificationPanel()),
+                        ),
+                      );
+                    },
+                    tooltip: 'Notifications',
+                  ),
+                  if (notifProvider.unreadCount > 0)
+                    Positioned(
+                      right: 8,
+                      top: 8,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                        constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                        child: Text(
+                          notifProvider.unreadCount > 9 ? '9+' : '${notifProvider.unreadCount}',
+                          style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.account_circle),
+            onSelected: (value) {
+              if (value == 'change_password') {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordScreen(userPhone: userPhone)));
+              } else if (value == 'logout') {
+                FirebaseAuth.instance.signOut();
+                Navigator.pushReplacementNamed(context, '/sign-in');
+              }
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'change_password',
+                child: Row(children: [Icon(Icons.lock_reset, size: 20), SizedBox(width: 8), Text('Change Password')]),
+              ),
+              const PopupMenuItem(
+                value: 'logout',
+                child: Row(children: [Icon(Icons.logout, size: 20), SizedBox(width: 8), Text('Sign Out')]),
+              ),
+            ],
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildInfoCard('Welcome ', form.fullName),
+            if (isFullyApproved) ...[
+              const SizedBox(height: 24),
+              const Text('Quick Actions', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              Consumer<ShiftAssignmentProvider>(
+                builder: (context, assignmentProvider, child) {
+                  final assignmentCount = assignmentProvider.assignments.length;
+                  return _buildActionCardWithBadge(context, 'My Events', 'View your assigned events and shifts', Icons.event, Colors.blue, assignmentCount, () {
+                    Navigator.pushNamed(context, '/volunteer/events');
+                  });
+                },
+              ),
+              _buildActionCard(context, 'My Schedule', 'View your volunteer schedule', Icons.calendar_today, Colors.purple, () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => VolunteerScheduleScreen(volunteerPhone: userPhone)));
+              }),
+              _buildActionCard(context, 'Profile', 'View and update your profile', Icons.person, Colors.teal, () {
+                // TODO: Navigate to profile page
+                Navigator.pushNamed(context, '/form-fill', arguments: form);
+              }),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoCard(String label, String? value) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: ListTile(
+        title: Text(label, style: const TextStyle(fontSize: 14, color: Colors.grey)),
+        subtitle: Text(
+          value ?? 'N/A',
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionCard(BuildContext context, String title, String description, IconData icon, Color color, VoidCallback onTap) {
+    return _buildActionCardWithBadge(context, title, description, icon, color, 0, onTap);
+  }
+
+  Widget _buildActionCardWithBadge(BuildContext context, String title, String description, IconData icon, Color color, int badgeCount, VoidCallback onTap) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
+              Stack(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+                    child: Icon(icon, color: color, size: 32),
+                  ),
+                  if (badgeCount > 0)
+                    Positioned(
+                      right: 0,
+                      top: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                        constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
+                        child: Text(
+                          badgeCount > 9 ? '9+' : '$badgeCount',
+                          style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 4),
+                    Text(description, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                  ],
+                ),
+              ),
+              Icon(Icons.arrow_forward_ios, color: Colors.grey[400]),
             ],
           ),
         ),

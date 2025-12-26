@@ -4,9 +4,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../../Providers/EventsProvider.dart';
+import '../../Providers/NotificationsProvider.dart';
 import '../../Models/Event.dart';
 import '../../Models/Location.dart';
 import '../Widgets/ChangePasswordScreen.dart';
+import '../Widgets/NotificationPanel.dart';
+import 'SendNotificationScreen.dart';
 
 class AdminDashboard extends StatelessWidget {
   const AdminDashboard({super.key});
@@ -14,18 +17,69 @@ class AdminDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
+    final userPhone = user?.email?.split('@').first ?? '';
 
+    return ChangeNotifierProvider(
+      create: (_) => NotificationsProvider()..loadNotifications(userPhone),
+      child: _AdminDashboardView(userPhone: userPhone),
+    );
+  }
+}
+
+class _AdminDashboardView extends StatelessWidget {
+  final String userPhone;
+
+  const _AdminDashboardView({required this.userPhone});
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text('Admin Dashboard'),
         actions: [
+          // Notification Bell
+          Consumer<NotificationsProvider>(
+            builder: (context, notifProvider, child) {
+              return Stack(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.notifications_outlined),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ChangeNotifierProvider.value(value: notifProvider, child: const NotificationPanel()),
+                        ),
+                      );
+                    },
+                    tooltip: 'Notifications',
+                  ),
+                  if (notifProvider.unreadCount > 0)
+                    Positioned(
+                      right: 8,
+                      top: 8,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                        constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                        child: Text(
+                          notifProvider.unreadCount > 9 ? '9+' : '${notifProvider.unreadCount}',
+                          style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
           PopupMenuButton<String>(
             icon: const Icon(Icons.account_circle),
             onSelected: (value) {
               if (value == 'change_password') {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordScreen(userPhone: user?.email?.split('@').first ?? '')));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordScreen(userPhone: userPhone)));
               } else if (value == 'logout') {
                 FirebaseAuth.instance.signOut();
                 Navigator.pushReplacementNamed(context, '/sign-in');
@@ -66,7 +120,7 @@ class AdminDashboard extends StatelessWidget {
                     style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
-                  Text(user?.email?.split('@').first ?? 'Admin', style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 16)),
+                  Text(userPhone.isNotEmpty ? userPhone : 'Admin', style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 16)),
                 ],
               ),
             ),
@@ -171,6 +225,14 @@ class AdminDashboard extends StatelessWidget {
                       icon: Icons.how_to_reg,
                       color: Colors.pink,
                       onTap: () => Navigator.pushNamed(context, '/presence-check-admin'),
+                    ),
+                    _buildManagementCard(
+                      context,
+                      title: 'Send Notification',
+                      subtitle: 'Send messages to users',
+                      icon: Icons.notifications_active,
+                      color: Colors.amber,
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const SendNotificationScreen())),
                     ),
                   ],
                 );

@@ -78,7 +78,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
     print('📊 Filtering events for team leader: $_currentUserPhone');
     print('Total events: ${eventsProvider.events.length}');
     print('Total teams: ${eventsProvider.teams.length}');
-    
+
     setState(() {
       _myEvents = eventsProvider.events.where((event) {
         final hasMyShift = event.shifts.any((shift) {
@@ -90,13 +90,13 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
         return hasMyShift;
       }).toList();
     });
-    
+
     print('📋 Found ${_myEvents.length} events for this team leader');
   }
 
   bool _isMyShiftOrLocation(EventShift shift, EventsProvider provider) {
     print('  Checking shift ${shift.startTime}-${shift.endTime}...');
-    
+
     // Check main location team
     if (shift.teamId != null) {
       print('    Main location has teamId: ${shift.teamId}');
@@ -118,7 +118,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
         return true;
       }
     }
-    
+
     // Check sublocation teams
     print('    Checking ${shift.subLocations.length} sublocations...');
     for (var subLoc in shift.subLocations) {
@@ -141,7 +141,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
         }
       }
     }
-    
+
     print('    ✗ No match for this shift');
     return false;
   }
