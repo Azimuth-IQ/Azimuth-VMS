@@ -7,16 +7,16 @@ class VolunteerEventFeedback {
   String eventId;
   String eventName; // For display
   String shiftId;
-  
+
   // Rating categories (1-5 scale)
   int organizationRating;
   int logisticsRating;
   int communicationRating;
   int managementRating;
-  
+
   // Open-ended feedback
   String message;
-  
+
   String timestamp; // ISO8601 string
 
   VolunteerEventFeedback({

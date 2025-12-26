@@ -20,11 +20,11 @@ class VolunteerEventFeedbackHelperFirebase {
   static Future<VolunteerEventFeedback?> GetFeedbackById(String eventId, String feedbackId) async {
     try {
       final snapshot = await _ref.child('ihs/eventFeedback/$eventId/$feedbackId').get();
-      
+
       if (!snapshot.exists) {
         return null;
       }
-      
+
       return VolunteerEventFeedback.fromDataSnapshot(snapshot);
     } catch (e) {
       print('Error getting event feedback: $e');
@@ -36,19 +36,19 @@ class VolunteerEventFeedbackHelperFirebase {
   static Future<List<VolunteerEventFeedback>> GetFeedbackByEvent(String eventId) async {
     try {
       final snapshot = await _ref.child('ihs/eventFeedback/$eventId').get();
-      
+
       if (!snapshot.exists) {
         return [];
       }
-      
+
       List<VolunteerEventFeedback> feedbackList = [];
       for (DataSnapshot d1 in snapshot.children) {
         feedbackList.add(VolunteerEventFeedback.fromDataSnapshot(d1));
       }
-      
+
       // Sort by timestamp (newest first)
       feedbackList.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-      
+
       return feedbackList;
     } catch (e) {
       print('Error getting feedback for event: $e');
@@ -60,11 +60,11 @@ class VolunteerEventFeedbackHelperFirebase {
   static Future<List<VolunteerEventFeedback>> GetFeedbackByVolunteer(String volunteerId) async {
     try {
       final snapshot = await _ref.child('ihs/eventFeedback').get();
-      
+
       if (!snapshot.exists) {
         return [];
       }
-      
+
       List<VolunteerEventFeedback> feedbackList = [];
       for (DataSnapshot eventSnapshot in snapshot.children) {
         for (DataSnapshot feedbackSnapshot in eventSnapshot.children) {
@@ -74,10 +74,10 @@ class VolunteerEventFeedbackHelperFirebase {
           }
         }
       }
-      
+
       // Sort by timestamp (newest first)
       feedbackList.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-      
+
       return feedbackList;
     } catch (e) {
       print('Error getting feedback by volunteer: $e');
@@ -89,21 +89,21 @@ class VolunteerEventFeedbackHelperFirebase {
   static Future<List<VolunteerEventFeedback>> GetAllFeedback() async {
     try {
       final snapshot = await _ref.child('ihs/eventFeedback').get();
-      
+
       if (!snapshot.exists) {
         return [];
       }
-      
+
       List<VolunteerEventFeedback> feedbackList = [];
       for (DataSnapshot eventSnapshot in snapshot.children) {
         for (DataSnapshot feedbackSnapshot in eventSnapshot.children) {
           feedbackList.add(VolunteerEventFeedback.fromDataSnapshot(feedbackSnapshot));
         }
       }
-      
+
       // Sort by timestamp (newest first)
       feedbackList.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-      
+
       return feedbackList;
     } catch (e) {
       print('Error getting all feedback: $e');
@@ -138,7 +138,7 @@ class VolunteerEventFeedbackHelperFirebase {
   static Stream<List<VolunteerEventFeedback>> StreamFeedbackByEvent(String eventId) {
     return _ref.child('ihs/eventFeedback/$eventId').onValue.map((event) {
       List<VolunteerEventFeedback> feedbackList = [];
-      
+
       if (event.snapshot.exists) {
         for (DataSnapshot d1 in event.snapshot.children) {
           try {
@@ -148,10 +148,10 @@ class VolunteerEventFeedbackHelperFirebase {
           }
         }
       }
-      
+
       // Sort by timestamp (newest first)
       feedbackList.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-      
+
       return feedbackList;
     });
   }
@@ -160,7 +160,7 @@ class VolunteerEventFeedbackHelperFirebase {
   static Stream<List<VolunteerEventFeedback>> StreamAllFeedback() {
     return _ref.child('ihs/eventFeedback').onValue.map((event) {
       List<VolunteerEventFeedback> feedbackList = [];
-      
+
       if (event.snapshot.exists) {
         for (DataSnapshot eventSnapshot in event.snapshot.children) {
           for (DataSnapshot feedbackSnapshot in eventSnapshot.children) {
@@ -172,10 +172,10 @@ class VolunteerEventFeedbackHelperFirebase {
           }
         }
       }
-      
+
       // Sort by timestamp (newest first)
       feedbackList.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-      
+
       return feedbackList;
     });
   }
@@ -184,17 +184,11 @@ class VolunteerEventFeedbackHelperFirebase {
   static Future<Map<String, double>> GetEventAverageRatings(String eventId) async {
     try {
       final feedbackList = await GetFeedbackByEvent(eventId);
-      
+
       if (feedbackList.isEmpty) {
-        return {
-          'organization': 0.0,
-          'logistics': 0.0,
-          'communication': 0.0,
-          'management': 0.0,
-          'overall': 0.0,
-        };
+        return {'organization': 0.0, 'logistics': 0.0, 'communication': 0.0, 'management': 0.0, 'overall': 0.0};
       }
-      
+
       double orgTotal = 0, logTotal = 0, commTotal = 0, mgmtTotal = 0;
       for (var feedback in feedbackList) {
         orgTotal += feedback.organizationRating;
@@ -202,7 +196,7 @@ class VolunteerEventFeedbackHelperFirebase {
         commTotal += feedback.communicationRating;
         mgmtTotal += feedback.managementRating;
       }
-      
+
       final count = feedbackList.length;
       return {
         'organization': orgTotal / count,
@@ -213,13 +207,7 @@ class VolunteerEventFeedbackHelperFirebase {
       };
     } catch (e) {
       print('Error calculating event average ratings: $e');
-      return {
-        'organization': 0.0,
-        'logistics': 0.0,
-        'communication': 0.0,
-        'management': 0.0,
-        'overall': 0.0,
-      };
+      return {'organization': 0.0, 'logistics': 0.0, 'communication': 0.0, 'management': 0.0, 'overall': 0.0};
     }
   }
 }

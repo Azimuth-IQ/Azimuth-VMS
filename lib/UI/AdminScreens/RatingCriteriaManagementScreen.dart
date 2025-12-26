@@ -11,13 +11,7 @@ class RatingCriteriaManagementScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Manage Rating Criteria'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: () => _saveCriteria(context),
-            tooltip: 'Save Criteria',
-          ),
-        ],
+        actions: [IconButton(icon: const Icon(Icons.save), onPressed: () => _saveCriteria(context), tooltip: 'Save Criteria')],
       ),
       body: Consumer<VolunteerRatingProvider>(
         builder: (context, provider, child) {
@@ -58,15 +52,9 @@ class RatingCriteriaManagementScreen extends StatelessWidget {
                           children: [
                             Icon(Icons.rule, size: 64, color: Colors.grey[400]),
                             const SizedBox(height: 16),
-                            Text(
-                              'No criteria defined',
-                              style: TextStyle(fontSize: 18, color: Colors.grey[600]),
-                            ),
+                            Text('No criteria defined', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
                             const SizedBox(height: 8),
-                            Text(
-                              'Click the + button to add criteria',
-                              style: TextStyle(color: Colors.grey[500]),
-                            ),
+                            Text('Click the + button to add criteria', style: TextStyle(color: Colors.grey[500])),
                           ],
                         ),
                       )
@@ -92,11 +80,7 @@ class RatingCriteriaManagementScreen extends StatelessWidget {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddCriterionDialog(context),
-        child: const Icon(Icons.add),
-        tooltip: 'Add Criterion',
-      ),
+      floatingActionButton: FloatingActionButton(onPressed: () => _showAddCriterionDialog(context), child: const Icon(Icons.add), tooltip: 'Add Criterion'),
     );
   }
 
@@ -105,9 +89,7 @@ class RatingCriteriaManagementScreen extends StatelessWidget {
       key: ValueKey(criterion.Criteria),
       margin: const EdgeInsets.symmetric(vertical: 4),
       child: ListTile(
-        leading: CircleAvatar(
-          child: Text('${index + 1}'),
-        ),
+        leading: CircleAvatar(child: Text('${index + 1}')),
         title: Text(criterion.Criteria),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
@@ -139,27 +121,18 @@ class RatingCriteriaManagementScreen extends StatelessWidget {
         title: const Text('Add New Criterion'),
         content: TextField(
           controller: controller,
-          decoration: const InputDecoration(
-            labelText: 'Criterion Name',
-            hintText: 'e.g., Communication Skills',
-            border: OutlineInputBorder(),
-          ),
+          decoration: const InputDecoration(labelText: 'Criterion Name', hintText: 'e.g., Communication Skills', border: OutlineInputBorder()),
           autofocus: true,
           textCapitalization: TextCapitalization.words,
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () {
               if (controller.text.trim().isNotEmpty) {
                 provider.addCriterion(controller.text.trim());
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Criterion added. Don\'t forget to save!')),
-                );
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Criterion added. Don\'t forget to save!')));
               }
             },
             child: const Text('Add'),
@@ -178,26 +151,18 @@ class RatingCriteriaManagementScreen extends StatelessWidget {
         title: const Text('Edit Criterion'),
         content: TextField(
           controller: controller,
-          decoration: const InputDecoration(
-            labelText: 'Criterion Name',
-            border: OutlineInputBorder(),
-          ),
+          decoration: const InputDecoration(labelText: 'Criterion Name', border: OutlineInputBorder()),
           autofocus: true,
           textCapitalization: TextCapitalization.words,
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () {
               if (controller.text.trim().isNotEmpty) {
                 provider.updateCriterion(index, controller.text.trim());
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Criterion updated. Don\'t forget to save!')),
-                );
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Criterion updated. Don\'t forget to save!')));
               }
             },
             child: const Text('Update'),
@@ -214,17 +179,12 @@ class RatingCriteriaManagementScreen extends StatelessWidget {
         title: const Text('Delete Criterion'),
         content: Text('Are you sure you want to delete "$criterionName"?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () {
               provider.removeCriterion(index);
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Criterion deleted. Don\'t forget to save!')),
-              );
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Criterion deleted. Don\'t forget to save!')));
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('Delete'),
@@ -238,35 +198,20 @@ class RatingCriteriaManagementScreen extends StatelessWidget {
     final provider = Provider.of<VolunteerRatingProvider>(context, listen: false);
 
     if (provider.ratingCriteria.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Cannot save empty criteria list'),
-          backgroundColor: Colors.orange,
-        ),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Cannot save empty criteria list'), backgroundColor: Colors.orange));
       return;
     }
 
     try {
       await provider.saveRatingCriteria(provider.ratingCriteria);
-      
+
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Rating criteria saved successfully'),
-            backgroundColor: Colors.green,
-          ),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Rating criteria saved successfully'), backgroundColor: Colors.green));
       }
     } catch (e) {
       print('Error saving criteria: $e');
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error saving criteria: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error saving criteria: $e'), backgroundColor: Colors.red));
       }
     }
   }

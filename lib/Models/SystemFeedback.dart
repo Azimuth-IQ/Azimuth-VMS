@@ -47,10 +47,7 @@ class SystemFeedback {
       userId: snapshot.child('userId').value?.toString() ?? '',
       userName: snapshot.child('userName').value?.toString() ?? '',
       message: snapshot.child('message').value?.toString() ?? '',
-      status: FeedbackStatus.values.firstWhere(
-        (e) => e.name == snapshot.child('status').value?.toString(),
-        orElse: () => FeedbackStatus.PENDING,
-      ),
+      status: FeedbackStatus.values.firstWhere((e) => e.name == snapshot.child('status').value?.toString(), orElse: () => FeedbackStatus.PENDING),
       timestamp: snapshot.child('timestamp').value?.toString() ?? '',
       reviewedBy: snapshot.child('reviewedBy').value?.toString(),
       reviewedAt: snapshot.child('reviewedAt').value?.toString(),

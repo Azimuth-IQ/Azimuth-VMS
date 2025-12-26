@@ -118,10 +118,10 @@ class VolunteerRatingProvider with ChangeNotifier {
       );
 
       await VolunteerRatingHelperFirebase.SaveVolunteerRating(volunteerId, rating);
-      
+
       // Also save to history for tracking
       await VolunteerRatingHelperFirebase.AddRatingHistory(volunteerId, rating);
-      
+
       notifyListeners();
     } catch (e) {
       print('Error saving volunteer rating: $e');
@@ -157,10 +157,8 @@ class VolunteerRatingProvider with ChangeNotifier {
   }
 
   // Filter volunteers by role
-  Map<SystemUser, VolunteerRating?> getVolunteersByRole(UserRole role) {
-    return Map.fromEntries(
-      _volunteersWithRatings.entries.where((entry) => entry.key.role == role),
-    );
+  Map<SystemUser, VolunteerRating?> getVolunteersByRole(SystemUserRole role) {
+    return Map.fromEntries(_volunteersWithRatings.entries.where((entry) => entry.key.role == role));
   }
 
   @override

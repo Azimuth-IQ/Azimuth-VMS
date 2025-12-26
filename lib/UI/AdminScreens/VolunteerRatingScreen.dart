@@ -13,13 +13,7 @@ class VolunteerRatingScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Rate Volunteers'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () => Navigator.pushNamed(context, '/rating-criteria-management'),
-            tooltip: 'Manage Criteria',
-          ),
-        ],
+        actions: [IconButton(icon: const Icon(Icons.settings), onPressed: () => Navigator.pushNamed(context, '/rating-criteria-management'), tooltip: 'Manage Criteria')],
       ),
       body: Consumer<VolunteerRatingProvider>(
         builder: (context, provider, child) {
@@ -34,10 +28,7 @@ class VolunteerRatingScreen extends StatelessWidget {
                 children: [
                   Icon(Icons.people_outline, size: 64, color: Colors.grey[400]),
                   const SizedBox(height: 16),
-                  Text(
-                    'No volunteers found',
-                    style: TextStyle(fontSize: 18, color: Colors.grey[600]),
-                  ),
+                  Text('No volunteers found', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
                 ],
               ),
             );
@@ -77,10 +68,10 @@ class VolunteerRatingScreen extends StatelessWidget {
                 backgroundColor: averageScore >= 4.0
                     ? Colors.green
                     : averageScore >= 3.0
-                        ? Colors.orange
-                        : averageScore > 0
-                            ? Colors.red
-                            : Colors.grey,
+                    ? Colors.orange
+                    : averageScore > 0
+                    ? Colors.red
+                    : Colors.grey,
                 child: Text(
                   user.name.isNotEmpty ? user.name[0].toUpperCase() : 'V',
                   style: const TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),
@@ -93,28 +84,15 @@ class VolunteerRatingScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      user.name,
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
+                    Text(user.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 4),
-                    Text(
-                      user.phone,
-                      style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                    ),
+                    Text(user.phone, style: TextStyle(color: Colors.grey[600], fontSize: 14)),
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        Icon(
-                          user.role == UserRole.TEAMLEADER ? Icons.groups : Icons.person,
-                          size: 14,
-                          color: Colors.grey[500],
-                        ),
+                        Icon(user.role == SystemUserRole.TEAMLEADER ? Icons.groups : Icons.person, size: 14, color: Colors.grey[500]),
                         const SizedBox(width: 4),
-                        Text(
-                          user.role == UserRole.TEAMLEADER ? 'Team Leader' : 'Volunteer',
-                          style: TextStyle(color: Colors.grey[500], fontSize: 12),
-                        ),
+                        Text(user.role == SystemUserRole.TEAMLEADER ? 'Team Leader' : 'Volunteer', style: TextStyle(color: Colors.grey[500], fontSize: 12)),
                       ],
                     ),
                   ],
@@ -128,36 +106,22 @@ class VolunteerRatingScreen extends StatelessWidget {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.star,
-                        color: averageScore > 0 ? Colors.amber : Colors.grey,
-                        size: 20,
-                      ),
+                      Icon(Icons.star, color: averageScore > 0 ? Colors.amber : Colors.grey, size: 20),
                       const SizedBox(width: 4),
                       Text(
                         averageScore > 0 ? averageScore.toStringAsFixed(1) : 'N/A',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: averageScore > 0 ? Colors.black87 : Colors.grey,
-                        ),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: averageScore > 0 ? Colors.black87 : Colors.grey),
                       ),
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    rating != null ? 'Last: ${rating.Date}' : 'Not rated',
-                    style: TextStyle(fontSize: 11, color: Colors.grey[500]),
-                  ),
+                  Text(rating != null ? 'Last: ${rating.Date}' : 'Not rated', style: TextStyle(fontSize: 11, color: Colors.grey[500])),
                   const SizedBox(height: 8),
                   ElevatedButton.icon(
                     onPressed: () => _showRatingDialog(context, user, rating),
                     icon: Icon(rating != null ? Icons.edit : Icons.add, size: 16),
                     label: Text(rating != null ? 'Update' : 'Rate'),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      textStyle: const TextStyle(fontSize: 12),
-                    ),
+                    style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), textStyle: const TextStyle(fontSize: 12)),
                   ),
                 ],
               ),
@@ -172,23 +136,14 @@ class VolunteerRatingScreen extends StatelessWidget {
     final provider = Provider.of<VolunteerRatingProvider>(context, listen: false);
 
     if (provider.ratingCriteria.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please configure rating criteria first'),
-          backgroundColor: Colors.orange,
-        ),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please configure rating criteria first'), backgroundColor: Colors.orange));
       Navigator.pushNamed(context, '/rating-criteria-management');
       return;
     }
 
     showDialog(
       context: context,
-      builder: (context) => _RatingDialog(
-        user: user,
-        existingRating: existingRating,
-        criteria: provider.ratingCriteria,
-      ),
+      builder: (context) => _RatingDialog(user: user, existingRating: existingRating, criteria: provider.ratingCriteria),
     );
   }
 }
@@ -198,11 +153,7 @@ class _RatingDialog extends StatefulWidget {
   final VolunteerRating? existingRating;
   final List<VolunteerRatingCriteria> criteria;
 
-  const _RatingDialog({
-    required this.user,
-    required this.existingRating,
-    required this.criteria,
-  });
+  const _RatingDialog({required this.user, required this.existingRating, required this.criteria});
 
   @override
   State<_RatingDialog> createState() => _RatingDialogState();
@@ -216,22 +167,19 @@ class _RatingDialogState extends State<_RatingDialog> {
   @override
   void initState() {
     super.initState();
-    
+
     // Initialize ratings
     ratings = {};
     for (var criterion in widget.criteria) {
       // Try to find existing rating for this criterion
       int existingScore = 3; // Default to middle rating
-      
+
       if (widget.existingRating != null) {
         // Find matching criterion by name
-        final existingEntry = widget.existingRating!.ratings.entries.firstWhere(
-          (entry) => entry.key.Criteria == criterion.Criteria,
-          orElse: () => MapEntry(criterion, 3),
-        );
+        final existingEntry = widget.existingRating!.ratings.entries.firstWhere((entry) => entry.key.Criteria == criterion.Criteria, orElse: () => MapEntry(criterion, 3));
         existingScore = existingEntry.value;
       }
-      
+
       ratings[criterion] = existingScore;
     }
 
@@ -258,10 +206,7 @@ class _RatingDialogState extends State<_RatingDialog> {
     return AlertDialog(
       title: Row(
         children: [
-          Icon(
-            widget.user.role == UserRole.TEAMLEADER ? Icons.groups : Icons.person,
-            color: Colors.blue,
-          ),
+          Icon(widget.user.role == SystemUserRole.TEAMLEADER ? Icons.groups : Icons.person, color: Colors.blue),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
@@ -269,7 +214,7 @@ class _RatingDialogState extends State<_RatingDialog> {
               children: [
                 Text('Rate ${widget.user.name}'),
                 Text(
-                  widget.user.role == UserRole.TEAMLEADER ? 'Team Leader' : 'Volunteer',
+                  widget.user.role == SystemUserRole.TEAMLEADER ? 'Team Leader' : 'Volunteer',
                   style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.grey),
                 ),
               ],
@@ -285,24 +230,18 @@ class _RatingDialogState extends State<_RatingDialog> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Rating criteria
-              Text(
-                'Rating Criteria',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-              ),
+              Text('Rating Criteria', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
               const SizedBox(height: 12),
-              
+
               ...widget.criteria.map((criterion) => _buildCriterionRating(criterion)),
-              
+
               const Divider(height: 32),
-              
+
               // Notes section
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Notes (Optional)',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-                  ),
+                  Text('Notes (Optional)', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
                   IconButton(
                     icon: const Icon(Icons.add_circle_outline),
                     onPressed: () {
@@ -315,7 +254,7 @@ class _RatingDialogState extends State<_RatingDialog> {
                 ],
               ),
               const SizedBox(height: 8),
-              
+
               ...List.generate(noteControllers.length, (index) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 8),
@@ -352,19 +291,10 @@ class _RatingDialogState extends State<_RatingDialog> {
         ),
       ),
       actions: [
-        TextButton(
-          onPressed: saving ? null : () => Navigator.pop(context),
-          child: const Text('Cancel'),
-        ),
+        TextButton(onPressed: saving ? null : () => Navigator.pop(context), child: const Text('Cancel')),
         ElevatedButton(
           onPressed: saving ? null : _saveRating,
-          child: saving
-              ? const SizedBox(
-                  height: 16,
-                  width: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Text('Save Rating'),
+          child: saving ? const SizedBox(height: 16, width: 16, child: CircularProgressIndicator(strokeWidth: 2)) : const Text('Save Rating'),
         ),
       ],
     );
@@ -376,17 +306,14 @@ class _RatingDialogState extends State<_RatingDialog> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            criterion.Criteria,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-          ),
+          Text(criterion.Criteria, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: List.generate(5, (index) {
               final score = index + 1;
               final isSelected = ratings[criterion] == score;
-              
+
               return InkWell(
                 onTap: () {
                   setState(() {
@@ -395,18 +322,10 @@ class _RatingDialogState extends State<_RatingDialog> {
                 },
                 child: Column(
                   children: [
-                    Icon(
-                      isSelected ? Icons.star : Icons.star_border,
-                      color: isSelected ? Colors.amber : Colors.grey,
-                      size: 32,
-                    ),
+                    Icon(isSelected ? Icons.star : Icons.star_border, color: isSelected ? Colors.amber : Colors.grey, size: 32),
                     Text(
                       score.toString(),
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: isSelected ? Colors.amber : Colors.grey,
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                      ),
+                      style: TextStyle(fontSize: 12, color: isSelected ? Colors.amber : Colors.grey, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal),
                     ),
                   ],
                 ),
@@ -425,23 +344,15 @@ class _RatingDialogState extends State<_RatingDialog> {
 
     try {
       final provider = Provider.of<VolunteerRatingProvider>(context, listen: false);
-      
+
       // Collect notes
-      final notes = noteControllers
-          .map((c) => c.text.trim())
-          .where((note) => note.isNotEmpty)
-          .toList();
+      final notes = noteControllers.map((c) => c.text.trim()).where((note) => note.isNotEmpty).toList();
 
       await provider.saveVolunteerRating(widget.user.phone, ratings, notes);
 
       if (mounted) {
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Rating saved for ${widget.user.name}'),
-            backgroundColor: Colors.green,
-          ),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Rating saved for ${widget.user.name}'), backgroundColor: Colors.green));
       }
     } catch (e) {
       print('Error saving rating: $e');
@@ -449,12 +360,7 @@ class _RatingDialogState extends State<_RatingDialog> {
         setState(() {
           saving = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error saving rating: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error saving rating: $e'), backgroundColor: Colors.red));
       }
     }
   }

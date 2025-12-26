@@ -318,6 +318,9 @@ class _ApprovedDashboardView extends StatelessWidget {
                 // TODO: Navigate to profile page
                 Navigator.pushNamed(context, '/form-fill', arguments: form);
               }),
+              _buildActionCard(context, 'Submit Feedback', 'Report bugs or suggest improvements', Icons.feedback, Colors.orange, () {
+                Navigator.pushNamed(context, '/submit-feedback');
+              }),
             ],
           ],
         ),
@@ -364,10 +367,7 @@ class _ApprovedDashboardView extends StatelessWidget {
                       averageScore.toStringAsFixed(1),
                       style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black87),
                     ),
-                    const Text(
-                      ' / 5.0',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
+                    const Text(' / 5.0', style: TextStyle(fontSize: 16, color: Colors.grey)),
                   ],
                 ),
               ],

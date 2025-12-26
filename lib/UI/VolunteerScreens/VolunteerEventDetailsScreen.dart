@@ -247,6 +247,28 @@ class _EventCard extends StatelessWidget {
                     ),
                   ],
                 ),
+                const SizedBox(height: 8),
+                // Feedback button
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/submit-event-feedback',
+                        arguments: {
+                          'event': event,
+                          'assignment': assignment,
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.rate_review),
+                    label: const Text('Submit Event Feedback'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.blue,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

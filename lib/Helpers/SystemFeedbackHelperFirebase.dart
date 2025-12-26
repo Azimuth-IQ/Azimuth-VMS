@@ -20,11 +20,11 @@ class SystemFeedbackHelperFirebase {
   static Future<SystemFeedback?> GetFeedbackById(String feedbackId) async {
     try {
       final snapshot = await _ref.child('ihs/systemFeedback/$feedbackId').get();
-      
+
       if (!snapshot.exists) {
         return null;
       }
-      
+
       return SystemFeedback.fromDataSnapshot(snapshot);
     } catch (e) {
       print('Error getting feedback: $e');
@@ -36,19 +36,19 @@ class SystemFeedbackHelperFirebase {
   static Future<List<SystemFeedback>> GetAllFeedback() async {
     try {
       final snapshot = await _ref.child('ihs/systemFeedback').get();
-      
+
       if (!snapshot.exists) {
         return [];
       }
-      
+
       List<SystemFeedback> feedbackList = [];
       for (DataSnapshot d1 in snapshot.children) {
         feedbackList.add(SystemFeedback.fromDataSnapshot(d1));
       }
-      
+
       // Sort by timestamp (newest first)
       feedbackList.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-      
+
       return feedbackList;
     } catch (e) {
       print('Error getting all feedback: $e');
@@ -60,11 +60,11 @@ class SystemFeedbackHelperFirebase {
   static Future<List<SystemFeedback>> GetFeedbackByUser(String userId) async {
     try {
       final snapshot = await _ref.child('ihs/systemFeedback').get();
-      
+
       if (!snapshot.exists) {
         return [];
       }
-      
+
       List<SystemFeedback> feedbackList = [];
       for (DataSnapshot d1 in snapshot.children) {
         final feedback = SystemFeedback.fromDataSnapshot(d1);
@@ -72,10 +72,10 @@ class SystemFeedbackHelperFirebase {
           feedbackList.add(feedback);
         }
       }
-      
+
       // Sort by timestamp (newest first)
       feedbackList.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-      
+
       return feedbackList;
     } catch (e) {
       print('Error getting user feedback: $e');
@@ -87,11 +87,11 @@ class SystemFeedbackHelperFirebase {
   static Future<List<SystemFeedback>> GetFeedbackByStatus(FeedbackStatus status) async {
     try {
       final snapshot = await _ref.child('ihs/systemFeedback').get();
-      
+
       if (!snapshot.exists) {
         return [];
       }
-      
+
       List<SystemFeedback> feedbackList = [];
       for (DataSnapshot d1 in snapshot.children) {
         final feedback = SystemFeedback.fromDataSnapshot(d1);
@@ -99,10 +99,10 @@ class SystemFeedbackHelperFirebase {
           feedbackList.add(feedback);
         }
       }
-      
+
       // Sort by timestamp (newest first)
       feedbackList.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-      
+
       return feedbackList;
     } catch (e) {
       print('Error getting feedback by status: $e');
@@ -137,7 +137,7 @@ class SystemFeedbackHelperFirebase {
   static Stream<List<SystemFeedback>> StreamAllFeedback() {
     return _ref.child('ihs/systemFeedback').onValue.map((event) {
       List<SystemFeedback> feedbackList = [];
-      
+
       if (event.snapshot.exists) {
         for (DataSnapshot d1 in event.snapshot.children) {
           try {
@@ -147,10 +147,10 @@ class SystemFeedbackHelperFirebase {
           }
         }
       }
-      
+
       // Sort by timestamp (newest first)
       feedbackList.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-      
+
       return feedbackList;
     });
   }

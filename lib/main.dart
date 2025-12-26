@@ -3,6 +3,8 @@ import 'package:azimuth_vms/Providers/EventsProvider.dart';
 import 'package:azimuth_vms/Providers/ShiftAssignmentProvider.dart';
 import 'package:azimuth_vms/Providers/NotificationsProvider.dart';
 import 'package:azimuth_vms/Providers/VolunteerRatingProvider.dart';
+import 'package:azimuth_vms/Providers/SystemFeedbackProvider.dart';
+import 'package:azimuth_vms/Providers/VolunteerEventFeedbackProvider.dart';
 import 'package:azimuth_vms/UI/AdminScreens/AdminDashboard.dart';
 import 'package:azimuth_vms/UI/AdminScreens/EventsMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/FormFillPage.dart' as Admin;
@@ -15,6 +17,10 @@ import 'package:azimuth_vms/UI/AdminScreens/ShiftAssignmentScreen.dart';
 import 'package:azimuth_vms/UI/AdminScreens/PresenceCheckScreen.dart';
 import 'package:azimuth_vms/UI/AdminScreens/VolunteerRatingScreen.dart';
 import 'package:azimuth_vms/UI/AdminScreens/RatingCriteriaManagementScreen.dart';
+import 'package:azimuth_vms/UI/AdminScreens/ManageFeedbackScreen.dart';
+import 'package:azimuth_vms/UI/AdminScreens/EventFeedbackReportScreen.dart';
+import 'package:azimuth_vms/UI/Shared/SubmitFeedbackScreen.dart';
+import 'package:azimuth_vms/UI/VolunteerScreens/SubmitEventFeedbackScreen.dart';
 import 'package:azimuth_vms/UI/TeamLeadersScreens/TeamleaderDashboard.dart';
 import 'package:azimuth_vms/UI/TeamLeadersScreens/TeamLeaderShiftManagementScreen.dart';
 import 'package:azimuth_vms/UI/TeamLeadersScreens/LeaveRequestManagementScreen.dart';
@@ -52,6 +58,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ShiftAssignmentProvider>(create: (_) => ShiftAssignmentProvider()),
         ChangeNotifierProvider<NotificationsProvider>(create: (_) => NotificationsProvider()),
         ChangeNotifierProvider<VolunteerRatingProvider>(create: (_) => VolunteerRatingProvider()),
+        ChangeNotifierProvider<SystemFeedbackProvider>(create: (_) => SystemFeedbackProvider()),
+        ChangeNotifierProvider<VolunteerEventFeedbackProvider>(create: (_) => VolunteerEventFeedbackProvider()),
       ],
       child: MaterialApp(
         title: 'Azimuth VMS',
@@ -197,11 +205,14 @@ class _AuthGuardState extends State<AuthGuard> {
       '/presence-check-admin',
       '/volunteer-rating',
       '/rating-criteria-management',
+      '/manage-feedback',
+      '/event-feedback-report',
+      '/submit-feedback',
     ];
 
-    const teamLeaderRoutes = ['/teamleaders-dashboard', '/teamleader-shift-management', '/leave-request-management', '/presence-check-teamleader'];
+    const teamLeaderRoutes = ['/teamleaders-dashboard', '/teamleader-shift-management', '/leave-request-management', '/presence-check-teamleader', '/submit-feedback'];
 
-    const volunteerRoutes = ['/volunteer-dashboard', '/form-fill', '/volunteer/events', '/volunteer/leave-request'];
+    const volunteerRoutes = ['/volunteer-dashboard', '/form-fill', '/volunteer/events', '/volunteer/leave-request', '/submit-feedback', '/submit-event-feedback'];
 
     // Check permissions
     bool hasPermission = false;
@@ -244,6 +255,12 @@ class _AuthGuardState extends State<AuthGuard> {
         return const VolunteerRatingScreen();
       case '/rating-criteria-management':
         return const RatingCriteriaManagementScreen();
+      case '/manage-feedback':
+        return const ManageFeedbackScreen();
+      case '/event-feedback-report':
+        return const EventFeedbackReportScreen();
+      case '/submit-feedback':
+        return SubmitFeedbackScreen();
 
       // Team Leader routes
       case '/teamleaders-dashboard':
@@ -265,6 +282,11 @@ class _AuthGuardState extends State<AuthGuard> {
       case '/volunteer/leave-request':
         if (arguments is Map<String, dynamic>) {
           return LeaveRequestScreen(event: arguments['event'] as Event, shift: arguments['shift'] as EventShift, assignment: arguments['assignment'] as ShiftAssignment);
+        }
+        return _buildUnauthorizedScreen('Invalid arguments');
+      case '/submit-event-feedback':
+        if (arguments is Map<String, dynamic>) {
+          return SubmitEventFeedbackScreen(event: arguments['event'] as Event, assignment: arguments['assignment'] as ShiftAssignment);
         }
         return _buildUnauthorizedScreen('Invalid arguments');
 
