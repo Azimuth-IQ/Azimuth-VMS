@@ -52,4 +52,49 @@ class VolunteerFormHelperFirebase {
   void UpdateForm(VolunteerForm form) {
     rootRef.child(form.mobileNumber!).update(form.toJson());
   }
+
+  //2.4- Archive
+  Future<void> ArchiveForm(String mobileNumber) async {
+    await rootRef.child(mobileNumber).update({'archived': true});
+  }
+
+  //2.5- Unarchive
+  Future<void> UnarchiveForm(String mobileNumber) async {
+    await rootRef.child(mobileNumber).update({'archived': false});
+  }
+
+  //2.6- Delete
+  Future<void> DeleteForm(String mobileNumber) async {
+    await rootRef.child(mobileNumber).remove();
+  }
+
+  //2.7- Get Active Forms
+  Future<List<VolunteerForm>> GetActiveForms() async {
+    DataSnapshot snapshot = await rootRef.get();
+    List<VolunteerForm> forms = [];
+    if (snapshot.exists) {
+      for (DataSnapshot d1 in snapshot.children) {
+        final form = VolunteerForm.fromDataSnapshot(d1);
+        if (!form.archived) {
+          forms.add(form);
+        }
+      }
+    }
+    return forms;
+  }
+
+  //2.8- Get Archived Forms
+  Future<List<VolunteerForm>> GetArchivedForms() async {
+    DataSnapshot snapshot = await rootRef.get();
+    List<VolunteerForm> forms = [];
+    if (snapshot.exists) {
+      for (DataSnapshot d1 in snapshot.children) {
+        final form = VolunteerForm.fromDataSnapshot(d1);
+        if (form.archived) {
+          forms.add(form);
+        }
+      }
+    }
+    return forms;
+  }
 }

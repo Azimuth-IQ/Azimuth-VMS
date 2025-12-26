@@ -39,6 +39,7 @@ class VolunteerForm {
   String? residenceFrontPath; // Residency card front image path
   String? residenceBackPath; // Residency card back image path
   VolunteerFormStatus? status;
+  bool archived;
 
   //2- Constructor
   VolunteerForm({
@@ -79,6 +80,7 @@ class VolunteerForm {
     this.residenceFrontPath,
     this.residenceBackPath,
     this.status,
+    this.archived = false,
   });
 
   //3- From DataSnapshot
@@ -138,6 +140,7 @@ class VolunteerForm {
       residenceFrontPath: getStringValue('residenceFrontPath'),
       residenceBackPath: getStringValue('residenceBackPath'),
       status: getStatus(),
+      archived: snapshot.child('archived').value as bool? ?? false,
     );
   }
 
@@ -181,6 +184,7 @@ class VolunteerForm {
       'residenceFrontPath': residenceFrontPath,
       'residenceBackPath': residenceBackPath,
       'status': status?.toString().split('.').last,
+      'archived': archived,
     };
   }
 }

@@ -3,6 +3,7 @@ import 'package:azimuth_vms/Helpers/VolunteerFormHelperFirebase.dart';
 import 'package:azimuth_vms/Helpers/SystemUserHelperFirebase.dart';
 import 'package:azimuth_vms/Models/VolunteerForm.dart';
 import 'package:azimuth_vms/Models/SystemUser.dart';
+import 'package:azimuth_vms/UI/Widgets/ArchiveDeleteWidget.dart';
 
 class FormMgmt extends StatefulWidget {
   const FormMgmt({super.key});
@@ -19,6 +20,7 @@ class _FormMgmtState extends State<FormMgmt> {
   bool _isLoading = false;
   String _searchQuery = '';
   VolunteerFormStatus? _selectedStatus;
+  bool _showArchived = false;
 
   @override
   void initState() {
@@ -54,7 +56,10 @@ class _FormMgmtState extends State<FormMgmt> {
         // Filter by status
         final matchesStatus = _selectedStatus == null || form.status == _selectedStatus;
 
-        return matchesSearch && matchesStatus;
+        // Filter by archived state
+        final matchesArchived = _showArchived ? form.archived : !form.archived;
+
+        return matchesSearch && matchesStatus && matchesArchived;
       }).toList();
     });
   }
@@ -190,6 +195,16 @@ class _FormMgmtState extends State<FormMgmt> {
             ),
           ),
 
+          // Show Archived Toggle
+          ShowArchivedToggle(
+            showArchived: _showArchived,
+            onChanged: (value) {
+              setState(() => _showArchived = value);
+              _filterForms();
+            },
+            archivedCount: _allForms.where((f) => f.archived).length,
+          ),
+
           // Forms List
           Expanded(
             child: _isLoading
@@ -201,7 +216,10 @@ class _FormMgmtState extends State<FormMgmt> {
                       children: [
                         Icon(Icons.description_outlined, size: 64, color: Colors.grey.shade400),
                         const SizedBox(height: 16),
-                        Text(_searchQuery.isEmpty && _selectedStatus == null ? 'No forms yet' : 'No forms found', style: TextStyle(fontSize: 18, color: Colors.grey.shade600)),
+                        Text(
+                          _showArchived ? 'No archived forms' : (_searchQuery.isEmpty && _selectedStatus == null ? 'No forms yet' : 'No forms found'),
+                          style: TextStyle(fontSize: 18, color: Colors.grey.shade600),
+                        ),
                         const SizedBox(height: 8),
                         Text('Create a new form to get started', style: TextStyle(color: Colors.grey.shade500)),
                       ],
@@ -257,7 +275,15 @@ class _FormMgmtState extends State<FormMgmt> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(form.fullName ?? 'Unknown', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(form.fullName ?? 'Unknown', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                            ),
+                            if (form.archived) const SizedBox(width: 8),
+                            if (form.archived) const ArchivedBadge(),
+                          ],
+                        ),
                         const SizedBox(height: 4),
                         Row(
                           children: [
@@ -292,6 +318,34 @@ class _FormMgmtState extends State<FormMgmt> {
                         }
                       },
                     ),
+                  ),
+                  const SizedBox(width: 8),
+                  // Archive/Delete Menu
+                  ArchiveDeleteMenu(
+                    isArchived: form.archived,
+                    itemType: 'Form',
+                    itemName: form.fullName ?? 'this form',
+                    onArchive: () async {
+                      await _formHelper.ArchiveForm(form.mobileNumber!);
+                      _loadForms();
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${form.fullName} archived')));
+                      }
+                    },
+                    onUnarchive: () async {
+                      await _formHelper.UnarchiveForm(form.mobileNumber!);
+                      _loadForms();
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${form.fullName} restored')));
+                      }
+                    },
+                    onDelete: () async {
+                      await _formHelper.DeleteForm(form.mobileNumber!);
+                      _loadForms();
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${form.fullName} deleted')));
+                      }
+                    },
                   ),
                 ],
               ),
