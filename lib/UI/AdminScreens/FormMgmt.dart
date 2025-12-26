@@ -67,15 +67,15 @@ class _FormMgmtState extends State<FormMgmt> {
   Future<void> _syncVolunteersWithForms() async {
     try {
       setState(() => _isLoading = true);
-      
+
       // Get all forms
       final forms = await _formHelper.GetAllForms();
-      
+
       // Get all system users
       final users = await _userHelper.GetAllSystemUsers();
-      
+
       int updatedCount = 0;
-      
+
       // For each volunteer user, attach their form if missing
       for (var user in users) {
         if (user.role == SystemUserRole.VOLUNTEER && user.volunteerForm == null) {
@@ -84,7 +84,7 @@ class _FormMgmtState extends State<FormMgmt> {
             (f) => f.mobileNumber == user.phone,
             orElse: () => VolunteerForm(), // Empty form as fallback
           );
-          
+
           if (form.mobileNumber != null) {
             user.volunteerForm = form;
             _userHelper.UpdateSystemUser(user);
@@ -93,23 +93,16 @@ class _FormMgmtState extends State<FormMgmt> {
           }
         }
       }
-      
+
       setState(() => _isLoading = false);
-      
+
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Synced $updatedCount volunteer(s) with their forms'),
-          backgroundColor: Colors.green,
-        ),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Synced $updatedCount volunteer(s) with their forms'), backgroundColor: Colors.green));
     } catch (e) {
       print('Error syncing volunteers: $e');
       setState(() => _isLoading = false);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
     }
   }
 
@@ -120,13 +113,7 @@ class _FormMgmtState extends State<FormMgmt> {
       appBar: AppBar(
         title: const Text('Volunteer Forms Management'),
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.sync),
-            tooltip: 'Sync Volunteers with Forms',
-            onPressed: _syncVolunteersWithForms,
-          ),
-        ],
+        actions: [IconButton(icon: const Icon(Icons.sync), tooltip: 'Sync Volunteers with Forms', onPressed: _syncVolunteersWithForms)],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {

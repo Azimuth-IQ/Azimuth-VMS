@@ -9,6 +9,7 @@ import '../../Models/Location.dart';
 import '../../Models/ShiftAssignment.dart';
 import '../../Models/SystemUser.dart';
 import '../../Providers/EventsProvider.dart';
+import '../../Providers/ShiftAssignmentProvider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ShiftAssignmentScreen extends StatelessWidget {
@@ -16,12 +17,17 @@ class ShiftAssignmentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => EventsProvider()
-        ..loadEvents()
-        ..loadSystemUsers()
-        ..loadLocations()
-        ..loadTeams(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => EventsProvider()
+            ..loadEvents()
+            ..loadSystemUsers()
+            ..loadLocations()
+            ..loadTeams(),
+        ),
+        ChangeNotifierProvider(create: (_) => ShiftAssignmentProvider()),
+      ],
       child: const ShiftAssignmentView(),
     );
   }
@@ -222,7 +228,10 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                                     setState(() {
                                       _selectedEvent = event;
                                       _selectedShift = shift;
+                                      _selectedLocationId = null;
+                                      _isMainLocation = true;
                                     });
+                                    context.read<ShiftAssignmentProvider>().startListeningToEvent(event.id);
                                   },
                                 );
                               }).toList(),
@@ -346,72 +355,118 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                             Expanded(
                               child: Padding(
                                 padding: const EdgeInsets.all(16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Team Assignment Info', style: Theme.of(context).textTheme.titleMedium),
-                                    const SizedBox(height: 16),
-                                    if (_selectedShift!.teamId != null) ...[
-                                      const Text('Main Location - Permanent Team:', style: TextStyle(fontWeight: FontWeight.w500)),
-                                      const SizedBox(height: 8),
-                                      _buildTeamInfo(provider, _selectedShift!.teamId!),
-                                    ] else if (_selectedShift!.tempTeam != null) ...[
-                                      const Text('Main Location - Temporary Team:', style: TextStyle(fontWeight: FontWeight.w500)),
-                                      const SizedBox(height: 8),
-                                      _buildTempTeamInfo(provider, _selectedShift!.tempTeam!),
-                                    ] else ...[
-                                      Text(
-                                        'No team assigned to main location',
-                                        style: TextStyle(color: Colors.grey[600], fontStyle: FontStyle.italic),
-                                      ),
-                                    ],
-
-                                    // Show sublocation teams
-                                    if (_selectedShift!.subLocations.isNotEmpty) ...[
-                                      const SizedBox(height: 24),
-                                      const Divider(),
-                                      const SizedBox(height: 16),
-                                      Text('Sub-Locations (${_selectedShift!.subLocations.length}):', style: Theme.of(context).textTheme.titleMedium),
-                                      const SizedBox(height: 12),
-                                      ..._selectedShift!.subLocations.map((subLoc) {
-                                        final subLocation = provider.locations
-                                            .expand((loc) => loc.subLocations ?? [])
-                                            .firstWhere(
-                                              (sl) => sl.id == subLoc.subLocationId,
-                                              orElse: () => Location(id: '', name: 'Unknown', description: '', latitude: '0', longitude: '0'),
-                                            );
-
-                                        return Padding(
-                                          padding: const EdgeInsets.only(bottom: 12),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  const Icon(Icons.location_on, size: 16, color: Colors.blue),
-                                                  const SizedBox(width: 4),
-                                                  Text(subLocation.name, style: const TextStyle(fontWeight: FontWeight.w500)),
-                                                ],
+                                child: Consumer<ShiftAssignmentProvider>(
+                                  builder: (context, assignmentProvider, child) {
+                                    final assignments = assignmentProvider.assignments;
+                                    
+                                    return Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Current Assignments', style: Theme.of(context).textTheme.titleMedium),
+                                            if (assignments.isNotEmpty)
+                                              Chip(
+                                                label: Text('${assignments.length} assigned'),
+                                                backgroundColor: Colors.green.shade100,
                                               ),
-                                              const SizedBox(height: 8),
-                                              if (subLoc.teamId != null)
-                                                _buildTeamInfo(provider, subLoc.teamId!)
-                                              else if (subLoc.tempTeam != null)
-                                                _buildTempTeamInfo(provider, subLoc.tempTeam!)
-                                              else
-                                                Padding(
-                                                  padding: const EdgeInsets.only(left: 20),
-                                                  child: Text(
-                                                    'No team assigned',
-                                                    style: TextStyle(color: Colors.grey[600], fontStyle: FontStyle.italic, fontSize: 12),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 16),
+                                        Expanded(
+                                          child: assignments.isEmpty
+                                              ? Center(
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Icon(Icons.info_outline, size: 48, color: Colors.grey[400]),
+                                                      const SizedBox(height: 8),
+                                                      Text(
+                                                        'No volunteers assigned yet',
+                                                        style: TextStyle(color: Colors.grey[600], fontStyle: FontStyle.italic),
+                                                      ),
+                                                      const SizedBox(height: 4),
+                                                      Text(
+                                                        'Team leaders should assign first',
+                                                        style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                                                      ),
+                                                    ],
                                                   ),
+                                                )
+                                              : ListView.builder(
+                                                  itemCount: assignments.length,
+                                                  itemBuilder: (context, index) {
+                                                    final assignment = assignments[index];
+                                                    final volunteer = provider.systemUsers.where((u) => u.phone == assignment.volunteerId).firstOrNull;
+                                                    
+                                                    // Get location name
+                                                    String locationName = 'Main Location';
+                                                    if (assignment.sublocationId != null) {
+                                                      final subLoc = provider.locations
+                                                          .expand((loc) => loc.subLocations ?? [])
+                                                          .where((sl) => sl.id == assignment.sublocationId)
+                                                          .firstOrNull;
+                                                      locationName = subLoc?.name ?? 'Unknown Sublocation';
+                                                    }
+                                                    
+                                                    // Determine who assigned
+                                                    final assignedByUser = provider.systemUsers.where((u) => u.phone == assignment.assignedBy).firstOrNull;
+                                                    final isTeamLeader = assignedByUser?.role == SystemUserRole.TEAMLEADER;
+
+                                                    return Card(
+                                                      elevation: 2,
+                                                      margin: const EdgeInsets.only(bottom: 8),
+                                                      child: ListTile(
+                                                        leading: Icon(
+                                                          Icons.person,
+                                                          color: assignment.status == ShiftAssignmentStatus.EXCUSED 
+                                                              ? Colors.orange 
+                                                              : Colors.green,
+                                                        ),
+                                                        title: Text(volunteer?.name ?? 'Unknown'),
+                                                        subtitle: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Text(locationName),
+                                                            const SizedBox(height: 4),
+                                                            Row(
+                                                              children: [
+                                                                Icon(
+                                                                  isTeamLeader ? Icons.badge : Icons.admin_panel_settings,
+                                                                  size: 12,
+                                                                  color: isTeamLeader ? Colors.blue : Colors.purple,
+                                                                ),
+                                                                const SizedBox(width: 4),
+                                                                Text(
+                                                                  'By: ${assignedByUser?.name ?? assignment.assignedBy}',
+                                                                  style: TextStyle(
+                                                                    fontSize: 11,
+                                                                    color: isTeamLeader ? Colors.blue : Colors.purple,
+                                                                    fontWeight: FontWeight.w500,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        trailing: Chip(
+                                                          label: Text(
+                                                            assignment.status.name,
+                                                            style: const TextStyle(fontSize: 11),
+                                                          ),
+                                                          backgroundColor: assignment.status == ShiftAssignmentStatus.EXCUSED 
+                                                              ? Colors.orange.shade100 
+                                                              : Colors.green.shade100,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
                                                 ),
-                                            ],
-                                          ),
-                                        );
-                                      }).toList(),
-                                    ],
-                                  ],
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 ),
                               ),
                             ),
@@ -422,87 +477,6 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
             ],
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildTeamInfo(EventsProvider provider, String teamId) {
-    try {
-      final team = provider.teams.firstWhere((t) => t.id == teamId);
-
-      final leader = provider.systemUsers.firstWhere(
-        (u) => u.phone == team.teamLeaderId,
-        orElse: () => SystemUser(id: '', name: 'Unknown', phone: team.teamLeaderId, role: SystemUserRole.TEAMLEADER),
-      );
-
-      return Card(
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(team.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              Row(children: [const Icon(Icons.person, size: 16), const SizedBox(width: 4), Text('Leader: ${leader.name}')]),
-              const SizedBox(height: 4),
-              Row(children: [const Icon(Icons.group, size: 16), const SizedBox(width: 4), Text('Members: ${team.memberIds.length}')]),
-            ],
-          ),
-        ),
-      );
-    } catch (e) {
-      print('Error finding team $teamId: $e');
-      print('Total teams loaded: ${provider.teams.length}');
-      print('Available team IDs: ${provider.teams.map((t) => t.id).toList()}');
-      return Card(
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const Icon(Icons.error_outline, color: Colors.orange, size: 20),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'Team Not Found',
-                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text('Team ID: $teamId', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
-              const SizedBox(height: 4),
-              Text(
-                'This team may have been deleted or the data is inconsistent.',
-                style: TextStyle(fontSize: 12, color: Colors.grey[600], fontStyle: FontStyle.italic),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-  }
-
-  Widget _buildTempTeamInfo(EventsProvider provider, TempTeam tempTeam) {
-    final leader = provider.systemUsers.firstWhere(
-      (u) => u.phone == tempTeam.teamLeaderId,
-      orElse: () => SystemUser(id: '', name: 'Unknown', phone: tempTeam.teamLeaderId, role: SystemUserRole.TEAMLEADER),
-    );
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Event-Specific Team', style: TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            Row(children: [const Icon(Icons.person, size: 16), const SizedBox(width: 4), Text('Leader: ${leader.name}')]),
-            const SizedBox(height: 4),
-            Row(children: [const Icon(Icons.group, size: 16), const SizedBox(width: 4), Text('Members: ${tempTeam.memberIds.length}')]),
-          ],
-        ),
       ),
     );
   }
