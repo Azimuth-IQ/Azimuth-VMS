@@ -14,6 +14,33 @@ A comprehensive Flutter-based system for managing volunteer registrations, event
 
 ---
 
+## System Goal & Vision
+
+### Primary Objective
+
+The Volunteer Management System (VMS) for Imam Hussein Shrine (IHS) is designed to streamline the complete lifecycle of volunteer management for religious events and campaigns—from initial registration through event execution and performance evaluation.
+
+### Target Users
+
+- **Admins**: Full system control, manage all users, locations, teams, and events
+- **Team Leaders**: Manage their teams, assign volunteers to shifts, check attendance
+- **Volunteers**: Fill applications, view assignments, request leaves
+
+### Core Workflows
+
+The system supports eight major operational workflows:
+
+1. Volunteer invitation and registration with approval workflow
+2. Event creation with date/time scheduling and recurrence
+3. Shift allocation and volunteer assignment
+4. Two-stage attendance verification (departure & arrival)
+5. Location reassignment during events
+6. Urgent leave request management
+7. Volunteer performance rating (PARTIALLY IMPLEMENTED)
+8. Feedback collection system (NOT IMPLEMENTED)
+
+---
+
 ## Business Models
 
 The system is built around several core data models that define the business logic:
@@ -84,15 +111,53 @@ Tracks two-stage presence verification.
 - **CheckType Enum**: `DEPARTURE`, `ARRIVAL`.
 - **Firebase Path**: `/ihs/events/{eventId}/attendance/{userId}/checks/{checkId}`.
 
-### 9. Event (Enhanced)
+### 8. Event (Enhanced)
 
 Extended event model with shift management and presence permissions.
 
 - **New Fields**:
   - `presenceCheckPermissions`: Controls who can check attendance (ADMIN_ONLY, TEAMLEADER_ONLY, BOTH).
   - `shifts`: List of EventShift objects defining time slots and team assignments.
+  - **Recurrence Support**: `isRecurring`, `recurrenceType`, `recurrenceEndDate`.
+  - **Recurrence Types**: NONE, DAILY, WEEKLY, MONTHLY, YEARLY.
+  - **Recurrence Rules**: `weeklyDays` (comma-separated), `monthlyDay`, `yearlyDay`, `yearlyMonth`.
 - **EventShift**: Contains `id`, `startTime`, `endTime`, `locationId`, `teamId`, `tempTeam`, `subLocations`.
 - **TempTeam**: Inline team with `teamLeaderId` and `memberIds` for one-time teams.
+- **ShiftSubLocation**: Nested location assignments with optional team assignments.
+
+### 9. VolunteerRating
+
+Tracks volunteer performance ratings based on defined criteria.
+
+- **Fields**: `id`, `ratings` (Map of criteria to scores), `Date`, `Time`, `Notes`.
+- **Ratings**: Map of VolunteerRatingCriteria to integer scores (1-5).
+- **Storage**: Embedded within SystemUser model as `volunteerRating` field.
+- **Status**: ⚠️ MODEL DEFINED but NO UI IMPLEMENTATION YET.
+
+### 10. VolunteerRatingCriteria
+
+Defines rating categories for volunteer performance.
+
+- **Fields**: `Criteria` (String name of criterion).
+- **Default Criteria** (from model comments):
+  1. Adherence to dress code
+  2. Adherence to location of event
+  3. Adherence to instructions
+  4. Presence score
+  5. Interaction with visitors
+  6. Active cooperation with other employees
+  7. Time commitment
+- **Status**: ⚠️ MODEL DEFINED but NO HELPER/PROVIDER/UI IMPLEMENTATION.
+
+### 11. Feedback Models
+
+**Status**: ❌ NOT IMPLEMENTED
+
+The system currently has **NO models, helpers, providers, or UI** for the three types of feedback mentioned in requirements:
+
+- Admin rating volunteers and team leaders
+- System user feedback on system/bugs
+- Volunteer feedback for event management
 
 ---
 
@@ -101,13 +166,13 @@ Extended event model with shift management and presence permissions.
 ### Core Framework
 
 - **Flutter Web**: Optimized for web deployment using Material Design 3.
-- **State Management**: Provider pattern for efficient state handling.
+- **State Management**: Provider pattern exclusively (no StatefulWidgets for state).
 
 ### Backend & Data
 
 - **Firebase Realtime Database**: Stores all application data in a JSON tree structure.
 - **Firebase Storage**: Securely stores volunteer documents and images.
-- **Authentication**: Firebase Auth (Email/Password).
+- **Authentication**: Firebase Auth (Email/Password) using phone as email format.
 
 ### Key Features
 
@@ -116,67 +181,211 @@ Extended event model with shift management and presence permissions.
 - **Maps Integration**: Google Maps for location selection and visualization.
 - **Search & Filter**: Real-time filtering of volunteer lists by name, phone, and status.
 - **Event Management**: Complete workflow from event creation to presence verification.
+- **Event Recurrence**: Support for recurring events (daily, weekly, monthly, yearly).
 - **Shift Assignment**: Flexible volunteer-to-shift mapping with sublocation support.
 - **Leave Management**: Digital leave request submission and approval workflow.
 - **Two-Stage Presence Checks**: Departure (on bus) and Arrival (at location) verification.
 - **Real-Time Notifications**: Browser push notifications via Firebase Cloud Messaging.
 - **Role-Based Access Control**: Three-tier system (Admin, Team Leader, Volunteer).
+- **Location Reassignment**: Dynamic volunteer relocation during events with notifications.
 
 ---
 
 ## Current Project State
 
-### ✅ Implemented Features
+### ✅ FULLY IMPLEMENTED Features
 
-- **Volunteer Registration System**:
+#### 1. Admin Setup & Management
 
-  - Multi-step form with 5 sections (Basic Info, Contact, Professional, Documents, Attachments).
-  - Image upload integration with Firebase Storage.
-  - PDF generation and download/print.
-  - Status workflow: Sent → Pending → Approved1/Rejected1 → Approved2/Rejected2 → Completed.
+- ✅ **System Users Management**: Create/edit admins and team leaders via [TeamLeadersMgmt.dart](lib/UI/AdminScreens/TeamLeadersMgmt.dart)
+- ✅ **Locations Management**: Create locations with Google Maps integration, add sublocations via [LocationsMgmt.dart](lib/UI/AdminScreens/LocationsMgmt.dart)
+- ✅ **Teams Management**: Create teams, assign team leaders, add members via [TeamsMgmt.dart](lib/UI/AdminScreens/TeamsMgmt.dart)
 
-- **Form Management Dashboard**:
+#### 2. Volunteer Registration Workflow (Flow #1)
 
-  - List view of all volunteer forms.
-  - Real-time search by name or phone number.
-  - Status filtering.
-  - Visual document status indicators.
-  - Quick status updates via dropdown.
+- ✅ **Invitation Flow**: Admin creates empty form with volunteer's phone number
+- ✅ **Volunteer Form Filling**: Multi-step form with 5 sections via [FormFillPage.dart](lib/UI/VolunteerScreens/FormFillPage.dart)
+  - Basic Info (name, education, birth date, marital status)
+  - Contact Info (address, landmark, mukhtar name)
+  - Professional Info (profession, job title, political affiliation, talents)
+  - Documents (ID numbers, ration card, residence card)
+  - Attachments (photo, ID images, residence card images)
+- ✅ **Image Upload Integration**: Web-based image picker with Firebase Storage
+- ✅ **Status Workflow**: Sent → Pending → Approved1/Rejected1 → Approved2/Rejected2 → Completed
+- ✅ **PDF Generation**: Download/print volunteer forms
+- ✅ **Form Management Dashboard**: Search, filter, quick status updates via [FormMgmt.dart](lib/UI/AdminScreens/FormMgmt.dart)
 
-- **Event Management Workflow**:
+#### 3. Event Creation Workflow (Flow #2)
 
-  - **Step 1 - Admin Creates Events**: Create events with multiple shifts, assign locations, set dates.
-  - **Step 2 - Admin Assigns Teams**: Assign permanent teams or create temporary teams for each shift.
-  - **Step 3 - Admin Assigns Volunteers**: Use Shift Assignment Screen to assign specific volunteers to shifts with optional sublocation assignment.
-  - **Step 4 - Team Leaders Assign Members**: Team leaders can assign their team members to their assigned shifts via Team Leader Shift Management Screen.
-  - **Step 5 - Volunteers View Events**: Volunteers see their assigned events with shift times, locations, and team leader contact info on My Events screen.
-  - **Step 6 - Leave Request Flow**:
-    - Volunteers submit leave requests per shift with detailed reason.
-    - Team leaders review pending requests in Leave Request Management Screen.
-    - Approval changes shift assignment status to EXCUSED.
-    - Volunteers receive real-time notifications of approval/rejection.
-  - **Step 7 - Two-Stage Presence Checks**:
-    - **Departure Check**: Admin/Team Leader marks volunteers present/absent when boarding bus.
-    - **Arrival Check**: Admin/Team Leader marks volunteers present/absent upon arrival at location.
-    - Real-time statistics display (Present/Absent/Not Checked/Excused counts).
-    - Permission system controls who can perform checks (ADMIN_ONLY, TEAMLEADER_ONLY, BOTH).
+- ✅ **Event Creation**: Main info, description via [EventsMgmt.dart](lib/UI/AdminScreens/EventsMgmt.dart)
+- ✅ **Date & Time Scheduling**: Start/end dates with time selection
+- ✅ **Recurrence Feature**: Daily, Weekly, Monthly, Yearly with custom rules
+  - Weekly: Select specific days (Monday, Wednesday, etc.)
+  - Monthly: Specify day of month (e.g., 15th)
+  - Yearly: Specify day and month (e.g., December 25th)
+  - Optional recurrence end date
+- ✅ **Multiple Shifts**: Define unlimited shifts per event
+- ✅ **Location Assignment**: Assign main location and sublocations per shift
+- ✅ **Team Assignment**: Choose existing teams or create temporary teams per shift/sublocation
+- ✅ **Presence Check Permissions**: Control who can check attendance (ADMIN_ONLY, TEAMLEADER_ONLY, BOTH)
 
-- **Real-Time Features**:
+#### 4. Shift Allocation Workflow (Flow #3)
 
-  - Live updates via Firebase Realtime Database listeners.
-  - Browser push notifications using Firebase Cloud Messaging (FCM).
-  - Real-time presence check updates across all connected devices.
+- ✅ **Admin Assignment Screen**: Assign specific volunteers to shifts via [ShiftAssignmentScreen.dart](lib/UI/AdminScreens/ShiftAssignmentScreen.dart)
+- ✅ **Team Leader Assignment**: Team leaders assign their team members via [TeamLeaderShiftManagementScreen.dart](lib/UI/TeamLeadersScreens/TeamLeaderShiftManagementScreen.dart)
+- ✅ **Notification System**: Automatic browser notifications for:
+  - Team leaders when assigned to manage event
+  - Volunteers when assigned to shifts
+- ✅ **Sublocation Assignment**: Optional assignment to specific sublocations
+- ✅ **Real-Time Updates**: All assignments update in real-time via Firebase listeners
 
-- **Firebase Integration**:
-  - Full CRUD operations for all models.
-  - Nested data structure under events for assignments, leave requests, and attendance.
-  - Image storage structure: `ihs/volunteerForms/{phoneNumber}/{imageName}`.
+#### 5. Event Day Attendance (Flow #4)
 
-### 🚧 Pending / In Progress
+- ✅ **Two-Stage Presence Checks** via [PresenceCheckScreen.dart](lib/UI/AdminScreens/PresenceCheckScreen.dart) and [TeamLeaderPresenceCheckScreen.dart](lib/UI/TeamLeadersScreens/TeamLeaderPresenceCheckScreen.dart):
+  - **Departure Check**: Mark attendance as volunteers board bus/gather
+  - **Arrival Check**: Mark attendance upon arrival at location
+- ✅ **Real-Time Statistics**: Live counts (Present/Absent/Not Checked/Excused)
+- ✅ **Permission System**: Respects event's presence check permissions setting
+- ✅ **Multi-User Support**: Admins and team leaders can check simultaneously
 
-- Advanced reporting and analytics.
-- Volunteer rating system implementation.
-- Export functionality for attendance reports.
+#### 6. Location Reassignment (Flow #5)
+
+- ✅ **Dynamic Reassignment**: Admin can move volunteers between locations/sublocations via [LocationReassignmentDialog.dart](lib/UI/AdminScreens/LocationReassignmentDialog.dart)
+- ✅ **Additional Attendance Check**: Take new attendance after reassignment
+- ✅ **Volunteer Notification**: Automatic notification of location change
+
+#### 7. Leave Request Management (Flow #6)
+
+- ✅ **Volunteer Leave Request**: Submit urgent leave with detailed reason via [LeaveRequestScreen.dart](lib/UI/VolunteerScreens/LeaveRequestScreen.dart)
+- ✅ **Team Leader Review**: View pending requests, approve/reject via [LeaveRequestManagementScreen.dart](lib/UI/TeamLeadersScreens/LeaveRequestManagementScreen.dart)
+- ✅ **Status Update**: Approved requests change assignment status to EXCUSED
+- ✅ **Real-Time Notifications**:
+  - Team leader notified of new leave request
+  - Volunteer notified of approval/rejection
+- ✅ **Timing Flexibility**: Can request leave before or during event
+
+#### 8. Real-Time Features
+
+- ✅ **Live Updates**: Firebase Realtime Database listeners for all collections
+- ✅ **Browser Push Notifications**: FCM-based notifications with service worker
+- ✅ **Notification Permission Handling**: Automatic permission request on sign-in
+- ✅ **Background Notifications**: Service worker handles notifications when tab is inactive
+
+#### 9. Volunteer Dashboard
+
+- ✅ **My Events View**: See all assigned events via [VolunteerEventDetailsScreen.dart](lib/UI/VolunteerScreens/VolunteerEventDetailsScreen.dart)
+- ✅ **Event Details Display**:
+  - Event name and date
+  - Shift time (start - end)
+  - Location/sublocation information
+  - Team leader name and phone
+- ✅ **Google Maps Integration**: View location on map
+- ✅ **Leave Request Button**: Quick access to leave request form
+
+---
+
+### ⚠️ PARTIALLY IMPLEMENTED Features
+
+#### Volunteer Rating System (Flow #7 - INCOMPLETE)
+
+- ✅ **Data Models**: `VolunteerRating` and `VolunteerRatingCriteria` exist in [lib/Models/](lib/Models/)
+- ✅ **Model Integration**: `volunteerRating` field in `SystemUser` model
+- ❌ **No Helper Class**: No `VolunteerRatingHelperFirebase` for CRUD operations
+- ❌ **No Provider**: No state management provider for ratings
+- ❌ **No UI Screens**: No interface for admins to rate volunteers
+- ❌ **No Score Calculation**: No automatic score calculation based on attendance/feedback
+- ❌ **No Score Display**: Ratings not visible anywhere in admin dashboard
+- ❌ **No Rating Criteria Management**: No UI to configure rating criteria
+
+**Rating Criteria Defined in Model**:
+
+1. Adherence to dress code
+2. Adherence to location of event
+3. Adherence to instructions
+4. Presence score
+5. Interaction with visitors
+6. Active cooperation with other employees
+7. Time commitment
+
+---
+
+### ❌ NOT IMPLEMENTED Features
+
+#### Feedback System (Flow #8 - COMPLETELY MISSING)
+
+The system has **NO implementation** for any of the three feedback types:
+
+##### A. Admin Rating Volunteers/Team Leaders
+
+- ❌ No feedback model for admin ratings
+- ❌ No UI for admins to rate volunteers after events
+- ❌ No UI for admins to rate team leaders
+- ❌ No feedback history tracking
+- ❌ Not integrated with volunteer rating system
+
+##### B. System User Feedback (Bugs/Improvements)
+
+- ❌ No model for system feedback
+- ❌ No feedback submission form
+- ❌ No feedback categories (bug report, feature request, improvement)
+- ❌ No admin dashboard to view feedback
+- ❌ No feedback status tracking (pending, in-progress, resolved)
+- ❌ No attachment support for bug screenshots
+
+##### C. Volunteer Event Feedback
+
+- ❌ No model for event feedback
+- ❌ No volunteer feedback form for events
+- ❌ No feedback submission after event completion
+- ❌ No admin view of volunteer event feedback
+- ❌ No feedback categorization (organization, logistics, management issues)
+- ❌ No feedback aggregation/reporting
+
+#### Advanced Reporting & Analytics
+
+- ❌ No attendance reports export (CSV/PDF)
+- ❌ No volunteer performance analytics dashboard
+- ❌ No event statistics summary
+- ❌ No team performance metrics
+- ❌ No leave request statistics
+- ❌ No location utilization reports
+
+#### Additional Missing Features
+
+- ❌ No volunteer availability management (volunteers set their available dates/times)
+- ❌ No conflict detection (double-booking volunteers)
+- ❌ No event templates (save common event configurations)
+- ❌ No bulk operations (assign multiple volunteers at once - currently manual)
+- ❌ No email notifications (only browser push notifications)
+- ❌ No SMS notifications
+- ❌ No volunteer badges/achievements system
+- ❌ No volunteer certificate generation
+- ❌ No volunteer hour tracking
+- ❌ No admin activity logs (audit trail)
+
+---
+
+### 🔧 Current Technical State
+
+#### Working Components
+
+- ✅ All models properly defined with DataSnapshot parsing
+- ✅ All helpers implement CRUD and streaming operations
+- ✅ All providers use ChangeNotifier pattern correctly
+- ✅ Firebase Storage properly configured for image uploads
+- ✅ Google Maps API integrated and working
+- ✅ FCM notifications working with service worker
+- ✅ Authentication flow complete
+- ✅ Role-based routing functional
+
+#### Known Limitations
+
+- ⚠️ Web-only (no mobile app support yet)
+- ⚠️ Chrome browser recommended (best FCM support)
+- ⚠️ Google Maps API requires billing enabled
+- ⚠️ No offline support
+- ⚠️ No data export functionality
+- ⚠️ No automated testing implemented
 
 ---
 
@@ -599,4 +808,398 @@ Stores user notifications:
 
 ---
 
-_Last Updated: December 21, 2025_
+## 📋 Development Roadmap & TODO
+
+### Priority 1: Complete Core Workflows (High Priority)
+
+#### 1.1 Volunteer Rating System (Flow #7)
+**Goal**: Allow admins to rate volunteers based on performance criteria
+
+- [ ] Create `VolunteerRatingHelperFirebase` in [lib/Helpers/](lib/Helpers/)
+  - [ ] `CreateRating(String volunteerId, VolunteerRating rating)`
+  - [ ] `UpdateRating(String volunteerId, VolunteerRating rating)`
+  - [ ] `GetRatingByVolunteer(String volunteerId)`
+  - [ ] `GetAllRatings()` for analytics
+- [ ] Create `VolunteerRatingProvider` in [lib/Providers/](lib/Providers/)
+  - [ ] State management for rating forms
+  - [ ] Calculate average scores per criterion
+  - [ ] Track rating history
+- [ ] Create `VolunteerRatingScreen.dart` in [lib/UI/AdminScreens/](lib/UI/AdminScreens/)
+  - [ ] Display volunteer list with current scores
+  - [ ] Rating form with 1-5 stars per criterion
+  - [ ] Notes field for feedback
+  - [ ] Date/time stamp
+  - [ ] Save and view rating history
+- [ ] Create `RatingCriteriaManagementScreen.dart`
+  - [ ] Allow admins to configure criteria list
+  - [ ] Add/remove/edit criteria
+  - [ ] Set criteria weights
+- [ ] **Auto-Calculate Scores**:
+  - [ ] Presence score based on attendance records
+  - [ ] Deduct points for absences
+  - [ ] Deduct points for rejected leave requests
+  - [ ] Add points for good feedback
+- [ ] Display volunteer scores in:
+  - [ ] Admin dashboard (volunteers list)
+  - [ ] Volunteer profile view
+  - [ ] Team performance summary
+
+**Estimated Effort**: 3-4 days
+
+---
+
+#### 1.2 Admin Rating Volunteers/Team Leaders (Flow #8.A)
+**Goal**: Provide structured feedback mechanism for admins to rate users after events
+
+- [ ] Create `AdminFeedback` model in [lib/Models/](lib/Models/)
+  ```dart
+  class AdminFeedback {
+    String id;
+    String adminId;
+    String targetUserId; // volunteer or team leader
+    String targetUserRole; // VOLUNTEER or TEAMLEADER
+    String eventId;
+    String shiftId;
+    int overallRating; // 1-5
+    Map<String, int> criteriaRatings; // criterion name -> score
+    String comments;
+    String timestamp;
+  }
+  ```
+- [ ] Create `AdminFeedbackHelperFirebase`
+  - [ ] CRUD operations
+  - [ ] Get feedback by event
+  - [ ] Get feedback by volunteer
+  - [ ] Get feedback by team leader
+- [ ] Create `AdminFeedbackProvider`
+- [ ] Create `PostEventFeedbackScreen.dart`
+  - [ ] Show after event completion
+  - [ ] List all volunteers/team leaders in event
+  - [ ] Quick rating interface (1-5 stars)
+  - [ ] Optional detailed feedback
+- [ ] Integrate with volunteer rating system
+  - [ ] Admin feedback should contribute to volunteer score
+- [ ] Firebase path: `/ihs/feedback/admin/{feedbackId}`
+
+**Estimated Effort**: 2-3 days
+
+---
+
+#### 1.3 System Feedback (Bugs/Improvements) (Flow #8.B)
+**Goal**: Allow users to report bugs and suggest improvements
+
+- [ ] Create `SystemFeedback` model
+  ```dart
+  class SystemFeedback {
+    String id;
+    String userId;
+    String userName;
+    FeedbackType type; // BUG, FEATURE_REQUEST, IMPROVEMENT
+    FeedbackPriority priority; // LOW, MEDIUM, HIGH
+    String title;
+    String description;
+    String? screenshotUrl;
+    FeedbackStatus status; // PENDING, IN_PROGRESS, RESOLVED, CLOSED
+    String timestamp;
+    String? resolvedBy;
+    String? resolvedAt;
+    String? resolutionNotes;
+  }
+  ```
+- [ ] Create `SystemFeedbackHelperFirebase`
+- [ ] Create `SystemFeedbackProvider`
+- [ ] Create `SubmitFeedbackScreen.dart` (available to all users)
+  - [ ] Category selection (Bug/Feature/Improvement)
+  - [ ] Priority selection
+  - [ ] Title and description
+  - [ ] Optional screenshot upload
+  - [ ] Submit button
+- [ ] Create `FeedbackManagementScreen.dart` (Admin only)
+  - [ ] List all feedback with filters
+  - [ ] Filter by type, priority, status
+  - [ ] View details
+  - [ ] Change status
+  - [ ] Add resolution notes
+  - [ ] Assign to admin
+- [ ] Add feedback button to all user dashboards
+- [ ] Firebase path: `/ihs/feedback/system/{feedbackId}`
+
+**Estimated Effort**: 2-3 days
+
+---
+
+#### 1.4 Volunteer Event Feedback (Flow #8.C)
+**Goal**: Allow volunteers to provide feedback about event management
+
+- [ ] Create `VolunteerEventFeedback` model
+  ```dart
+  class VolunteerEventFeedback {
+    String id;
+    String volunteerId;
+    String eventId;
+    String shiftId;
+    int organizationRating; // 1-5
+    int logisticsRating; // 1-5
+    int communicationRating; // 1-5
+    int managementRating; // 1-5
+    String whatWentWell;
+    String whatNeedsImprovement;
+    List<String> issues; // predefined list: late start, poor communication, etc.
+    String additionalComments;
+    String timestamp;
+    bool isAnonymous;
+  }
+  ```
+- [ ] Create `VolunteerEventFeedbackHelperFirebase`
+- [ ] Create `VolunteerEventFeedbackProvider`
+- [ ] Create `SubmitEventFeedbackScreen.dart` (Volunteer only)
+  - [ ] Show after event completion
+  - [ ] Rating sliders (1-5) for each category
+  - [ ] Text fields for open feedback
+  - [ ] Checkbox for common issues
+  - [ ] Anonymous option
+  - [ ] Submit button
+- [ ] Create `EventFeedbackReportScreen.dart` (Admin only)
+  - [ ] View aggregated feedback per event
+  - [ ] Average ratings per category
+  - [ ] Common issues chart
+  - [ ] Individual feedback list
+  - [ ] Filter by event/date
+- [ ] Auto-prompt volunteer to submit feedback 24 hours after event
+- [ ] Firebase path: `/ihs/feedback/events/{eventId}/volunteers/{feedbackId}`
+
+**Estimated Effort**: 3-4 days
+
+---
+
+### Priority 2: Reporting & Analytics (Medium Priority)
+
+#### 2.1 Attendance Reports
+- [ ] Create `ReportsScreen.dart` in [lib/UI/AdminScreens/](lib/UI/AdminScreens/)
+- [ ] Export attendance to CSV
+  - [ ] Event-level report
+  - [ ] Volunteer-level report
+  - [ ] Date range filtering
+- [ ] Export attendance to PDF
+  - [ ] Formatted tables
+  - [ ] Event header
+  - [ ] Statistics summary
+- [ ] Attendance summary dashboard
+  - [ ] Total events
+  - [ ] Total volunteers
+  - [ ] Average attendance rate
+  - [ ] Absence trends
+
+**Estimated Effort**: 2-3 days
+
+---
+
+#### 2.2 Volunteer Performance Analytics
+- [ ] Create `VolunteerAnalyticsScreen.dart`
+- [ ] Individual volunteer dashboard showing:
+  - [ ] Total events participated
+  - [ ] Attendance rate percentage
+  - [ ] Average rating score
+  - [ ] Leave request history
+  - [ ] Feedback received
+  - [ ] Performance trend chart
+- [ ] Leaderboard view
+  - [ ] Top-rated volunteers
+  - [ ] Most active volunteers
+  - [ ] Best attendance rate
+- [ ] Export volunteer performance report
+
+**Estimated Effort**: 3-4 days
+
+---
+
+#### 2.3 Event Statistics
+- [ ] Event summary report:
+  - [ ] Volunteer count per shift
+  - [ ] Attendance statistics
+  - [ ] Leave request count
+  - [ ] Location utilization
+  - [ ] Team performance
+- [ ] Event comparison:
+  - [ ] Compare multiple events
+  - [ ] Identify trends
+  - [ ] Best practices insights
+- [ ] Export event statistics
+
+**Estimated Effort**: 2-3 days
+
+---
+
+### Priority 3: Enhanced Features (Medium Priority)
+
+#### 3.1 Volunteer Availability Management
+- [ ] Create `Availability` model (volunteer sets available dates/times)
+- [ ] Create `AvailabilityScreen.dart` for volunteers
+  - [ ] Calendar view
+  - [ ] Mark available/unavailable dates
+  - [ ] Set recurring availability patterns
+  - [ ] Set blackout dates
+- [ ] Integrate with shift assignment
+  - [ ] Only show available volunteers
+  - [ ] Warning for unavailable assignments
+  - [ ] Automatic conflict detection
+
+**Estimated Effort**: 3-4 days
+
+---
+
+#### 3.2 Conflict Detection
+- [ ] Check for volunteer double-booking
+- [ ] Check for team leader conflicts
+- [ ] Check for location capacity limits
+- [ ] Display warnings during assignment
+- [ ] Suggest alternative volunteers/times
+
+**Estimated Effort**: 2 days
+
+---
+
+#### 3.3 Event Templates
+- [ ] Create `EventTemplate` model
+- [ ] Save event configurations as templates
+- [ ] Template library screen
+- [ ] Create event from template
+- [ ] Edit and update templates
+- [ ] Share templates between admins
+
+**Estimated Effort**: 2-3 days
+
+---
+
+#### 3.4 Bulk Operations
+- [ ] Bulk volunteer assignment
+  - [ ] Select multiple volunteers
+  - [ ] Assign to same shift
+  - [ ] Assign to multiple shifts
+- [ ] Bulk status updates
+- [ ] Bulk notifications
+- [ ] Import volunteers from CSV
+
+**Estimated Effort**: 2-3 days
+
+---
+
+### Priority 4: Communication Enhancements (Low Priority)
+
+#### 4.1 Email Notifications
+- [ ] Set up Firebase Functions for emails
+- [ ] Email templates
+- [ ] Email for shift assignments
+- [ ] Email for leave approvals
+- [ ] Email for event reminders
+- [ ] User email preferences
+
+**Estimated Effort**: 3-4 days
+
+---
+
+#### 4.2 SMS Notifications
+- [ ] Integrate SMS provider (Twilio/Firebase)
+- [ ] SMS for critical notifications
+- [ ] SMS for event reminders
+- [ ] SMS opt-in/opt-out
+
+**Estimated Effort**: 2-3 days
+
+---
+
+### Priority 5: Gamification & Recognition (Low Priority)
+
+#### 5.1 Volunteer Badges/Achievements
+- [ ] Create `Badge` model
+- [ ] Define achievement criteria
+- [ ] Award badges automatically
+- [ ] Display badges on volunteer profile
+- [ ] Badge notification system
+
+**Estimated Effort**: 2-3 days
+
+---
+
+#### 5.2 Volunteer Certificates
+- [ ] Certificate template design
+- [ ] Auto-generate certificates
+- [ ] Download/print certificates
+- [ ] Email certificates
+
+**Estimated Effort**: 2 days
+
+---
+
+#### 5.3 Volunteer Hour Tracking
+- [ ] Calculate hours from attendance
+- [ ] Display total hours on profile
+- [ ] Hours leaderboard
+- [ ] Export hours report
+
+**Estimated Effort**: 1-2 days
+
+---
+
+### Priority 6: System Improvements (Ongoing)
+
+#### 6.1 Automated Testing
+- [ ] Unit tests for models
+- [ ] Unit tests for helpers
+- [ ] Widget tests for UI components
+- [ ] Integration tests for workflows
+- [ ] Set up CI/CD pipeline
+
+**Estimated Effort**: 5-7 days
+
+---
+
+#### 6.2 Admin Activity Logs
+- [ ] Create `ActivityLog` model
+- [ ] Log all admin actions
+- [ ] Log system changes
+- [ ] Admin logs viewer screen
+- [ ] Filter by user, action, date
+- [ ] Export logs
+
+**Estimated Effort**: 2-3 days
+
+---
+
+#### 6.3 Mobile App Support
+- [ ] Add Android support
+- [ ] Add iOS support
+- [ ] Platform-specific UI adjustments
+- [ ] Mobile push notifications
+- [ ] Offline support
+
+**Estimated Effort**: 10-15 days
+
+---
+
+#### 6.4 Performance Optimization
+- [ ] Database indexing
+- [ ] Lazy loading for large lists
+- [ ] Image optimization
+- [ ] Caching strategies
+- [ ] Reduce Firebase reads
+
+**Estimated Effort**: 3-5 days
+
+---
+
+### Total Estimated Effort Summary
+
+| Priority | Tasks | Estimated Days |
+|----------|-------|----------------|
+| **Priority 1** (Core Workflows) | 4 tasks | 10-14 days |
+| **Priority 2** (Reporting) | 3 tasks | 7-10 days |
+| **Priority 3** (Enhanced Features) | 4 tasks | 9-13 days |
+| **Priority 4** (Communication) | 2 tasks | 5-7 days |
+| **Priority 5** (Gamification) | 3 tasks | 5-7 days |
+| **Priority 6** (System Improvements) | 4 tasks | 20-30 days |
+| **TOTAL** | **20 tasks** | **56-81 days** |
+
+---
+
+_Last Updated: December 26, 2025_
