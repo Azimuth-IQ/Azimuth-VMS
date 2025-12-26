@@ -20,7 +20,8 @@ class ShiftAssignmentScreen extends StatelessWidget {
       create: (_) => EventsProvider()
         ..loadEvents()
         ..loadSystemUsers()
-        ..loadLocations(),
+        ..loadLocations()
+        ..loadTeams(),
       child: const ShiftAssignmentView(),
     );
   }
@@ -147,6 +148,7 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
               final provider = context.read<EventsProvider>();
               provider.loadEvents();
               provider.loadSystemUsers();
+              provider.loadTeams();
             },
           ),
         ],
@@ -267,7 +269,7 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                                         (loc) => loc.id == _selectedShift!.locationId,
                                         orElse: () => Location(id: '', name: 'Unknown', description: '', latitude: '0', longitude: '0'),
                                       );
-                                      
+
                                       return DropdownButtonFormField<String>(
                                         value: _selectedLocationId,
                                         decoration: const InputDecoration(
@@ -322,10 +324,7 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                                     onPressed: _selectedLocationId == null ? null : () => _assignVolunteersToLocation(context),
                                     icon: const Icon(Icons.person_add),
                                     label: const Text('Assign Volunteers to Location'),
-                                    style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                                      disabledBackgroundColor: Colors.grey[300],
-                                    ),
+                                    style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16), disabledBackgroundColor: Colors.grey[300]),
                                   ),
                                 ],
                               ),
@@ -440,6 +439,8 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
       );
     } catch (e) {
       print('Error finding team $teamId: $e');
+      print('Total teams loaded: ${provider.teams.length}');
+      print('Available team IDs: ${provider.teams.map((t) => t.id).toList()}');
       return Card(
         child: Padding(
           padding: const EdgeInsets.all(12),
