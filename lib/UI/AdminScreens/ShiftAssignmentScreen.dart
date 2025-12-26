@@ -47,7 +47,10 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
     }
 
     final provider = context.read<EventsProvider>();
-    final volunteers = provider.volunteers.where((v) => v.volunteerForm?.status == VolunteerFormStatus.Completed).toList();
+    final volunteers = provider.volunteers.where((v) {
+      final status = v.volunteerForm?.status;
+      return status == VolunteerFormStatus.Approved1 || status == VolunteerFormStatus.Approved2 || status == VolunteerFormStatus.Completed;
+    }).toList();
 
     if (volunteers.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No approved volunteers available')));
