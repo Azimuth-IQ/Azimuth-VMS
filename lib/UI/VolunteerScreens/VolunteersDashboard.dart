@@ -1,7 +1,9 @@
 import 'package:azimuth_vms/Helpers/VolunteerFormHelperFirebase.dart';
+import 'package:azimuth_vms/Helpers/SystemUserHelperFirebase.dart';
 import 'package:azimuth_vms/Models/VolunteerForm.dart';
 import 'package:azimuth_vms/Providers/NotificationsProvider.dart';
 import 'package:azimuth_vms/Providers/ShiftAssignmentProvider.dart';
+import 'package:azimuth_vms/Providers/VolunteerRatingProvider.dart';
 import 'package:azimuth_vms/UI/Widgets/ChangePasswordScreen.dart';
 import 'package:azimuth_vms/UI/Widgets/NotificationPanel.dart';
 import 'package:azimuth_vms/UI/VolunteerScreens/VolunteerScheduleScreen.dart';
@@ -121,6 +123,7 @@ class VolunteersDashboard extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => NotificationsProvider()..loadNotifications(userPhone)),
         ChangeNotifierProvider(create: (_) => ShiftAssignmentProvider()..startListeningToVolunteer(userPhone)),
+        ChangeNotifierProvider(create: (_) => VolunteerRatingProvider()),
       ],
       child: _ApprovedDashboardView(form: form, title: title, message: message, isFullyApproved: isFullyApproved, userPhone: userPhone),
     );
@@ -280,6 +283,22 @@ class _ApprovedDashboardView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildInfoCard('Welcome ', form.fullName),
+            const SizedBox(height: 8),
+            Consumer<VolunteerRatingProvider>(
+              builder: (context, ratingProvider, child) {
+                return FutureBuilder(
+                  future: SystemUserHelperFirebase().GetSystemUserByPhone(userPhone),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData && snapshot.data?.volunteerRating != null) {
+                      final rating = snapshot.data!.volunteerRating!;
+                      final average = ratingProvider.getAverageScore(rating);
+                      return _buildRatingCard(average);
+                    }
+                    return const SizedBox.shrink();
+                  },
+                );
+              },
+            ),
             if (isFullyApproved) ...[
               const SizedBox(height: 24),
               const Text('Quick Actions', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
@@ -315,6 +334,45 @@ class _ApprovedDashboardView extends StatelessWidget {
           value ?? 'N/A',
           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRatingCard(double averageScore) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      color: Colors.amber.shade50,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.star, color: Colors.amber, size: 32),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Your Performance Rating',
+                  style: TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Text(
+                      averageScore.toStringAsFixed(1),
+                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black87),
+                    ),
+                    const Text(
+                      ' / 5.0',
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

@@ -2,6 +2,7 @@ import 'package:azimuth_vms/Providers/AppProvider.dart';
 import 'package:azimuth_vms/Providers/EventsProvider.dart';
 import 'package:azimuth_vms/Providers/ShiftAssignmentProvider.dart';
 import 'package:azimuth_vms/Providers/NotificationsProvider.dart';
+import 'package:azimuth_vms/Providers/VolunteerRatingProvider.dart';
 import 'package:azimuth_vms/UI/AdminScreens/AdminDashboard.dart';
 import 'package:azimuth_vms/UI/AdminScreens/EventsMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/FormFillPage.dart' as Admin;
@@ -12,6 +13,8 @@ import 'package:azimuth_vms/UI/AdminScreens/TeamsMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/VolunteersMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/ShiftAssignmentScreen.dart';
 import 'package:azimuth_vms/UI/AdminScreens/PresenceCheckScreen.dart';
+import 'package:azimuth_vms/UI/AdminScreens/VolunteerRatingScreen.dart';
+import 'package:azimuth_vms/UI/AdminScreens/RatingCriteriaManagementScreen.dart';
 import 'package:azimuth_vms/UI/TeamLeadersScreens/TeamleaderDashboard.dart';
 import 'package:azimuth_vms/UI/TeamLeadersScreens/TeamLeaderShiftManagementScreen.dart';
 import 'package:azimuth_vms/UI/TeamLeadersScreens/LeaveRequestManagementScreen.dart';
@@ -48,6 +51,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<EventsProvider>(create: (_) => EventsProvider()),
         ChangeNotifierProvider<ShiftAssignmentProvider>(create: (_) => ShiftAssignmentProvider()),
         ChangeNotifierProvider<NotificationsProvider>(create: (_) => NotificationsProvider()),
+        ChangeNotifierProvider<VolunteerRatingProvider>(create: (_) => VolunteerRatingProvider()),
       ],
       child: MaterialApp(
         title: 'Azimuth VMS',
@@ -191,6 +195,8 @@ class _AuthGuardState extends State<AuthGuard> {
       '/admin-form-fill',
       '/shift-assignment',
       '/presence-check-admin',
+      '/volunteer-rating',
+      '/rating-criteria-management',
     ];
 
     const teamLeaderRoutes = ['/teamleaders-dashboard', '/teamleader-shift-management', '/leave-request-management', '/presence-check-teamleader'];
@@ -234,6 +240,10 @@ class _AuthGuardState extends State<AuthGuard> {
         return const ShiftAssignmentScreen();
       case '/presence-check-admin':
         return const PresenceCheckScreen();
+      case '/volunteer-rating':
+        return const VolunteerRatingScreen();
+      case '/rating-criteria-management':
+        return const RatingCriteriaManagementScreen();
 
       // Team Leader routes
       case '/teamleaders-dashboard':

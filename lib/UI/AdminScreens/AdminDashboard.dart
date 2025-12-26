@@ -234,6 +234,14 @@ class _AdminDashboardView extends StatelessWidget {
                       color: Colors.amber,
                       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const SendNotificationScreen())),
                     ),
+                    _buildManagementCard(
+                      context,
+                      title: 'Rate Volunteers',
+                      subtitle: 'Evaluate volunteer performance',
+                      icon: Icons.star,
+                      color: Colors.deepOrange,
+                      onTap: () => Navigator.pushNamed(context, '/volunteer-rating'),
+                    ),
                   ],
                 );
               },
