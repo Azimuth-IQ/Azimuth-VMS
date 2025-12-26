@@ -13,30 +13,37 @@ applyTo: "**"
 ### ✅ FULLY IMPLEMENTED (8/8 Core Workflows)
 
 1. **Admin Setup** ✅
+
    - System users, locations, teams fully functional
    - Files: [TeamLeadersMgmt.dart](lib/UI/AdminScreens/TeamLeadersMgmt.dart), [LocationsMgmt.dart](lib/UI/AdminScreens/LocationsMgmt.dart), [TeamsMgmt.dart](lib/UI/AdminScreens/TeamsMgmt.dart)
 
 2. **Volunteer Registration** ✅
+
    - Complete invitation → form filling → approval workflow
    - Files: [FormFillPage.dart](lib/UI/VolunteerScreens/FormFillPage.dart), [FormMgmt.dart](lib/UI/AdminScreens/FormMgmt.dart)
 
 3. **Event Creation** ✅
+
    - With recurrence (daily/weekly/monthly/yearly)
    - Files: [EventsMgmt.dart](lib/UI/AdminScreens/EventsMgmt.dart)
 
 4. **Shift Allocation** ✅
+
    - Admin and team leader assignment screens
    - Files: [ShiftAssignmentScreen.dart](lib/UI/AdminScreens/ShiftAssignmentScreen.dart), [TeamLeaderShiftManagementScreen.dart](lib/UI/TeamLeadersScreens/TeamLeaderShiftManagementScreen.dart)
 
 5. **Two-Stage Attendance** ✅
+
    - Departure + Arrival checks
    - Files: [PresenceCheckScreen.dart](lib/UI/AdminScreens/PresenceCheckScreen.dart), [TeamLeaderPresenceCheckScreen.dart](lib/UI/TeamLeadersScreens/TeamLeaderPresenceCheckScreen.dart)
 
 6. **Location Reassignment** ✅
+
    - Dynamic volunteer relocation
    - Files: [LocationReassignmentDialog.dart](lib/UI/AdminScreens/LocationReassignmentDialog.dart)
 
 7. **Leave Requests** ✅
+
    - Submit, review, approve/reject
    - Files: [LeaveRequestScreen.dart](lib/UI/VolunteerScreens/LeaveRequestScreen.dart), [LeaveRequestManagementScreen.dart](lib/UI/TeamLeadersScreens/LeaveRequestManagementScreen.dart)
 
@@ -49,6 +56,7 @@ applyTo: "**"
 ### ⚠️ PARTIALLY IMPLEMENTED
 
 #### Volunteer Rating System
+
 - ✅ Models exist: [VolunteerRating.dart](lib/Models/VolunteerRating.dart), [VolunteerRatingCriteria.dart](lib/Models/VolunteerRatingCriteria.dart)
 - ✅ Integrated in SystemUser model
 - ❌ No Helper class
@@ -65,6 +73,7 @@ applyTo: "**"
 #### Feedback System (3 Types Missing)
 
 ##### A. Admin Rating Volunteers/Team Leaders
+
 - **What**: Admins rate users after events
 - **Models**: None
 - **Helpers**: None
@@ -72,6 +81,7 @@ applyTo: "**"
 - **Action**: See README.md → Priority 1.2
 
 ##### B. System Feedback (Bugs/Improvements)
+
 - **What**: Users report bugs and suggest features
 - **Models**: None
 - **Helpers**: None
@@ -79,6 +89,7 @@ applyTo: "**"
 - **Action**: See README.md → Priority 1.3
 
 ##### C. Volunteer Event Feedback
+
 - **What**: Volunteers provide event management feedback
 - **Models**: None
 - **Helpers**: None
@@ -86,6 +97,7 @@ applyTo: "**"
 - **Action**: See README.md → Priority 1.4
 
 #### Reporting & Analytics
+
 - No CSV/PDF export
 - No analytics dashboards
 - No performance metrics
@@ -96,18 +108,22 @@ applyTo: "**"
 ## File Structure Reference
 
 ### Models (`lib/Models/`)
+
 - **Implemented**: VolunteerForm, Event, Location, Team, SystemUser, ShiftAssignment, LeaveRequest, AttendanceRecord, Notification, VolunteerRating, VolunteerRatingCriteria
 - **Missing**: AdminFeedback, SystemFeedback, VolunteerEventFeedback, EventTemplate, Availability, Badge
 
 ### Helpers (`lib/Helpers/`)
+
 - **Implemented**: All Firebase helpers for implemented models
 - **Missing**: VolunteerRatingHelperFirebase, AdminFeedbackHelperFirebase, SystemFeedbackHelperFirebase, VolunteerEventFeedbackHelperFirebase
 
 ### Providers (`lib/Providers/`)
+
 - **Implemented**: AppProvider, AttendanceProvider, EventsProvider, LeaveRequestProvider, LocationsProvider, NotificationsProvider, ShiftAssignmentProvider, TeamLeadersProvider, TeamsProvider, VolunteersProvider
 - **Missing**: VolunteerRatingProvider, FeedbackProvider, AnalyticsProvider
 
 ### UI Screens
+
 - **Admin Screens**: AdminDashboard, EventsMgmt, FormMgmt, LocationsMgmt, TeamsMgmt, TeamLeadersMgmt, VolunteersMgmt, PresenceCheckScreen, ShiftAssignmentScreen, LocationReassignmentDialog, SendNotificationScreen
 - **Team Leader Screens**: TeamLeaderDashboard, TeamLeaderShiftManagementScreen, TeamLeaderPresenceCheckScreen, LeaveRequestManagementScreen
 - **Volunteer Screens**: VolunteerDashboard, FormFillPage, VolunteerEventDetailsScreen, LeaveRequestScreen
@@ -145,6 +161,7 @@ ihs/
 ```
 
 **Note**: Feedback paths will be added when implemented:
+
 - `/ihs/feedback/admin/{feedbackId}`
 - `/ihs/feedback/system/{feedbackId}`
 - `/ihs/feedback/events/{eventId}/volunteers/{feedbackId}`
@@ -154,6 +171,7 @@ ihs/
 ## Key Implementation Patterns
 
 ### Data Models
+
 ```dart
 // Always use DataSnapshot for Firebase parsing
 factory ModelName.fromDataSnapshot(DataSnapshot snapshot) {
@@ -168,35 +186,37 @@ Map<String, dynamic> toJson() {
 ```
 
 ### Helpers
+
 ```dart
 class ModelHelperFirebase {
   static final _ref = FirebaseDatabase.instance.ref();
-  
+
   // CRUD operations
   Future<void> Create(...) async { ... }
   Future<Model?> GetById(...) async { ... }
   Future<List<Model>> GetAll(...) async { ... }
   Future<void> Update(...) async { ... }
   Future<void> Delete(...) async { ... }
-  
+
   // Streaming for real-time
   Stream<List<Model>> StreamModels(...) { ... }
 }
 ```
 
 ### Providers
+
 ```dart
 class ModelProvider with ChangeNotifier {
   List<Model> _items = [];
   StreamSubscription? _subscription;
-  
+
   void startListening() {
     _subscription = helper.StreamModels().listen((items) {
       _items = items;
       notifyListeners();
     });
   }
-  
+
   @override
   void dispose() {
     _subscription?.cancel();
@@ -206,6 +226,7 @@ class ModelProvider with ChangeNotifier {
 ```
 
 ### UI Screens
+
 - **Always use StatelessWidget** with Consumer<Provider>
 - Exception: Widgets with native controllers (GoogleMapController)
 - Pattern:
@@ -229,6 +250,7 @@ class ModelProvider with ChangeNotifier {
 ### Checklist for New Feature Implementation
 
 1. **Model** (`lib/Models/`)
+
    - [ ] Create model class
    - [ ] Add `fromDataSnapshot()` factory
    - [ ] Add `toJson()` method
@@ -236,6 +258,7 @@ class ModelProvider with ChangeNotifier {
    - [ ] Test with sample data
 
 2. **Helper** (`lib/Helpers/`)
+
    - [ ] Create `{Model}HelperFirebase` class
    - [ ] Implement CRUD operations
    - [ ] Add streaming methods for real-time
@@ -243,6 +266,7 @@ class ModelProvider with ChangeNotifier {
    - [ ] Handle errors with print + SnackBar
 
 3. **Provider** (`lib/Providers/`)
+
    - [ ] Create `{Model}Provider` with ChangeNotifier
    - [ ] Add state variables
    - [ ] Implement `startListening()` / `stopListening()`
@@ -250,6 +274,7 @@ class ModelProvider with ChangeNotifier {
    - [ ] Call `notifyListeners()` after state changes
 
 4. **UI Screen** (`lib/UI/{Role}Screens/`)
+
    - [ ] Create screen file
    - [ ] Use StatelessWidget + Consumer
    - [ ] Add to routing in main.dart
@@ -258,6 +283,7 @@ class ModelProvider with ChangeNotifier {
    - [ ] Test on Chrome web
 
 5. **Documentation** (README.md)
+
    - [ ] Update "Current Project State" section
    - [ ] Add to implemented features
    - [ ] Update Firebase structure if needed
@@ -305,6 +331,7 @@ Before marking any feature as "done":
 Refer to README.md → Development Roadmap for full details.
 
 **Immediate Priorities** (in order):
+
 1. Volunteer Rating System UI (Priority 1.1)
 2. Admin Rating Feedback (Priority 1.2)
 3. System Feedback (Priority 1.3)

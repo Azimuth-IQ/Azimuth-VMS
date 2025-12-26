@@ -4,7 +4,9 @@
 # This script builds the Flutter web app and deploys it to Firebase Hosting
 
 echo "🚀 Starting Firebase Hosting deployment..."
-
+# Clean the previous build
+echo "🧹 Cleaning previous build..."
+flutter clean
 # Build the Flutter web app
 echo "📦 Building Flutter web app..."
 flutter build web --release
