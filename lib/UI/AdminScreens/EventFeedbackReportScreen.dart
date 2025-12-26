@@ -14,7 +14,7 @@ class EventFeedbackReportScreen extends StatefulWidget {
 
 class _EventFeedbackReportScreenState extends State<EventFeedbackReportScreen> {
   Event? _selectedEvent;
-  
+
   @override
   void initState() {
     super.initState();
@@ -26,10 +26,7 @@ class _EventFeedbackReportScreenState extends State<EventFeedbackReportScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Event Feedback Reports'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
+      appBar: AppBar(title: const Text('Event Feedback Reports'), backgroundColor: Theme.of(context).colorScheme.inversePrimary),
       body: Column(
         children: [
           // Event Selector
@@ -39,27 +36,17 @@ class _EventFeedbackReportScreenState extends State<EventFeedbackReportScreen> {
             child: Consumer<EventsProvider>(
               builder: (context, eventsProvider, child) {
                 if (eventsProvider.events.isEmpty) {
-                  return const Center(
-                    child: Text('No events available'),
-                  );
+                  return const Center(child: Text('No events available'));
                 }
 
                 return DropdownButtonFormField<Event>(
                   value: _selectedEvent,
-                  decoration: const InputDecoration(
-                    labelText: 'Select Event',
-                    border: OutlineInputBorder(),
-                    filled: true,
-                    fillColor: Colors.white,
-                  ),
+                  decoration: const InputDecoration(labelText: 'Select Event', border: OutlineInputBorder(), filled: true, fillColor: Colors.white),
                   hint: const Text('Choose an event to view feedback'),
                   items: eventsProvider.events.map((event) {
                     return DropdownMenuItem<Event>(
                       value: event,
-                      child: Text(
-                        event.name,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      child: Text(event.name, overflow: TextOverflow.ellipsis),
                     );
                   }).toList(),
                   onChanged: (event) {
@@ -67,8 +54,7 @@ class _EventFeedbackReportScreenState extends State<EventFeedbackReportScreen> {
                       _selectedEvent = event;
                     });
                     if (event != null) {
-                      context.read<VolunteerEventFeedbackProvider>()
-                        .startListeningToEvent(event.id);
+                      context.read<VolunteerEventFeedbackProvider>().startListeningToEvent(event.id);
                     }
                   },
                 );
@@ -83,19 +69,9 @@ class _EventFeedbackReportScreenState extends State<EventFeedbackReportScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.assessment,
-                          size: 64,
-                          color: Colors.grey.shade400,
-                        ),
+                        Icon(Icons.assessment, size: 64, color: Colors.grey.shade400),
                         const SizedBox(height: 16),
-                        Text(
-                          'Select an event to view feedback',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey.shade600,
-                          ),
-                        ),
+                        Text('Select an event to view feedback', style: TextStyle(fontSize: 16, color: Colors.grey.shade600)),
                       ],
                     ),
                   )
@@ -120,19 +96,9 @@ class _EventFeedbackReportScreenState extends State<EventFeedbackReportScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.feedback_outlined,
-                  size: 64,
-                  color: Colors.grey.shade400,
-                ),
+                Icon(Icons.feedback_outlined, size: 64, color: Colors.grey.shade400),
                 const SizedBox(height: 16),
-                Text(
-                  'No feedback received for this event yet',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey.shade600,
-                  ),
-                ),
+                Text('No feedback received for this event yet', style: TextStyle(fontSize: 16, color: Colors.grey.shade600)),
               ],
             ),
           );
@@ -146,17 +112,11 @@ class _EventFeedbackReportScreenState extends State<EventFeedbackReportScreen> {
                 future: provider.getEventAverageRatings(_selectedEvent!.id),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: CircularProgressIndicator(),
-                    );
+                    return const Padding(padding: EdgeInsets.all(16.0), child: CircularProgressIndicator());
                   }
 
                   if (snapshot.hasError) {
-                    return Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text('Error loading averages: ${snapshot.error}'),
-                    );
+                    return Padding(padding: const EdgeInsets.all(16.0), child: Text('Error loading averages: ${snapshot.error}'));
                   }
 
                   final averages = snapshot.data ?? {};
@@ -172,10 +132,7 @@ class _EventFeedbackReportScreenState extends State<EventFeedbackReportScreen> {
                   children: [
                     const Divider(),
                     const SizedBox(height: 16),
-                    Text(
-                      'Individual Feedback (${feedbackList.length})',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
+                    Text('Individual Feedback (${feedbackList.length})', style: Theme.of(context).textTheme.titleLarge),
                     const SizedBox(height: 16),
                     ListView.builder(
                       shrinkWrap: true,
@@ -202,19 +159,9 @@ class _EventFeedbackReportScreenState extends State<EventFeedbackReportScreen> {
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.blue.shade700, Colors.blue.shade500],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        gradient: LinearGradient(colors: [Colors.blue.shade700, Colors.blue.shade500], begin: Alignment.topLeft, end: Alignment.bottomRight),
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.blue.shade200,
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.blue.shade200, blurRadius: 8, offset: const Offset(0, 4))],
       ),
       child: Column(
         children: [
@@ -227,73 +174,33 @@ class _EventFeedbackReportScreenState extends State<EventFeedbackReportScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Overall Rating',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 14,
-                    ),
-                  ),
+                  const Text('Overall Rating', style: TextStyle(color: Colors.white70, fontSize: 14)),
                   Text(
                     '${overallAverage.toStringAsFixed(2)} / 5.00',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: const TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
             ],
           ),
           const SizedBox(height: 8),
-          Text(
-            'Based on $totalFeedback response${totalFeedback != 1 ? 's' : ''}',
-            style: const TextStyle(
-              color: Colors.white70,
-              fontSize: 12,
-            ),
-          ),
+          Text('Based on $totalFeedback response${totalFeedback != 1 ? 's' : ''}', style: const TextStyle(color: Colors.white70, fontSize: 12)),
           const SizedBox(height: 24),
 
           // Category Ratings
           Row(
             children: [
-              Expanded(
-                child: _buildCategoryCard(
-                  'Organization',
-                  averages['organization'] ?? 0.0,
-                  Icons.calendar_today,
-                ),
-              ),
+              Expanded(child: _buildCategoryCard('Organization', averages['organization'] ?? 0.0, Icons.calendar_today)),
               const SizedBox(width: 12),
-              Expanded(
-                child: _buildCategoryCard(
-                  'Logistics',
-                  averages['logistics'] ?? 0.0,
-                  Icons.inventory_2,
-                ),
-              ),
+              Expanded(child: _buildCategoryCard('Logistics', averages['logistics'] ?? 0.0, Icons.inventory_2)),
             ],
           ),
           const SizedBox(height: 12),
           Row(
             children: [
-              Expanded(
-                child: _buildCategoryCard(
-                  'Communication',
-                  averages['communication'] ?? 0.0,
-                  Icons.chat,
-                ),
-              ),
+              Expanded(child: _buildCategoryCard('Communication', averages['communication'] ?? 0.0, Icons.chat)),
               const SizedBox(width: 12),
-              Expanded(
-                child: _buildCategoryCard(
-                  'Management',
-                  averages['management'] ?? 0.0,
-                  Icons.manage_accounts,
-                ),
-              ),
+              Expanded(child: _buildCategoryCard('Management', averages['management'] ?? 0.0, Icons.manage_accounts)),
             ],
           ),
         ],
@@ -304,29 +211,16 @@ class _EventFeedbackReportScreenState extends State<EventFeedbackReportScreen> {
   Widget _buildCategoryCard(String label, double rating, IconData icon) {
     return Container(
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(12),
-      ),
+      decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), borderRadius: BorderRadius.circular(12)),
       child: Column(
         children: [
           Icon(icon, color: Colors.white, size: 24),
           const SizedBox(height: 8),
-          Text(
-            label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-            ),
-          ),
+          Text(label, style: const TextStyle(color: Colors.white, fontSize: 12)),
           const SizedBox(height: 4),
           Text(
             rating.toStringAsFixed(1),
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ],
       ),
@@ -349,30 +243,15 @@ class _EventFeedbackReportScreenState extends State<EventFeedbackReportScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        feedback.volunteerName,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      Text(
-                        feedback.shiftId,
-                        style: TextStyle(
-                          color: Colors.grey.shade600,
-                          fontSize: 12,
-                        ),
-                      ),
+                      Text(feedback.volunteerName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                      Text(feedback.shiftId, style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
                     ],
                   ),
                 ),
                 // Overall Rating Badge
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: _getRatingColor(feedback.averageRating),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  decoration: BoxDecoration(color: _getRatingColor(feedback.averageRating), borderRadius: BorderRadius.circular(12)),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -380,10 +259,7 @@ class _EventFeedbackReportScreenState extends State<EventFeedbackReportScreen> {
                       const SizedBox(width: 4),
                       Text(
                         feedback.averageRating.toStringAsFixed(1),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -400,32 +276,22 @@ class _EventFeedbackReportScreenState extends State<EventFeedbackReportScreen> {
             _buildRatingBar('Communication', feedback.communicationRating),
             const SizedBox(height: 8),
             _buildRatingBar('Management', feedback.managementRating),
-            
+
             // Message
             if (feedback.message.isNotEmpty) ...[
               const SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  borderRadius: BorderRadius.circular(8),
-                ),
+                decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(8)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Comments:',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                        color: Colors.grey.shade700,
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.grey.shade700),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      feedback.message,
-                      style: const TextStyle(fontSize: 14),
-                    ),
+                    Text(feedback.message, style: const TextStyle(fontSize: 14)),
                   ],
                 ),
               ),
@@ -433,13 +299,7 @@ class _EventFeedbackReportScreenState extends State<EventFeedbackReportScreen> {
 
             // Timestamp
             const SizedBox(height: 12),
-            Text(
-              'Submitted: ${_formatDate(feedback.timestamp)}',
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 12,
-              ),
-            ),
+            Text('Submitted: ${_formatDate(feedback.timestamp)}', style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
           ],
         ),
       ),
@@ -451,32 +311,20 @@ class _EventFeedbackReportScreenState extends State<EventFeedbackReportScreen> {
       children: [
         SizedBox(
           width: 120,
-          child: Text(
-            label,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+          child: Text(label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
         ),
         Expanded(
           child: Stack(
             children: [
               Container(
                 height: 8,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(4),
-                ),
+                decoration: BoxDecoration(color: Colors.grey.shade200, borderRadius: BorderRadius.circular(4)),
               ),
               FractionallySizedBox(
                 widthFactor: rating / 5,
                 child: Container(
                   height: 8,
-                  decoration: BoxDecoration(
-                    color: _getRatingColor(rating.toDouble()),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
+                  decoration: BoxDecoration(color: _getRatingColor(rating.toDouble()), borderRadius: BorderRadius.circular(4)),
                 ),
               ),
             ],
@@ -485,13 +333,7 @@ class _EventFeedbackReportScreenState extends State<EventFeedbackReportScreen> {
         const SizedBox(width: 12),
         SizedBox(
           width: 30,
-          child: Text(
-            '$rating/5',
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          child: Text('$rating/5', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
         ),
       ],
     );

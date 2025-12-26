@@ -12,7 +12,7 @@ class ManageFeedbackScreen extends StatefulWidget {
 
 class _ManageFeedbackScreenState extends State<ManageFeedbackScreen> {
   FeedbackStatus? _selectedStatusFilter;
-  
+
   @override
   void initState() {
     super.initState();
@@ -38,26 +38,11 @@ class _ManageFeedbackScreenState extends State<ManageFeedbackScreen> {
               });
             },
             itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: null,
-                child: Text('All Feedback'),
-              ),
-              const PopupMenuItem(
-                value: FeedbackStatus.PENDING,
-                child: Text('Pending'),
-              ),
-              const PopupMenuItem(
-                value: FeedbackStatus.IN_PROGRESS,
-                child: Text('In Progress'),
-              ),
-              const PopupMenuItem(
-                value: FeedbackStatus.RESOLVED,
-                child: Text('Resolved'),
-              ),
-              const PopupMenuItem(
-                value: FeedbackStatus.CLOSED,
-                child: Text('Closed'),
-              ),
+              const PopupMenuItem(value: null, child: Text('All Feedback')),
+              const PopupMenuItem(value: FeedbackStatus.PENDING, child: Text('Pending')),
+              const PopupMenuItem(value: FeedbackStatus.IN_PROGRESS, child: Text('In Progress')),
+              const PopupMenuItem(value: FeedbackStatus.RESOLVED, child: Text('Resolved')),
+              const PopupMenuItem(value: FeedbackStatus.CLOSED, child: Text('Closed')),
             ],
           ),
         ],
@@ -94,20 +79,11 @@ class _ManageFeedbackScreenState extends State<ManageFeedbackScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.feedback_outlined,
-                    size: 64,
-                    color: Colors.grey.shade400,
-                  ),
+                  Icon(Icons.feedback_outlined, size: 64, color: Colors.grey.shade400),
                   const SizedBox(height: 16),
                   Text(
-                    _selectedStatusFilter == null 
-                      ? 'No feedback submitted yet'
-                      : 'No ${_selectedStatusFilter!.name.toLowerCase()} feedback',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey.shade600,
-                    ),
+                    _selectedStatusFilter == null ? 'No feedback submitted yet' : 'No ${_selectedStatusFilter!.name.toLowerCase()} feedback',
+                    style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
                   ),
                 ],
               ),
@@ -121,26 +97,11 @@ class _ManageFeedbackScreenState extends State<ManageFeedbackScreen> {
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    _buildSummaryCard(
-                      'Pending',
-                      provider.pendingFeedback.length,
-                      Colors.orange,
-                      Icons.schedule,
-                    ),
+                    _buildSummaryCard('Pending', provider.pendingFeedback.length, Colors.orange, Icons.schedule),
                     const SizedBox(width: 12),
-                    _buildSummaryCard(
-                      'In Progress',
-                      provider.inProgressFeedback.length,
-                      Colors.blue,
-                      Icons.hourglass_bottom,
-                    ),
+                    _buildSummaryCard('In Progress', provider.inProgressFeedback.length, Colors.blue, Icons.hourglass_bottom),
                     const SizedBox(width: 12),
-                    _buildSummaryCard(
-                      'Resolved',
-                      provider.resolvedFeedback.length,
-                      Colors.green,
-                      Icons.check_circle,
-                    ),
+                    _buildSummaryCard('Resolved', provider.resolvedFeedback.length, Colors.green, Icons.check_circle),
                   ],
                 ),
               ),
@@ -175,19 +136,9 @@ class _ManageFeedbackScreenState extends State<ManageFeedbackScreen> {
               const SizedBox(height: 8),
               Text(
                 count.toString(),
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: color,
-                ),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color),
               ),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey.shade600,
-                ),
-              ),
+              Text(label, style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
             ],
           ),
         ),
@@ -195,11 +146,7 @@ class _ManageFeedbackScreenState extends State<ManageFeedbackScreen> {
     );
   }
 
-  Widget _buildFeedbackCard(
-    BuildContext context,
-    SystemFeedback feedback,
-    SystemFeedbackProvider provider,
-  ) {
+  Widget _buildFeedbackCard(BuildContext context, SystemFeedback feedback, SystemFeedbackProvider provider) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: Padding(
@@ -215,20 +162,8 @@ class _ManageFeedbackScreenState extends State<ManageFeedbackScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        feedback.userName,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      Text(
-                        feedback.userId,
-                        style: TextStyle(
-                          color: Colors.grey.shade600,
-                          fontSize: 12,
-                        ),
-                      ),
+                      Text(feedback.userName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                      Text(feedback.userId, style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
                     ],
                   ),
                 ),
@@ -240,36 +175,18 @@ class _ManageFeedbackScreenState extends State<ManageFeedbackScreen> {
             // Feedback Message
             Container(
               padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                feedback.message,
-                style: const TextStyle(fontSize: 14),
-              ),
+              decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(8)),
+              child: Text(feedback.message, style: const TextStyle(fontSize: 14)),
             ),
             const SizedBox(height: 12),
 
             // Timestamp
-            Text(
-              'Submitted: ${_formatDate(feedback.timestamp)}',
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 12,
-              ),
-            ),
+            Text('Submitted: ${_formatDate(feedback.timestamp)}', style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
 
             // Resolution Info
             if (feedback.reviewedBy != null) ...[
               const SizedBox(height: 8),
-              Text(
-                'Reviewed by: ${feedback.reviewedBy}',
-                style: TextStyle(
-                  color: Colors.grey.shade600,
-                  fontSize: 12,
-                ),
-              ),
+              Text('Reviewed by: ${feedback.reviewedBy}', style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
             ],
 
             // Resolution Notes
@@ -287,20 +204,10 @@ class _ManageFeedbackScreenState extends State<ManageFeedbackScreen> {
                   children: [
                     Text(
                       'Resolution Notes:',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green.shade900,
-                        fontSize: 12,
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green.shade900, fontSize: 12),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      feedback.resolutionNotes!,
-                      style: TextStyle(
-                        color: Colors.green.shade900,
-                        fontSize: 13,
-                      ),
-                    ),
+                    Text(feedback.resolutionNotes!, style: TextStyle(color: Colors.green.shade900, fontSize: 13)),
                   ],
                 ),
               ),
@@ -317,10 +224,7 @@ class _ManageFeedbackScreenState extends State<ManageFeedbackScreen> {
                     onPressed: () => _showUpdateStatusDialog(context, feedback, provider),
                     icon: const Icon(Icons.edit, size: 18),
                     label: const Text('Update Status'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
-                    ),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -339,11 +243,7 @@ class _ManageFeedbackScreenState extends State<ManageFeedbackScreen> {
     );
   }
 
-  void _showUpdateStatusDialog(
-    BuildContext context,
-    SystemFeedback feedback,
-    SystemFeedbackProvider provider,
-  ) {
+  void _showUpdateStatusDialog(BuildContext context, SystemFeedback feedback, SystemFeedbackProvider provider) {
     FeedbackStatus selectedStatus = feedback.status;
     final notesController = TextEditingController(text: feedback.resolutionNotes ?? '');
 
@@ -360,15 +260,9 @@ class _ManageFeedbackScreenState extends State<ManageFeedbackScreen> {
               const SizedBox(height: 8),
               DropdownButtonFormField<FeedbackStatus>(
                 value: selectedStatus,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                ),
+                decoration: const InputDecoration(border: OutlineInputBorder(), contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
                 items: FeedbackStatus.values.map((status) {
-                  return DropdownMenuItem(
-                    value: status,
-                    child: Text(status.name),
-                  );
+                  return DropdownMenuItem(value: status, child: Text(status.name));
                 }).toList(),
                 onChanged: (value) {
                   if (value != null) {
@@ -384,19 +278,13 @@ class _ManageFeedbackScreenState extends State<ManageFeedbackScreen> {
               TextField(
                 controller: notesController,
                 maxLines: 4,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Add notes about the resolution...',
-                ),
+                decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Add notes about the resolution...'),
               ),
             ],
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () async {
               try {
@@ -404,26 +292,17 @@ class _ManageFeedbackScreenState extends State<ManageFeedbackScreen> {
                   feedback: feedback,
                   newStatus: selectedStatus,
                   reviewedBy: 'Admin', // You can get actual admin name from FirebaseAuth
-                  resolutionNotes: notesController.text.trim().isEmpty 
-                    ? null 
-                    : notesController.text.trim(),
+                  resolutionNotes: notesController.text.trim().isEmpty ? null : notesController.text.trim(),
                 );
 
                 if (context.mounted) {
                   Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Feedback updated successfully'),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Feedback updated successfully'), backgroundColor: Colors.green));
                 }
               } catch (e) {
                 print('Error updating feedback status: $e');
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error: $e')),
-                  );
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
                 }
               }
             },
@@ -434,47 +313,30 @@ class _ManageFeedbackScreenState extends State<ManageFeedbackScreen> {
     );
   }
 
-  void _confirmDelete(
-    BuildContext context,
-    SystemFeedback feedback,
-    SystemFeedbackProvider provider,
-  ) {
+  void _confirmDelete(BuildContext context, SystemFeedback feedback, SystemFeedbackProvider provider) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Delete Feedback'),
         content: const Text('Are you sure you want to delete this feedback? This action cannot be undone.'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () async {
               try {
                 await provider.deleteFeedback(feedback.id);
                 if (context.mounted) {
                   Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Feedback deleted successfully'),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Feedback deleted successfully'), backgroundColor: Colors.green));
                 }
               } catch (e) {
                 print('Error deleting feedback: $e');
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error: $e')),
-                  );
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
                 }
               }
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
             child: const Text('Delete'),
           ),
         ],
@@ -519,11 +381,7 @@ class _ManageFeedbackScreenState extends State<ManageFeedbackScreen> {
           const SizedBox(width: 4),
           Text(
             status.name,
-            style: TextStyle(
-              color: color,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-            ),
+            style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12),
           ),
         ],
       ),

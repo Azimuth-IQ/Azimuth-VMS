@@ -9,11 +9,7 @@ class SubmitEventFeedbackScreen extends StatefulWidget {
   final Event event;
   final ShiftAssignment assignment;
 
-  const SubmitEventFeedbackScreen({
-    super.key,
-    required this.event,
-    required this.assignment,
-  });
+  const SubmitEventFeedbackScreen({super.key, required this.event, required this.assignment});
 
   @override
   State<SubmitEventFeedbackScreen> createState() => _SubmitEventFeedbackScreenState();
@@ -44,10 +40,7 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
     final userPhone = user?.email?.split('@').first ?? '';
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Event Feedback'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
+      appBar: AppBar(title: const Text('Event Feedback'), backgroundColor: Theme.of(context).colorScheme.inversePrimary),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -68,31 +61,15 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
                         Expanded(
                           child: Text(
                             widget.event.name,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue.shade900,
-                            ),
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue.shade900),
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 8),
-                    Text(
-                      'Your shift: ${widget.assignment.shiftId}',
-                      style: TextStyle(
-                        color: Colors.blue.shade800,
-                        fontSize: 14,
-                      ),
-                    ),
+                    Text('Your shift: ${widget.assignment.shiftId}', style: TextStyle(color: Colors.blue.shade800, fontSize: 14)),
                     const SizedBox(height: 4),
-                    Text(
-                      'Location: ${widget.assignment.sublocationId ?? 'Not assigned'}',
-                      style: TextStyle(
-                        color: Colors.blue.shade800,
-                        fontSize: 14,
-                      ),
-                    ),
+                    Text('Location: ${widget.assignment.sublocationId ?? 'Not assigned'}', style: TextStyle(color: Colors.blue.shade800, fontSize: 14)),
                   ],
                 ),
               ),
@@ -100,18 +77,9 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
             const SizedBox(height: 24),
 
             // Instructions
-            Text(
-              'Rate Your Experience',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
+            Text('Rate Your Experience', style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
-            Text(
-              'Please rate the following aspects of the event management (1 = Poor, 5 = Excellent)',
-              style: TextStyle(
-                color: Colors.grey.shade700,
-                fontSize: 14,
-              ),
-            ),
+            Text('Please rate the following aspects of the event management (1 = Poor, 5 = Excellent)', style: TextStyle(color: Colors.grey.shade700, fontSize: 14)),
             const SizedBox(height: 24),
 
             // Rating Form
@@ -175,11 +143,7 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
                         const SizedBox(width: 12),
                         Text(
                           'Average Rating: ${_averageRating.toStringAsFixed(1)} / 5',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.green.shade900,
-                          ),
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green.shade900),
                         ),
                       ],
                     ),
@@ -187,21 +151,12 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
                   const SizedBox(height: 24),
 
                   // Additional Comments
-                  const Text(
-                    'Additional Comments (Optional)',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  const Text('Additional Comments (Optional)', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _messageController,
                     maxLines: 5,
-                    decoration: const InputDecoration(
-                      hintText: 'Share your thoughts, suggestions, or any issues you experienced...',
-                      border: OutlineInputBorder(),
-                    ),
+                    decoration: const InputDecoration(hintText: 'Share your thoughts, suggestions, or any issues you experienced...', border: OutlineInputBorder()),
                   ),
                   const SizedBox(height: 24),
 
@@ -227,31 +182,20 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
                             );
 
                             if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Thank you for your feedback!'),
-                                  backgroundColor: Colors.green,
-                                ),
-                              );
+                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Thank you for your feedback!'), backgroundColor: Colors.green));
                               Navigator.pop(context);
                             }
                           } catch (e) {
                             print('Error submitting event feedback: $e');
                             if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Error: $e')),
-                              );
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
                             }
                           }
                         }
                       },
                       icon: const Icon(Icons.send),
                       label: const Text('Submit Feedback'),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        backgroundColor: Colors.blue,
-                        foregroundColor: Colors.white,
-                      ),
+                      style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16), backgroundColor: Colors.blue, foregroundColor: Colors.white),
                     ),
                   ),
                 ],
@@ -263,13 +207,7 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
     );
   }
 
-  Widget _buildRatingSlider(
-    String title,
-    String description,
-    int currentValue,
-    Function(int) onChanged,
-    IconData icon,
-  ) {
+  Widget _buildRatingSlider(String title, String description, int currentValue, Function(int) onChanged, IconData icon) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -286,36 +224,20 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
               Icon(icon, color: Colors.blue.shade700, size: 20),
               const SizedBox(width: 8),
               Expanded(
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                child: Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ),
               // Current Rating Badge
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                decoration: BoxDecoration(
-                  color: _getRatingColor(currentValue),
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                decoration: BoxDecoration(color: _getRatingColor(currentValue), borderRadius: BorderRadius.circular(12)),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      Icons.star,
-                      size: 16,
-                      color: Colors.white,
-                    ),
+                    Icon(Icons.star, size: 16, color: Colors.white),
                     const SizedBox(width: 4),
                     Text(
                       currentValue.toString(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -324,27 +246,14 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
           ),
           const SizedBox(height: 8),
           // Description
-          Text(
-            description,
-            style: TextStyle(
-              color: Colors.grey.shade700,
-              fontSize: 13,
-            ),
-          ),
+          Text(description, style: TextStyle(color: Colors.grey.shade700, fontSize: 13)),
           const SizedBox(height: 16),
           // Rating Slider
           Row(
             children: [
               const Text('1', style: TextStyle(fontWeight: FontWeight.bold)),
               Expanded(
-                child: Slider(
-                  value: currentValue.toDouble(),
-                  min: 1,
-                  max: 5,
-                  divisions: 4,
-                  label: _getRatingLabel(currentValue),
-                  onChanged: (value) => onChanged(value.round()),
-                ),
+                child: Slider(value: currentValue.toDouble(), min: 1, max: 5, divisions: 4, label: _getRatingLabel(currentValue), onChanged: (value) => onChanged(value.round())),
               ),
               const Text('5', style: TextStyle(fontWeight: FontWeight.bold)),
             ],
