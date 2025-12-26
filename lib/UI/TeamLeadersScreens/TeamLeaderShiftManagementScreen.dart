@@ -52,6 +52,10 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
   void initState() {
     super.initState();
     _loadCurrentUser();
+    // Wait for provider to load before filtering
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _filterMyEvents();
+    });
   }
 
   void _loadCurrentUser() {
@@ -60,49 +64,85 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
       setState(() {
         _currentUserPhone = user.email!.split('@').first;
       });
-      _filterMyEvents();
+      print('🔑 Team Leader logged in: $_currentUserPhone');
     }
   }
 
   void _filterMyEvents() {
-    if (_currentUserPhone == null) return;
+    if (_currentUserPhone == null) {
+      print('⚠️ Cannot filter events - user phone is null');
+      return;
+    }
 
     final eventsProvider = context.read<EventsProvider>();
+    print('📊 Filtering events for team leader: $_currentUserPhone');
+    print('Total events: ${eventsProvider.events.length}');
+    print('Total teams: ${eventsProvider.teams.length}');
+    
     setState(() {
       _myEvents = eventsProvider.events.where((event) {
-        return event.shifts.any((shift) {
+        final hasMyShift = event.shifts.any((shift) {
           return _isMyShiftOrLocation(shift, eventsProvider);
         });
+        if (hasMyShift) {
+          print('✓ Event "${event.name}" has shifts for this team leader');
+        }
+        return hasMyShift;
       }).toList();
     });
+    
+    print('📋 Found ${_myEvents.length} events for this team leader');
   }
 
   bool _isMyShiftOrLocation(EventShift shift, EventsProvider provider) {
+    print('  Checking shift ${shift.startTime}-${shift.endTime}...');
+    
     // Check main location team
     if (shift.teamId != null) {
+      print('    Main location has teamId: ${shift.teamId}');
       final team = provider.teams.where((t) => t.id == shift.teamId).firstOrNull;
-      if (team != null && team.teamLeaderId == _currentUserPhone) {
-        return true;
+      if (team != null) {
+        print('    Team found: ${team.name}, Leader: ${team.teamLeaderId}');
+        if (team.teamLeaderId == _currentUserPhone) {
+          print('    ✓ Match! This is my team');
+          return true;
+        }
+      } else {
+        print('    ⚠️ Team not found in provider.teams');
       }
     }
-    if (shift.tempTeam != null && shift.tempTeam!.teamLeaderId == _currentUserPhone) {
-      return true;
+    if (shift.tempTeam != null) {
+      print('    Main location has temp team, Leader: ${shift.tempTeam!.teamLeaderId}');
+      if (shift.tempTeam!.teamLeaderId == _currentUserPhone) {
+        print('    ✓ Match! This is my temp team');
+        return true;
+      }
     }
     
     // Check sublocation teams
+    print('    Checking ${shift.subLocations.length} sublocations...');
     for (var subLoc in shift.subLocations) {
       if (subLoc.teamId != null) {
+        print('      Sublocation has teamId: ${subLoc.teamId}');
         final team = provider.teams.where((t) => t.id == subLoc.teamId).firstOrNull;
-        if (team != null && team.teamLeaderId == _currentUserPhone) {
+        if (team != null) {
+          print('      Team found: ${team.name}, Leader: ${team.teamLeaderId}');
+          if (team.teamLeaderId == _currentUserPhone) {
+            print('      ✓ Match! This is my team in sublocation');
+            return true;
+          }
+        }
+      }
+      if (subLoc.tempTeam != null) {
+        print('      Sublocation has temp team, Leader: ${subLoc.tempTeam!.teamLeaderId}');
+        if (subLoc.tempTeam!.teamLeaderId == _currentUserPhone) {
+          print('      ✓ Match! This is my temp team in sublocation');
           return true;
         }
       }
-      if (subLoc.tempTeam != null && subLoc.tempTeam!.teamLeaderId == _currentUserPhone) {
-        return true;
-      }
     }
     
-    return false;
+    print('    ✗ No match for this shift');
   }
 
   void _assignVolunteersToLocation(BuildContext context) async {
@@ -112,7 +152,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
     }
 
     final provider = context.read<EventsProvider>();
-    
+
     // Get team members based on selected location
     List<String> teamMemberIds = [];
     if (_isMainLocation) {
@@ -153,9 +193,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
       if (u.role != SystemUserRole.VOLUNTEER) return false;
       if (u.volunteerForm == null) return false;
       final status = u.volunteerForm!.status;
-      return status == VolunteerFormStatus.Approved1 || 
-             status == VolunteerFormStatus.Approved2 || 
-             status == VolunteerFormStatus.Completed;
+      return status == VolunteerFormStatus.Approved1 || status == VolunteerFormStatus.Approved2 || status == VolunteerFormStatus.Completed;
     }).toList();
 
     if (volunteers.isEmpty) {
@@ -201,13 +239,13 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
       if (!context.mounted) return;
       final locationMsg = sublocationId != null ? ' to sublocation' : '';
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Assigned ${volunteers.length} volunteers$locationMsg successfully')));
-      
+
       // Reset selection
       setState(() {
         _selectedLocationId = null;
         _isMainLocation = true;
       });
-      
+
       // Reload assignments
       context.read<ShiftAssignmentProvider>().startListeningToEvent(event.id);
     } catch (e) {
@@ -382,10 +420,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
                                     onPressed: _selectedLocationId == null ? null : () => _assignVolunteersToLocation(context),
                                     icon: const Icon(Icons.person_add),
                                     label: const Text('Assign Volunteers to Location'),
-                                    style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                                      disabledBackgroundColor: Colors.grey[300],
-                                    ),
+                                    style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16), disabledBackgroundColor: Colors.grey[300]),
                                   ),
                                 ],
                               ),
@@ -420,7 +455,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
                                                   itemBuilder: (context, index) {
                                                     final assignment = assignments[index];
                                                     final volunteer = provider.systemUsers.where((u) => u.phone == assignment.volunteerId).firstOrNull;
-                                                    
+
                                                     // Get location name
                                                     String locationName = 'Main Location';
                                                     if (assignment.sublocationId != null) {
@@ -433,18 +468,10 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
 
                                                     return Card(
                                                       child: ListTile(
-                                                        leading: Icon(
-                                                          Icons.person,
-                                                          color: assignment.status == ShiftAssignmentStatus.EXCUSED 
-                                                              ? Colors.orange 
-                                                              : Colors.green,
-                                                        ),
+                                                        leading: Icon(Icons.person, color: assignment.status == ShiftAssignmentStatus.EXCUSED ? Colors.orange : Colors.green),
                                                         title: Text(volunteer?.name ?? 'Unknown'),
                                                         subtitle: Text('$locationName - ${assignment.status.name}'),
-                                                        trailing: Text(
-                                                          'By: ${assignment.assignedBy}',
-                                                          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                                                        ),
+                                                        trailing: Text('By: ${assignment.assignedBy}', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
                                                       ),
                                                     );
                                                   },
@@ -517,7 +544,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
               (sl) => sl.id == subLoc.subLocationId,
               orElse: () => Location(id: '', name: 'Unknown', description: '', latitude: '0', longitude: '0'),
             );
-        
+
         locationItems.add(
           DropdownMenuItem(
             value: subLoc.subLocationId,
@@ -535,11 +562,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
 
     return DropdownButtonFormField<String>(
       value: _selectedLocationId,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        labelText: 'Choose location',
-      ),
+      decoration: const InputDecoration(border: OutlineInputBorder(), contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), labelText: 'Choose location'),
       hint: const Text('Select a location'),
       items: locationItems,
       onChanged: (value) {

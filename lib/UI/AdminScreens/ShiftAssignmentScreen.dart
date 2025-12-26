@@ -358,7 +358,7 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                                 child: Consumer<ShiftAssignmentProvider>(
                                   builder: (context, assignmentProvider, child) {
                                     final assignments = assignmentProvider.assignments;
-                                    
+
                                     return Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
@@ -366,11 +366,7 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text('Current Assignments', style: Theme.of(context).textTheme.titleMedium),
-                                            if (assignments.isNotEmpty)
-                                              Chip(
-                                                label: Text('${assignments.length} assigned'),
-                                                backgroundColor: Colors.green.shade100,
-                                              ),
+                                            if (assignments.isNotEmpty) Chip(label: Text('${assignments.length} assigned'), backgroundColor: Colors.green.shade100),
                                           ],
                                         ),
                                         const SizedBox(height: 16),
@@ -387,10 +383,7 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                                                         style: TextStyle(color: Colors.grey[600], fontStyle: FontStyle.italic),
                                                       ),
                                                       const SizedBox(height: 4),
-                                                      Text(
-                                                        'Team leaders should assign first',
-                                                        style: TextStyle(fontSize: 12, color: Colors.grey[500]),
-                                                      ),
+                                                      Text('Team leaders should assign first', style: TextStyle(fontSize: 12, color: Colors.grey[500])),
                                                     ],
                                                   ),
                                                 )
@@ -399,7 +392,7 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                                                   itemBuilder: (context, index) {
                                                     final assignment = assignments[index];
                                                     final volunteer = provider.systemUsers.where((u) => u.phone == assignment.volunteerId).firstOrNull;
-                                                    
+
                                                     // Get location name
                                                     String locationName = 'Main Location';
                                                     if (assignment.sublocationId != null) {
@@ -409,7 +402,7 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                                                           .firstOrNull;
                                                       locationName = subLoc?.name ?? 'Unknown Sublocation';
                                                     }
-                                                    
+
                                                     // Determine who assigned
                                                     final assignedByUser = provider.systemUsers.where((u) => u.phone == assignment.assignedBy).firstOrNull;
                                                     final isTeamLeader = assignedByUser?.role == SystemUserRole.TEAMLEADER;
@@ -418,12 +411,7 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                                                       elevation: 2,
                                                       margin: const EdgeInsets.only(bottom: 8),
                                                       child: ListTile(
-                                                        leading: Icon(
-                                                          Icons.person,
-                                                          color: assignment.status == ShiftAssignmentStatus.EXCUSED 
-                                                              ? Colors.orange 
-                                                              : Colors.green,
-                                                        ),
+                                                        leading: Icon(Icons.person, color: assignment.status == ShiftAssignmentStatus.EXCUSED ? Colors.orange : Colors.green),
                                                         title: Text(volunteer?.name ?? 'Unknown'),
                                                         subtitle: Column(
                                                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -440,24 +428,15 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                                                                 const SizedBox(width: 4),
                                                                 Text(
                                                                   'By: ${assignedByUser?.name ?? assignment.assignedBy}',
-                                                                  style: TextStyle(
-                                                                    fontSize: 11,
-                                                                    color: isTeamLeader ? Colors.blue : Colors.purple,
-                                                                    fontWeight: FontWeight.w500,
-                                                                  ),
+                                                                  style: TextStyle(fontSize: 11, color: isTeamLeader ? Colors.blue : Colors.purple, fontWeight: FontWeight.w500),
                                                                 ),
                                                               ],
                                                             ),
                                                           ],
                                                         ),
                                                         trailing: Chip(
-                                                          label: Text(
-                                                            assignment.status.name,
-                                                            style: const TextStyle(fontSize: 11),
-                                                          ),
-                                                          backgroundColor: assignment.status == ShiftAssignmentStatus.EXCUSED 
-                                                              ? Colors.orange.shade100 
-                                                              : Colors.green.shade100,
+                                                          label: Text(assignment.status.name, style: const TextStyle(fontSize: 11)),
+                                                          backgroundColor: assignment.status == ShiftAssignmentStatus.EXCUSED ? Colors.orange.shade100 : Colors.green.shade100,
                                                         ),
                                                       ),
                                                     );
