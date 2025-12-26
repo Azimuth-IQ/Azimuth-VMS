@@ -64,11 +64,70 @@ class _FormMgmtState extends State<FormMgmt> {
     return path != null && path.isNotEmpty && path != 'null';
   }
 
+  Future<void> _syncVolunteersWithForms() async {
+    try {
+      setState(() => _isLoading = true);
+      
+      // Get all forms
+      final forms = await _formHelper.GetAllForms();
+      
+      // Get all system users
+      final users = await _userHelper.GetAllSystemUsers();
+      
+      int updatedCount = 0;
+      
+      // For each volunteer user, attach their form if missing
+      for (var user in users) {
+        if (user.role == SystemUserRole.VOLUNTEER && user.volunteerForm == null) {
+          // Find their form
+          final form = forms.firstWhere(
+            (f) => f.mobileNumber == user.phone,
+            orElse: () => VolunteerForm(), // Empty form as fallback
+          );
+          
+          if (form.mobileNumber != null) {
+            user.volunteerForm = form;
+            _userHelper.UpdateSystemUser(user);
+            updatedCount++;
+            print('Synced form for volunteer: ${user.name}');
+          }
+        }
+      }
+      
+      setState(() => _isLoading = false);
+      
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Synced $updatedCount volunteer(s) with their forms'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      print('Error syncing volunteers: $e');
+      setState(() => _isLoading = false);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
-      appBar: AppBar(title: const Text('Volunteer Forms Management'), elevation: 0),
+      appBar: AppBar(
+        title: const Text('Volunteer Forms Management'),
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.sync),
+            tooltip: 'Sync Volunteers with Forms',
+            onPressed: _syncVolunteersWithForms,
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.pushNamed(context, '/admin-form-fill').then((_) => _loadForms());
@@ -373,13 +432,14 @@ class _FormMgmtState extends State<FormMgmt> {
         final existingUser = await _userHelper.GetSystemUserByPhone(form.mobileNumber!);
 
         if (existingUser == null) {
-          // Create new SystemUser
+          // Create new SystemUser with volunteerForm attached
           final systemUser = SystemUser(
             id: form.mobileNumber!,
             phone: form.mobileNumber!,
             name: form.fullName ?? 'Volunteer',
             role: SystemUserRole.VOLUNTEER,
             password: form.mobileNumber!, // Use phone as password
+            volunteerForm: form, // Attach the approved volunteer form
           );
 
           _userHelper.CreateSystemUser(systemUser);
@@ -391,7 +451,10 @@ class _FormMgmtState extends State<FormMgmt> {
             );
           }
         } else {
-          print('SystemUser already exists for: ${form.mobileNumber}');
+          // Update existing user's volunteer form
+          existingUser.volunteerForm = form;
+          _userHelper.UpdateSystemUser(existingUser);
+          print('SystemUser updated with form for: ${form.mobileNumber}');
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Status updated to ${_getStatusLabel(newStatus)}'), duration: const Duration(seconds: 2)));
           }
