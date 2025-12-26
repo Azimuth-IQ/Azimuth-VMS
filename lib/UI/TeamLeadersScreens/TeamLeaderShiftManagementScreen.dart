@@ -143,6 +143,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
     }
     
     print('    ✗ No match for this shift');
+    return false;
   }
 
   void _assignVolunteersToLocation(BuildContext context) async {
