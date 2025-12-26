@@ -35,7 +35,7 @@ class _TeamLeadersMgmtViewState extends State<TeamLeadersMgmtView> {
     if (result != null) {
       final provider = context.read<TeamLeadersProvider>();
       if (teamLeader == null) {
-        provider.createTeamLeader(result);
+        await provider.createTeamLeader(result);
       } else {
         provider.updateTeamLeader(result);
       }

@@ -43,7 +43,7 @@ class _VolunteersMgmtViewState extends State<VolunteersMgmtView> {
     if (result != null) {
       final provider = context.read<VolunteersProvider>();
       if (volunteer == null) {
-        provider.createVolunteer(result);
+        await provider.createVolunteer(result);
       } else {
         provider.updateVolunteer(result);
       }

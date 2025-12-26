@@ -34,9 +34,15 @@ class VolunteersProvider with ChangeNotifier {
     }
   }
 
-  void createVolunteer(SystemUser volunteer) {
-    _userHelper.CreateSystemUser(volunteer);
-    loadVolunteers();
+  Future<void> createVolunteer(SystemUser volunteer) async {
+    try {
+      await _userHelper.CreateSystemUser(volunteer);
+      await loadVolunteers();
+    } catch (e) {
+      print('Error creating volunteer: $e');
+      _errorMessage = 'Error creating volunteer: $e';
+      notifyListeners();
+    }
   }
 
   void updateVolunteer(SystemUser volunteer) {

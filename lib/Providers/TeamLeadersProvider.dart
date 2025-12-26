@@ -34,9 +34,15 @@ class TeamLeadersProvider with ChangeNotifier {
     }
   }
 
-  void createTeamLeader(SystemUser teamLeader) {
-    _userHelper.CreateSystemUser(teamLeader);
-    loadTeamLeaders();
+  Future<void> createTeamLeader(SystemUser teamLeader) async {
+    try {
+      await _userHelper.CreateSystemUser(teamLeader);
+      await loadTeamLeaders();
+    } catch (e) {
+      print('Error creating team leader: $e');
+      _errorMessage = 'Error creating team leader: $e';
+      notifyListeners();
+    }
   }
 
   void updateTeamLeader(SystemUser teamLeader) {

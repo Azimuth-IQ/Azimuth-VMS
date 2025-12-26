@@ -9,10 +9,16 @@ class SystemUserHelperFirebase {
 
   //Basic CRUD
   //1- Create
-  void CreateSystemUser(SystemUser user) {
-    rootRef.child(user.phone).set(user.toJson());
-    //Create Auth User
-    auth.createUserWithEmailAndPassword(email: "${user.phone}@azimuth-vms.com", password: user.password!);
+  Future<void> CreateSystemUser(SystemUser user) async {
+    await rootRef.child(user.phone).set(user.toJson());
+
+    // Create Firebase Auth user so they can login
+    try {
+      await auth.createUserWithEmailAndPassword(email: "${user.phone}@azimuth-vms.com", password: user.password!);
+      print('Firebase Auth created for user: ${user.phone} (${user.role})');
+    } catch (e) {
+      print('Error creating auth for user ${user.phone} (may already exist): $e');
+    }
   }
 
   //2- Read

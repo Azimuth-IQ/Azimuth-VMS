@@ -505,7 +505,7 @@ class _EventAssignmentPageState extends State<EventAssignmentPage> {
 
               return ExpansionTile(
                 leading: const Icon(Icons.place),
-                title: Text('SubLocation: ${subLoc.subLocationId}'),
+                title: Text('SubLocation: ${subLoc.id}'),
                 subtitle: _buildAssignmentSubtitle(assignedMemberIds.length, availableVolunteers.length),
                 children: [_buildMemberAssignmentList(assignedMemberIds, availableVolunteers, (memberId, assign) => _assignMemberToSubLocation(shift, subLoc, memberId, assign))],
               );
