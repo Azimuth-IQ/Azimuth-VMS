@@ -12,6 +12,7 @@ import 'package:azimuth_vms/UI/AdminScreens/FormMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/LocationsMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/SignInScreen.dart';
 import 'package:azimuth_vms/UI/AdminScreens/TeamsMgmt.dart';
+import 'package:azimuth_vms/UI/AdminScreens/TeamLeadersMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/VolunteersMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/ShiftAssignmentScreen.dart';
 import 'package:azimuth_vms/UI/AdminScreens/PresenceCheckScreen.dart';
@@ -197,6 +198,7 @@ class _AuthGuardState extends State<AuthGuard> {
       '/admin-dashboard',
       '/locations-mgmt',
       '/teams-mgmt',
+      '/team-leaders-mgmt',
       '/event-mgmt',
       '/volunteers-mgmt',
       '/form-mgmt',
@@ -239,6 +241,8 @@ class _AuthGuardState extends State<AuthGuard> {
         return const LocationsMgmt();
       case '/teams-mgmt':
         return const TeamsMgmt();
+      case '/team-leaders-mgmt':
+        return const TeamLeadersMgmt();
       case '/event-mgmt':
         return const EventsMgmt();
       case '/volunteers-mgmt':
