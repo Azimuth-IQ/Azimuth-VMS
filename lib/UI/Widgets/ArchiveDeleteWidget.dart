@@ -103,10 +103,7 @@ class ArchiveDeleteMenu extends StatelessWidget {
                   Icon(Icons.info_outline, color: Colors.orange.shade700, size: 20),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: Text(
-                      'This will hide the $itemType from active lists but keep all data intact.',
-                      style: TextStyle(fontSize: 12, color: Colors.orange.shade900),
-                    ),
+                    child: Text('This will hide the $itemType from active lists but keep all data intact.', style: TextStyle(fontSize: 12, color: Colors.orange.shade900)),
                   ),
                 ],
               ),
@@ -114,10 +111,7 @@ class ArchiveDeleteMenu extends StatelessWidget {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
           ElevatedButton.icon(
             onPressed: () {
               Navigator.pop(context);
@@ -125,10 +119,7 @@ class ArchiveDeleteMenu extends StatelessWidget {
             },
             icon: const Icon(Icons.archive),
             label: const Text('Archive'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange,
-              foregroundColor: Colors.white,
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.orange, foregroundColor: Colors.white),
           ),
         ],
       ),
@@ -148,10 +139,7 @@ class ArchiveDeleteMenu extends StatelessWidget {
         ),
         content: Text('Are you sure you want to restore "$itemName" to active status?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
           ElevatedButton.icon(
             onPressed: () {
               Navigator.pop(context);
@@ -159,10 +147,7 @@ class ArchiveDeleteMenu extends StatelessWidget {
             },
             icon: const Icon(Icons.unarchive),
             label: const Text('Unarchive'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              foregroundColor: Colors.white,
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white),
           ),
         ],
       ),
@@ -209,10 +194,7 @@ class ArchiveDeleteMenu extends StatelessWidget {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
           ElevatedButton.icon(
             onPressed: () {
               Navigator.pop(context);
@@ -220,10 +202,7 @@ class ArchiveDeleteMenu extends StatelessWidget {
             },
             icon: const Icon(Icons.delete_forever),
             label: const Text('Delete'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
           ),
         ],
       ),
@@ -237,12 +216,7 @@ class ShowArchivedToggle extends StatelessWidget {
   final ValueChanged<bool> onChanged;
   final int archivedCount;
 
-  const ShowArchivedToggle({
-    super.key,
-    required this.showArchived,
-    required this.onChanged,
-    this.archivedCount = 0,
-  });
+  const ShowArchivedToggle({super.key, required this.showArchived, required this.onChanged, this.archivedCount = 0});
 
   @override
   Widget build(BuildContext context) {
@@ -259,34 +233,17 @@ class ShowArchivedToggle extends StatelessWidget {
         onChanged: (value) => onChanged(value ?? false),
         title: Row(
           children: [
-            Icon(
-              showArchived ? Icons.archive : Icons.archive_outlined,
-              size: 20,
-              color: showArchived ? Colors.orange : Colors.grey,
-            ),
+            Icon(showArchived ? Icons.archive : Icons.archive_outlined, size: 20, color: showArchived ? Colors.orange : Colors.grey),
             const SizedBox(width: 8),
-            Text(
-              'Show Archived',
-              style: TextStyle(
-                fontSize: 14,
-                color: showArchived ? Colors.black87 : Colors.grey.shade700,
-              ),
-            ),
+            Text('Show Archived', style: TextStyle(fontSize: 14, color: showArchived ? Colors.black87 : Colors.grey.shade700)),
             if (archivedCount > 0) ...[
               const SizedBox(width: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.orange,
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                decoration: BoxDecoration(color: Colors.orange, borderRadius: BorderRadius.circular(12)),
                 child: Text(
                   archivedCount.toString(),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
                 ),
               ),
             ],
@@ -317,11 +274,7 @@ class ArchivedBadge extends StatelessWidget {
           const SizedBox(width: 4),
           Text(
             'ARCHIVED',
-            style: TextStyle(
-              color: Colors.orange.shade900,
-              fontSize: 11,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(color: Colors.orange.shade900, fontSize: 11, fontWeight: FontWeight.bold),
           ),
         ],
       ),

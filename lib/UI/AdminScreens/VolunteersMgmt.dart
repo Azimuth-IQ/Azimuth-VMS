@@ -101,11 +101,7 @@ class _VolunteersMgmtViewState extends State<VolunteersMgmtView> {
               ? const Center(child: CircularProgressIndicator())
               : Column(
                   children: [
-                    ShowArchivedToggle(
-                      showArchived: _showArchived,
-                      onChanged: (value) => setState(() => _showArchived = value),
-                      archivedCount: provider.archivedVolunteers.length,
-                    ),
+                    ShowArchivedToggle(showArchived: _showArchived, onChanged: (value) => setState(() => _showArchived = value), archivedCount: provider.archivedVolunteers.length),
                     Expanded(
                       child: displayVolunteers.isEmpty
                           ? Center(
@@ -117,32 +113,28 @@ class _VolunteersMgmtViewState extends State<VolunteersMgmtView> {
                                   Text(
                                     _showArchived ? 'No archived volunteers' : 'No volunteers found',
                                     style: TextStyle(fontSize: 18, color: Colors.grey[600], fontWeight: FontWeight.w500),
-                      ),
-                      const SizedBox(height: 8),
-                      Text('Tap + to add a new volunteer', style: TextStyle(fontSize: 14, color: Colors.grey[500])),
-                    ],
-                  ),
-                )
-              : ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: displayVolunteers.length,
-                  itemBuilder: (context, index) {
-                    final volunteer = displayVolunteers[index];
-                    return VolunteerTile(
-                      volunteer: volunteer,
-                      onEdit: () => _showVolunteerForm(context, volunteer: volunteer),
-                      onTeamAssign: (teamId) => _assignTeam(context, volunteer, teamId),
-                    );
-                  },
-                ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text('Tap + to add a new volunteer', style: TextStyle(fontSize: 14, color: Colors.grey[500])),
+                                ],
+                              ),
+                            )
+                          : ListView.builder(
+                              padding: const EdgeInsets.all(16),
+                              itemCount: displayVolunteers.length,
+                              itemBuilder: (context, index) {
+                                final volunteer = displayVolunteers[index];
+                                return VolunteerTile(
+                                  volunteer: volunteer,
+                                  onEdit: () => _showVolunteerForm(context, volunteer: volunteer),
+                                  onTeamAssign: (teamId) => _assignTeam(context, volunteer, teamId),
+                                );
+                              },
+                            ),
                     ),
                   ],
                 ),
-          floatingActionButton: FloatingActionButton.extended(
-            onPressed: () => _showVolunteerForm(context),
-            icon: const Icon(Icons.add),
-            label: const Text('Add Volunteer'),
-          ),
+          floatingActionButton: FloatingActionButton.extended(onPressed: () => _showVolunteerForm(context), icon: const Icon(Icons.add), label: const Text('Add Volunteer')),
         );
       },
     );
@@ -159,7 +151,7 @@ class VolunteerTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = context.read<VolunteersProvider>();
-    
+
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
@@ -251,18 +243,36 @@ class VolunteerTile extends StatelessWidget {
                     const PopupMenuDivider(),
                     const PopupMenuItem(
                       value: 'archive',
-                      child: Row(children: [Icon(Icons.archive, size: 20, color: Colors.orange), SizedBox(width: 8), Text('Archive', style: TextStyle(color: Colors.orange))]),
+                      child: Row(
+                        children: [
+                          Icon(Icons.archive, size: 20, color: Colors.orange),
+                          SizedBox(width: 8),
+                          Text('Archive', style: TextStyle(color: Colors.orange)),
+                        ],
+                      ),
                     ),
                   ],
                   if (volunteer.archived)
                     const PopupMenuItem(
                       value: 'unarchive',
-                      child: Row(children: [Icon(Icons.unarchive, size: 20, color: Colors.green), SizedBox(width: 8), Text('Restore', style: TextStyle(color: Colors.green))]),
+                      child: Row(
+                        children: [
+                          Icon(Icons.unarchive, size: 20, color: Colors.green),
+                          SizedBox(width: 8),
+                          Text('Restore', style: TextStyle(color: Colors.green)),
+                        ],
+                      ),
                     ),
                   const PopupMenuDivider(),
                   const PopupMenuItem(
                     value: 'delete',
-                    child: Row(children: [Icon(Icons.delete, size: 20, color: Colors.red), SizedBox(width: 8), Text('Delete', style: TextStyle(color: Colors.red))]),
+                    child: Row(
+                      children: [
+                        Icon(Icons.delete, size: 20, color: Colors.red),
+                        SizedBox(width: 8),
+                        Text('Delete', style: TextStyle(color: Colors.red)),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -277,7 +287,13 @@ class VolunteerTile extends StatelessWidget {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Row(children: [Icon(Icons.archive, color: Colors.orange), SizedBox(width: 8), Text('Archive Volunteer')]),
+        title: const Row(
+          children: [
+            Icon(Icons.archive, color: Colors.orange),
+            SizedBox(width: 8),
+            Text('Archive Volunteer'),
+          ],
+        ),
         content: Text('Archive ${volunteer.name}?\n\nThis will hide the volunteer but keep their data.'),
         actions: [
           TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Cancel')),
@@ -301,7 +317,13 @@ class VolunteerTile extends StatelessWidget {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Row(children: [Icon(Icons.unarchive, color: Colors.green), SizedBox(width: 8), Text('Restore Volunteer')]),
+        title: const Row(
+          children: [
+            Icon(Icons.unarchive, color: Colors.green),
+            SizedBox(width: 8),
+            Text('Restore Volunteer'),
+          ],
+        ),
         content: Text('Restore ${volunteer.name}?'),
         actions: [
           TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Cancel')),
@@ -325,7 +347,13 @@ class VolunteerTile extends StatelessWidget {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Row(children: [Icon(Icons.delete, color: Colors.red), SizedBox(width: 8), Text('Delete Volunteer')]),
+        title: const Row(
+          children: [
+            Icon(Icons.delete, color: Colors.red),
+            SizedBox(width: 8),
+            Text('Delete Volunteer'),
+          ],
+        ),
         content: Text('⚠️ WARNING: Delete ${volunteer.name} permanently?\n\nThis action CANNOT be undone!'),
         actions: [
           TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Cancel')),
@@ -343,7 +371,6 @@ class VolunteerTile extends StatelessWidget {
         ],
       ),
     );
-  }
   }
 
   void _showTeamAssignDialog(BuildContext context) {

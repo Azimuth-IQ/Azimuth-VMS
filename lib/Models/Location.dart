@@ -12,7 +12,16 @@ class Location {
   bool archived;
 
   //2- Constructor
-  Location({required this.id, required this.name, required this.description, this.imageUrl, required this.longitude, required this.latitude, this.subLocations, this.archived = false});
+  Location({
+    required this.id,
+    required this.name,
+    required this.description,
+    this.imageUrl,
+    required this.longitude,
+    required this.latitude,
+    this.subLocations,
+    this.archived = false,
+  });
   //3- To Json
   Map<String, dynamic> toJson() {
     return {
