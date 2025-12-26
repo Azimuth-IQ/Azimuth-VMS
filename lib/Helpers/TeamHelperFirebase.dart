@@ -38,4 +38,47 @@ class TeamHelperFirebase {
   void UpdateTeam(Team team) {
     rootRef.child(team.id).update(team.toJson());
   }
+
+  //4- Archive/Unarchive
+  Future<void> ArchiveTeam(String teamId) async {
+    await rootRef.child(teamId).update({'archived': true});
+  }
+
+  Future<void> UnarchiveTeam(String teamId) async {
+    await rootRef.child(teamId).update({'archived': false});
+  }
+
+  //5- Delete
+  Future<void> DeleteTeam(String id) async {
+    await rootRef.child(id).remove();
+  }
+
+  //6- Query Methods
+  Future<List<Team>> GetActiveTeams() async {
+    DataSnapshot snapshot = await rootRef.get();
+    List<Team> teams = [];
+    if (snapshot.exists) {
+      for (DataSnapshot d1 in snapshot.children) {
+        Team team = Team.fromDataSnapshot(d1);
+        if (!team.archived) {
+          teams.add(team);
+        }
+      }
+    }
+    return teams;
+  }
+
+  Future<List<Team>> GetArchivedTeams() async {
+    DataSnapshot snapshot = await rootRef.get();
+    List<Team> teams = [];
+    if (snapshot.exists) {
+      for (DataSnapshot d1 in snapshot.children) {
+        Team team = Team.fromDataSnapshot(d1);
+        if (team.archived) {
+          teams.add(team);
+        }
+      }
+    }
+    return teams;
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:azimuth_vms/Models/SystemUser.dart';
 import 'package:azimuth_vms/Providers/TeamLeadersProvider.dart';
+import 'package:azimuth_vms/UI/Widgets/ArchiveDeleteWidget.dart';
 import 'package:provider/provider.dart';
 
 class TeamLeadersMgmt extends StatelessWidget {
@@ -12,8 +13,15 @@ class TeamLeadersMgmt extends StatelessWidget {
   }
 }
 
-class TeamLeadersMgmtView extends StatelessWidget {
+class TeamLeadersMgmtView extends StatefulWidget {
   const TeamLeadersMgmtView({super.key});
+
+  @override
+  State<TeamLeadersMgmtView> createState() => _TeamLeadersMgmtViewState();
+}
+
+class _TeamLeadersMgmtViewState extends State<TeamLeadersMgmtView> {
+  bool _showArchived = false;
 
   void _showTeamLeaderForm(BuildContext context, {SystemUser? teamLeader}) async {
     final result = await showDialog<SystemUser>(
@@ -44,6 +52,8 @@ class TeamLeadersMgmtView extends StatelessWidget {
           });
         }
 
+        final displayTeamLeaders = _showArchived ? provider.archivedTeamLeaders : provider.activeTeamLeaders;
+
         return Scaffold(
           appBar: AppBar(
             title: const Text('Team Leaders Management'),
@@ -51,32 +61,43 @@ class TeamLeadersMgmtView extends StatelessWidget {
           ),
           body: provider.isLoading
               ? const Center(child: CircularProgressIndicator())
-              : provider.teamLeaders.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.person_pin_circle, size: 64, color: Colors.grey[400]),
-                      const SizedBox(height: 16),
-                      Text(
-                        'No team leaders found',
-                        style: TextStyle(fontSize: 18, color: Colors.grey[600], fontWeight: FontWeight.w500),
-                      ),
-                      const SizedBox(height: 8),
-                      Text('Tap + to add a new team leader', style: TextStyle(fontSize: 14, color: Colors.grey[500])),
-                    ],
-                  ),
-                )
-              : ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: provider.teamLeaders.length,
-                  itemBuilder: (context, index) {
-                    final teamLeader = provider.teamLeaders[index];
-                    return TeamLeaderTile(
-                      teamLeader: teamLeader,
-                      onEdit: () => _showTeamLeaderForm(context, teamLeader: teamLeader),
-                    );
-                  },
+              : Column(
+                  children: [
+                    ShowArchivedToggle(
+                      showArchived: _showArchived,
+                      onChanged: (value) => setState(() => _showArchived = value),
+                      archivedCount: provider.archivedTeamLeaders.length,
+                    ),
+                    Expanded(
+                      child: displayTeamLeaders.isEmpty
+                          ? Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.person_pin_circle, size: 64, color: Colors.grey[400]),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    _showArchived ? 'No archived team leaders' : 'No team leaders found',
+                                    style: TextStyle(fontSize: 18, color: Colors.grey[600], fontWeight: FontWeight.w500),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text('Tap + to add a new team leader', style: TextStyle(fontSize: 14, color: Colors.grey[500])),
+                                ],
+                              ),
+                            )
+                          : ListView.builder(
+                              padding: const EdgeInsets.all(16),
+                              itemCount: displayTeamLeaders.length,
+                              itemBuilder: (context, index) {
+                                final teamLeader = displayTeamLeaders[index];
+                                return TeamLeaderTile(
+                                  teamLeader: teamLeader,
+                                  onEdit: () => _showTeamLeaderForm(context, teamLeader: teamLeader),
+                                );
+                              },
+                            ),
+                    ),
+                  ],
                 ),
           floatingActionButton: FloatingActionButton.extended(onPressed: () => _showTeamLeaderForm(context), icon: const Icon(Icons.add), label: const Text('Add Team Leader')),
         );
@@ -93,6 +114,8 @@ class TeamLeaderTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.read<TeamLeadersProvider>();
+
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
@@ -112,9 +135,17 @@ class TeamLeaderTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      teamLeader.name,
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF1A1F36)),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            teamLeader.name,
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF1A1F36)),
+                          ),
+                        ),
+                        if (teamLeader.archived) const SizedBox(width: 8),
+                        if (teamLeader.archived) const ArchivedBadge(),
+                      ],
                     ),
                     const SizedBox(height: 4),
                     Row(
@@ -127,7 +158,29 @@ class TeamLeaderTile extends StatelessWidget {
                   ],
                 ),
               ),
-              IconButton(icon: const Icon(Icons.edit_outlined), onPressed: onEdit, color: Colors.indigo),
+              ArchiveDeleteMenu(
+                isArchived: teamLeader.archived,
+                itemType: 'Team Leader',
+                itemName: teamLeader.name,
+                onArchive: () async {
+                  await provider.archiveTeamLeader(teamLeader.phone);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${teamLeader.name} archived')));
+                  }
+                },
+                onUnarchive: () async {
+                  await provider.unarchiveTeamLeader(teamLeader.phone);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${teamLeader.name} restored')));
+                  }
+                },
+                onDelete: () async {
+                  await provider.deleteTeamLeader(teamLeader.phone);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${teamLeader.name} deleted')));
+                  }
+                },
+              ),
             ],
           ),
         ),

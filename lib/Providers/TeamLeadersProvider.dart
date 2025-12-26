@@ -13,6 +13,9 @@ class TeamLeadersProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
+  List<SystemUser> get activeTeamLeaders => _teamLeaders.where((tl) => !tl.archived).toList();
+  List<SystemUser> get archivedTeamLeaders => _teamLeaders.where((tl) => tl.archived).toList();
+
   Future<void> loadTeamLeaders() async {
     _isLoading = true;
     _errorMessage = null;
@@ -39,6 +42,39 @@ class TeamLeadersProvider with ChangeNotifier {
   void updateTeamLeader(SystemUser teamLeader) {
     _userHelper.UpdateSystemUser(teamLeader);
     loadTeamLeaders();
+  }
+
+  Future<void> archiveTeamLeader(String phone) async {
+    try {
+      await _userHelper.ArchiveSystemUser(phone);
+      await loadTeamLeaders();
+    } catch (e) {
+      print('Error archiving team leader: $e');
+      _errorMessage = 'Error archiving team leader: $e';
+      notifyListeners();
+    }
+  }
+
+  Future<void> unarchiveTeamLeader(String phone) async {
+    try {
+      await _userHelper.UnarchiveSystemUser(phone);
+      await loadTeamLeaders();
+    } catch (e) {
+      print('Error unarchiving team leader: $e');
+      _errorMessage = 'Error unarchiving team leader: $e';
+      notifyListeners();
+    }
+  }
+
+  Future<void> deleteTeamLeader(String phone) async {
+    try {
+      await _userHelper.DeleteSystemUser(phone);
+      await loadTeamLeaders();
+    } catch (e) {
+      print('Error deleting team leader: $e');
+      _errorMessage = 'Error deleting team leader: $e';
+      notifyListeners();
+    }
   }
 }
 

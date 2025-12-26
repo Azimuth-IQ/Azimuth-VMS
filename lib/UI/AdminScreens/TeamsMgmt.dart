@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:azimuth_vms/Models/Team.dart';
 import 'package:azimuth_vms/Providers/TeamsProvider.dart';
+import 'package:azimuth_vms/UI/Widgets/ArchiveDeleteWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -13,8 +14,15 @@ class TeamsMgmt extends StatelessWidget {
   }
 }
 
-class TeamsMgmtView extends StatelessWidget {
+class TeamsMgmtView extends StatefulWidget {
   const TeamsMgmtView({super.key});
+
+  @override
+  State<TeamsMgmtView> createState() => _TeamsMgmtViewState();
+}
+
+class _TeamsMgmtViewState extends State<TeamsMgmtView> {
+  bool _showArchived = false;
 
   void _showTeamForm(BuildContext context, {Team? team}) async {
     final result = await showDialog<Team>(
@@ -45,6 +53,8 @@ class TeamsMgmtView extends StatelessWidget {
           });
         }
 
+        final displayTeams = _showArchived ? provider.archivedTeams : provider.activeTeams;
+
         return Scaffold(
           appBar: AppBar(
             title: const Text('Teams Management'),
@@ -52,17 +62,24 @@ class TeamsMgmtView extends StatelessWidget {
           ),
           body: provider.isLoading
               ? const Center(child: CircularProgressIndicator())
-              : provider.teams.isEmpty
-              ? const Center(child: Text('No teams found.\nTap + to add a new team.', textAlign: TextAlign.center))
-              : ListView.builder(
-                  itemCount: provider.teams.length,
-                  itemBuilder: (context, index) {
-                    final team = provider.teams[index];
-                    return TeamTile(
-                      team: team,
-                      onEdit: () => _showTeamForm(context, team: team),
-                    );
-                  },
+              : Column(
+                  children: [
+                    ShowArchivedToggle(showArchived: _showArchived, onChanged: (value) => setState(() => _showArchived = value), archivedCount: provider.archivedTeams.length),
+                    Expanded(
+                      child: displayTeams.isEmpty
+                          ? Center(child: Text(_showArchived ? 'No archived teams' : 'No active teams found.\nTap + to add a new team.', textAlign: TextAlign.center))
+                          : ListView.builder(
+                              itemCount: displayTeams.length,
+                              itemBuilder: (context, index) {
+                                final team = displayTeams[index];
+                                return TeamTile(
+                                  team: team,
+                                  onEdit: () => _showTeamForm(context, team: team),
+                                );
+                              },
+                            ),
+                    ),
+                  ],
                 ),
           floatingActionButton: FloatingActionButton(onPressed: () => _showTeamForm(context), child: const Icon(Icons.add)),
         );
@@ -79,13 +96,49 @@ class TeamTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.read<TeamsProvider>();
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: ExpansionTile(
         leading: const Icon(Icons.groups),
         title: Text(team.name),
-        subtitle: Text('Team Leader ID: ${team.teamLeaderId}'),
-        trailing: IconButton(icon: const Icon(Icons.edit), onPressed: onEdit),
+        subtitle: Row(
+          children: [
+            Expanded(child: Text('Team Leader ID: ${team.teamLeaderId}')),
+            if (team.archived) const SizedBox(width: 8),
+            if (team.archived) const ArchivedBadge(),
+          ],
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(icon: const Icon(Icons.edit), onPressed: onEdit),
+            ArchiveDeleteMenu(
+              isArchived: team.archived,
+              itemType: 'Team',
+              itemName: team.name,
+              onArchive: () async {
+                await provider.archiveTeam(team.id);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${team.name} archived')));
+                }
+              },
+              onUnarchive: () async {
+                await provider.unarchiveTeam(team.id);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${team.name} restored')));
+                }
+              },
+              onDelete: () async {
+                await provider.deleteTeam(team.id);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${team.name} deleted')));
+                }
+              },
+            ),
+          ],
+        ),
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),

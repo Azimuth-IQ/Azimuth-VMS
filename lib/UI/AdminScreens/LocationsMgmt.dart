@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:azimuth_vms/Models/Location.dart';
 import 'package:azimuth_vms/Providers/LocationsProvider.dart';
+import 'package:azimuth_vms/UI/Widgets/ArchiveDeleteWidget.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
@@ -14,8 +15,15 @@ class LocationsMgmt extends StatelessWidget {
   }
 }
 
-class LocationsMgmtView extends StatelessWidget {
+class LocationsMgmtView extends StatefulWidget {
   const LocationsMgmtView({super.key});
+
+  @override
+  State<LocationsMgmtView> createState() => _LocationsMgmtViewState();
+}
+
+class _LocationsMgmtViewState extends State<LocationsMgmtView> {
+  bool _showArchived = false;
 
   void _showLocationForm(BuildContext context, {Location? location}) async {
     final result = await showDialog<Location>(
@@ -46,6 +54,8 @@ class LocationsMgmtView extends StatelessWidget {
           });
         }
 
+        final displayLocations = _showArchived ? provider.archivedLocations : provider.activeLocations;
+
         return Scaffold(
           appBar: AppBar(
             title: const Text('Locations Management'),
@@ -53,17 +63,24 @@ class LocationsMgmtView extends StatelessWidget {
           ),
           body: provider.isLoading
               ? const Center(child: CircularProgressIndicator())
-              : provider.locations.isEmpty
-              ? const Center(child: Text('No locations found.\nTap + to add a new location.', textAlign: TextAlign.center))
-              : ListView.builder(
-                  itemCount: provider.locations.length,
-                  itemBuilder: (context, index) {
-                    final location = provider.locations[index];
-                    return LocationTile(
-                      location: location,
-                      onEdit: () => _showLocationForm(context, location: location),
-                    );
-                  },
+              : Column(
+                  children: [
+                    ShowArchivedToggle(showArchived: _showArchived, onChanged: (value) => setState(() => _showArchived = value), archivedCount: provider.archivedLocations.length),
+                    Expanded(
+                      child: displayLocations.isEmpty
+                          ? Center(child: Text(_showArchived ? 'No archived locations' : 'No active locations found.\nTap + to add a new location.', textAlign: TextAlign.center))
+                          : ListView.builder(
+                              itemCount: displayLocations.length,
+                              itemBuilder: (context, index) {
+                                final location = displayLocations[index];
+                                return LocationTile(
+                                  location: location,
+                                  onEdit: () => _showLocationForm(context, location: location),
+                                );
+                              },
+                            ),
+                    ),
+                  ],
                 ),
           floatingActionButton: FloatingActionButton(onPressed: () => _showLocationForm(context), child: const Icon(Icons.add)),
         );
@@ -80,13 +97,49 @@ class LocationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.read<LocationsProvider>();
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: ExpansionTile(
         leading: const Icon(Icons.location_on),
         title: Text(location.name),
-        subtitle: Text(location.description),
-        trailing: IconButton(icon: const Icon(Icons.edit), onPressed: onEdit),
+        subtitle: Row(
+          children: [
+            Expanded(child: Text(location.description)),
+            if (location.archived) const SizedBox(width: 8),
+            if (location.archived) const ArchivedBadge(),
+          ],
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(icon: const Icon(Icons.edit), onPressed: onEdit),
+            ArchiveDeleteMenu(
+              isArchived: location.archived,
+              itemType: 'Location',
+              itemName: location.name,
+              onArchive: () async {
+                await provider.archiveLocation(location.id);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${location.name} archived')));
+                }
+              },
+              onUnarchive: () async {
+                await provider.unarchiveLocation(location.id);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${location.name} restored')));
+                }
+              },
+              onDelete: () async {
+                await provider.deleteLocation(location.id);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${location.name} deleted')));
+                }
+              },
+            ),
+          ],
+        ),
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),

@@ -14,6 +14,7 @@ class SystemUser {
   VolunteerForm? volunteerForm; // Nullable for non-volunteer roles
   VolunteerRating? volunteerRating; // Nullable for non-volunteer roles
   List<Notification>? notifications;
+  bool archived;
 
   //2- Constructor
   SystemUser({
@@ -26,6 +27,7 @@ class SystemUser {
     this.volunteerForm,
     this.volunteerRating,
     this.notifications,
+    this.archived = false,
   });
 
   //3- ToJson
@@ -39,6 +41,7 @@ class SystemUser {
       'teamId': teamId,
       'volunteerForm': volunteerForm?.toJson(),
       'volunteerRating': volunteerRating?.toJson(),
+      'archived': archived,
       'notifications': notifications?.map((n) => n.toJson()).toList(),
     };
   }
@@ -62,6 +65,7 @@ class SystemUser {
       password: snapshot.child('password').value?.toString(),
       role: SystemUserRole.values.firstWhere((e) => e.toString() == 'SystemUserRole.${snapshot.child('role').value}', orElse: () => SystemUserRole.VOLUNTEER),
       teamId: snapshot.child('teamId').value?.toString(),
+      archived: snapshot.child('archived').value as bool? ?? false,
       volunteerForm: vForm,
       volunteerRating: vRating,
     );

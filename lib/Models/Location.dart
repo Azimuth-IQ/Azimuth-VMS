@@ -9,9 +9,10 @@ class Location {
   String longitude;
   String latitude;
   List<Location>? subLocations;
+  bool archived;
 
   //2- Constructor
-  Location({required this.id, required this.name, required this.description, this.imageUrl, required this.longitude, required this.latitude, this.subLocations});
+  Location({required this.id, required this.name, required this.description, this.imageUrl, required this.longitude, required this.latitude, this.subLocations, this.archived = false});
   //3- To Json
   Map<String, dynamic> toJson() {
     return {
@@ -21,6 +22,7 @@ class Location {
       'imageUrl': imageUrl,
       'longitude': longitude,
       'latitude': latitude,
+      'archived': archived,
       'subLocations': subLocations?.map((loc) => loc.toJson()).toList(),
     };
   }
@@ -45,6 +47,7 @@ class Location {
       imageUrl: snapshot.child('imageUrl').value as String?,
       longitude: snapshot.child('longitude').value as String,
       latitude: snapshot.child('latitude').value as String,
+      archived: snapshot.child('archived').value as bool? ?? false,
       subLocations: subLocations,
     );
   }

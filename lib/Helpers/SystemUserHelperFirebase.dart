@@ -41,4 +41,61 @@ class SystemUserHelperFirebase {
   void UpdateSystemUser(SystemUser user) {
     rootRef.child(user.phone).update(user.toJson());
   }
+
+  //4- Archive/Unarchive
+  Future<void> ArchiveSystemUser(String phone) async {
+    await rootRef.child(phone).update({'archived': true});
+  }
+
+  Future<void> UnarchiveSystemUser(String phone) async {
+    await rootRef.child(phone).update({'archived': false});
+  }
+
+  //5- Delete
+  Future<void> DeleteSystemUser(String phone) async {
+    await rootRef.child(phone).remove();
+  }
+
+  //6- Query Methods
+  Future<List<SystemUser>> GetActiveUsers() async {
+    DataSnapshot snapshot = await rootRef.get();
+    List<SystemUser> users = [];
+    if (snapshot.exists) {
+      for (DataSnapshot d1 in snapshot.children) {
+        SystemUser user = SystemUser.fromDataSnapshot(d1);
+        if (!user.archived) {
+          users.add(user);
+        }
+      }
+    }
+    return users;
+  }
+
+  Future<List<SystemUser>> GetArchivedUsers() async {
+    DataSnapshot snapshot = await rootRef.get();
+    List<SystemUser> users = [];
+    if (snapshot.exists) {
+      for (DataSnapshot d1 in snapshot.children) {
+        SystemUser user = SystemUser.fromDataSnapshot(d1);
+        if (user.archived) {
+          users.add(user);
+        }
+      }
+    }
+    return users;
+  }
+
+  Future<List<SystemUser>> GetActiveUsersByRole(SystemUserRole role) async {
+    DataSnapshot snapshot = await rootRef.get();
+    List<SystemUser> users = [];
+    if (snapshot.exists) {
+      for (DataSnapshot d1 in snapshot.children) {
+        SystemUser user = SystemUser.fromDataSnapshot(d1);
+        if (user.role == role && !user.archived) {
+          users.add(user);
+        }
+      }
+    }
+    return users;
+  }
 }

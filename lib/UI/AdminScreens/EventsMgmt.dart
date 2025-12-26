@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:azimuth_vms/Models/Event.dart';
 import 'package:azimuth_vms/Models/Location.dart';
 import 'package:azimuth_vms/Providers/EventsProvider.dart';
+import 'package:azimuth_vms/UI/Widgets/ArchiveDeleteWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
@@ -22,8 +23,15 @@ class EventsMgmt extends StatelessWidget {
   }
 }
 
-class EventsMgmtView extends StatelessWidget {
+class EventsMgmtView extends StatefulWidget {
   const EventsMgmtView({super.key});
+
+  @override
+  State<EventsMgmtView> createState() => _EventsMgmtViewState();
+}
+
+class _EventsMgmtViewState extends State<EventsMgmtView> {
+  bool _showArchived = false;
 
   void _showEventForm(BuildContext context, {Event? event}) async {
     final eventsProvider = context.read<EventsProvider>();
@@ -58,6 +66,8 @@ class EventsMgmtView extends StatelessWidget {
           });
         }
 
+        final displayEvents = _showArchived ? provider.archivedEvents : provider.activeEvents;
+
         return Scaffold(
           appBar: AppBar(
             title: const Text('Events Management'),
@@ -65,17 +75,24 @@ class EventsMgmtView extends StatelessWidget {
           ),
           body: provider.isLoading
               ? const Center(child: CircularProgressIndicator())
-              : provider.events.isEmpty
-              ? const Center(child: Text('No events found.\nTap + to add a new event.', textAlign: TextAlign.center))
-              : ListView.builder(
-                  itemCount: provider.events.length,
-                  itemBuilder: (context, index) {
-                    final event = provider.events[index];
-                    return EventTile(
-                      event: event,
-                      onEdit: () => _showEventForm(context, event: event),
-                    );
-                  },
+              : Column(
+                  children: [
+                    ShowArchivedToggle(showArchived: _showArchived, onChanged: (value) => setState(() => _showArchived = value), archivedCount: provider.archivedEvents.length),
+                    Expanded(
+                      child: displayEvents.isEmpty
+                          ? Center(child: Text(_showArchived ? 'No archived events' : 'No active events found.\nTap + to add a new event.', textAlign: TextAlign.center))
+                          : ListView.builder(
+                              itemCount: displayEvents.length,
+                              itemBuilder: (context, index) {
+                                final event = displayEvents[index];
+                                return EventTile(
+                                  event: event,
+                                  onEdit: () => _showEventForm(context, event: event),
+                                );
+                              },
+                            ),
+                    ),
+                  ],
                 ),
           floatingActionButton: FloatingActionButton(onPressed: () => _showEventForm(context), child: const Icon(Icons.add)),
         );
@@ -92,13 +109,49 @@ class EventTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.read<EventsProvider>();
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: ExpansionTile(
         leading: const Icon(Icons.event),
         title: Text(event.name),
-        subtitle: Text('${event.startDate} - ${event.endDate}'),
-        trailing: IconButton(icon: const Icon(Icons.edit), onPressed: onEdit),
+        subtitle: Row(
+          children: [
+            Expanded(child: Text('${event.startDate} - ${event.endDate}')),
+            if (event.archived) const SizedBox(width: 8),
+            if (event.archived) const ArchivedBadge(),
+          ],
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(icon: const Icon(Icons.edit), onPressed: onEdit),
+            ArchiveDeleteMenu(
+              isArchived: event.archived,
+              itemType: 'Event',
+              itemName: event.name,
+              onArchive: () async {
+                await provider.archiveEvent(event.id);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${event.name} archived')));
+                }
+              },
+              onUnarchive: () async {
+                await provider.unarchiveEvent(event.id);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${event.name} restored')));
+                }
+              },
+              onDelete: () async {
+                await provider.deleteEvent(event.id);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${event.name} deleted')));
+                }
+              },
+            ),
+          ],
+        ),
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),

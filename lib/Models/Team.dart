@@ -6,13 +6,14 @@ class Team {
   String name;
   String teamLeaderId;
   List<String> memberIds;
+  bool archived;
 
   //2- Constructor
-  Team({required this.id, required this.name, required this.teamLeaderId, required this.memberIds});
+  Team({required this.id, required this.name, required this.teamLeaderId, required this.memberIds, this.archived = false});
 
   //3- To Json
   Map<String, dynamic> toJson() {
-    return {'id': id, 'name': name, 'teamLeaderId': teamLeaderId, 'memberIds': memberIds};
+    return {'id': id, 'name': name, 'teamLeaderId': teamLeaderId, 'memberIds': memberIds, 'archived': archived};
   }
 
   //4- From DataSnapshot
@@ -31,6 +32,7 @@ class Team {
       id: snapshot.child('id').value?.toString() ?? '',
       name: snapshot.child('name').value?.toString() ?? '',
       teamLeaderId: snapshot.child('teamLeaderId').value?.toString() ?? '',
+      archived: snapshot.child('archived').value as bool? ?? false,
       memberIds: members,
     );
   }

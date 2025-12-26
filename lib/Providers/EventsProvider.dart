@@ -84,6 +84,42 @@ class EventsProvider with ChangeNotifier {
     _eventHelper.UpdateEvent(event);
     loadEvents();
   }
+
+  // Archive/Unarchive
+  Future<void> archiveEvent(String eventId) async {
+    try {
+      await _eventHelper.ArchiveEvent(eventId);
+      await loadEvents();
+    } catch (e) {
+      print('Error archiving event: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> unarchiveEvent(String eventId) async {
+    try {
+      await _eventHelper.UnarchiveEvent(eventId);
+      await loadEvents();
+    } catch (e) {
+      print('Error unarchiving event: $e');
+      rethrow;
+    }
+  }
+
+  // Delete
+  Future<void> deleteEvent(String eventId) async {
+    try {
+      await _eventHelper.DeleteEvent(eventId);
+      await loadEvents();
+    } catch (e) {
+      print('Error deleting event: $e');
+      rethrow;
+    }
+  }
+
+  // Get active/archived events
+  List<Event> get activeEvents => _events.where((e) => !e.archived).toList();
+  List<Event> get archivedEvents => _events.where((e) => e.archived).toList();
 }
 
 class EventFormProvider with ChangeNotifier {

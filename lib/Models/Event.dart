@@ -59,6 +59,9 @@ class Event {
   // Presence check permissions
   PresenceCheckPermissions presenceCheckPermissions;
 
+  // Archive status
+  bool archived;
+
   // Shifts
   List<EventShift> shifts;
 
@@ -76,6 +79,7 @@ class Event {
     this.yearlyDay,
     this.yearlyMonth,
     this.presenceCheckPermissions = PresenceCheckPermissions.BOTH,
+    this.archived = false,
     required this.shifts,
   });
 
@@ -94,6 +98,7 @@ class Event {
       'yearlyDay': yearlyDay,
       'yearlyMonth': yearlyMonth,
       'presenceCheckPermissions': presenceCheckPermissions.name,
+      'archived': archived,
       'shifts': shifts.map((s) => s.toJson()).toList(),
     };
   }
@@ -124,6 +129,7 @@ class Event {
         (e) => e.name == snapshot.child('presenceCheckPermissions').value?.toString(),
         orElse: () => PresenceCheckPermissions.BOTH,
       ),
+      archived: snapshot.child('archived').value as bool? ?? false,
       shifts: shifts,
     );
   }

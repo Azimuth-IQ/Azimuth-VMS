@@ -13,6 +13,9 @@ class LocationsProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
+  List<Location> get activeLocations => _locations.where((loc) => !loc.archived).toList();
+  List<Location> get archivedLocations => _locations.where((loc) => loc.archived).toList();
+
   Future<void> loadLocations() async {
     _isLoading = true;
     _errorMessage = null;
@@ -38,6 +41,39 @@ class LocationsProvider with ChangeNotifier {
   void updateLocation(Location location) {
     _locationHelper.UpdateLocation(location);
     loadLocations();
+  }
+
+  Future<void> archiveLocation(String locationId) async {
+    try {
+      await _locationHelper.ArchiveLocation(locationId);
+      await loadLocations();
+    } catch (e) {
+      print('Error archiving location: $e');
+      _errorMessage = 'Error archiving location: $e';
+      notifyListeners();
+    }
+  }
+
+  Future<void> unarchiveLocation(String locationId) async {
+    try {
+      await _locationHelper.UnarchiveLocation(locationId);
+      await loadLocations();
+    } catch (e) {
+      print('Error unarchiving location: $e');
+      _errorMessage = 'Error unarchiving location: $e';
+      notifyListeners();
+    }
+  }
+
+  Future<void> deleteLocation(String locationId) async {
+    try {
+      await _locationHelper.DeleteLocation(locationId);
+      await loadLocations();
+    } catch (e) {
+      print('Error deleting location: $e');
+      _errorMessage = 'Error deleting location: $e';
+      notifyListeners();
+    }
   }
 }
 

@@ -38,4 +38,47 @@ class LocationHelperFirebase {
   void UpdateLocation(Location location) {
     rootRef.child(location.id).update(location.toJson());
   }
+
+  //4- Archive/Unarchive
+  Future<void> ArchiveLocation(String locationId) async {
+    await rootRef.child(locationId).update({'archived': true});
+  }
+
+  Future<void> UnarchiveLocation(String locationId) async {
+    await rootRef.child(locationId).update({'archived': false});
+  }
+
+  //5- Delete
+  Future<void> DeleteLocation(String id) async {
+    await rootRef.child(id).remove();
+  }
+
+  //6- Query Methods
+  Future<List<Location>> GetActiveLocations() async {
+    DataSnapshot snapshot = await rootRef.get();
+    List<Location> locations = [];
+    if (snapshot.exists) {
+      for (DataSnapshot d1 in snapshot.children) {
+        Location location = Location.fromDataSnapshot(d1);
+        if (!location.archived) {
+          locations.add(location);
+        }
+      }
+    }
+    return locations;
+  }
+
+  Future<List<Location>> GetArchivedLocations() async {
+    DataSnapshot snapshot = await rootRef.get();
+    List<Location> locations = [];
+    if (snapshot.exists) {
+      for (DataSnapshot d1 in snapshot.children) {
+        Location location = Location.fromDataSnapshot(d1);
+        if (location.archived) {
+          locations.add(location);
+        }
+      }
+    }
+    return locations;
+  }
 }

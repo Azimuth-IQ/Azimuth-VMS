@@ -15,6 +15,9 @@ class TeamsProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
+  List<Team> get activeTeams => _teams.where((team) => !team.archived).toList();
+  List<Team> get archivedTeams => _teams.where((team) => team.archived).toList();
+
   Future<void> loadTeams() async {
     _isLoading = true;
     _errorMessage = null;
@@ -40,6 +43,39 @@ class TeamsProvider with ChangeNotifier {
   void updateTeam(Team team) {
     _teamHelper.UpdateTeam(team);
     loadTeams();
+  }
+
+  Future<void> archiveTeam(String teamId) async {
+    try {
+      await _teamHelper.ArchiveTeam(teamId);
+      await loadTeams();
+    } catch (e) {
+      print('Error archiving team: $e');
+      _errorMessage = 'Error archiving team: $e';
+      notifyListeners();
+    }
+  }
+
+  Future<void> unarchiveTeam(String teamId) async {
+    try {
+      await _teamHelper.UnarchiveTeam(teamId);
+      await loadTeams();
+    } catch (e) {
+      print('Error unarchiving team: $e');
+      _errorMessage = 'Error unarchiving team: $e';
+      notifyListeners();
+    }
+  }
+
+  Future<void> deleteTeam(String teamId) async {
+    try {
+      await _teamHelper.DeleteTeam(teamId);
+      await loadTeams();
+    } catch (e) {
+      print('Error deleting team: $e');
+      _errorMessage = 'Error deleting team: $e';
+      notifyListeners();
+    }
   }
 }
 

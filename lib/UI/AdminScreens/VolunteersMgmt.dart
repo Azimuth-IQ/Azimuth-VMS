@@ -3,6 +3,7 @@ import 'package:azimuth_vms/Models/SystemUser.dart';
 import 'package:azimuth_vms/Models/Team.dart';
 import 'package:azimuth_vms/Providers/VolunteersProvider.dart';
 import 'package:azimuth_vms/Providers/TeamsProvider.dart';
+import 'package:azimuth_vms/UI/Widgets/ArchiveDeleteWidget.dart';
 import 'package:provider/provider.dart';
 
 class VolunteersMgmt extends StatelessWidget {
@@ -20,8 +21,15 @@ class VolunteersMgmt extends StatelessWidget {
   }
 }
 
-class VolunteersMgmtView extends StatelessWidget {
+class VolunteersMgmtView extends StatefulWidget {
   const VolunteersMgmtView({super.key});
+
+  @override
+  State<VolunteersMgmtView> createState() => _VolunteersMgmtViewState();
+}
+
+class _VolunteersMgmtViewState extends State<VolunteersMgmtView> {
+  bool _showArchived = false;
 
   void _showVolunteerForm(BuildContext context, {SystemUser? volunteer}) async {
     final result = await showDialog<SystemUser>(
@@ -54,6 +62,7 @@ class VolunteersMgmtView extends StatelessWidget {
       volunteerForm: volunteer.volunteerForm,
       volunteerRating: volunteer.volunteerRating,
       notifications: volunteer.notifications,
+      archived: volunteer.archived,
     );
     provider.updateVolunteer(updatedVolunteer);
 
@@ -63,7 +72,7 @@ class VolunteersMgmtView extends StatelessWidget {
               .teams
               .firstWhere(
                 (t) => t.id == teamId,
-                orElse: () => Team(id: '', name: 'Unknown', teamLeaderId: '', memberIds: []),
+                orElse: () => Team(id: '', name: 'Unknown', teamLeaderId: '', memberIds: [], archived: false),
               )
               .name
         : 'No team';
@@ -81,6 +90,8 @@ class VolunteersMgmtView extends StatelessWidget {
           });
         }
 
+        final displayVolunteers = _showArchived ? provider.archivedVolunteers : provider.activeVolunteers;
+
         return Scaffold(
           appBar: AppBar(
             title: const Text('Volunteers Management'),
@@ -88,16 +99,24 @@ class VolunteersMgmtView extends StatelessWidget {
           ),
           body: provider.isLoading
               ? const Center(child: CircularProgressIndicator())
-              : provider.volunteers.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.volunteer_activism, size: 64, color: Colors.grey[400]),
-                      const SizedBox(height: 16),
-                      Text(
-                        'No volunteers found',
-                        style: TextStyle(fontSize: 18, color: Colors.grey[600], fontWeight: FontWeight.w500),
+              : Column(
+                  children: [
+                    ShowArchivedToggle(
+                      showArchived: _showArchived,
+                      onChanged: (value) => setState(() => _showArchived = value),
+                      archivedCount: provider.archivedVolunteers.length,
+                    ),
+                    Expanded(
+                      child: displayVolunteers.isEmpty
+                          ? Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.volunteer_activism, size: 64, color: Colors.grey[400]),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    _showArchived ? 'No archived volunteers' : 'No volunteers found',
+                                    style: TextStyle(fontSize: 18, color: Colors.grey[600], fontWeight: FontWeight.w500),
                       ),
                       const SizedBox(height: 8),
                       Text('Tap + to add a new volunteer', style: TextStyle(fontSize: 14, color: Colors.grey[500])),
@@ -106,9 +125,9 @@ class VolunteersMgmtView extends StatelessWidget {
                 )
               : ListView.builder(
                   padding: const EdgeInsets.all(16),
-                  itemCount: provider.volunteers.length,
+                  itemCount: displayVolunteers.length,
                   itemBuilder: (context, index) {
-                    final volunteer = provider.volunteers[index];
+                    final volunteer = displayVolunteers[index];
                     return VolunteerTile(
                       volunteer: volunteer,
                       onEdit: () => _showVolunteerForm(context, volunteer: volunteer),
@@ -116,7 +135,14 @@ class VolunteersMgmtView extends StatelessWidget {
                     );
                   },
                 ),
-          floatingActionButton: FloatingActionButton.extended(onPressed: () => _showVolunteerForm(context), icon: const Icon(Icons.add), label: const Text('Add Volunteer')),
+                    ),
+                  ],
+                ),
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () => _showVolunteerForm(context),
+            icon: const Icon(Icons.add),
+            label: const Text('Add Volunteer'),
+          ),
         );
       },
     );
@@ -132,6 +158,8 @@ class VolunteerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.read<VolunteersProvider>();
+    
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
@@ -151,9 +179,17 @@ class VolunteerTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      volunteer.name,
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF1A1F36)),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            volunteer.name,
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF1A1F36)),
+                          ),
+                        ),
+                        if (volunteer.archived) const SizedBox(width: 8),
+                        if (volunteer.archived) const ArchivedBadge(),
+                      ],
                     ),
                     const SizedBox(height: 4),
                     Row(
@@ -169,7 +205,7 @@ class VolunteerTile extends StatelessWidget {
                         final team = volunteer.teamId != null
                             ? teamsProvider.teams.firstWhere(
                                 (t) => t.id == volunteer.teamId,
-                                orElse: () => Team(id: '', name: 'Unknown', teamLeaderId: '', memberIds: []),
+                                orElse: () => Team(id: '', name: 'Unknown', teamLeaderId: '', memberIds: [], archived: false),
                               )
                             : null;
                         return Row(
@@ -194,6 +230,12 @@ class VolunteerTile extends StatelessWidget {
                     onEdit();
                   } else if (value == 'assign') {
                     _showTeamAssignDialog(context);
+                  } else if (value == 'archive') {
+                    _showArchiveDialog(context, provider);
+                  } else if (value == 'unarchive') {
+                    _showUnarchiveDialog(context, provider);
+                  } else if (value == 'delete') {
+                    _showDeleteDialog(context, provider);
                   }
                 },
                 itemBuilder: (context) => [
@@ -205,6 +247,23 @@ class VolunteerTile extends StatelessWidget {
                     value: 'assign',
                     child: Row(children: [Icon(Icons.group_add, size: 20), SizedBox(width: 8), Text('Assign Team')]),
                   ),
+                  if (!volunteer.archived) ...[
+                    const PopupMenuDivider(),
+                    const PopupMenuItem(
+                      value: 'archive',
+                      child: Row(children: [Icon(Icons.archive, size: 20, color: Colors.orange), SizedBox(width: 8), Text('Archive', style: TextStyle(color: Colors.orange))]),
+                    ),
+                  ],
+                  if (volunteer.archived)
+                    const PopupMenuItem(
+                      value: 'unarchive',
+                      child: Row(children: [Icon(Icons.unarchive, size: 20, color: Colors.green), SizedBox(width: 8), Text('Restore', style: TextStyle(color: Colors.green))]),
+                    ),
+                  const PopupMenuDivider(),
+                  const PopupMenuItem(
+                    value: 'delete',
+                    child: Row(children: [Icon(Icons.delete, size: 20, color: Colors.red), SizedBox(width: 8), Text('Delete', style: TextStyle(color: Colors.red))]),
+                  ),
                 ],
               ),
             ],
@@ -212,6 +271,79 @@ class VolunteerTile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _showArchiveDialog(BuildContext context, VolunteersProvider provider) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Row(children: [Icon(Icons.archive, color: Colors.orange), SizedBox(width: 8), Text('Archive Volunteer')]),
+        content: Text('Archive ${volunteer.name}?\n\nThis will hide the volunteer but keep their data.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Cancel')),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: Colors.orange),
+            onPressed: () async {
+              Navigator.pop(dialogContext);
+              await provider.archiveVolunteer(volunteer.phone);
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${volunteer.name} archived')));
+              }
+            },
+            child: const Text('Archive'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showUnarchiveDialog(BuildContext context, VolunteersProvider provider) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Row(children: [Icon(Icons.unarchive, color: Colors.green), SizedBox(width: 8), Text('Restore Volunteer')]),
+        content: Text('Restore ${volunteer.name}?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Cancel')),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: Colors.green),
+            onPressed: () async {
+              Navigator.pop(dialogContext);
+              await provider.unarchiveVolunteer(volunteer.phone);
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${volunteer.name} restored')));
+              }
+            },
+            child: const Text('Restore'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDeleteDialog(BuildContext context, VolunteersProvider provider) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Row(children: [Icon(Icons.delete, color: Colors.red), SizedBox(width: 8), Text('Delete Volunteer')]),
+        content: Text('⚠️ WARNING: Delete ${volunteer.name} permanently?\n\nThis action CANNOT be undone!'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Cancel')),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () async {
+              Navigator.pop(dialogContext);
+              await provider.deleteVolunteer(volunteer.phone);
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${volunteer.name} deleted')));
+              }
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+  }
   }
 
   void _showTeamAssignDialog(BuildContext context) {

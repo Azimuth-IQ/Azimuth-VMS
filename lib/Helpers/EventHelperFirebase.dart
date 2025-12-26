@@ -38,4 +38,52 @@ class EventHelperFirebase {
   void UpdateEvent(Event event) {
     rootRef.child(event.id).update(event.toJson());
   }
+
+  //2.4- Archive/Unarchive
+  Future<void> ArchiveEvent(String eventId) async {
+    await rootRef.child(eventId).update({'archived': true});
+  }
+
+  Future<void> UnarchiveEvent(String eventId) async {
+    await rootRef.child(eventId).update({'archived': false});
+  }
+
+  //2.5- Delete (soft delete via archive is preferred)
+  Future<void> DeleteEvent(String eventId) async {
+    // Delete all sub-collections first
+    await rootRef.child(eventId).child('assignments').remove();
+    await rootRef.child(eventId).child('leave-requests').remove();
+    await rootRef.child(eventId).child('attendance').remove();
+    // Delete the event itself
+    await rootRef.child(eventId).remove();
+  }
+
+  //3- Query Methods
+  Future<List<Event>> GetActiveEvents() async {
+    DataSnapshot snapshot = await rootRef.get();
+    List<Event> events = [];
+    if (snapshot.exists) {
+      for (DataSnapshot d1 in snapshot.children) {
+        Event event = Event.fromDataSnapshot(d1);
+        if (!event.archived) {
+          events.add(event);
+        }
+      }
+    }
+    return events;
+  }
+
+  Future<List<Event>> GetArchivedEvents() async {
+    DataSnapshot snapshot = await rootRef.get();
+    List<Event> events = [];
+    if (snapshot.exists) {
+      for (DataSnapshot d1 in snapshot.children) {
+        Event event = Event.fromDataSnapshot(d1);
+        if (event.archived) {
+          events.add(event);
+        }
+      }
+    }
+    return events;
+  }
 }
