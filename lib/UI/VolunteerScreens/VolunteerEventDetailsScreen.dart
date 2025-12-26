@@ -14,18 +14,8 @@ class VolunteerEventDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (_) => EventsProvider()
-            ..loadEvents()
-            ..loadLocations()
-            ..loadSystemUsers(),
-        ),
-        ChangeNotifierProvider(create: (_) => ShiftAssignmentProvider()),
-      ],
-      child: const VolunteerEventDetailsView(),
-    );
+    // Use existing providers from main.dart instead of creating new ones
+    return const VolunteerEventDetailsView();
   }
 }
 

@@ -1,5 +1,7 @@
 import 'package:azimuth_vms/Providers/AppProvider.dart';
 import 'package:azimuth_vms/Providers/EventsProvider.dart';
+import 'package:azimuth_vms/Providers/ShiftAssignmentProvider.dart';
+import 'package:azimuth_vms/Providers/NotificationsProvider.dart';
 import 'package:azimuth_vms/UI/AdminScreens/AdminDashboard.dart';
 import 'package:azimuth_vms/UI/AdminScreens/EventsMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/FormFillPage.dart' as Admin;
@@ -44,6 +46,8 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<AppProvider>(create: (_) => AppProvider()),
         ChangeNotifierProvider<EventsProvider>(create: (_) => EventsProvider()),
+        ChangeNotifierProvider<ShiftAssignmentProvider>(create: (_) => ShiftAssignmentProvider()),
+        ChangeNotifierProvider<NotificationsProvider>(create: (_) => NotificationsProvider()),
       ],
       child: MaterialApp(
         title: 'Azimuth VMS',
