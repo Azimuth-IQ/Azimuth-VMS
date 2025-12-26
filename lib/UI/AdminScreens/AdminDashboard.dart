@@ -326,15 +326,11 @@ class _AdminDashboardView extends StatelessWidget {
 
         // Filter for active events (today's events)
         final today = DateFormat('dd-MM-yyyy').format(DateTime.now());
-        print('Today\'s date for filtering: $today');
-        print('Total events loaded: ${eventsProvider.events.length}');
 
         final activeEvents = eventsProvider.events.where((event) {
           print('Event: ${event.name}, Start Date: ${event.startDate}');
           return today.compareTo(event.endDate) <= 0;
         }).toList();
-
-        print('Active events found: ${activeEvents.length}');
 
         if (activeEvents.isEmpty) {
           return Card(

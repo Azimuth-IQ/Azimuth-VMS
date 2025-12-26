@@ -116,6 +116,7 @@ class MyApp extends StatelessWidget {
 
     // Protected routes - require authentication
     return MaterialPageRoute(
+      settings: settings, // Pass settings so ModalRoute can access arguments
       builder: (_) => AuthGuard(routeName: settings.name ?? '', arguments: settings.arguments),
     );
   }
@@ -250,7 +251,8 @@ class _AuthGuardState extends State<AuthGuard> {
       case '/form-mgmt':
         return const FormMgmt();
       case '/admin-form-fill':
-        return Admin.FormFillPage();
+        // Arguments will be passed via ModalRoute, no need to pass here
+        return const Admin.FormFillPage();
       case '/shift-assignment':
         return const ShiftAssignmentScreen();
       case '/presence-check-admin':
