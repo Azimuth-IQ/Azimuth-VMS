@@ -14,9 +14,11 @@ import 'package:azimuth_vms/UI/AdminScreens/SendNotificationScreen.dart';
 import 'package:azimuth_vms/UI/Widgets/ChangePasswordScreen.dart';
 import 'package:azimuth_vms/UI/Widgets/ImageCarouselSlider.dart';
 import 'package:azimuth_vms/UI/Widgets/NotificationPanel.dart';
+import 'package:azimuth_vms/UI/Widgets/LanguageSwitcher.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -49,6 +51,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     final screens = [
       _DashboardHome(userPhone: _userPhone, onNavigate: (index) => setState(() => _selectedIndex = index)),
       const EventsMgmt(),
@@ -79,14 +83,14 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       child: Icon(Icons.admin_panel_settings, color: Theme.of(context).colorScheme.primary, size: 20),
                     ),
                   ),
-                  destinations: const [
-                    NavigationRailDestination(icon: Icon(Icons.dashboard_outlined), selectedIcon: Icon(Icons.dashboard), label: Text('Dashboard')),
-                    NavigationRailDestination(icon: Icon(Icons.event_outlined), selectedIcon: Icon(Icons.event), label: Text('Events')),
-                    NavigationRailDestination(icon: Icon(Icons.people_outline), selectedIcon: Icon(Icons.people), label: Text('Volunteers')),
-                    NavigationRailDestination(icon: Icon(Icons.supervisor_account_outlined), selectedIcon: Icon(Icons.supervisor_account), label: Text('Leaders')),
-                    NavigationRailDestination(icon: Icon(Icons.groups_outlined), selectedIcon: Icon(Icons.groups), label: Text('Teams')),
-                    NavigationRailDestination(icon: Icon(Icons.location_on_outlined), selectedIcon: Icon(Icons.location_on), label: Text('Locations')),
-                    NavigationRailDestination(icon: Icon(Icons.campaign_outlined), selectedIcon: Icon(Icons.campaign), label: Text('Send Notif')),
+                  destinations: [
+                    NavigationRailDestination(icon: const Icon(Icons.dashboard_outlined), selectedIcon: const Icon(Icons.dashboard), label: Text(l10n.dashboard)),
+                    NavigationRailDestination(icon: const Icon(Icons.event_outlined), selectedIcon: const Icon(Icons.event), label: Text(l10n.events)),
+                    NavigationRailDestination(icon: const Icon(Icons.people_outline), selectedIcon: const Icon(Icons.people), label: Text(l10n.volunteers)),
+                    NavigationRailDestination(icon: const Icon(Icons.supervisor_account_outlined), selectedIcon: const Icon(Icons.supervisor_account), label: Text(l10n.leaders)),
+                    NavigationRailDestination(icon: const Icon(Icons.groups_outlined), selectedIcon: const Icon(Icons.groups), label: Text(l10n.teams)),
+                    NavigationRailDestination(icon: const Icon(Icons.location_on_outlined), selectedIcon: const Icon(Icons.location_on), label: Text(l10n.locations)),
+                    NavigationRailDestination(icon: const Icon(Icons.campaign_outlined), selectedIcon: const Icon(Icons.campaign), label: Text(l10n.sendNotif)),
                   ],
                   trailing: Expanded(
                     child: Column(
@@ -117,14 +121,14 @@ class _AdminDashboardState extends State<AdminDashboard> {
             bottomNavigationBar: NavigationBar(
               selectedIndex: _selectedIndex,
               onDestinationSelected: (index) => setState(() => _selectedIndex = index),
-              destinations: const [
-                NavigationDestination(icon: Icon(Icons.dashboard_outlined), selectedIcon: Icon(Icons.dashboard), label: 'Home'),
-                NavigationDestination(icon: Icon(Icons.event_outlined), selectedIcon: Icon(Icons.event), label: 'Events'),
-                NavigationDestination(icon: Icon(Icons.people_outline), selectedIcon: Icon(Icons.people), label: 'Volunteers'),
-                NavigationDestination(icon: Icon(Icons.supervisor_account_outlined), selectedIcon: Icon(Icons.supervisor_account), label: 'Leaders'),
-                NavigationDestination(icon: Icon(Icons.groups_outlined), selectedIcon: Icon(Icons.groups), label: 'Teams'),
-                NavigationDestination(icon: Icon(Icons.location_on_outlined), selectedIcon: Icon(Icons.location_on), label: 'Locations'),
-                NavigationDestination(icon: Icon(Icons.campaign_outlined), selectedIcon: Icon(Icons.campaign), label: 'Send Notif'),
+              destinations: [
+                NavigationDestination(icon: const Icon(Icons.dashboard_outlined), selectedIcon: const Icon(Icons.dashboard), label: l10n.home),
+                NavigationDestination(icon: const Icon(Icons.event_outlined), selectedIcon: const Icon(Icons.event), label: l10n.events),
+                NavigationDestination(icon: const Icon(Icons.people_outline), selectedIcon: const Icon(Icons.people), label: l10n.volunteers),
+                NavigationDestination(icon: const Icon(Icons.supervisor_account_outlined), selectedIcon: const Icon(Icons.supervisor_account), label: l10n.leaders),
+                NavigationDestination(icon: const Icon(Icons.groups_outlined), selectedIcon: const Icon(Icons.groups), label: l10n.teams),
+                NavigationDestination(icon: const Icon(Icons.location_on_outlined), selectedIcon: const Icon(Icons.location_on), label: l10n.locations),
+                NavigationDestination(icon: const Icon(Icons.campaign_outlined), selectedIcon: const Icon(Icons.campaign), label: l10n.sendNotif),
               ],
             ),
           );
@@ -142,16 +146,19 @@ class _DashboardHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Dashboard', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            Text('Welcome back, $userPhone', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey)),
+            Text(l10n.dashboard, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Text(l10n.welcomeBack(userPhone), style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey)),
           ],
         ),
         actions: [
+          const LanguageSwitcher(showLabel: false, isIconButton: true),
           Consumer<NotificationsProvider>(
             builder: (context, notifProvider, child) {
               return Stack(
@@ -197,13 +204,13 @@ class _DashboardHome extends StatelessWidget {
               }
             },
             itemBuilder: (context) => [
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'change_password',
-                child: Row(children: [Icon(Icons.lock_reset, size: 20), SizedBox(width: 8), Text('Change Password')]),
+                child: Row(children: [const Icon(Icons.lock_reset, size: 20), const SizedBox(width: 8), Text(l10n.changePassword)]),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'logout',
-                child: Row(children: [Icon(Icons.logout, size: 20), SizedBox(width: 8), Text('Sign Out')]),
+                child: Row(children: [const Icon(Icons.logout, size: 20), const SizedBox(width: 8), Text(l10n.signOut)]),
               ),
             ],
           ),

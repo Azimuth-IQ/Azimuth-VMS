@@ -2,6 +2,7 @@ import 'package:azimuth_vms/Providers/AppProvider.dart';
 import 'package:azimuth_vms/Providers/EventsProvider.dart';
 import 'package:azimuth_vms/Providers/ShiftAssignmentProvider.dart';
 import 'package:azimuth_vms/Providers/NotificationsProvider.dart';
+import 'package:azimuth_vms/Providers/LanguageProvider.dart';
 import 'package:azimuth_vms/Providers/VolunteerRatingProvider.dart';
 import 'package:azimuth_vms/Providers/SystemFeedbackProvider.dart';
 import 'package:azimuth_vms/Providers/VolunteerEventFeedbackProvider.dart';
@@ -48,6 +49,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Required for async operations in main
@@ -63,6 +66,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider<LanguageProvider>(create: (_) => LanguageProvider()),
         ChangeNotifierProvider<AppProvider>(create: (_) => AppProvider()),
         ChangeNotifierProvider<EventsProvider>(create: (_) => EventsProvider()),
         ChangeNotifierProvider<ShiftAssignmentProvider>(create: (_) => ShiftAssignmentProvider()),
@@ -77,93 +81,103 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<TeamsProvider>(create: (_) => TeamsProvider()),
         ChangeNotifierProvider<LocationsProvider>(create: (_) => LocationsProvider()),
       ],
-      child: MaterialApp(
-        title: 'Azimuth VMS',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF2563EB), // Modern Blue
-            brightness: Brightness.light,
-            surface: Colors.white,
-            background: const Color(0xFFF8FAFC), // Slate 50
-            primary: const Color(0xFF2563EB),
-            secondary: const Color(0xFF0EA5E9), // Sky 500
-            tertiary: const Color(0xFF6366F1), // Indigo 500
-          ),
-          scaffoldBackgroundColor: const Color(0xFFF8FAFC),
-          cardTheme: CardThemeData(
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-              side: BorderSide(color: Colors.grey.shade200),
+      child: Consumer<LanguageProvider>(
+        builder: (context, languageProvider, child) => MaterialApp(
+          title: 'Azimuth VMS',
+          debugShowCheckedModeBanner: false,
+          locale: languageProvider.currentLocale,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [Locale('en'), Locale('ar')],
+          theme: ThemeData(
+            useMaterial3: true,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF2563EB), // Modern Blue
+              brightness: Brightness.light,
+              surface: Colors.white,
+              background: const Color(0xFFF8FAFC), // Slate 50
+              primary: const Color(0xFF2563EB),
+              secondary: const Color(0xFF0EA5E9), // Sky 500
+              tertiary: const Color(0xFF6366F1), // Indigo 500
             ),
-            color: Colors.white,
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          ),
-          appBarTheme: const AppBarTheme(
-            elevation: 0,
-            centerTitle: false,
-            backgroundColor: Colors.white,
-            foregroundColor: Color(0xFF0F172A), // Slate 900
-            titleTextStyle: TextStyle(color: Color(0xFF0F172A), fontSize: 20, fontWeight: FontWeight.w700, letterSpacing: -0.5),
-            iconTheme: IconThemeData(color: Color(0xFF64748B)), // Slate 500
-          ),
-          navigationRailTheme: NavigationRailThemeData(
-            backgroundColor: Colors.white,
-            selectedIconTheme: const IconThemeData(color: Color(0xFF2563EB)),
-            unselectedIconTheme: const IconThemeData(color: Color(0xFF64748B)),
-            selectedLabelTextStyle: const TextStyle(color: Color(0xFF2563EB), fontWeight: FontWeight.w600),
-            unselectedLabelTextStyle: const TextStyle(color: Color(0xFF64748B)),
-            indicatorColor: const Color(0xFFEFF6FF), // Blue 50
-            labelType: NavigationRailLabelType.all,
-          ),
-          navigationBarTheme: NavigationBarThemeData(
-            backgroundColor: Colors.white,
-            indicatorColor: const Color(0xFFEFF6FF),
-            labelTextStyle: MaterialStateProperty.resolveWith((states) {
-              if (states.contains(MaterialState.selected)) {
-                return const TextStyle(color: Color(0xFF2563EB), fontWeight: FontWeight.w600);
-              }
-              return const TextStyle(color: Color(0xFF64748B));
-            }),
-            iconTheme: MaterialStateProperty.resolveWith((states) {
-              if (states.contains(MaterialState.selected)) {
-                return const IconThemeData(color: Color(0xFF2563EB));
-              }
-              return const IconThemeData(color: Color(0xFF64748B));
-            }),
-          ),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
+            scaffoldBackgroundColor: const Color(0xFFF8FAFC),
+            cardTheme: CardThemeData(
               elevation: 0,
-              backgroundColor: const Color(0xFF2563EB),
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+                side: BorderSide(color: Colors.grey.shade200),
+              ),
+              color: Colors.white,
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             ),
+            appBarTheme: const AppBarTheme(
+              elevation: 0,
+              centerTitle: false,
+              backgroundColor: Colors.white,
+              foregroundColor: Color(0xFF0F172A), // Slate 900
+              titleTextStyle: TextStyle(color: Color(0xFF0F172A), fontSize: 20, fontWeight: FontWeight.w700, letterSpacing: -0.5),
+              iconTheme: IconThemeData(color: Color(0xFF64748B)), // Slate 500
+            ),
+            navigationRailTheme: NavigationRailThemeData(
+              backgroundColor: Colors.white,
+              selectedIconTheme: const IconThemeData(color: Color(0xFF2563EB)),
+              unselectedIconTheme: const IconThemeData(color: Color(0xFF64748B)),
+              selectedLabelTextStyle: const TextStyle(color: Color(0xFF2563EB), fontWeight: FontWeight.w600),
+              unselectedLabelTextStyle: const TextStyle(color: Color(0xFF64748B)),
+              indicatorColor: const Color(0xFFEFF6FF), // Blue 50
+              labelType: NavigationRailLabelType.all,
+            ),
+            navigationBarTheme: NavigationBarThemeData(
+              backgroundColor: Colors.white,
+              indicatorColor: const Color(0xFFEFF6FF),
+              labelTextStyle: MaterialStateProperty.resolveWith((states) {
+                if (states.contains(MaterialState.selected)) {
+                  return const TextStyle(color: Color(0xFF2563EB), fontWeight: FontWeight.w600);
+                }
+                return const TextStyle(color: Color(0xFF64748B));
+              }),
+              iconTheme: MaterialStateProperty.resolveWith((states) {
+                if (states.contains(MaterialState.selected)) {
+                  return const IconThemeData(color: Color(0xFF2563EB));
+                }
+                return const IconThemeData(color: Color(0xFF64748B));
+              }),
+            ),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                elevation: 0,
+                backgroundColor: const Color(0xFF2563EB),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+            ),
+            inputDecorationTheme: InputDecorationTheme(
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.grey.shade200),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.grey.shade200),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Color(0xFF2563EB), width: 2),
+              ),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            ),
+            floatingActionButtonTheme: const FloatingActionButtonThemeData(elevation: 4, shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16)))),
           ),
-          inputDecorationTheme: InputDecorationTheme(
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade200),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade200),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF2563EB), width: 2),
-            ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          ),
-          floatingActionButtonTheme: const FloatingActionButtonThemeData(elevation: 4, shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16)))),
+          home: SignInScreen(),
+          onGenerateRoute: (settings) => _generateRoute(settings),
         ),
-        home: SignInScreen(),
-        onGenerateRoute: (settings) => _generateRoute(settings),
       ),
     );
   }

@@ -1,0 +1,442 @@
+{
+  "@@locale": "en",
+  
+  "appTitle": "VMS",
+  "welcome": "Welcome",
+  "search": "Search",
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "edit": "Edit",
+  "add": "Add",
+  "update": "Update",
+  "submit": "Submit",
+  "close": "Close",
+  "confirm": "Confirm",
+  "back": "Back",
+  "next": "Next",
+  "previous": "Previous",
+  "loading": "Loading...",
+  "error": "Error",
+  "success": "Success",
+  "signOut": "Sign Out",
+  "signIn": "Sign In",
+  "changePassword": "Change Password",
+  "yes": "Yes",
+  "no": "No",
+  "ok": "OK",
+  "retry": "Retry",
+  "upload": "Upload",
+  "uploaded": "Uploaded",
+  "download": "Download",
+  "print": "Print",
+  "select": "Select",
+  "selected": "Selected",
+  "assign": "Assign",
+  "approve": "Approve",
+  "reject": "Reject",
+  "pending": "Pending",
+  "approved": "Approved",
+  "rejected": "Rejected",
+  "completed": "Completed",
+  "active": "Active",
+  "inactive": "Inactive",
+  "send": "Send",
+  "view": "View",
+  "refresh": "Refresh",
+  
+  "dashboard": "Dashboard",
+  "home": "Home",
+  "events": "Events",
+  "volunteers": "Volunteers",
+  "leaders": "Leaders",
+  "teamLeaders": "Team Leaders",
+  "teams": "Teams",
+  "locations": "Locations",
+  "notifications": "Notifications",
+  "sendNotif": "Send Notif",
+  "sendNotification": "Send Notification",
+  "profile": "Profile",
+  "settings": "Settings",
+  
+  "welcomeBack": "Welcome back, {userPhone}",
+  "@welcomeBack": {
+    "placeholders": {
+      "userPhone": {
+        "type": "String"
+      }
+    }
+  },
+  "analytics": "Analytics",
+  "quickActions": "Quick Actions",
+  "workflowScenarios": "Workflow Scenarios",
+  "activeEvents": "Active Events",
+  "volunteersPerTeam": "Volunteers per Team (Top 5)",
+  "noActiveEvents": "No active events",
+  "activity": "Activity",
+  "actions": "Actions",
+  "activityOverview": "Activity Overview",
+  "shiftsCompletedLast6Months": "Shifts completed in last 6 months",
+  
+  "activeEventsCount": "Active Events",
+  "volunteersCount": "Volunteers",
+  "teamLeadersCount": "Team Leaders",
+  "notificationsCount": "Notifications",
+  
+  "shiftAssignment": "Shift Assignment",
+  "presenceCheck": "Presence Check",
+  "formsMgmt": "Forms Mgmt",
+  "carouselMgmt": "Carousel Mgmt",
+  "ratings": "Ratings",
+  "leaveRequests": "Leave Requests",
+  "systemFeedback": "System Feedback",
+  "eventFeedback": "Event Feedback",
+  
+  "volunteerRegistration": "Volunteer Registration",
+  "volunteerRegistrationDescription": "Complete onboarding flow for new volunteers including form submission, review, and approval",
+  "eventManagement": "Event Management",
+  "eventManagementDescription": "Create events with recurrence, assign teams, manage shifts, and track attendance",
+  
+  "volunteerWorkflow": "Volunteer Workflow",
+  "statusUpdatedTo": "Status updated to {status}",
+  "@statusUpdatedTo": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "sent": "Sent",
+  "waitingForVolunteerToFillData": "Waiting for volunteer to fill data",
+  "formLinkSent": "Form link has been sent to the volunteer.",
+  "pendingReview": "Pending Review",
+  "adminChecksForm": "Admin checks form and attachments",
+  "pleaseReviewForm": "Please review the form data and attachments.",
+  "viewForm": "View Form",
+  "generatingPdf": "Generating PDF...",
+  "pdfDownloaded": "PDF Downloaded",
+  "initialApproval": "Initial Approval",
+  "firstLevelApproval": "First level approval",
+  "formPassedInitialReview": "Form has passed initial review.",
+  "approveL1": "Approve (L1)",
+  "finalApproval": "Final Approval",
+  "secondLevelApproval": "Second level approval",
+  "formPassedFinalReview": "Form has passed final review.",
+  "approveL2": "Approve (L2)",
+  "processFinished": "Process finished",
+  "volunteerRegistrationComplete": "Volunteer registration is complete.",
+  "complete": "Complete",
+  "reEvaluate": "Re-evaluate",
+  
+  "volunteerDashboard": "Volunteer Dashboard",
+  "redirectingToForm": "Redirecting to form...",
+  "myAssignments": "My Assignments",
+  "upcomingShift": "Upcoming Shift",
+  "noUpcomingShifts": "No upcoming shifts assigned.",
+  
+  "eventsManagement": "Events Management",
+  "createEvent": "Create Event",
+  "editEvent": "Edit Event",
+  "deleteEvent": "Delete Event",
+  "eventName": "Event Name",
+  "eventDescription": "Event Description",
+  "startDate": "Start Date",
+  "endDate": "End Date",
+  "eventCreated": "Event created successfully",
+  "eventUpdated": "Event updated successfully",
+  "eventDeleted": "Event deleted successfully",
+  "noEvents": "No events found",
+  "selectEvent": "Select Event",
+  
+  "shifts": "Shifts",
+  "shiftTime": "Shift Time",
+  "startTime": "Start Time",
+  "endTime": "End Time",
+  "shift": "Shift",
+  "noShifts": "No shifts available",
+  "selectShift": "Select a shift",
+  
+  "teamLeadersManagement": "Team Leaders Management",
+  "addTeamLeader": "Add Team Leader",
+  "editTeamLeader": "Edit Team Leader",
+  "deleteTeamLeader": "Delete Team Leader",
+  "noTeamLeaders": "No team leaders found",
+  "tapPlusToAddTeamLeader": "Tap + to add a new team leader",
+  "teamLeaderArchived": "{name} archived",
+  "@teamLeaderArchived": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "teamLeaderRestored": "{name} restored",
+  "@teamLeaderRestored": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "teamLeaderDeleted": "{name} deleted",
+  "@teamLeaderDeleted": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "teamsManagement": "Teams Management",
+  "addTeam": "Add Team",
+  "editTeam": "Edit Team",
+  "deleteTeam": "Delete Team",
+  "teamName": "Team Name",
+  "noTeams": "No teams found",
+  
+  "locationsManagement": "Locations Management",
+  "addLocation": "Add Location",
+  "editLocation": "Edit Location",
+  "deleteLocation": "Delete Location",
+  "locationName": "Location Name",
+  "mainLocation": "Main Location",
+  "subLocation": "Sub Location",
+  "noLocations": "No locations found",
+  "selectLocation": "Select a location",
+  "location": "Location",
+  
+  "assignMyTeam": "Assign My Team",
+  "unableToIdentifyCurrentUser": "Unable to identify current user",
+  "noEventsAssignedToYourTeams": "No events assigned to your teams",
+  "contactAdminToAssignYourTeam": "Contact admin to assign your team to events",
+  "selectEventAndShift": "Select a shift to assign volunteers",
+  "myEvents": "My Events",
+  "eventsWhereYourTeamIsAssigned": "Events where your team is assigned",
+  "selectLocationToAssign": "Select Location to Assign",
+  "chooseLocationToAssignTeam": "Choose which location to assign your team members to:",
+  "assignVolunteers": "Assign Volunteers",
+  "currentAssignments": "Current Assignments",
+  "by": "By: {assignedBy}",
+  "@by": {
+    "placeholders": {
+      "assignedBy": {
+        "type": "String"
+      }
+    }
+  },
+  "selectVolunteers": "Select Volunteers",
+  "pleaseSelectEventShiftLocation": "Please select an event, shift, and location first",
+  "noTeamAssignedToLocation": "No team assigned to this location",
+  "noApprovedVolunteersInTeam": "No approved volunteers available in your team",
+  "assignedVolunteersSuccessfully": "Assigned {count} volunteers successfully",
+  "@assignedVolunteersSuccessfully": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  
+  "leaveRequestsManagement": "Leave Requests",
+  "leaveRequestApproved": "Leave request approved",
+  "leaveRequestRejected": "Leave request rejected",
+  "selectAnEventToViewRequests": "Select an event to view leave requests",
+  "pendingLeaveRequests": "Pending Leave Requests",
+  "noPendingLeaveRequests": "No pending leave requests",
+  "reason": "Reason:",
+  "requested": "Requested: {date}",
+  "@requested": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "volunteerForm": "Volunteer Form",
+  "editVolunteerForm": "Edit Volunteer Form",
+  "basicInformation": "المعلومات الأساسية",
+  "contactInformation": "معلومات الاتصال",
+  "professionalInformation": "المعلومات المهنية",
+  "documentInformation": "معلومات الوثائق",
+  "attachments": "المرفقات",
+  "createPdf": "إنشاء PDF",
+  "formCreatedSuccessfully": "Form created successfully! Volunteer can now login.",
+  "formUpdatedSuccessfully": "Form updated successfully!",
+  "imageSizeExceeds500KB": "Image size should not exceed 500 KB.",
+  "errorPickingImage": "Error picking image: {error}",
+  "@errorPickingImage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "uploadingImages": "Uploading images...",
+  "imageUploaded": "Image uploaded: {name}",
+  "@imageUploaded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "errorUploadingImage": "Error uploading {name}: {error}",
+  "@errorUploadingImage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfDownloadedSuccessfully": "تم تحميل ملف PDF بنجاح!",
+  "errorDownloading": "Error downloading: {error}",
+  "@errorDownloading": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorPrinting": "Error printing: {error}",
+  "@errorPrinting": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "existingImage": "Existing image",
+  
+  "rateVolunteers": "Rate Volunteers",
+  "noVolunteersFound": "No volunteers found",
+  "rate": "Rate",
+  "notRated": "Not rated",
+  "lastRated": "Last: {date}",
+  "@lastRated": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "pleaseConfigureCriteriaFirst": "Please configure rating criteria first",
+  "ratingCriteria": "Rating Criteria",
+  "notesOptional": "Notes (Optional)",
+  "addNote": "Add a note...",
+  "saveRating": "Save Rating",
+  "ratingSaved": "Rating saved for {name}",
+  "@ratingSaved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "errorSavingRating": "Error saving rating: {error}",
+  "@errorSavingRating": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "averageRating": "Average: {rating}/5",
+  "@averageRating": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "manageRatingCriteria": "Manage Rating Criteria",
+  "noCriteriaDefined": "No criteria defined",
+  "clickPlusToAddCriteria": "Click the + button to add criteria",
+  "addNewCriterion": "Add New Criterion",
+  "criterionName": "Criterion Name",
+  "criterionPlaceholder": "e.g., Communication Skills",
+  "criterionAdded": "Criterion added. Don't forget to save!",
+  "editCriterion": "Edit Criterion",
+  "criterionUpdated": "Criterion updated. Don't forget to save!",
+  "deleteCriterion": "Delete Criterion",
+  "confirmDeleteCriterion": "Are you sure you want to delete \"{name}\"?",
+  "@confirmDeleteCriterion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "criterionDeleted": "Criterion deleted. Don't forget to save!",
+  "cannotSaveEmptyCriteria": "Cannot save empty criteria list",
+  "ratingCriteriaSaved": "Rating criteria saved successfully",
+  "errorSavingCriteria": "Error saving criteria: {error}",
+  "@errorSavingCriteria": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "currentPassword": "Current Password",
+  "newPassword": "New Password",
+  "confirmPassword": "Confirm Password",
+  "passwordChangedSuccessfully": "Password changed successfully!",
+  "passwordMismatch": "Passwords do not match",
+  "passwordTooShort": "Password must be at least 6 characters",
+  "wrongCurrentPassword": "Current password is incorrect",
+  "passwordSecurityTips": "Password Security Tips:",
+  
+  "volunteerManagementSystem": "Volunteer Management System",
+  "phoneNumber": "Phone Number",
+  "password": "Password",
+  "enterPhoneNumber": "Enter your phone number",
+  "enterPassword": "Enter your password",
+  "seedDevelopmentData": "Seed Development Data",
+  
+  "manageSystemFeedback": "Manage System Feedback",
+  "allFeedback": "All Feedback",
+  "inProgress": "In Progress",
+  "resolved": "Resolved",
+  "feedbackType": "Feedback Type",
+  "bugReport": "Bug Report",
+  "featureRequest": "Feature Request",
+  "improvement": "Improvement",
+  
+  "unknownError": "An unknown error occurred",
+  "networkError": "Network error. Please check your connection.",
+  "permissionDenied": "Permission denied",
+  "notFound": "Not found",
+  "somethingWentWrong": "Something went wrong",
+  
+  "language": "Language",
+  "english": "English",
+  "arabic": "Arabic",
+  "switchLanguage": "Switch Language",
+  "languageChanged": "Language changed successfully",
+  
+  "name": "Name",
+  "phone": "Phone",
+  "email": "Email",
+  "address": "Address",
+  "date": "Date",
+  "time": "Time",
+  "status": "Status",
+  "description": "Description",
+  "notes": "Notes",
+  "from": "From",
+  "to": "To",
+  "volunteer": "Volunteer",
+  "teamLeader": "Team Leader",
+  "admin": "Admin",
+  "all": "All",
+  "none": "None",
+  "unknown": "Unknown",
+  "unknownName": "Unknown Name",
+  "noPhone": "No Phone"
+}

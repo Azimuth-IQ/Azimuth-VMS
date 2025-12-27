@@ -2,15 +2,18 @@
 
 A comprehensive Flutter-based system for managing volunteer registrations, events, and teams for the Imam Hussein Shrine (IHS).
 
+**🌐 Multi-Language Support**: Fully supports English and Arabic with RTL (Right-to-Left) layout.
+
 ## 📋 Table of Contents
 
 1. [Business Models](#business-models)
 2. [Technical Capabilities](#technical-capabilities)
 3. [Current Project State](#current-project-state)
-4. [Setup Instructions](#setup-instructions)
-5. [User Manual](#user-manual)
-6. [API Documentation](#api-documentation)
-7. [Troubleshooting](#troubleshooting)
+4. [Multi-Language Support](#multi-language-support)
+5. [Setup Instructions](#setup-instructions)
+6. [User Manual](#user-manual)
+7. [API Documentation](#api-documentation)
+8. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -167,6 +170,7 @@ The system currently has **NO models, helpers, providers, or UI** for the three 
 
 - **Flutter Web**: Optimized for web deployment using Material Design 3.
 - **State Management**: Provider pattern exclusively (no StatefulWidgets for state).
+- **Multi-Language Support**: Full localization for English and Arabic with RTL support.
 
 ### Backend & Data
 
@@ -188,6 +192,53 @@ The system currently has **NO models, helpers, providers, or UI** for the three 
 - **Real-Time Notifications**: Browser push notifications via Firebase Cloud Messaging.
 - **Role-Based Access Control**: Three-tier system (Admin, Team Leader, Volunteer).
 - **Location Reassignment**: Dynamic volunteer relocation during events with notifications.
+- **Language Switching**: Users can switch between English and Arabic in real-time.
+
+---
+
+## Multi-Language Support
+
+### Overview
+
+The application fully supports **English** and **Arabic** languages with proper RTL (Right-to-Left) text direction for Arabic.
+
+### Features
+
+- **Real-time Language Switching**: Users can change language without restarting the app
+- **Persistent Language Selection**: Selected language is saved using `SharedPreferences`
+- **RTL Support**: Automatic right-to-left layout for Arabic text
+- **Comprehensive Translations**: 200+ translation keys covering all UI elements
+- **Language Switcher Widget**: Available in all major screens via AppBar
+
+### Implementation Files
+
+- **Translation Files**:
+  - [lib/l10n/app_en.arb](lib/l10n/app_en.arb) - English translations
+  - [lib/l10n/app_ar.arb](lib/l10n/app_ar.arb) - Arabic translations
+- **Provider**: [lib/Providers/LanguageProvider.dart](lib/Providers/LanguageProvider.dart)
+- **Widget**: [lib/UI/Widgets/LanguageSwitcher.dart](lib/UI/Widgets/LanguageSwitcher.dart)
+- **Configuration**: [l10n.yaml](l10n.yaml)
+
+### Using Localizations in Code
+
+```dart
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+// In build method:
+final l10n = AppLocalizations.of(context)!;
+
+// Use translations:
+Text(l10n.dashboard)
+Text(l10n.welcomeBack(userPhone))
+```
+
+### Adding New Translations
+
+1. Add key-value pair to both `app_en.arb` and `app_ar.arb`
+2. Run `flutter pub get` to regenerate localization files
+3. Use the key in your code: `l10n.yourNewKey`
+
+**Full Developer Guide**: See [LOCALIZATION_GUIDE.md](LOCALIZATION_GUIDE.md) for detailed implementation instructions.
 
 ---
 
@@ -813,6 +864,7 @@ Stores user notifications:
 ### Priority 1: Complete Core Workflows (High Priority)
 
 #### 1.1 Volunteer Rating System (Flow #7)
+
 **Goal**: Allow admins to rate volunteers based on performance criteria
 
 - [ ] Create `VolunteerRatingHelperFirebase` in [lib/Helpers/](lib/Helpers/)
@@ -849,6 +901,7 @@ Stores user notifications:
 ---
 
 #### 1.2 Admin Rating Volunteers/Team Leaders (Flow #8.A)
+
 **Goal**: Provide structured feedback mechanism for admins to rate users after events
 
 - [ ] Create `AdminFeedback` model in [lib/Models/](lib/Models/)
@@ -886,6 +939,7 @@ Stores user notifications:
 ---
 
 #### 1.3 System Feedback (Bugs/Improvements) (Flow #8.B)
+
 **Goal**: Allow users to report bugs and suggest improvements
 
 - [ ] Create `SystemFeedback` model
@@ -929,6 +983,7 @@ Stores user notifications:
 ---
 
 #### 1.4 Volunteer Event Feedback (Flow #8.C)
+
 **Goal**: Allow volunteers to provide feedback about event management
 
 - [ ] Create `VolunteerEventFeedback` model
@@ -975,6 +1030,7 @@ Stores user notifications:
 ### Priority 2: Reporting & Analytics (Medium Priority)
 
 #### 2.1 Attendance Reports
+
 - [ ] Create `ReportsScreen.dart` in [lib/UI/AdminScreens/](lib/UI/AdminScreens/)
 - [ ] Export attendance to CSV
   - [ ] Event-level report
@@ -995,6 +1051,7 @@ Stores user notifications:
 ---
 
 #### 2.2 Volunteer Performance Analytics
+
 - [ ] Create `VolunteerAnalyticsScreen.dart`
 - [ ] Individual volunteer dashboard showing:
   - [ ] Total events participated
@@ -1014,6 +1071,7 @@ Stores user notifications:
 ---
 
 #### 2.3 Event Statistics
+
 - [ ] Event summary report:
   - [ ] Volunteer count per shift
   - [ ] Attendance statistics
@@ -1033,6 +1091,7 @@ Stores user notifications:
 ### Priority 3: Enhanced Features (Medium Priority)
 
 #### 3.1 Volunteer Availability Management
+
 - [ ] Create `Availability` model (volunteer sets available dates/times)
 - [ ] Create `AvailabilityScreen.dart` for volunteers
   - [ ] Calendar view
@@ -1049,6 +1108,7 @@ Stores user notifications:
 ---
 
 #### 3.2 Conflict Detection
+
 - [ ] Check for volunteer double-booking
 - [ ] Check for team leader conflicts
 - [ ] Check for location capacity limits
@@ -1060,6 +1120,7 @@ Stores user notifications:
 ---
 
 #### 3.3 Event Templates
+
 - [ ] Create `EventTemplate` model
 - [ ] Save event configurations as templates
 - [ ] Template library screen
@@ -1072,6 +1133,7 @@ Stores user notifications:
 ---
 
 #### 3.4 Bulk Operations
+
 - [ ] Bulk volunteer assignment
   - [ ] Select multiple volunteers
   - [ ] Assign to same shift
@@ -1087,6 +1149,7 @@ Stores user notifications:
 ### Priority 4: Communication Enhancements (Low Priority)
 
 #### 4.1 Email Notifications
+
 - [ ] Set up Firebase Functions for emails
 - [ ] Email templates
 - [ ] Email for shift assignments
@@ -1099,6 +1162,7 @@ Stores user notifications:
 ---
 
 #### 4.2 SMS Notifications
+
 - [ ] Integrate SMS provider (Twilio/Firebase)
 - [ ] SMS for critical notifications
 - [ ] SMS for event reminders
@@ -1111,6 +1175,7 @@ Stores user notifications:
 ### Priority 5: Gamification & Recognition (Low Priority)
 
 #### 5.1 Volunteer Badges/Achievements
+
 - [ ] Create `Badge` model
 - [ ] Define achievement criteria
 - [ ] Award badges automatically
@@ -1122,6 +1187,7 @@ Stores user notifications:
 ---
 
 #### 5.2 Volunteer Certificates
+
 - [ ] Certificate template design
 - [ ] Auto-generate certificates
 - [ ] Download/print certificates
@@ -1132,6 +1198,7 @@ Stores user notifications:
 ---
 
 #### 5.3 Volunteer Hour Tracking
+
 - [ ] Calculate hours from attendance
 - [ ] Display total hours on profile
 - [ ] Hours leaderboard
@@ -1144,6 +1211,7 @@ Stores user notifications:
 ### Priority 6: System Improvements (Ongoing)
 
 #### 6.1 Automated Testing
+
 - [ ] Unit tests for models
 - [ ] Unit tests for helpers
 - [ ] Widget tests for UI components
@@ -1155,6 +1223,7 @@ Stores user notifications:
 ---
 
 #### 6.2 Admin Activity Logs
+
 - [ ] Create `ActivityLog` model
 - [ ] Log all admin actions
 - [ ] Log system changes
@@ -1167,6 +1236,7 @@ Stores user notifications:
 ---
 
 #### 6.3 Mobile App Support
+
 - [ ] Add Android support
 - [ ] Add iOS support
 - [ ] Platform-specific UI adjustments
@@ -1178,6 +1248,7 @@ Stores user notifications:
 ---
 
 #### 6.4 Performance Optimization
+
 - [ ] Database indexing
 - [ ] Lazy loading for large lists
 - [ ] Image optimization
@@ -1190,15 +1261,15 @@ Stores user notifications:
 
 ### Total Estimated Effort Summary
 
-| Priority | Tasks | Estimated Days |
-|----------|-------|----------------|
-| **Priority 1** (Core Workflows) | 4 tasks | 10-14 days |
-| **Priority 2** (Reporting) | 3 tasks | 7-10 days |
-| **Priority 3** (Enhanced Features) | 4 tasks | 9-13 days |
-| **Priority 4** (Communication) | 2 tasks | 5-7 days |
-| **Priority 5** (Gamification) | 3 tasks | 5-7 days |
-| **Priority 6** (System Improvements) | 4 tasks | 20-30 days |
-| **TOTAL** | **20 tasks** | **56-81 days** |
+| Priority                             | Tasks        | Estimated Days |
+| ------------------------------------ | ------------ | -------------- |
+| **Priority 1** (Core Workflows)      | 4 tasks      | 10-14 days     |
+| **Priority 2** (Reporting)           | 3 tasks      | 7-10 days      |
+| **Priority 3** (Enhanced Features)   | 4 tasks      | 9-13 days      |
+| **Priority 4** (Communication)       | 2 tasks      | 5-7 days       |
+| **Priority 5** (Gamification)        | 3 tasks      | 5-7 days       |
+| **Priority 6** (System Improvements) | 4 tasks      | 20-30 days     |
+| **TOTAL**                            | **20 tasks** | **56-81 days** |
 
 ---
 
