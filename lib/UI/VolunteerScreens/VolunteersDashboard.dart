@@ -12,6 +12,7 @@ import 'package:azimuth_vms/UI/VolunteerScreens/VolunteerProfileScreen.dart';
 import 'package:azimuth_vms/UI/Widgets/VolunteerStatsChart.dart';
 import 'package:azimuth_vms/UI/Widgets/UpcomingShiftCard.dart';
 import 'package:azimuth_vms/UI/Widgets/FadeInSlide.dart';
+import 'package:azimuth_vms/l10n/app_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -48,12 +49,14 @@ class VolunteersDashboard extends StatelessWidget {
 
         if (snapshot.hasError) {
           print('Error loading volunteer form: ${snapshot.error}');
-          return _buildErrorScreen(context, 'Error loading your information. Please try again.');
+          final l10n = AppLocalizations.of(context)!;
+          return _buildErrorScreen(context, l10n.errorLoadingInfo);
         }
 
         final form = snapshot.data;
         if (form == null) {
-          return _buildErrorScreen(context, 'No volunteer form found. Please contact support.');
+          final l10n = AppLocalizations.of(context)!;
+          return _buildErrorScreen(context, l10n.noVolunteerFormFound);
         }
 
         final status = form.status ?? VolunteerFormStatus.Rejected2;
@@ -64,9 +67,10 @@ class VolunteersDashboard extends StatelessWidget {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               _handleFormFill(context, form);
             });
-            return const Scaffold(
+            final l10n = AppLocalizations.of(context)!;
+            return Scaffold(
               body: Center(
-                child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [CircularProgressIndicator(), SizedBox(height: 16), Text('Redirecting to form...')]),
+                child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [CircularProgressIndicator(), SizedBox(height: 16), Text(l10n.redirectingToForm)]),
               ),
             );
 
@@ -74,50 +78,60 @@ class VolunteersDashboard extends StatelessWidget {
             return _buildPendingScreen();
 
           case VolunteerFormStatus.Approved1:
-            return _buildApprovedDashboard(context, form, 'First Level Approval', 'Your application has been approved at the first level. Waiting for final approval.');
+            final l10n = AppLocalizations.of(context)!;
+            return _buildApprovedDashboard(context, form, l10n.firstLevelApprovalTitle, l10n.firstLevelApprovalDesc);
 
           case VolunteerFormStatus.Approved2:
-            return _buildApprovedDashboard(context, form, 'Fully Approved', 'Congratulations! Your application has been fully approved.', isFullyApproved: true);
+            final l10n = AppLocalizations.of(context)!;
+            return _buildApprovedDashboard(context, form, l10n.fullyApproved, l10n.fullyApprovedDesc, isFullyApproved: true);
 
           case VolunteerFormStatus.Completed:
-            return _buildApprovedDashboard(context, form, 'Active Volunteer', 'You are an active volunteer in the system.', isFullyApproved: true);
+            final l10n = AppLocalizations.of(context)!;
+            return _buildApprovedDashboard(context, form, l10n.activeVolunteer, l10n.activeVolunteerDesc, isFullyApproved: true);
 
           case VolunteerFormStatus.Rejected1:
-            return _buildRejectedScreen(context, 'Application Rejected', 'Your application was rejected at the first review stage.');
+            final l10n = AppLocalizations.of(context)!;
+            return _buildRejectedScreen(context, l10n.applicationRejected, l10n.applicationRejectedFirstStage);
 
           case VolunteerFormStatus.Rejected2:
-            return _buildRejectedScreen(context, 'Application Rejected', 'Your application was rejected at the final review stage.');
+            final l10n = AppLocalizations.of(context)!;
+            return _buildRejectedScreen(context, l10n.applicationRejected, l10n.applicationRejectedFinalStage);
         }
       },
     );
   }
 
   Widget _buildPendingScreen() {
-    return Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: false, title: const Text('Volunteer Dashboard'), backgroundColor: Colors.orange),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.hourglass_empty, size: 80, color: Colors.orange),
-              const SizedBox(height: 24),
-              const Text(
-                'Application Under Review',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
+    return Builder(
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        return Scaffold(
+          appBar: AppBar(automaticallyImplyLeading: false, title: Text(l10n.volunteerDashboard), backgroundColor: Colors.orange),
+          body: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.hourglass_empty, size: 80, color: Colors.orange),
+                  const SizedBox(height: 24),
+                  Text(
+                    l10n.applicationUnderReview,
+                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    l10n.applicationUnderReviewDesc,
+                    style: const TextStyle(fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-              const Text(
-                'Your volunteer application has been submitted and is currently under review. You will be notified once a decision has been made.',
-                style: TextStyle(fontSize: 16),
-                textAlign: TextAlign.center,
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -135,8 +149,9 @@ class VolunteersDashboard extends StatelessWidget {
   }
 
   Widget _buildRejectedScreen(BuildContext context, String title, String message) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: false, title: const Text('Volunteer Dashboard'), backgroundColor: Colors.red),
+      appBar: AppBar(automaticallyImplyLeading: false, title: Text(l10n.volunteerDashboard), backgroundColor: Colors.red),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -159,7 +174,7 @@ class VolunteersDashboard extends StatelessWidget {
                   Navigator.pushReplacementNamed(context, '/sign-in');
                 },
                 icon: const Icon(Icons.logout),
-                label: const Text('Sign Out'),
+                label: Text(l10n.signOut),
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12)),
               ),
             ],
@@ -170,8 +185,9 @@ class VolunteersDashboard extends StatelessWidget {
   }
 
   Widget _buildErrorScreen(BuildContext context, String message) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: false, title: const Text('Volunteer Dashboard'), backgroundColor: Colors.grey),
+      appBar: AppBar(automaticallyImplyLeading: false, title: Text(l10n.volunteerDashboard), backgroundColor: Colors.grey),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -180,9 +196,9 @@ class VolunteersDashboard extends StatelessWidget {
             children: [
               Icon(Icons.error_outline, size: 80, color: Colors.grey),
               const SizedBox(height: 24),
-              const Text(
-                'Error',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              Text(
+                l10n.error,
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
@@ -194,7 +210,7 @@ class VolunteersDashboard extends StatelessWidget {
                   Navigator.pushReplacementNamed(context, '/sign-in');
                 },
                 icon: const Icon(Icons.logout),
-                label: const Text('Sign Out'),
+                label: Text(l10n.signOut),
                 style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12)),
               ),
             ],
@@ -216,10 +232,11 @@ class _ApprovedDashboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Volunteer Dashboard'),
+        title: Text(l10n.volunteerDashboard),
         backgroundColor: Colors.green,
         actions: [
           // Notification Bell
@@ -238,7 +255,7 @@ class _ApprovedDashboardView extends StatelessWidget {
                         ),
                       );
                     },
-                    tooltip: 'Notifications',
+                    tooltip: l10n.notifications,
                   ),
                   if (notifProvider.unreadCount > 0)
                     Positioned(
@@ -270,13 +287,13 @@ class _ApprovedDashboardView extends StatelessWidget {
               }
             },
             itemBuilder: (context) => [
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'change_password',
-                child: Row(children: [Icon(Icons.lock_reset, size: 20), SizedBox(width: 8), Text('Change Password')]),
+                child: Row(children: [const Icon(Icons.lock_reset, size: 20), const SizedBox(width: 8), Text(l10n.changePassword)]),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'logout',
-                child: Row(children: [Icon(Icons.logout, size: 20), SizedBox(width: 8), Text('Sign Out')]),
+                child: Row(children: [const Icon(Icons.logout, size: 20), const SizedBox(width: 8), Text(l10n.signOut)]),
               ),
             ],
           ),
@@ -351,21 +368,21 @@ class _ApprovedDashboardView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              const FadeInSlide(
+              FadeInSlide(
                 delay: 0.5,
-                child: Text('Activity', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                child: Text(l10n.activity, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(height: 16),
               FadeInSlide(delay: 0.6, child: VolunteerStatsChart(userPhone: userPhone)),
               const SizedBox(height: 24),
-              const FadeInSlide(
+              FadeInSlide(
                 delay: 0.7,
-                child: Text('Actions', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                child: Text(l10n.actions, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(height: 16),
               FadeInSlide(
                 delay: 0.8,
-                child: _buildActionCard(context, 'My Profile', 'View your rating and personal info', Icons.person, Colors.teal, () {
+                child: _buildActionCard(context, l10n.myProfile, l10n.viewRatingAndInfo, Icons.person, Colors.teal, () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -376,7 +393,7 @@ class _ApprovedDashboardView extends StatelessWidget {
               ),
               FadeInSlide(
                 delay: 0.9,
-                child: _buildActionCard(context, 'Submit Feedback', 'Report bugs or suggest improvements', Icons.feedback, Colors.orange, () {
+                child: _buildActionCard(context, l10n.submitFeedback, l10n.reportBugsOrSuggest, Icons.feedback, Colors.orange, () {
                   Navigator.pushNamed(context, '/submit-feedback');
                 }),
               ),
@@ -388,45 +405,48 @@ class _ApprovedDashboardView extends StatelessWidget {
   }
 
   Widget _buildWelcomeHeader(String? name) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [Colors.green.shade800, Colors.green.shade400], begin: Alignment.topLeft, end: Alignment.bottomRight),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [BoxShadow(color: Colors.green.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, 10))],
-      ),
-      child: Stack(
-        children: [
-          Positioned(right: -20, top: -20, child: Icon(Icons.volunteer_activism, size: 150, color: Colors.white.withOpacity(0.1))),
-          Row(
+    return Builder(
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        return Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [Colors.green.shade800, Colors.green.shade400], begin: Alignment.topLeft, end: Alignment.bottomRight),
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [BoxShadow(color: Colors.green.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, 10))],
+          ),
+          child: Stack(
             children: [
-              Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white.withOpacity(0.5), width: 2),
-                ),
-                child: CircleAvatar(
-                  radius: 36,
-                  backgroundColor: Colors.white,
-                  child: Text(
-                    name?.substring(0, 1).toUpperCase() ?? '?',
-                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.green.shade800),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 20),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Welcome back,',
-                      style: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w500),
+              Positioned(right: -20, top: -20, child: Icon(Icons.volunteer_activism, size: 150, color: Colors.white.withOpacity(0.1))),
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white.withOpacity(0.5), width: 2),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      name ?? 'Volunteer',
+                    child: CircleAvatar(
+                      radius: 36,
+                      backgroundColor: Colors.white,
+                      child: Text(
+                        name?.substring(0, 1).toUpperCase() ?? '?',
+                        style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.green.shade800),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.welcomeBackName,
+                          style: const TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          name ?? l10n.volunteer,
                       style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
                       overflow: TextOverflow.ellipsis,
                     ),
