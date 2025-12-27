@@ -212,6 +212,75 @@ class AppLocalizationsAr extends AppLocalizations {
   String get shiftsCompletedLast6Months => 'الورديات المكتملة في آخر 6 أشهر';
 
   @override
+  String get management => 'الإدارة';
+
+  @override
+  String get manageShifts => 'إدارة الورديات';
+
+  @override
+  String get assignVolunteersToShifts => 'تعيين المتطوعين للورديات';
+
+  @override
+  String get presenceChecks => 'فحوصات الحضور';
+
+  @override
+  String get checkVolunteerAttendance => 'فحص حضور المتطوعين';
+
+  @override
+  String get reviewVolunteerLeaveRequests => 'مراجعة طلبات إجازة المتطوعين';
+
+  @override
+  String get reportBugsOrSuggestIdeas => 'الإبلاغ عن الأخطاء أو اقتراح أفكار';
+
+  @override
+  String get noEventsAssignedYet => 'لا توجد فعاليات معينة لفرقك بعد';
+
+  @override
+  String errorLoadingData(String error) {
+    return 'خطأ في تحميل البيانات: $error';
+  }
+
+  @override
+  String get teamLeaderDashboard => 'لوحة تحكم قائد الفريق';
+
+  @override
+  String get myEvents => 'فعالياتي';
+
+  @override
+  String shiftsAssigned(int count, String plural) {
+    return '$count وردية$plural معينة';
+  }
+
+  @override
+  String get noShiftsAssignedToYourTeams => 'لا توجد ورديات معينة لفرقك';
+
+  @override
+  String get mainShift => 'الوردية الرئيسية';
+
+  @override
+  String get subLocation => 'الموقع الفرعي';
+
+  @override
+  String membersAssigned(int assigned, int total) {
+    return '$assigned/$total أعضاء معينين';
+  }
+
+  @override
+  String get noTeamMembersAvailable => 'لا يوجد أعضاء فريق متاحون';
+
+  @override
+  String get memberAssigned => 'تم تعيين العضو';
+
+  @override
+  String get memberRemoved => 'تم إزالة العضو';
+
+  @override
+  String get memberAssignedToSublocation => 'تم تعيين العضو للموقع الفرعي';
+
+  @override
+  String get memberRemovedFromSublocation => 'تم إزالة العضو من الموقع الفرعي';
+
+  @override
   String get activeEventsCount => 'الفعاليات النشطة';
 
   @override
@@ -438,13 +507,34 @@ class AppLocalizationsAr extends AppLocalizations {
   String get eventName => 'اسم الفعالية';
 
   @override
+  String get eventNameRequired => 'اسم الفعالية *';
+
+  @override
+  String get pleaseEnterEventName => 'يرجى إدخال اسم الفعالية';
+
+  @override
   String get eventDescription => 'وصف الفعالية';
+
+  @override
+  String get description => 'الوصف';
 
   @override
   String get startDate => 'تاريخ البدء';
 
   @override
+  String get startDateRequired => 'تاريخ البدء *';
+
+  @override
   String get endDate => 'تاريخ الانتهاء';
+
+  @override
+  String get endDateRequired => 'تاريخ الانتهاء *';
+
+  @override
+  String get required => 'مطلوب';
+
+  @override
+  String get dateFormatHint => 'يوم-شهر-سنة';
 
   @override
   String get eventCreated => 'تم إنشاء الفعالية بنجاح';
@@ -459,7 +549,53 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noEvents => 'لا توجد فعاليات';
 
   @override
+  String get noArchivedEvents => 'لا توجد فعاليات مؤرشفة';
+
+  @override
+  String get noActiveEventsFound =>
+      'لا توجد فعاليات نشطة.\nاضغط + لإضافة فعالية جديدة.';
+
+  @override
   String get selectEvent => 'اختر فعالية';
+
+  @override
+  String get viewWorkflow => 'عرض سير العمل';
+
+  @override
+  String get archived => 'مؤرشف';
+
+  @override
+  String get restored => 'تم الاستعادة';
+
+  @override
+  String get deleted => 'تم الحذف';
+
+  @override
+  String get addNewEvent => 'إضافة فعالية جديدة';
+
+  @override
+  String get recurringEvent => 'فعالية متكررة';
+
+  @override
+  String get recurrenceType => 'نوع التكرار';
+
+  @override
+  String get recurrenceTypeRequired => 'نوع التكرار *';
+
+  @override
+  String get recurrenceEndDate => 'تاريخ انتهاء التكرار (اختياري)';
+
+  @override
+  String get recurrence => 'التكرار';
+
+  @override
+  String get presenceCheckPermissions => 'صلاحيات فحص الحضور';
+
+  @override
+  String get presenceCheckPermissionsRequired => 'صلاحيات فحص الحضور *';
+
+  @override
+  String get to => 'إلى';
 
   @override
   String get shifts => 'الورديات';
@@ -480,7 +616,123 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noShifts => 'لا توجد ورديات متاحة';
 
   @override
+  String get noShiftsAdded => 'لم تتم إضافة ورديات';
+
+  @override
   String get selectShift => 'اختر وردية';
+
+  @override
+  String get addShift => 'إضافة وردية';
+
+  @override
+  String get location => 'الموقع';
+
+  @override
+  String get locationColon => 'الموقع:';
+
+  @override
+  String get subLocationRequired => 'الموقع الفرعي *';
+
+  @override
+  String get addSubLocation => 'إضافة موقع فرعي';
+
+  @override
+  String get editSubLocation => 'تعديل الموقع الفرعي';
+
+  @override
+  String get thisLocationHasNoSublocations => 'هذا الموقع ليس لديه مواقع فرعية';
+
+  @override
+  String get pleaseSelectSublocation => 'يرجى اختيار موقع فرعي';
+
+  @override
+  String get teamAssignment => 'تعيين الفريق';
+
+  @override
+  String get existing => 'موجود';
+
+  @override
+  String get temporary => 'مؤقت';
+
+  @override
+  String get teamOptional => 'الفريق (اختياري)';
+
+  @override
+  String get selectTeam => 'اختر فريق';
+
+  @override
+  String get none => 'لا شيء';
+
+  @override
+  String get temporaryTeam => 'فريق مؤقت';
+
+  @override
+  String get create => 'إنشاء';
+
+  @override
+  String get createTeam => 'إنشاء فريق';
+
+  @override
+  String get createTemporaryTeam => 'إنشاء فريق مؤقت';
+
+  @override
+  String get leader => 'القائد';
+
+  @override
+  String get leaderColon => 'القائد:';
+
+  @override
+  String get membersColon => 'الأعضاء:';
+
+  @override
+  String get teamMembers => 'أعضاء الفريق';
+
+  @override
+  String get noMembers => 'لا يوجد أعضاء';
+
+  @override
+  String get noTemporaryTeamCreated => 'لم يتم إنشاء فريق مؤقت';
+
+  @override
+  String get selectTeamMember => 'اختر عضو الفريق';
+
+  @override
+  String get addMember => 'إضافة';
+
+  @override
+  String get selectDays => 'اختر الأيام:';
+
+  @override
+  String get dayOfMonth => 'يوم من الشهر';
+
+  @override
+  String get dayOfMonthRequired => 'يوم من الشهر *';
+
+  @override
+  String get selectDayHint => 'اختر اليوم (1-31)';
+
+  @override
+  String get day => 'اليوم';
+
+  @override
+  String get dayRequired => 'اليوم *';
+
+  @override
+  String dayNumber(int number) {
+    return 'اليوم $number';
+  }
+
+  @override
+  String get pleaseSelectDay => 'يرجى اختيار اليوم';
+
+  @override
+  String get month => 'الشهر';
+
+  @override
+  String get monthRequired => 'الشهر *';
+
+  @override
+  String get pleaseSelectMonth => 'يرجى اختيار الشهر';
 
   @override
   String get teamLeadersManagement => 'إدارة قادة الفرق';
@@ -552,16 +804,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get mainLocation => 'الموقع الرئيسي';
 
   @override
-  String get subLocation => 'الموقع الفرعي';
-
-  @override
   String get noLocations => 'لا توجد مواقع';
 
   @override
   String get selectLocation => 'اختر موقعاً';
-
-  @override
-  String get location => 'الموقع';
 
   @override
   String get assignMyTeam => 'تعيين فريقي';
@@ -579,9 +825,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get selectEventAndShift => 'اختر وردية لتعيين المتطوعين';
-
-  @override
-  String get myEvents => 'فعالياتي';
 
   @override
   String get eventsWhereYourTeamIsAssigned =>
@@ -932,16 +1175,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get status => 'الحالة';
 
   @override
-  String get description => 'الوصف';
-
-  @override
   String get notes => 'ملاحظات';
 
   @override
   String get from => 'من';
-
-  @override
-  String get to => 'إلى';
 
   @override
   String get teamLeader => 'قائد الفريق';
@@ -951,9 +1188,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get all => 'الكل';
-
-  @override
-  String get none => 'لا شيء';
 
   @override
   String get unknown => 'غير معروف';

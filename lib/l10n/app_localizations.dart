@@ -500,6 +500,132 @@ abstract class AppLocalizations {
   /// **'Shifts completed in last 6 months'**
   String get shiftsCompletedLast6Months;
 
+  /// No description provided for @management.
+  ///
+  /// In en, this message translates to:
+  /// **'Management'**
+  String get management;
+
+  /// No description provided for @manageShifts.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Shifts'**
+  String get manageShifts;
+
+  /// No description provided for @assignVolunteersToShifts.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign volunteers to shifts'**
+  String get assignVolunteersToShifts;
+
+  /// No description provided for @presenceChecks.
+  ///
+  /// In en, this message translates to:
+  /// **'Presence Checks'**
+  String get presenceChecks;
+
+  /// No description provided for @checkVolunteerAttendance.
+  ///
+  /// In en, this message translates to:
+  /// **'Check volunteer attendance'**
+  String get checkVolunteerAttendance;
+
+  /// No description provided for @reviewVolunteerLeaveRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Review volunteer leave requests'**
+  String get reviewVolunteerLeaveRequests;
+
+  /// No description provided for @reportBugsOrSuggestIdeas.
+  ///
+  /// In en, this message translates to:
+  /// **'Report bugs or suggest ideas'**
+  String get reportBugsOrSuggestIdeas;
+
+  /// No description provided for @noEventsAssignedYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No events assigned to your teams yet'**
+  String get noEventsAssignedYet;
+
+  /// No description provided for @errorLoadingData.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading data: {error}'**
+  String errorLoadingData(String error);
+
+  /// No description provided for @teamLeaderDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Team Leader Dashboard'**
+  String get teamLeaderDashboard;
+
+  /// No description provided for @myEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'My Events'**
+  String get myEvents;
+
+  /// No description provided for @shiftsAssigned.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Shift{plural} Assigned'**
+  String shiftsAssigned(int count, String plural);
+
+  /// No description provided for @noShiftsAssignedToYourTeams.
+  ///
+  /// In en, this message translates to:
+  /// **'No shifts assigned to your teams'**
+  String get noShiftsAssignedToYourTeams;
+
+  /// No description provided for @mainShift.
+  ///
+  /// In en, this message translates to:
+  /// **'Main Shift'**
+  String get mainShift;
+
+  /// No description provided for @subLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Sub Location'**
+  String get subLocation;
+
+  /// No description provided for @membersAssigned.
+  ///
+  /// In en, this message translates to:
+  /// **'{assigned}/{total} members assigned'**
+  String membersAssigned(int assigned, int total);
+
+  /// No description provided for @noTeamMembersAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No team members available'**
+  String get noTeamMembersAvailable;
+
+  /// No description provided for @memberAssigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Member assigned'**
+  String get memberAssigned;
+
+  /// No description provided for @memberRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Member removed'**
+  String get memberRemoved;
+
+  /// No description provided for @memberAssignedToSublocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Member assigned to sublocation'**
+  String get memberAssignedToSublocation;
+
+  /// No description provided for @memberRemovedFromSublocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Member removed from sublocation'**
+  String get memberRemovedFromSublocation;
+
   /// No description provided for @activeEventsCount.
   ///
   /// In en, this message translates to:
@@ -932,11 +1058,29 @@ abstract class AppLocalizations {
   /// **'Event Name'**
   String get eventName;
 
+  /// No description provided for @eventNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Event Name *'**
+  String get eventNameRequired;
+
+  /// No description provided for @pleaseEnterEventName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter event name'**
+  String get pleaseEnterEventName;
+
   /// No description provided for @eventDescription.
   ///
   /// In en, this message translates to:
   /// **'Event Description'**
   String get eventDescription;
+
+  /// No description provided for @description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get description;
 
   /// No description provided for @startDate.
   ///
@@ -944,11 +1088,35 @@ abstract class AppLocalizations {
   /// **'Start Date'**
   String get startDate;
 
+  /// No description provided for @startDateRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Date *'**
+  String get startDateRequired;
+
   /// No description provided for @endDate.
   ///
   /// In en, this message translates to:
   /// **'End Date'**
   String get endDate;
+
+  /// No description provided for @endDateRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'End Date *'**
+  String get endDateRequired;
+
+  /// No description provided for @required.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get required;
+
+  /// No description provided for @dateFormatHint.
+  ///
+  /// In en, this message translates to:
+  /// **'DD-MM-YYYY'**
+  String get dateFormatHint;
 
   /// No description provided for @eventCreated.
   ///
@@ -974,11 +1142,101 @@ abstract class AppLocalizations {
   /// **'No events found'**
   String get noEvents;
 
+  /// No description provided for @noArchivedEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'No archived events'**
+  String get noArchivedEvents;
+
+  /// No description provided for @noActiveEventsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No active events found.\nTap + to add a new event.'**
+  String get noActiveEventsFound;
+
   /// No description provided for @selectEvent.
   ///
   /// In en, this message translates to:
   /// **'Select Event'**
   String get selectEvent;
+
+  /// No description provided for @viewWorkflow.
+  ///
+  /// In en, this message translates to:
+  /// **'View Workflow'**
+  String get viewWorkflow;
+
+  /// No description provided for @archived.
+  ///
+  /// In en, this message translates to:
+  /// **'archived'**
+  String get archived;
+
+  /// No description provided for @restored.
+  ///
+  /// In en, this message translates to:
+  /// **'restored'**
+  String get restored;
+
+  /// No description provided for @deleted.
+  ///
+  /// In en, this message translates to:
+  /// **'deleted'**
+  String get deleted;
+
+  /// No description provided for @addNewEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Add New Event'**
+  String get addNewEvent;
+
+  /// No description provided for @recurringEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurring Event'**
+  String get recurringEvent;
+
+  /// No description provided for @recurrenceType.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurrence Type'**
+  String get recurrenceType;
+
+  /// No description provided for @recurrenceTypeRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurrence Type *'**
+  String get recurrenceTypeRequired;
+
+  /// No description provided for @recurrenceEndDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurrence End Date (Optional)'**
+  String get recurrenceEndDate;
+
+  /// No description provided for @recurrence.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurrence'**
+  String get recurrence;
+
+  /// No description provided for @presenceCheckPermissions.
+  ///
+  /// In en, this message translates to:
+  /// **'Presence Check Permissions'**
+  String get presenceCheckPermissions;
+
+  /// No description provided for @presenceCheckPermissionsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Presence Check Permissions *'**
+  String get presenceCheckPermissionsRequired;
+
+  /// No description provided for @to.
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get to;
 
   /// No description provided for @shifts.
   ///
@@ -1016,11 +1274,239 @@ abstract class AppLocalizations {
   /// **'No shifts available'**
   String get noShifts;
 
+  /// No description provided for @noShiftsAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'No shifts added'**
+  String get noShiftsAdded;
+
   /// No description provided for @selectShift.
   ///
   /// In en, this message translates to:
   /// **'Select a shift'**
   String get selectShift;
+
+  /// No description provided for @addShift.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Shift'**
+  String get addShift;
+
+  /// No description provided for @location.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get location;
+
+  /// No description provided for @locationColon.
+  ///
+  /// In en, this message translates to:
+  /// **'Location:'**
+  String get locationColon;
+
+  /// No description provided for @subLocationRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'SubLocation *'**
+  String get subLocationRequired;
+
+  /// No description provided for @addSubLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Add SubLocation'**
+  String get addSubLocation;
+
+  /// No description provided for @editSubLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit SubLocation'**
+  String get editSubLocation;
+
+  /// No description provided for @thisLocationHasNoSublocations.
+  ///
+  /// In en, this message translates to:
+  /// **'This location has no sublocations'**
+  String get thisLocationHasNoSublocations;
+
+  /// No description provided for @pleaseSelectSublocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a sublocation'**
+  String get pleaseSelectSublocation;
+
+  /// No description provided for @teamAssignment.
+  ///
+  /// In en, this message translates to:
+  /// **'Team Assignment'**
+  String get teamAssignment;
+
+  /// No description provided for @existing.
+  ///
+  /// In en, this message translates to:
+  /// **'Existing'**
+  String get existing;
+
+  /// No description provided for @temporary.
+  ///
+  /// In en, this message translates to:
+  /// **'Temporary'**
+  String get temporary;
+
+  /// No description provided for @teamOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Team (Optional)'**
+  String get teamOptional;
+
+  /// No description provided for @selectTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Select team'**
+  String get selectTeam;
+
+  /// No description provided for @none.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get none;
+
+  /// No description provided for @temporaryTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Temporary Team'**
+  String get temporaryTeam;
+
+  /// No description provided for @create.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get create;
+
+  /// No description provided for @createTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Team'**
+  String get createTeam;
+
+  /// No description provided for @createTemporaryTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Temporary Team'**
+  String get createTemporaryTeam;
+
+  /// No description provided for @leader.
+  ///
+  /// In en, this message translates to:
+  /// **'Leader'**
+  String get leader;
+
+  /// No description provided for @leaderColon.
+  ///
+  /// In en, this message translates to:
+  /// **'Leader:'**
+  String get leaderColon;
+
+  /// No description provided for @membersColon.
+  ///
+  /// In en, this message translates to:
+  /// **'Members:'**
+  String get membersColon;
+
+  /// No description provided for @teamMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Team Members'**
+  String get teamMembers;
+
+  /// No description provided for @noMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'No members'**
+  String get noMembers;
+
+  /// No description provided for @noTemporaryTeamCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'No temporary team created'**
+  String get noTemporaryTeamCreated;
+
+  /// No description provided for @selectTeamMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Team Member'**
+  String get selectTeamMember;
+
+  /// No description provided for @addMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get addMember;
+
+  /// No description provided for @selectDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Days:'**
+  String get selectDays;
+
+  /// No description provided for @dayOfMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Day of Month'**
+  String get dayOfMonth;
+
+  /// No description provided for @dayOfMonthRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Day of Month *'**
+  String get dayOfMonthRequired;
+
+  /// No description provided for @selectDayHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select day (1-31)'**
+  String get selectDayHint;
+
+  /// No description provided for @day.
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get day;
+
+  /// No description provided for @dayRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Day *'**
+  String get dayRequired;
+
+  /// No description provided for @dayNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Day {number}'**
+  String dayNumber(int number);
+
+  /// No description provided for @pleaseSelectDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a day'**
+  String get pleaseSelectDay;
+
+  /// No description provided for @month.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get month;
+
+  /// No description provided for @monthRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Month *'**
+  String get monthRequired;
+
+  /// No description provided for @pleaseSelectMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a month'**
+  String get pleaseSelectMonth;
 
   /// No description provided for @teamLeadersManagement.
   ///
@@ -1148,12 +1634,6 @@ abstract class AppLocalizations {
   /// **'Main Location'**
   String get mainLocation;
 
-  /// No description provided for @subLocation.
-  ///
-  /// In en, this message translates to:
-  /// **'Sub Location'**
-  String get subLocation;
-
   /// No description provided for @noLocations.
   ///
   /// In en, this message translates to:
@@ -1165,12 +1645,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select a location'**
   String get selectLocation;
-
-  /// No description provided for @location.
-  ///
-  /// In en, this message translates to:
-  /// **'Location'**
-  String get location;
 
   /// No description provided for @assignMyTeam.
   ///
@@ -1201,12 +1675,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select a shift to assign volunteers'**
   String get selectEventAndShift;
-
-  /// No description provided for @myEvents.
-  ///
-  /// In en, this message translates to:
-  /// **'My Events'**
-  String get myEvents;
 
   /// No description provided for @eventsWhereYourTeamIsAssigned.
   ///
@@ -1838,12 +2306,6 @@ abstract class AppLocalizations {
   /// **'Status'**
   String get status;
 
-  /// No description provided for @description.
-  ///
-  /// In en, this message translates to:
-  /// **'Description'**
-  String get description;
-
   /// No description provided for @notes.
   ///
   /// In en, this message translates to:
@@ -1855,12 +2317,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'From'**
   String get from;
-
-  /// No description provided for @to.
-  ///
-  /// In en, this message translates to:
-  /// **'To'**
-  String get to;
 
   /// No description provided for @teamLeader.
   ///
@@ -1879,12 +2335,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All'**
   String get all;
-
-  /// No description provided for @none.
-  ///
-  /// In en, this message translates to:
-  /// **'None'**
-  String get none;
 
   /// No description provided for @unknown.
   ///

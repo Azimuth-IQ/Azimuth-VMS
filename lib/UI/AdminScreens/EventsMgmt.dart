@@ -4,6 +4,7 @@ import 'package:azimuth_vms/Models/Location.dart';
 import 'package:azimuth_vms/Providers/EventsProvider.dart';
 import 'package:azimuth_vms/UI/AdminScreens/EventWorkflowScreen.dart';
 import 'package:azimuth_vms/UI/Widgets/ArchiveDeleteWidget.dart';
+import 'package:azimuth_vms/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
@@ -81,7 +82,7 @@ class _EventsMgmtViewState extends State<EventsMgmtView> {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Events Management'),
+            title: Text(AppLocalizations.of(context)!.eventsManagement),
             actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: () => provider.loadEvents())],
           ),
           body: provider.isLoading
@@ -91,7 +92,7 @@ class _EventsMgmtViewState extends State<EventsMgmtView> {
                     ShowArchivedToggle(showArchived: _showArchived, onChanged: (value) => setState(() => _showArchived = value), archivedCount: provider.archivedEvents.length),
                     Expanded(
                       child: displayEvents.isEmpty
-                          ? Center(child: Text(_showArchived ? 'No archived events' : 'No active events found.\nTap + to add a new event.', textAlign: TextAlign.center))
+                          ? Center(child: Text(_showArchived ? AppLocalizations.of(context)!.noArchivedEvents : AppLocalizations.of(context)!.noActiveEventsFound, textAlign: TextAlign.center))
                           : ListView.builder(
                               itemCount: displayEvents.length,
                               itemBuilder: (context, index) {
@@ -121,6 +122,7 @@ class EventTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     EventsProvider provider = context.read<EventsProvider>();
+    final l10n = AppLocalizations.of(context)!;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -139,7 +141,7 @@ class EventTile extends StatelessWidget {
           children: [
             IconButton(
               icon: const Icon(Icons.timeline),
-              tooltip: 'View Workflow',
+              tooltip: l10n.viewWorkflow,
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => EventWorkflowScreen(event: event)));
               },
@@ -152,19 +154,19 @@ class EventTile extends StatelessWidget {
               onArchive: () async {
                 await provider.archiveEvent(event.id);
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${event.name} archived')));
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${event.name} ${l10n.archived}')));
                 }
               },
               onUnarchive: () async {
                 await provider.unarchiveEvent(event.id);
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${event.name} restored')));
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${event.name} ${l10n.restored}')));
                 }
               },
               onDelete: () async {
                 await provider.deleteEvent(event.id);
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${event.name} deleted')));
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${event.name} ${l10n.deleted}')));
                 }
               },
             ),
@@ -184,23 +186,23 @@ class EventTile extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 8),
-                Row(children: [const Icon(Icons.calendar_today, size: 16), const SizedBox(width: 8), Text('${event.startDate} to ${event.endDate}')]),
+                Row(children: [const Icon(Icons.calendar_today, size: 16), const SizedBox(width: 8), Text('${event.startDate} ${l10n.to} ${event.endDate}')]),
                 if (event.isRecurring) ...[
                   const SizedBox(height: 8),
-                  Row(children: [const Icon(Icons.repeat, size: 16), const SizedBox(width: 8), Text('Recurrence: ${event.recurrenceType}')]),
+                  Row(children: [const Icon(Icons.repeat, size: 16), const SizedBox(width: 8), Text('${l10n.recurrence}: ${event.recurrenceType}')]),
                 ],
                 if (event.shifts.isNotEmpty) ...[
                   const SizedBox(height: 16),
-                  const Text('Shifts:', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text('${l10n.shifts}:', style: const TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
                   ...event.shifts.map(
-                    (shift) => Padding(padding: const EdgeInsets.only(left: 16, top: 4), child: Text('${shift.startTime} - ${shift.endTime} (Location: ${shift.locationId})')),
+                    (shift) => Padding(padding: const EdgeInsets.only(left: 16, top: 4), child: Text('${shift.startTime} - ${shift.endTime} (${l10n.location}: ${shift.locationId})')),
                   ),
                 ] else
-                  const Padding(
-                    padding: EdgeInsets.only(top: 8),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
                     child: Text(
-                      'No shifts added',
+                      l10n.noShiftsAdded,
                       style: TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
                     ),
                   ),
@@ -297,6 +299,7 @@ class EventFormDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     GlobalKey<FormState> formKey = GlobalKey<FormState>();
+    final l10n = AppLocalizations.of(context)!;
 
     return Consumer<EventFormProvider>(
       builder: (context, provider, child) {
@@ -308,7 +311,7 @@ class EventFormDialog extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Text(isEdit ? 'Edit Event' : 'Add New Event', style: Theme.of(context).textTheme.headlineSmall),
+                  child: Text(isEdit ? l10n.editEvent : l10n.addNewEvent, style: Theme.of(context).textTheme.headlineSmall),
                 ),
                 Expanded(
                   child: SingleChildScrollView(
@@ -321,11 +324,11 @@ class EventFormDialog extends StatelessWidget {
                           children: [
                             TextFormField(
                               initialValue: provider.name,
-                              decoration: const InputDecoration(labelText: 'Event Name *', border: OutlineInputBorder(), prefixIcon: Icon(Icons.event)),
+                              decoration: InputDecoration(labelText: l10n.eventNameRequired, border: const OutlineInputBorder(), prefixIcon: const Icon(Icons.event)),
                               onChanged: provider.updateName,
                               validator: (value) {
                                 if (value == null || value.trim().isEmpty) {
-                                  return 'Please enter event name';
+                                  return l10n.pleaseEnterEventName;
                                 }
                                 return null;
                               },
@@ -333,7 +336,7 @@ class EventFormDialog extends StatelessWidget {
                             const SizedBox(height: 16),
                             TextFormField(
                               initialValue: provider.description,
-                              decoration: const InputDecoration(labelText: 'Description', border: OutlineInputBorder(), prefixIcon: Icon(Icons.description)),
+                              decoration: InputDecoration(labelText: l10n.description, border: const OutlineInputBorder(), prefixIcon: const Icon(Icons.description)),
                               maxLines: 3,
                               onChanged: provider.updateDescription,
                             ),
@@ -343,17 +346,17 @@ class EventFormDialog extends StatelessWidget {
                                 Expanded(
                                   child: TextFormField(
                                     controller: TextEditingController(text: provider.startDate),
-                                    decoration: const InputDecoration(
-                                      labelText: 'Start Date *',
-                                      border: OutlineInputBorder(),
-                                      prefixIcon: Icon(Icons.calendar_today),
-                                      hintText: 'DD-MM-YYYY',
+                                    decoration: InputDecoration(
+                                      labelText: l10n.startDateRequired,
+                                      border: const OutlineInputBorder(),
+                                      prefixIcon: const Icon(Icons.calendar_today),
+                                      hintText: l10n.dateFormatHint,
                                     ),
                                     readOnly: true,
                                     onTap: () => _pickDate(context, 'Start Date', provider.updateStartDate),
                                     validator: (value) {
                                       if (value == null || value.trim().isEmpty) {
-                                        return 'Required';
+                                        return l10n.required;
                                       }
                                       return null;
                                     },
@@ -363,17 +366,17 @@ class EventFormDialog extends StatelessWidget {
                                 Expanded(
                                   child: TextFormField(
                                     controller: TextEditingController(text: provider.endDate),
-                                    decoration: const InputDecoration(
-                                      labelText: 'End Date *',
-                                      border: OutlineInputBorder(),
-                                      prefixIcon: Icon(Icons.calendar_today),
-                                      hintText: 'DD-MM-YYYY',
+                                    decoration: InputDecoration(
+                                      labelText: l10n.endDateRequired,
+                                      border: const OutlineInputBorder(),
+                                      prefixIcon: const Icon(Icons.calendar_today),
+                                      hintText: l10n.dateFormatHint,
                                     ),
                                     readOnly: true,
                                     onTap: () => _pickDate(context, 'End Date', provider.updateEndDate),
                                     validator: (value) {
                                       if (value == null || value.trim().isEmpty) {
-                                        return 'Required';
+                                        return l10n.required;
                                       }
                                       return null;
                                     },
@@ -384,8 +387,8 @@ class EventFormDialog extends StatelessWidget {
                             const SizedBox(height: 16),
                             DropdownButtonFormField<PresenceCheckPermissions>(
                               value: provider.presenceCheckPermissions,
-                              decoration: const InputDecoration(
-                                labelText: 'Presence Check Permissions *',
+                              decoration: InputDecoration(
+                                labelText: l10n.presenceCheckPermissionsRequired,
                                 border: OutlineInputBorder(),
                                 prefixIcon: Icon(Icons.admin_panel_settings),
                               ),
@@ -399,12 +402,12 @@ class EventFormDialog extends StatelessWidget {
                               },
                             ),
                             const SizedBox(height: 16),
-                            SwitchListTile(title: const Text('Recurring Event'), value: provider.isRecurring, onChanged: provider.updateIsRecurring),
+                            SwitchListTile(title: Text(l10n.recurringEvent), value: provider.isRecurring, onChanged: provider.updateIsRecurring),
                             if (provider.isRecurring) ...[
                               const SizedBox(height: 16),
                               DropdownButtonFormField<String>(
                                 initialValue: provider.recurrenceType,
-                                decoration: const InputDecoration(labelText: 'Recurrence Type *', border: OutlineInputBorder(), prefixIcon: Icon(Icons.repeat)),
+                                decoration: InputDecoration(labelText: l10n.recurrenceTypeRequired, border: const OutlineInputBorder(), prefixIcon: const Icon(Icons.repeat)),
                                 items: RecurrenceType.values.where((type) => type != RecurrenceType.NONE).map((type) {
                                   return DropdownMenuItem<String>(value: type.name, child: Text(type.displayName));
                                 }).toList(),
@@ -415,17 +418,17 @@ class EventFormDialog extends StatelessWidget {
                                 },
                               ),
                               const SizedBox(height: 16),
-                              if (provider.recurrenceType == RecurrenceType.WEEKLY.name) _buildWeeklyDaysSelector(provider),
-                              if (provider.recurrenceType == RecurrenceType.MONTHLY.name) _buildMonthlyDaySelector(provider),
-                              if (provider.recurrenceType == RecurrenceType.YEARLY.name) _buildYearlySelector(provider),
+                              if (provider.recurrenceType == RecurrenceType.WEEKLY.name) _buildWeeklyDaysSelector(context, provider),
+                              if (provider.recurrenceType == RecurrenceType.MONTHLY.name) _buildMonthlyDaySelector(context, provider),
+                              if (provider.recurrenceType == RecurrenceType.YEARLY.name) _buildYearlySelector(context, provider),
                               const SizedBox(height: 16),
                               TextFormField(
                                 controller: TextEditingController(text: provider.recurrenceEndDate ?? ''),
-                                decoration: const InputDecoration(
-                                  labelText: 'Recurrence End Date (Optional)',
-                                  border: OutlineInputBorder(),
-                                  prefixIcon: Icon(Icons.event_busy),
-                                  hintText: 'DD-MM-YYYY',
+                                decoration: InputDecoration(
+                                  labelText: l10n.recurrenceEndDate,
+                                  border: const OutlineInputBorder(),
+                                  prefixIcon: const Icon(Icons.event_busy),
+                                  hintText: l10n.dateFormatHint,
                                 ),
                                 readOnly: true,
                                 onTap: () => _pickDate(context, 'Recurrence End Date', provider.updateRecurrenceEndDate),
@@ -435,18 +438,18 @@ class EventFormDialog extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('Shifts', style: Theme.of(context).textTheme.titleMedium),
-                                TextButton.icon(onPressed: () => _showShiftForm(context), icon: const Icon(Icons.add), label: const Text('Add Shift')),
+                                Text(l10n.shifts, style: Theme.of(context).textTheme.titleMedium),
+                                TextButton.icon(onPressed: () => _showShiftForm(context), icon: const Icon(Icons.add), label: Text(l10n.addShift)),
                               ],
                             ),
                             const SizedBox(height: 8),
                             if (provider.shifts.isEmpty)
-                              const Center(
+                              Center(
                                 child: Padding(
-                                  padding: EdgeInsets.all(16.0),
+                                  padding: const EdgeInsets.all(16.0),
                                   child: Text(
-                                    'No shifts added',
-                                    style: TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
+                                    l10n.noShiftsAdded,
+                                    style: const TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
                                   ),
                                 ),
                               )
@@ -458,7 +461,7 @@ class EventFormDialog extends StatelessWidget {
                                   child: ListTile(
                                     leading: const Icon(Icons.schedule),
                                     title: Text('${shift.startTime} - ${shift.endTime}'),
-                                    subtitle: Text('Location: ${shift.locationId}'),
+                                    subtitle: Text('${l10n.locationColon} ${shift.locationId}'),
                                     trailing: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
@@ -483,9 +486,9 @@ class EventFormDialog extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+                      TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(l10n.cancel)),
                       const SizedBox(width: 8),
-                      ElevatedButton(onPressed: () => _save(context, formKey), child: const Text('Save')),
+                      ElevatedButton(onPressed: () => _save(context, formKey), child: Text(l10n.save)),
                     ],
                   ),
                 ),
@@ -497,11 +500,12 @@ class EventFormDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildWeeklyDaysSelector(EventFormProvider provider) {
+  Widget _buildWeeklyDaysSelector(BuildContext context, EventFormProvider provider) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Select Days:', style: TextStyle(fontWeight: FontWeight.bold)),
+        Text(l10n.selectDays, style: const TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
@@ -515,36 +519,38 @@ class EventFormDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildMonthlyDaySelector(EventFormProvider provider) {
+  Widget _buildMonthlyDaySelector(BuildContext context, EventFormProvider provider) {
+    final l10n = AppLocalizations.of(context)!;
     return DropdownButtonFormField<String>(
       initialValue: provider.monthlyDay,
-      decoration: const InputDecoration(labelText: 'Day of Month *', border: OutlineInputBorder(), hintText: 'Select day (1-31)'),
+      decoration: InputDecoration(labelText: l10n.dayOfMonthRequired, border: const OutlineInputBorder(), hintText: l10n.selectDayHint),
       items: List.generate(31, (index) => index + 1).map((day) {
-        return DropdownMenuItem<String>(value: day.toString(), child: Text('Day $day'));
+        return DropdownMenuItem<String>(value: day.toString(), child: Text(l10n.dayNumber(day)));
       }).toList(),
       onChanged: provider.updateMonthlyDay,
       validator: (value) {
         if (provider.recurrenceType == RecurrenceType.MONTHLY.name && (value == null || value.isEmpty)) {
-          return 'Please select a day';
+          return l10n.pleaseSelectDay;
         }
         return null;
       },
     );
   }
 
-  Widget _buildYearlySelector(EventFormProvider provider) {
+  Widget _buildYearlySelector(BuildContext context, EventFormProvider provider) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         DropdownButtonFormField<String>(
           initialValue: provider.yearlyMonth,
-          decoration: const InputDecoration(labelText: 'Month *', border: OutlineInputBorder()),
+          decoration: InputDecoration(labelText: l10n.monthRequired, border: const OutlineInputBorder()),
           items: Month.values.map((month) {
             return DropdownMenuItem<String>(value: month.name, child: Text(month.displayName));
           }).toList(),
           onChanged: provider.updateYearlyMonth,
           validator: (value) {
             if (provider.recurrenceType == RecurrenceType.YEARLY.name && (value == null || value.isEmpty)) {
-              return 'Please select a month';
+              return l10n.pleaseSelectMonth;
             }
             return null;
           },
@@ -552,14 +558,14 @@ class EventFormDialog extends StatelessWidget {
         const SizedBox(height: 16),
         DropdownButtonFormField<String>(
           initialValue: provider.yearlyDay,
-          decoration: const InputDecoration(labelText: 'Day *', border: OutlineInputBorder()),
+          decoration: InputDecoration(labelText: l10n.dayRequired, border: const OutlineInputBorder()),
           items: List.generate(31, (index) => index + 1).map((day) {
-            return DropdownMenuItem<String>(value: day.toString(), child: Text('Day $day'));
+            return DropdownMenuItem<String>(value: day.toString(), child: Text(l10n.dayNumber(day)));
           }).toList(),
           onChanged: provider.updateYearlyDay,
           validator: (value) {
             if (provider.recurrenceType == RecurrenceType.YEARLY.name && (value == null || value.isEmpty)) {
-              return 'Please select a day';
+              return l10n.pleaseSelectDay;
             }
             return null;
           },
@@ -586,7 +592,7 @@ class ShiftFormDialog extends StatelessWidget {
   void _showSubLocationForm(BuildContext context, Location selectedLocation, {ShiftSubLocation? subLocation, int? index}) async {
     if (selectedLocation.subLocations == null || selectedLocation.subLocations!.isEmpty) {
       print('Error showing sublocation form: No sublocations available');
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('This location has no sublocations')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.thisLocationHasNoSublocations)));
       return;
     }
 
@@ -600,8 +606,9 @@ class ShiftFormDialog extends StatelessWidget {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) {
+          final l10n = AppLocalizations.of(context)!;
           return AlertDialog(
-            title: Text(subLocation == null ? 'Add SubLocation' : 'Edit SubLocation'),
+            title: Text(subLocation == null ? l10n.addSubLocation : l10n.editSubLocation),
             content: SizedBox(
               width: double.maxFinite,
               child: SingleChildScrollView(
@@ -611,7 +618,7 @@ class ShiftFormDialog extends StatelessWidget {
                   children: [
                     DropdownButtonFormField<String>(
                       initialValue: selectedSubLocationId,
-                      decoration: const InputDecoration(labelText: 'SubLocation *', border: OutlineInputBorder()),
+                      decoration: InputDecoration(labelText: l10n.subLocationRequired, border: const OutlineInputBorder()),
                       items: selectedLocation.subLocations!.map((subLoc) {
                         return DropdownMenuItem<String>(value: subLoc.id, child: Text(subLoc.name));
                       }).toList(),
@@ -621,11 +628,11 @@ class ShiftFormDialog extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Team Assignment', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(l10n.teamAssignment, style: const TextStyle(fontWeight: FontWeight.bold)),
                         SegmentedButton<bool>(
-                          segments: const [
-                            ButtonSegment<bool>(value: true, label: Text('Existing'), icon: Icon(Icons.groups, size: 16)),
-                            ButtonSegment<bool>(value: false, label: Text('Temporary'), icon: Icon(Icons.person_add, size: 16)),
+                          segments: [
+                            ButtonSegment<bool>(value: true, label: Text(l10n.existing), icon: const Icon(Icons.groups, size: 16)),
+                            ButtonSegment<bool>(value: false, label: Text(l10n.temporary), icon: const Icon(Icons.person_add, size: 16)),
                           ],
                           selected: {useExistingTeam},
                           onSelectionChanged: (Set<bool> selection) {
@@ -645,9 +652,9 @@ class ShiftFormDialog extends StatelessWidget {
                     if (useExistingTeam)
                       DropdownButtonFormField<String>(
                         initialValue: selectedTeamId,
-                        decoration: const InputDecoration(labelText: 'Team (Optional)', border: OutlineInputBorder(), hintText: 'Select team'),
+                        decoration: InputDecoration(labelText: l10n.teamOptional, border: const OutlineInputBorder(), hintText: l10n.selectTeam),
                         items: [
-                          const DropdownMenuItem<String>(value: null, child: Text('None')),
+                          DropdownMenuItem<String>(value: null, child: Text(l10n.none)),
                           ...eventsProvider.teams.map((team) {
                             return DropdownMenuItem<String>(value: team.id, child: Text(team.name));
                           }),
@@ -664,7 +671,7 @@ class ShiftFormDialog extends StatelessWidget {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text('Temporary Team', style: TextStyle(fontWeight: FontWeight.bold)),
+                                  Text(l10n.temporaryTeam, style: const TextStyle(fontWeight: FontWeight.bold)),
                                   if (selectedTempTeam == null)
                                     ElevatedButton.icon(
                                       onPressed: () async {
@@ -674,7 +681,7 @@ class ShiftFormDialog extends StatelessWidget {
                                         }
                                       },
                                       icon: const Icon(Icons.add, size: 16),
-                                      label: const Text('Create', style: TextStyle(fontSize: 12)),
+                                      label: Text(l10n.create, style: const TextStyle(fontSize: 12)),
                                     )
                                   else
                                     Row(
@@ -725,18 +732,18 @@ class ShiftFormDialog extends StatelessWidget {
                                     );
                                   }),
                                 ] else
-                                  const Padding(
-                                    padding: EdgeInsets.only(top: 8),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8),
                                     child: Text(
-                                      'No members',
-                                      style: TextStyle(fontSize: 11, fontStyle: FontStyle.italic, color: Colors.grey),
+                                      l10n.noMembers,
+                                      style: const TextStyle(fontSize: 11, fontStyle: FontStyle.italic, color: Colors.grey),
                                     ),
                                   ),
                               ] else
-                                const Padding(
-                                  padding: EdgeInsets.only(top: 8),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8),
                                   child: Text(
-                                    'No temporary team created',
+                                    l10n.noTemporaryTeamCreated,
                                     style: TextStyle(fontSize: 11, fontStyle: FontStyle.italic, color: Colors.grey),
                                   ),
                                 ),
@@ -749,12 +756,12 @@ class ShiftFormDialog extends StatelessWidget {
               ),
             ),
             actions: [
-              TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+              TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(l10n.cancel)),
               ElevatedButton(
                 onPressed: () {
                   if (selectedSubLocationId == null || selectedSubLocationId!.isEmpty) {
                     print('Error saving sublocation: No sublocation selected');
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select a sublocation')));
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.pleaseSelectSublocation)));
                     return;
                   }
 
@@ -767,7 +774,7 @@ class ShiftFormDialog extends StatelessWidget {
 
                   Navigator.of(context).pop(newSubLocation);
                 },
-                child: const Text('Save'),
+                child: Text(l10n.save),
               ),
             ],
           );

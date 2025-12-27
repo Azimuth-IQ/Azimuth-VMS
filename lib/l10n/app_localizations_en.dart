@@ -212,6 +212,75 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shiftsCompletedLast6Months => 'Shifts completed in last 6 months';
 
   @override
+  String get management => 'Management';
+
+  @override
+  String get manageShifts => 'Manage Shifts';
+
+  @override
+  String get assignVolunteersToShifts => 'Assign volunteers to shifts';
+
+  @override
+  String get presenceChecks => 'Presence Checks';
+
+  @override
+  String get checkVolunteerAttendance => 'Check volunteer attendance';
+
+  @override
+  String get reviewVolunteerLeaveRequests => 'Review volunteer leave requests';
+
+  @override
+  String get reportBugsOrSuggestIdeas => 'Report bugs or suggest ideas';
+
+  @override
+  String get noEventsAssignedYet => 'No events assigned to your teams yet';
+
+  @override
+  String errorLoadingData(String error) {
+    return 'Error loading data: $error';
+  }
+
+  @override
+  String get teamLeaderDashboard => 'Team Leader Dashboard';
+
+  @override
+  String get myEvents => 'My Events';
+
+  @override
+  String shiftsAssigned(int count, String plural) {
+    return '$count Shift$plural Assigned';
+  }
+
+  @override
+  String get noShiftsAssignedToYourTeams => 'No shifts assigned to your teams';
+
+  @override
+  String get mainShift => 'Main Shift';
+
+  @override
+  String get subLocation => 'Sub Location';
+
+  @override
+  String membersAssigned(int assigned, int total) {
+    return '$assigned/$total members assigned';
+  }
+
+  @override
+  String get noTeamMembersAvailable => 'No team members available';
+
+  @override
+  String get memberAssigned => 'Member assigned';
+
+  @override
+  String get memberRemoved => 'Member removed';
+
+  @override
+  String get memberAssignedToSublocation => 'Member assigned to sublocation';
+
+  @override
+  String get memberRemovedFromSublocation => 'Member removed from sublocation';
+
+  @override
   String get activeEventsCount => 'Active Events';
 
   @override
@@ -443,13 +512,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eventName => 'Event Name';
 
   @override
+  String get eventNameRequired => 'Event Name *';
+
+  @override
+  String get pleaseEnterEventName => 'Please enter event name';
+
+  @override
   String get eventDescription => 'Event Description';
+
+  @override
+  String get description => 'Description';
 
   @override
   String get startDate => 'Start Date';
 
   @override
+  String get startDateRequired => 'Start Date *';
+
+  @override
   String get endDate => 'End Date';
+
+  @override
+  String get endDateRequired => 'End Date *';
+
+  @override
+  String get required => 'Required';
+
+  @override
+  String get dateFormatHint => 'DD-MM-YYYY';
 
   @override
   String get eventCreated => 'Event created successfully';
@@ -464,7 +554,53 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noEvents => 'No events found';
 
   @override
+  String get noArchivedEvents => 'No archived events';
+
+  @override
+  String get noActiveEventsFound =>
+      'No active events found.\nTap + to add a new event.';
+
+  @override
   String get selectEvent => 'Select Event';
+
+  @override
+  String get viewWorkflow => 'View Workflow';
+
+  @override
+  String get archived => 'archived';
+
+  @override
+  String get restored => 'restored';
+
+  @override
+  String get deleted => 'deleted';
+
+  @override
+  String get addNewEvent => 'Add New Event';
+
+  @override
+  String get recurringEvent => 'Recurring Event';
+
+  @override
+  String get recurrenceType => 'Recurrence Type';
+
+  @override
+  String get recurrenceTypeRequired => 'Recurrence Type *';
+
+  @override
+  String get recurrenceEndDate => 'Recurrence End Date (Optional)';
+
+  @override
+  String get recurrence => 'Recurrence';
+
+  @override
+  String get presenceCheckPermissions => 'Presence Check Permissions';
+
+  @override
+  String get presenceCheckPermissionsRequired => 'Presence Check Permissions *';
+
+  @override
+  String get to => 'To';
 
   @override
   String get shifts => 'Shifts';
@@ -485,7 +621,124 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noShifts => 'No shifts available';
 
   @override
+  String get noShiftsAdded => 'No shifts added';
+
+  @override
   String get selectShift => 'Select a shift';
+
+  @override
+  String get addShift => 'Add Shift';
+
+  @override
+  String get location => 'Location';
+
+  @override
+  String get locationColon => 'Location:';
+
+  @override
+  String get subLocationRequired => 'SubLocation *';
+
+  @override
+  String get addSubLocation => 'Add SubLocation';
+
+  @override
+  String get editSubLocation => 'Edit SubLocation';
+
+  @override
+  String get thisLocationHasNoSublocations =>
+      'This location has no sublocations';
+
+  @override
+  String get pleaseSelectSublocation => 'Please select a sublocation';
+
+  @override
+  String get teamAssignment => 'Team Assignment';
+
+  @override
+  String get existing => 'Existing';
+
+  @override
+  String get temporary => 'Temporary';
+
+  @override
+  String get teamOptional => 'Team (Optional)';
+
+  @override
+  String get selectTeam => 'Select team';
+
+  @override
+  String get none => 'None';
+
+  @override
+  String get temporaryTeam => 'Temporary Team';
+
+  @override
+  String get create => 'Create';
+
+  @override
+  String get createTeam => 'Create Team';
+
+  @override
+  String get createTemporaryTeam => 'Create Temporary Team';
+
+  @override
+  String get leader => 'Leader';
+
+  @override
+  String get leaderColon => 'Leader:';
+
+  @override
+  String get membersColon => 'Members:';
+
+  @override
+  String get teamMembers => 'Team Members';
+
+  @override
+  String get noMembers => 'No members';
+
+  @override
+  String get noTemporaryTeamCreated => 'No temporary team created';
+
+  @override
+  String get selectTeamMember => 'Select Team Member';
+
+  @override
+  String get addMember => 'Add';
+
+  @override
+  String get selectDays => 'Select Days:';
+
+  @override
+  String get dayOfMonth => 'Day of Month';
+
+  @override
+  String get dayOfMonthRequired => 'Day of Month *';
+
+  @override
+  String get selectDayHint => 'Select day (1-31)';
+
+  @override
+  String get day => 'Day';
+
+  @override
+  String get dayRequired => 'Day *';
+
+  @override
+  String dayNumber(int number) {
+    return 'Day $number';
+  }
+
+  @override
+  String get pleaseSelectDay => 'Please select a day';
+
+  @override
+  String get month => 'Month';
+
+  @override
+  String get monthRequired => 'Month *';
+
+  @override
+  String get pleaseSelectMonth => 'Please select a month';
 
   @override
   String get teamLeadersManagement => 'Team Leaders Management';
@@ -557,16 +810,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mainLocation => 'Main Location';
 
   @override
-  String get subLocation => 'Sub Location';
-
-  @override
   String get noLocations => 'No locations found';
 
   @override
   String get selectLocation => 'Select a location';
-
-  @override
-  String get location => 'Location';
 
   @override
   String get assignMyTeam => 'Assign My Team';
@@ -583,9 +830,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectEventAndShift => 'Select a shift to assign volunteers';
-
-  @override
-  String get myEvents => 'My Events';
 
   @override
   String get eventsWhereYourTeamIsAssigned =>
@@ -938,16 +1182,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get status => 'Status';
 
   @override
-  String get description => 'Description';
-
-  @override
   String get notes => 'Notes';
 
   @override
   String get from => 'From';
-
-  @override
-  String get to => 'To';
 
   @override
   String get teamLeader => 'Team Leader';
@@ -957,9 +1195,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get all => 'All';
-
-  @override
-  String get none => 'None';
 
   @override
   String get unknown => 'Unknown';
