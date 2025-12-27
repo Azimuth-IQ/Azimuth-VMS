@@ -12,14 +12,16 @@ class EventsMgmt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => EventsProvider()
-        ..loadEvents()
-        ..loadLocations()
-        ..loadTeams()
-        ..loadSystemUsers(),
-      child: const EventsMgmtView(),
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider = context.read<EventsProvider>();
+      if (provider.activeEvents.isEmpty && !provider.isLoading) {
+        provider.loadEvents();
+        provider.loadLocations();
+        provider.loadTeams();
+        provider.loadSystemUsers();
+      }
+    });
+    return const EventsMgmtView();
   }
 }
 
@@ -94,7 +96,11 @@ class _EventsMgmtViewState extends State<EventsMgmtView> {
                     ),
                   ],
                 ),
-          floatingActionButton: FloatingActionButton(onPressed: () => _showEventForm(context), child: const Icon(Icons.add)),
+          floatingActionButton: FloatingActionButton(
+            heroTag: 'events_mgmt_fab',
+            onPressed: () => _showEventForm(context),
+            child: const Icon(Icons.add),
+          ),
         );
       },
     );

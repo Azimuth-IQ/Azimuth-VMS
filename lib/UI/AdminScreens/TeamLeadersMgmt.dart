@@ -9,7 +9,13 @@ class TeamLeadersMgmt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(create: (_) => TeamLeadersProvider()..loadTeamLeaders(), child: const TeamLeadersMgmtView());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider = context.read<TeamLeadersProvider>();
+      if (provider.teamLeaders.isEmpty && !provider.isLoading) {
+        provider.loadTeamLeaders();
+      }
+    });
+    return const TeamLeadersMgmtView();
   }
 }
 
@@ -99,7 +105,12 @@ class _TeamLeadersMgmtViewState extends State<TeamLeadersMgmtView> {
                     ),
                   ],
                 ),
-          floatingActionButton: FloatingActionButton.extended(onPressed: () => _showTeamLeaderForm(context), icon: const Icon(Icons.add), label: const Text('Add Team Leader')),
+          floatingActionButton: FloatingActionButton.extended(
+            heroTag: 'team_leaders_mgmt_fab',
+            onPressed: () => _showTeamLeaderForm(context),
+            icon: const Icon(Icons.add),
+            label: const Text('Add Team Leader'),
+          ),
         );
       },
     );

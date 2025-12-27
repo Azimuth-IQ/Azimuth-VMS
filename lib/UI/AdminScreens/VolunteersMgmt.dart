@@ -11,13 +11,17 @@ class VolunteersMgmt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => VolunteersProvider()..loadVolunteers()),
-        ChangeNotifierProvider(create: (_) => TeamsProvider()..loadTeams()),
-      ],
-      child: const VolunteersMgmtView(),
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final volProvider = context.read<VolunteersProvider>();
+      if (volProvider.volunteers.isEmpty && !volProvider.isLoading) {
+        volProvider.loadVolunteers();
+      }
+      final teamProvider = context.read<TeamsProvider>();
+      if (teamProvider.teams.isEmpty && !teamProvider.isLoading) {
+        teamProvider.loadTeams();
+      }
+    });
+    return const VolunteersMgmtView();
   }
 }
 
@@ -134,7 +138,12 @@ class _VolunteersMgmtViewState extends State<VolunteersMgmtView> {
                     ),
                   ],
                 ),
-          floatingActionButton: FloatingActionButton.extended(onPressed: () => _showVolunteerForm(context), icon: const Icon(Icons.add), label: const Text('Add Volunteer')),
+          floatingActionButton: FloatingActionButton.extended(
+            heroTag: 'volunteers_mgmt_fab',
+            onPressed: () => _showVolunteerForm(context),
+            icon: const Icon(Icons.add),
+            label: const Text('Add Volunteer'),
+          ),
         );
       },
     );

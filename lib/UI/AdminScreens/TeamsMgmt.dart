@@ -10,7 +10,16 @@ class TeamsMgmt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(create: (_) => TeamsProvider()..loadTeams(), child: const TeamsMgmtView());
+    // Use the global TeamsProvider instead of creating a new one
+    // Trigger load if empty
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider = context.read<TeamsProvider>();
+      if (provider.teams.isEmpty && !provider.isLoading) {
+        provider.loadTeams();
+      }
+    });
+    
+    return const TeamsMgmtView();
   }
 }
 
@@ -81,7 +90,11 @@ class _TeamsMgmtViewState extends State<TeamsMgmtView> {
                     ),
                   ],
                 ),
-          floatingActionButton: FloatingActionButton(onPressed: () => _showTeamForm(context), child: const Icon(Icons.add)),
+          floatingActionButton: FloatingActionButton(
+            heroTag: 'teams_mgmt_fab',
+            onPressed: () => _showTeamForm(context),
+            child: const Icon(Icons.add),
+          ),
         );
       },
     );

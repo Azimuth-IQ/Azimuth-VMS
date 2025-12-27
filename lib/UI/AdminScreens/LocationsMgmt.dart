@@ -11,7 +11,13 @@ class LocationsMgmt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(create: (_) => LocationsProvider()..loadLocations(), child: const LocationsMgmtView());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider = context.read<LocationsProvider>();
+      if (provider.locations.isEmpty && !provider.isLoading) {
+        provider.loadLocations();
+      }
+    });
+    return const LocationsMgmtView();
   }
 }
 
@@ -82,7 +88,11 @@ class _LocationsMgmtViewState extends State<LocationsMgmtView> {
                     ),
                   ],
                 ),
-          floatingActionButton: FloatingActionButton(onPressed: () => _showLocationForm(context), child: const Icon(Icons.add)),
+          floatingActionButton: FloatingActionButton(
+            heroTag: 'locations_mgmt_fab',
+            onPressed: () => _showLocationForm(context),
+            child: const Icon(Icons.add),
+          ),
         );
       },
     );
