@@ -250,19 +250,19 @@ class _DashboardHome extends StatelessWidget {
               ),
               _buildStatsRow(context),
               const SizedBox(height: 32),
-              Text('Analytics', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+              Text(l10n.analytics, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               _buildAnalyticsSection(context),
               const SizedBox(height: 32),
-              Text('Quick Actions', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+              Text(l10n.quickActions, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               _buildQuickActionsGrid(context),
               const SizedBox(height: 32),
-              Text('Workflow Scenarios', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+              Text(l10n.workflowScenarios, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               _buildWorkflowScenarios(context),
               const SizedBox(height: 32),
-              Text('Active Events', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+              Text(l10n.activeEvents, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               _buildActiveEventsList(context),
             ],
@@ -294,7 +294,7 @@ class _DashboardHome extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Volunteers per Team (Top 5)', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              Text(l10n.volunteersPerTeam, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
               const SizedBox(height: 24),
               SizedBox(
                 height: 200,
@@ -308,7 +308,7 @@ class _DashboardHome extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Tooltip(
-                            message: '${team.memberIds.length} members',
+                            message: '${team.memberIds.length} ${l10n.members}',
                             child: Container(
                               height: 150 * heightFactor,
                               width: 30,
@@ -338,22 +338,23 @@ class _DashboardHome extends StatelessWidget {
   }
 
   Widget _buildStatsRow(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return LayoutBuilder(
       builder: (context, constraints) {
         final isMobile = constraints.maxWidth < 600;
         final children = [
           Consumer<EventsProvider>(
-            builder: (context, provider, _) => _StatCard(title: 'Active Events', value: provider.activeEvents.length.toString(), icon: Icons.event_available, color: Colors.blue),
+            builder: (context, provider, _) => _StatCard(title: l10n.activeEventsCount, value: provider.activeEvents.length.toString(), icon: Icons.event_available, color: Colors.blue),
           ),
           Consumer<VolunteersProvider>(
-            builder: (context, provider, _) => _StatCard(title: 'Volunteers', value: provider.volunteers.length.toString(), icon: Icons.people, color: Colors.green),
+            builder: (context, provider, _) => _StatCard(title: l10n.volunteers, value: provider.volunteers.length.toString(), icon: Icons.people, color: Colors.green),
           ),
           Consumer<TeamLeadersProvider>(
             builder: (context, provider, _) =>
-                _StatCard(title: 'Team Leaders', value: provider.teamLeaders.length.toString(), icon: Icons.supervisor_account, color: Colors.orange),
+                _StatCard(title: l10n.teamLeaders, value: provider.teamLeaders.length.toString(), icon: Icons.supervisor_account, color: Colors.orange),
           ),
           Consumer<NotificationsProvider>(
-            builder: (context, provider, _) => _StatCard(title: 'Notifications', value: provider.unreadCount.toString(), icon: Icons.notifications_active, color: Colors.purple),
+            builder: (context, provider, _) => _StatCard(title: l10n.notifications, value: provider.unreadCount.toString(), icon: Icons.notifications_active, color: Colors.purple),
           ),
         ];
 
@@ -383,16 +384,17 @@ class _DashboardHome extends StatelessWidget {
   }
 
   Widget _buildQuickActionsGrid(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final actions = [
-      _QuickAction(title: 'Shift Assignment', icon: Icons.assignment_ind, color: Colors.indigo, onTap: () => Navigator.pushNamed(context, '/shift-assignment')),
-      _QuickAction(title: 'Presence Check', icon: Icons.fact_check, color: Colors.teal, onTap: () => Navigator.pushNamed(context, '/presence-check-admin')),
-      _QuickAction(title: 'Forms Mgmt', icon: Icons.description, color: Colors.amber.shade700, onTap: () => Navigator.pushNamed(context, '/form-mgmt')),
-      _QuickAction(title: 'Carousel Mgmt', icon: Icons.view_carousel, color: Colors.deepPurple, onTap: () => Navigator.pushNamed(context, '/carousel-management')),
-      _QuickAction(title: 'Ratings', icon: Icons.star, color: Colors.pink, onTap: () => Navigator.pushNamed(context, '/volunteer-rating')),
-      _QuickAction(title: 'Leave Requests', icon: Icons.event_busy, color: Colors.orange, onTap: () => Navigator.pushNamed(context, '/leave-request-management')),
-      _QuickAction(title: 'System Feedback', icon: Icons.feedback, color: Colors.teal, onTap: () => Navigator.pushNamed(context, '/manage-feedback')),
-      _QuickAction(title: 'Event Feedback', icon: Icons.rate_review, color: Colors.purple, onTap: () => Navigator.pushNamed(context, '/event-feedback-report')),
-      _QuickAction(title: 'Send Notification', icon: Icons.send, color: Colors.cyan, onTap: () => Navigator.pushNamed(context, '/send-notification')),
+      _QuickAction(title: l10n.shiftAssignment, icon: Icons.assignment_ind, color: Colors.indigo, onTap: () => Navigator.pushNamed(context, '/shift-assignment')),
+      _QuickAction(title: l10n.presenceCheck, icon: Icons.fact_check, color: Colors.teal, onTap: () => Navigator.pushNamed(context, '/presence-check-admin')),
+      _QuickAction(title: l10n.formsMgmt, icon: Icons.description, color: Colors.amber.shade700, onTap: () => Navigator.pushNamed(context, '/form-mgmt')),
+      _QuickAction(title: l10n.carouselMgmt, icon: Icons.view_carousel, color: Colors.deepPurple, onTap: () => Navigator.pushNamed(context, '/carousel-management')),
+      _QuickAction(title: l10n.ratings, icon: Icons.star, color: Colors.pink, onTap: () => Navigator.pushNamed(context, '/volunteer-rating')),
+      _QuickAction(title: l10n.leaveRequests, icon: Icons.event_busy, color: Colors.orange, onTap: () => Navigator.pushNamed(context, '/leave-request-management')),
+      _QuickAction(title: l10n.systemFeedback, icon: Icons.feedback, color: Colors.teal, onTap: () => Navigator.pushNamed(context, '/manage-feedback')),
+      _QuickAction(title: l10n.eventFeedback, icon: Icons.rate_review, color: Colors.purple, onTap: () => Navigator.pushNamed(context, '/event-feedback-report')),
+      _QuickAction(title: l10n.sendNotification, icon: Icons.send, color: Colors.cyan, onTap: () => Navigator.pushNamed(context, '/send-notification')),
     ];
 
     return LayoutBuilder(
@@ -416,6 +418,7 @@ class _DashboardHome extends StatelessWidget {
   }
 
   Widget _buildActiveEventsList(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Consumer<EventsProvider>(
       builder: (context, provider, _) {
         if (provider.isLoading) return const Center(child: CircularProgressIndicator());
@@ -432,7 +435,7 @@ class _DashboardHome extends StatelessWidget {
               children: [
                 Icon(Icons.event_busy, size: 48, color: Colors.grey.shade300),
                 const SizedBox(height: 16),
-                Text('No active events', style: TextStyle(color: Colors.grey.shade500)),
+                Text(l10n.noActiveEvents, style: TextStyle(color: Colors.grey.shade500)),
               ],
             ),
           );
@@ -471,25 +474,26 @@ class _DashboardHome extends StatelessWidget {
   }
 
   Widget _buildWorkflowScenarios(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return LayoutBuilder(
       builder: (context, constraints) {
         return Row(
           children: [
             Expanded(
               child: _ScenarioCard(
-                title: 'Volunteer Registration',
-                description: 'Manage new sign-ups, review forms, and approve volunteers.',
+                title: l10n.volunteerRegistration,
+                description: l10n.volunteerRegistrationDescription,
                 icon: Icons.person_add,
                 color: Colors.blue,
                 onTap: () => Navigator.pushNamed(context, '/form-mgmt'),
               ),
             ),
-            if (constraints.maxWidth > 600) ...[
+            if (constraints.maxWidth > 600) ..[
               const SizedBox(width: 16),
               Expanded(
                 child: _ScenarioCard(
-                  title: 'Event Management',
-                  description: 'Create events, assign shifts, and manage attendance.',
+                  title: l10n.eventManagement,
+                  description: l10n.eventManagementDescription,
                   icon: Icons.event,
                   color: Colors.purple,
                   onTap: () => onNavigate(1), // Switch to Events tab
@@ -514,6 +518,7 @@ class _ScenarioCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -541,7 +546,7 @@ class _ScenarioCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'Start Workflow',
+                    l10n.startWorkflow,
                     style: TextStyle(color: color, fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(width: 8),

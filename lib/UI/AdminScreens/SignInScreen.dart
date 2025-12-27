@@ -1,6 +1,7 @@
 import 'package:azimuth_vms/Helpers/SystemUserHelperFirebase.dart';
 import 'package:azimuth_vms/Models/Seed.dart';
 import 'package:azimuth_vms/Models/SystemUser.dart';
+import 'package:azimuth_vms/l10n/app_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -70,6 +71,7 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     checkAuthStatus(context);
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
@@ -98,12 +100,12 @@ class SignInScreen extends StatelessWidget {
                         child: const Icon(Icons.volunteer_activism, size: 48, color: Colors.blue),
                       ),
                       const SizedBox(height: 16),
-                      const Text(
-                        'Azimuth VMS',
-                        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFF1A1F36)),
+                      Text(
+                        l10n.appTitle,
+                        style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFF1A1F36)),
                       ),
                       const SizedBox(height: 8),
-                      Text('Volunteer Management System', style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                      Text(l10n.volunteerManagementSystem, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
                     ],
                   ),
                 ),
@@ -120,19 +122,19 @@ class SignInScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const Text(
-                        'Sign In',
-                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Color(0xFF1A1F36)),
+                      Text(
+                        l10n.signIn,
+                        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Color(0xFF1A1F36)),
                       ),
                       const SizedBox(height: 24),
                       TextField(
                         controller: phoneController,
-                        decoration: const InputDecoration(labelText: 'Phone Number', prefixIcon: Icon(Icons.phone)),
+                        decoration: InputDecoration(labelText: l10n.phoneNumber, prefixIcon: const Icon(Icons.phone)),
                       ),
                       const SizedBox(height: 16),
                       TextField(
                         controller: passwordController,
-                        decoration: const InputDecoration(labelText: 'Password', prefixIcon: Icon(Icons.lock)),
+                        decoration: InputDecoration(labelText: l10n.password, prefixIcon: const Icon(Icons.lock)),
                         obscureText: true,
                       ),
                       const SizedBox(height: 24),
@@ -141,7 +143,7 @@ class SignInScreen extends StatelessWidget {
                           signIn(context, phoneController.text, passwordController.text);
                         },
                         style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
-                        child: const Text('Sign In', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                        child: Text(l10n.signIn, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                       ),
                     ],
                   ),
@@ -157,7 +159,7 @@ class SignInScreen extends StatelessWidget {
                       Seed().seedLocations();
                     },
                     icon: const Icon(Icons.storage, size: 18),
-                    label: const Text('Seed Development Data'),
+                    label: Text(l10n.seedDevelopmentData),
                     style: TextButton.styleFrom(foregroundColor: Colors.grey),
                   ),
               ],

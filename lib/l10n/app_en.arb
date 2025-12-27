@@ -93,9 +93,11 @@
   "eventFeedback": "Event Feedback",
   
   "volunteerRegistration": "Volunteer Registration",
-  "volunteerRegistrationDescription": "Complete onboarding flow for new volunteers including form submission, review, and approval",
+  "volunteerRegistrationDescription": "Manage new sign-ups, review forms, and approve volunteers.",
   "eventManagement": "Event Management",
-  "eventManagementDescription": "Create events with recurrence, assign teams, manage shifts, and track attendance",
+  "eventManagementDescription": "Create events, assign shifts, and manage attendance.",
+  "startWorkflow": "Start Workflow",
+  "members": "members",
   
   "volunteerWorkflow": "Volunteer Workflow",
   "statusUpdatedTo": "Status updated to {status}",

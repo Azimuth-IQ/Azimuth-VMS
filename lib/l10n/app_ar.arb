@@ -88,7 +88,9 @@
   "volunteerRegistration": "تسجيل المتطوعين",
   "volunteerRegistrationDescription": "سير عمل كامل لتأهيل المتطوعين الجدد بما في ذلك تقديم النموذج والمراجعة والموافقة",
   "eventManagement": "إدارة الفعاليات",
-  "eventManagementDescription": "إنشاء الفعاليات مع التكرار، تعيين الفرق، إدارة الورديات، وتتبع الحضور",
+  "eventManagementDescription": "إنشاء الفعاليات، تعيين الورديات، وإدارة الحضور.",
+  "startWorkflow": "بدء سير العمل",
+  "members": "أعضاء",
   
   "volunteerWorkflow": "سير عمل المتطوع",
   "statusUpdatedTo": "تم تحديث الحالة إلى {status}",
