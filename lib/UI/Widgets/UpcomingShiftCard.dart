@@ -12,13 +12,7 @@ class UpcomingShiftCard extends StatefulWidget {
   final EventShift? shift;
   final Location? location;
 
-  const UpcomingShiftCard({
-    super.key,
-    this.assignment,
-    this.event,
-    this.shift,
-    this.location,
-  });
+  const UpcomingShiftCard({super.key, this.assignment, this.event, this.shift, this.location});
 
   @override
   State<UpcomingShiftCard> createState() => _UpcomingShiftCardState();

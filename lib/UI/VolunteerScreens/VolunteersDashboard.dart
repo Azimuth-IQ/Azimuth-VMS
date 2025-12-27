@@ -10,6 +10,7 @@ import 'package:azimuth_vms/UI/VolunteerScreens/VolunteerScheduleScreen.dart';
 import 'package:azimuth_vms/UI/VolunteerScreens/VolunteerProfileScreen.dart';
 import 'package:azimuth_vms/UI/Widgets/VolunteerStatsChart.dart';
 import 'package:azimuth_vms/UI/Widgets/UpcomingShiftCard.dart';
+import 'package:azimuth_vms/UI/Widgets/FadeInSlide.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -285,61 +286,85 @@ class _ApprovedDashboardView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildWelcomeHeader(form.fullName),
+            FadeInSlide(child: _buildWelcomeHeader(form.fullName)),
             const SizedBox(height: 24),
             if (isFullyApproved) ...[
-              const Text('My Assignments', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 16),
-              Consumer<ShiftAssignmentProvider>(
-                builder: (context, assignmentProvider, child) {
-                  final assignmentCount = assignmentProvider.assignments.length;
-                  return _buildActionCardWithBadge(
-                    context,
-                    'My Schedule & Locations',
-                    'View your upcoming shifts, times, and locations',
-                    Icons.calendar_month,
-                    Colors.blue,
-                    assignmentCount,
-                    () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => VolunteerScheduleScreen(volunteerPhone: userPhone)));
-                    },
-                  );
-                },
+              const FadeInSlide(
+                delay: 0.1,
+                child: Text('My Assignments', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               ),
-              const SizedBox(height: 24),
-              const Text('Upcoming Shift', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
-              Consumer<ShiftAssignmentProvider>(
-                builder: (context, provider, child) {
-                  if (provider.assignments.isEmpty) {
-                    return const Card(
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Center(child: Text("No upcoming shifts assigned.")),
-                      ),
+              FadeInSlide(
+                delay: 0.2,
+                child: Consumer<ShiftAssignmentProvider>(
+                  builder: (context, assignmentProvider, child) {
+                    final assignmentCount = assignmentProvider.assignments.length;
+                    return _buildActionCardWithBadge(
+                      context,
+                      'My Schedule & Locations',
+                      'View your upcoming shifts, times, and locations',
+                      Icons.calendar_month,
+                      Colors.blue,
+                      assignmentCount,
+                      () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => VolunteerScheduleScreen(volunteerPhone: userPhone)));
+                      },
                     );
-                  }
-                  return UpcomingShiftCard(assignment: provider.assignments.first);
-                },
+                  },
+                ),
               ),
               const SizedBox(height: 24),
-              const Text('Activity', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const FadeInSlide(
+                delay: 0.3,
+                child: Text('Upcoming Shift', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              ),
               const SizedBox(height: 16),
-              VolunteerStatsChart(userPhone: userPhone),
+              FadeInSlide(
+                delay: 0.4,
+                child: Consumer<ShiftAssignmentProvider>(
+                  builder: (context, provider, child) {
+                    if (provider.assignments.isEmpty) {
+                      return const Card(
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Center(child: Text("No upcoming shifts assigned.")),
+                        ),
+                      );
+                    }
+                    return UpcomingShiftCard(assignment: provider.assignments.first);
+                  },
+                ),
+              ),
               const SizedBox(height: 24),
-              const Text('Actions', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const FadeInSlide(
+                delay: 0.5,
+                child: Text('Activity', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              ),
               const SizedBox(height: 16),
-              _buildActionCard(context, 'My Profile', 'View your rating and personal info', Icons.person, Colors.teal, () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => VolunteerProfileScreen(form: form, userPhone: userPhone),
-                  ),
-                );
-              }),
-              _buildActionCard(context, 'Submit Feedback', 'Report bugs or suggest improvements', Icons.feedback, Colors.orange, () {
-                Navigator.pushNamed(context, '/submit-feedback');
-              }),
+              FadeInSlide(delay: 0.6, child: VolunteerStatsChart(userPhone: userPhone)),
+              const SizedBox(height: 24),
+              const FadeInSlide(
+                delay: 0.7,
+                child: Text('Actions', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              ),
+              const SizedBox(height: 16),
+              FadeInSlide(
+                delay: 0.8,
+                child: _buildActionCard(context, 'My Profile', 'View your rating and personal info', Icons.person, Colors.teal, () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => VolunteerProfileScreen(form: form, userPhone: userPhone),
+                    ),
+                  );
+                }),
+              ),
+              FadeInSlide(
+                delay: 0.9,
+                child: _buildActionCard(context, 'Submit Feedback', 'Report bugs or suggest improvements', Icons.feedback, Colors.orange, () {
+                  Navigator.pushNamed(context, '/submit-feedback');
+                }),
+              ),
             ],
           ],
         ),
@@ -351,44 +376,49 @@ class _ApprovedDashboardView extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [Colors.green.shade800, Colors.green.shade500], begin: Alignment.topLeft, end: Alignment.bottomRight),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [BoxShadow(color: Colors.green.withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 6))],
+        gradient: LinearGradient(colors: [Colors.green.shade800, Colors.green.shade400], begin: Alignment.topLeft, end: Alignment.bottomRight),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [BoxShadow(color: Colors.green.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, 10))],
       ),
-      child: Row(
+      child: Stack(
         children: [
-          Container(
-            padding: const EdgeInsets.all(3),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 2),
-            ),
-            child: CircleAvatar(
-              radius: 32,
-              backgroundColor: Colors.white,
-              child: Text(
-                name?.substring(0, 1).toUpperCase() ?? '?',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.green.shade800),
+          Positioned(right: -20, top: -20, child: Icon(Icons.volunteer_activism, size: 150, color: Colors.white.withOpacity(0.1))),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white.withOpacity(0.5), width: 2),
+                ),
+                child: CircleAvatar(
+                  radius: 36,
+                  backgroundColor: Colors.white,
+                  child: Text(
+                    name?.substring(0, 1).toUpperCase() ?? '?',
+                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.green.shade800),
+                  ),
+                ),
               ),
-            ),
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Welcome back,',
-                  style: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w500),
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Welcome back,',
+                      style: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      name ?? 'Volunteer',
+                      style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  name ?? 'Volunteer',
-                  style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),

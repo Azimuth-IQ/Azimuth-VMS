@@ -9,6 +9,7 @@ import 'package:azimuth_vms/UI/Widgets/ChangePasswordScreen.dart';
 import 'package:azimuth_vms/UI/Widgets/NotificationPanel.dart';
 import 'package:azimuth_vms/UI/Widgets/UpcomingShiftCard.dart';
 import 'package:azimuth_vms/UI/Widgets/VolunteerStatsChart.dart';
+import 'package:azimuth_vms/UI/Widgets/FadeInSlide.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -233,87 +234,108 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildWelcomeHeader(_currentUser?.name),
+                    FadeInSlide(child: _buildWelcomeHeader(_currentUser?.name)),
                     const SizedBox(height: 24),
                     if (nextEvent != null && nextShift != null) ...[
-                      const Text('Upcoming Shift', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      const FadeInSlide(
+                        delay: 0.1,
+                        child: Text('Upcoming Shift', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      ),
                       const SizedBox(height: 16),
-                      UpcomingShiftCard(event: nextEvent, shift: nextShift),
+                      FadeInSlide(
+                        delay: 0.2,
+                        child: UpcomingShiftCard(event: nextEvent, shift: nextShift),
+                      ),
                       const SizedBox(height: 24),
                     ],
-                    const Text('Activity', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 16),
-                    VolunteerStatsChart(userPhone: _currentUserPhone ?? ''),
-                    const SizedBox(height: 24),
-                    const Text(
-                      'Management',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    const FadeInSlide(
+                      delay: 0.3,
+                      child: Text('Activity', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                     ),
                     const SizedBox(height: 16),
-                    GridView.count(
-                      crossAxisCount: 2,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                      childAspectRatio: 1.3,
-                      children: [
-                        _buildManagementCard(
-                          context,
-                          title: 'Manage Shifts',
-                          subtitle: 'Assign volunteers to shifts',
-                          icon: Icons.assignment,
-                          color: Colors.blue,
-                          onTap: () => Navigator.pushNamed(context, '/teamleader-shift-management'),
-                        ),
-                        _buildManagementCard(
-                          context,
-                          title: 'Leave Requests',
-                          subtitle: 'Review volunteer leave requests',
-                          icon: Icons.report_problem,
-                          color: Colors.orange,
-                          onTap: () => Navigator.pushNamed(context, '/leave-request-management'),
-                        ),
-                        _buildManagementCard(
-                          context,
-                          title: 'Presence Checks',
-                          subtitle: 'Check volunteer attendance',
-                          icon: Icons.how_to_reg,
-                          color: Colors.green,
-                          onTap: () => Navigator.pushNamed(context, '/presence-check-teamleader'),
-                        ),
-                        _buildManagementCard(
-                          context,
-                          title: 'Submit Feedback',
-                          subtitle: 'Report bugs or suggest ideas',
-                          icon: Icons.feedback,
-                          color: Colors.purple,
-                          onTap: () => Navigator.pushNamed(context, '/submit-feedback'),
-                        ),
-                      ],
+                    FadeInSlide(
+                      delay: 0.4,
+                      child: VolunteerStatsChart(userPhone: _currentUserPhone ?? ''),
+                    ),
+                    const SizedBox(height: 24),
+                    const FadeInSlide(
+                      delay: 0.5,
+                      child: Text('Management', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    ),
+                    const SizedBox(height: 16),
+                    FadeInSlide(
+                      delay: 0.6,
+                      child: GridView.count(
+                        crossAxisCount: 2,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                        childAspectRatio: 1.3,
+                        children: [
+                          _buildManagementCard(
+                            context,
+                            title: 'Manage Shifts',
+                            subtitle: 'Assign volunteers to shifts',
+                            icon: Icons.assignment,
+                            color: Colors.blue,
+                            onTap: () => Navigator.pushNamed(context, '/teamleader-shift-management'),
+                          ),
+                          _buildManagementCard(
+                            context,
+                            title: 'Leave Requests',
+                            subtitle: 'Review volunteer leave requests',
+                            icon: Icons.report_problem,
+                            color: Colors.orange,
+                            onTap: () => Navigator.pushNamed(context, '/leave-request-management'),
+                          ),
+                          _buildManagementCard(
+                            context,
+                            title: 'Presence Checks',
+                            subtitle: 'Check volunteer attendance',
+                            icon: Icons.how_to_reg,
+                            color: Colors.green,
+                            onTap: () => Navigator.pushNamed(context, '/presence-check-teamleader'),
+                          ),
+                          _buildManagementCard(
+                            context,
+                            title: 'Submit Feedback',
+                            subtitle: 'Report bugs or suggest ideas',
+                            icon: Icons.feedback,
+                            color: Colors.purple,
+                            onTap: () => Navigator.pushNamed(context, '/submit-feedback'),
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 32),
 
                     // Events Section
-                    const Text(
-                      'My Events',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    const FadeInSlide(
+                      delay: 0.7,
+                      child: Text('My Events', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                     ),
                     const SizedBox(height: 16),
 
                     if (_myEvents.isEmpty)
-                      const Center(
-                        child: Column(
-                          children: [
-                            SizedBox(height: 40),
-                            Icon(Icons.event_busy, size: 64, color: Colors.grey),
-                            SizedBox(height: 16),
-                            Text('No events assigned to your teams yet', style: TextStyle(fontSize: 16, color: Colors.grey)),
-                          ],
+                      const FadeInSlide(
+                        delay: 0.8,
+                        child: Center(
+                          child: Column(
+                            children: [
+                              SizedBox(height: 40),
+                              Icon(Icons.event_busy, size: 64, color: Colors.grey),
+                              SizedBox(height: 16),
+                              Text('No events assigned to your teams yet', style: TextStyle(fontSize: 16, color: Colors.grey)),
+                            ],
+                          ),
                         ),
                       )
                     else
-                      ...List.generate(_myEvents.length, (index) => _buildEventCard(_myEvents[index])),
+                      ...List.generate(_myEvents.length, (index) => FadeInSlide(
+                        delay: 0.8 + (index * 0.1),
+                        child: _buildEventCard(_myEvents[index]),
+                      )),
                   ],
                 ),
               ),
@@ -325,40 +347,67 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [Colors.blue.shade800, Colors.blue.shade500], begin: Alignment.topLeft, end: Alignment.bottomRight),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [BoxShadow(color: Colors.blue.withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 6))],
+        gradient: LinearGradient(
+          colors: [Colors.blue.shade800, Colors.blue.shade500],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.blue.withOpacity(0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
-      child: Row(
+      child: Stack(
         children: [
-          Container(
-            padding: const EdgeInsets.all(3),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 2),
-            ),
-            child: CircleAvatar(
-              radius: 32,
-              backgroundColor: Colors.white,
-              child: Text(
-                name?.substring(0, 1).toUpperCase() ?? '?',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.blue.shade800),
-              ),
+          Positioned(
+            right: -20,
+            top: -20,
+            child: Icon(
+              Icons.admin_panel_settings,
+              size: 150,
+              color: Colors.white.withOpacity(0.1),
             ),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Welcome back,', style: TextStyle(color: Colors.white70, fontSize: 16)),
-                Text(
-                  name ?? 'Team Leader',
-                  style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
-                  overflow: TextOverflow.ellipsis,
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white.withOpacity(0.5), width: 2),
                 ),
-              ],
-            ),
+                child: CircleAvatar(
+                  radius: 36,
+                  backgroundColor: Colors.white,
+                  child: Text(
+                    name?.substring(0, 1).toUpperCase() ?? '?',
+                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.blue.shade800),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Welcome back,',
+                      style: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      name ?? 'Team Leader',
+                      style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
