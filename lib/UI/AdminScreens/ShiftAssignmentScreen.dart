@@ -143,8 +143,6 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
       final locationMsg = sublocationId != null ? ' to sublocation' : '';
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Assigned ${volunteers.length} volunteers$locationMsg successfully')));
       setState(() {
-        _selectedEvent = null;
-        _selectedShift = null;
         _selectedLocationId = null;
         _isMainLocation = true;
       });

@@ -247,8 +247,8 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
         _isMainLocation = true;
       });
 
-      // Reload assignments
-      context.read<ShiftAssignmentProvider>().startListeningToEvent(event.id);
+      // No need to reload assignments manually as the stream listener is already active
+      // and will automatically pick up the new assignments
     } catch (e) {
       print('Error creating assignments: $e');
       if (!context.mounted) return;

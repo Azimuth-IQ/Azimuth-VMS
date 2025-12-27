@@ -50,18 +50,18 @@ class _VolunteerStatsChartState extends State<VolunteerStatsChart> {
 
     // Count unique shifts per month
     final Set<String> processedShifts = {};
-    
+
     for (var record in records) {
       if (!record.present) continue;
-      
+
       // Only count each shift once (even if multiple checks)
       final shiftKey = '${record.eventId}_${record.shiftId}';
       if (processedShifts.contains(shiftKey)) continue;
-      
+
       try {
         final date = DateTime.parse(record.timestamp);
         final monthKey = date.year * 100 + date.month;
-        
+
         if (shiftsPerMonth.containsKey(monthKey)) {
           shiftsPerMonth[monthKey] = (shiftsPerMonth[monthKey] ?? 0) + 1;
           processedShifts.add(shiftKey);
@@ -148,7 +148,10 @@ class _VolunteerStatsChartState extends State<VolunteerStatsChart> {
                         return SideTitleWidget(
                           meta: meta,
                           space: 4,
-                          child: Text(_monthLabels[value.toInt()], style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 12)),
+                          child: Text(
+                            _monthLabels[value.toInt()],
+                            style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 12),
+                          ),
                         );
                       },
                       reservedSize: 30,
