@@ -581,7 +581,7 @@ abstract class AppLocalizations {
   /// No description provided for @volunteerRegistrationDescription.
   ///
   /// In en, this message translates to:
-  /// **'Complete onboarding flow for new volunteers including form submission, review, and approval'**
+  /// **'Manage new sign-ups, review forms, and approve volunteers.'**
   String get volunteerRegistrationDescription;
 
   /// No description provided for @eventManagement.
@@ -593,8 +593,20 @@ abstract class AppLocalizations {
   /// No description provided for @eventManagementDescription.
   ///
   /// In en, this message translates to:
-  /// **'Create events with recurrence, assign teams, manage shifts, and track attendance'**
+  /// **'Create events, assign shifts, and manage attendance.'**
   String get eventManagementDescription;
+
+  /// No description provided for @startWorkflow.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Workflow'**
+  String get startWorkflow;
+
+  /// No description provided for @members.
+  ///
+  /// In en, this message translates to:
+  /// **'members'**
+  String get members;
 
   /// No description provided for @volunteerWorkflow.
   ///
@@ -763,6 +775,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No upcoming shifts assigned.'**
   String get noUpcomingShifts;
+
+  /// No description provided for @applicationUnderReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Application Under Review'**
+  String get applicationUnderReview;
+
+  /// No description provided for @applicationUnderReviewDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your volunteer application has been submitted and is currently under review. You will be notified once a decision has been made.'**
+  String get applicationUnderReviewDesc;
+
+  /// No description provided for @firstLevelApprovalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'First Level Approval'**
+  String get firstLevelApprovalTitle;
+
+  /// No description provided for @firstLevelApprovalDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your application has been approved at the first level. Waiting for final approval.'**
+  String get firstLevelApprovalDesc;
+
+  /// No description provided for @fullyApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Fully Approved'**
+  String get fullyApproved;
+
+  /// No description provided for @fullyApprovedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Congratulations! Your application has been fully approved.'**
+  String get fullyApprovedDesc;
+
+  /// No description provided for @activeVolunteer.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Volunteer'**
+  String get activeVolunteer;
+
+  /// No description provided for @activeVolunteerDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'You are an active volunteer in the system.'**
+  String get activeVolunteerDesc;
+
+  /// No description provided for @applicationRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Application Rejected'**
+  String get applicationRejected;
+
+  /// No description provided for @applicationRejectedFirstStage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your application was rejected at the first review stage.'**
+  String get applicationRejectedFirstStage;
+
+  /// No description provided for @applicationRejectedFinalStage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your application was rejected at the final review stage.'**
+  String get applicationRejectedFinalStage;
+
+  /// No description provided for @errorLoadingInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading your information. Please try again.'**
+  String get errorLoadingInfo;
+
+  /// No description provided for @noVolunteerFormFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No volunteer form found. Please contact support.'**
+  String get noVolunteerFormFound;
+
+  /// No description provided for @myScheduleLocations.
+  ///
+  /// In en, this message translates to:
+  /// **'My Schedule & Locations'**
+  String get myScheduleLocations;
+
+  /// No description provided for @viewUpcomingShifts.
+  ///
+  /// In en, this message translates to:
+  /// **'View your upcoming shifts, times, and locations'**
+  String get viewUpcomingShifts;
+
+  /// No description provided for @myProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'My Profile'**
+  String get myProfile;
+
+  /// No description provided for @viewRatingAndInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'View your rating and personal info'**
+  String get viewRatingAndInfo;
+
+  /// No description provided for @submitFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Feedback'**
+  String get submitFeedback;
+
+  /// No description provided for @reportBugsOrSuggest.
+  ///
+  /// In en, this message translates to:
+  /// **'Report bugs or suggest improvements'**
+  String get reportBugsOrSuggest;
+
+  /// No description provided for @welcomeBackName.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back,'**
+  String get welcomeBackName;
+
+  /// No description provided for @volunteer.
+  ///
+  /// In en, this message translates to:
+  /// **'Volunteer'**
+  String get volunteer;
 
   /// No description provided for @eventsManagement.
   ///
@@ -1723,12 +1861,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'To'**
   String get to;
-
-  /// No description provided for @volunteer.
-  ///
-  /// In en, this message translates to:
-  /// **'Volunteer'**
-  String get volunteer;
 
   /// No description provided for @teamLeader.
   ///

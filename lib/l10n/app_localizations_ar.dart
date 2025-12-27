@@ -259,7 +259,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get eventManagementDescription =>
-      'إنشاء الفعاليات مع التكرار، تعيين الفرق، إدارة الورديات، وتتبع الحضور';
+      'إنشاء الفعاليات، تعيين الورديات، وإدارة الحضور.';
+
+  @override
+  String get startWorkflow => 'بدء سير العمل';
+
+  @override
+  String get members => 'أعضاء';
 
   @override
   String get volunteerWorkflow => 'سير عمل المتطوع';
@@ -346,6 +352,75 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noUpcomingShifts => 'لا توجد ورديات قادمة معينة.';
+
+  @override
+  String get applicationUnderReview => 'الطلب قيد المراجعة';
+
+  @override
+  String get applicationUnderReviewDesc =>
+      'تم تقديم طلب التطوع الخاص بك وهو قيد المراجعة حاليًا. سيتم إعلامك بمجرد اتخاذ القرار.';
+
+  @override
+  String get firstLevelApprovalTitle => 'الموافقة من المستوى الأول';
+
+  @override
+  String get firstLevelApprovalDesc =>
+      'تمت الموافقة على طلبك في المستوى الأول. في انتظار الموافقة النهائية.';
+
+  @override
+  String get fullyApproved => 'تمت الموافقة بالكامل';
+
+  @override
+  String get fullyApprovedDesc => 'تهانينا! تمت الموافقة على طلبك بالكامل.';
+
+  @override
+  String get activeVolunteer => 'متطوع نشط';
+
+  @override
+  String get activeVolunteerDesc => 'أنت متطوع نشط في النظام.';
+
+  @override
+  String get applicationRejected => 'تم رفض الطلب';
+
+  @override
+  String get applicationRejectedFirstStage =>
+      'تم رفض طلبك في مرحلة المراجعة الأولى.';
+
+  @override
+  String get applicationRejectedFinalStage =>
+      'تم رفض طلبك في مرحلة المراجعة النهائية.';
+
+  @override
+  String get errorLoadingInfo =>
+      'حدث خطأ أثناء تحميل معلوماتك. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get noVolunteerFormFound =>
+      'لم يتم العثور على نموذج متطوع. يرجى الاتصال بالدعم.';
+
+  @override
+  String get myScheduleLocations => 'جدولي والمواقع';
+
+  @override
+  String get viewUpcomingShifts => 'عرض الورديات القادمة، الأوقات، والمواقع';
+
+  @override
+  String get myProfile => 'ملفي الشخصي';
+
+  @override
+  String get viewRatingAndInfo => 'عرض تقييمك ومعلوماتك الشخصية';
+
+  @override
+  String get submitFeedback => 'تقديم ملاحظات';
+
+  @override
+  String get reportBugsOrSuggest => 'الإبلاغ عن الأخطاء أو اقتراح تحسينات';
+
+  @override
+  String get welcomeBackName => 'مرحبًا بعودتك،';
+
+  @override
+  String get volunteer => 'متطوع';
 
   @override
   String get eventsManagement => 'إدارة الفعاليات';
@@ -867,9 +942,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get to => 'إلى';
-
-  @override
-  String get volunteer => 'متطوع';
 
   @override
   String get teamLeader => 'قائد الفريق';

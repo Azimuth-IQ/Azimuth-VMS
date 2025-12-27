@@ -12,6 +12,7 @@ import 'package:azimuth_vms/UI/Widgets/NotificationPanel.dart';
 import 'package:azimuth_vms/UI/Widgets/UpcomingShiftCard.dart';
 import 'package:azimuth_vms/UI/Widgets/VolunteerStatsChart.dart';
 import 'package:azimuth_vms/UI/Widgets/FadeInSlide.dart';
+import 'package:azimuth_vms/l10n/app_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -123,7 +124,8 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
       if (mounted) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error loading data: $e')));
+            final l10n = AppLocalizations.of(context)!;
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.errorLoadingData(e.toString()))));
           }
         });
       }
@@ -169,7 +171,7 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Team Leader Dashboard'),
+        title: Text(AppLocalizations.of(context)!.teamLeaderDashboard),
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
         actions: [
@@ -177,6 +179,7 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
           // Notification Bell
           Consumer<NotificationsProvider>(
             builder: (context, notifProvider, child) {
+              final l10n = AppLocalizations.of(context)!;
               return Stack(
                 children: [
                   IconButton(
@@ -190,7 +193,7 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                         ),
                       );
                     },
-                    tooltip: 'Notifications',
+                    tooltip: l10n.notifications,
                   ),
                   if (notifProvider.unreadCount > 0)
                     Positioned(
@@ -221,16 +224,19 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                 Navigator.pushReplacementNamed(context, '/sign-in');
               }
             },
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'change_password',
-                child: Row(children: [Icon(Icons.lock_reset, size: 20), SizedBox(width: 8), Text('Change Password')]),
-              ),
-              const PopupMenuItem(
-                value: 'logout',
-                child: Row(children: [Icon(Icons.logout, size: 20), SizedBox(width: 8), Text('Sign Out')]),
-              ),
-            ],
+            itemBuilder: (context) {
+              final l10n = AppLocalizations.of(context)!;
+              return [
+                PopupMenuItem(
+                  value: 'change_password',
+                  child: Row(children: [const Icon(Icons.lock_reset, size: 20), const SizedBox(width: 8), Text(l10n.changePassword)]),
+                ),
+                PopupMenuItem(
+                  value: 'logout',
+                  child: Row(children: [const Icon(Icons.logout, size: 20), const SizedBox(width: 8), Text(l10n.signOut)]),
+                ),
+              ];
+            },
           ),
         ],
       ),
@@ -260,9 +266,9 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                     ),
                     const SizedBox(height: 24),
                     if (nextEvent != null && nextShift != null) ...[
-                      const FadeInSlide(
+                      FadeInSlide(
                         delay: 0.1,
-                        child: Text('Upcoming Shift', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        child: Text(AppLocalizations.of(context)!.upcomingShift, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                       ),
                       const SizedBox(height: 16),
                       FadeInSlide(
@@ -271,84 +277,94 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                       ),
                       const SizedBox(height: 24),
                     ],
-                    const FadeInSlide(
+                    FadeInSlide(
                       delay: 0.3,
-                      child: Text('Activity', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      child: Text(AppLocalizations.of(context)!.activity, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                     ),
                     const SizedBox(height: 16),
                     FadeInSlide(delay: 0.4, child: VolunteerStatsChart(userPhone: _currentUserPhone ?? '')),
                     const SizedBox(height: 24),
-                    const FadeInSlide(
+                    FadeInSlide(
                       delay: 0.5,
-                      child: Text('Management', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      child: Text(AppLocalizations.of(context)!.management, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                     ),
                     const SizedBox(height: 16),
                     FadeInSlide(
                       delay: 0.6,
-                      child: GridView.count(
-                        crossAxisCount: 2,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        crossAxisSpacing: 16,
-                        mainAxisSpacing: 16,
-                        childAspectRatio: 0.9,
-                        children: [
-                          _buildManagementCard(
-                            context,
-                            title: 'Manage Shifts',
-                            subtitle: 'Assign volunteers to shifts',
-                            icon: Icons.assignment,
-                            color: Colors.blue,
-                            onTap: () => Navigator.pushNamed(context, '/teamleader-shift-management'),
-                          ),
-                          _buildManagementCard(
-                            context,
-                            title: 'Leave Requests',
-                            subtitle: 'Review volunteer leave requests',
-                            icon: Icons.report_problem,
-                            color: Colors.orange,
-                            onTap: () => Navigator.pushNamed(context, '/leave-request-management'),
-                          ),
-                          _buildManagementCard(
-                            context,
-                            title: 'Presence Checks',
-                            subtitle: 'Check volunteer attendance',
-                            icon: Icons.how_to_reg,
-                            color: Colors.green,
-                            onTap: () => Navigator.pushNamed(context, '/presence-check-teamleader'),
-                          ),
-                          _buildManagementCard(
-                            context,
-                            title: 'Submit Feedback',
-                            subtitle: 'Report bugs or suggest ideas',
-                            icon: Icons.feedback,
-                            color: Colors.purple,
-                            onTap: () => Navigator.pushNamed(context, '/submit-feedback'),
-                          ),
-                        ],
+                      child: Builder(
+                        builder: (context) {
+                          final l10n = AppLocalizations.of(context)!;
+                          return GridView.count(
+                            crossAxisCount: 2,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                            childAspectRatio: 0.9,
+                            children: [
+                              _buildManagementCard(
+                                context,
+                                title: l10n.manageShifts,
+                                subtitle: l10n.assignVolunteersToShifts,
+                                icon: Icons.assignment,
+                                color: Colors.blue,
+                                onTap: () => Navigator.pushNamed(context, '/teamleader-shift-management'),
+                              ),
+                              _buildManagementCard(
+                                context,
+                                title: l10n.leaveRequests,
+                                subtitle: l10n.reviewVolunteerLeaveRequests,
+                                icon: Icons.report_problem,
+                                color: Colors.orange,
+                                onTap: () => Navigator.pushNamed(context, '/leave-request-management'),
+                              ),
+                              _buildManagementCard(
+                                context,
+                                title: l10n.presenceChecks,
+                                subtitle: l10n.checkVolunteerAttendance,
+                                icon: Icons.how_to_reg,
+                                color: Colors.green,
+                                onTap: () => Navigator.pushNamed(context, '/presence-check-teamleader'),
+                              ),
+                              _buildManagementCard(
+                                context,
+                                title: l10n.submitFeedback,
+                                subtitle: l10n.reportBugsOrSuggestIdeas,
+                                icon: Icons.feedback,
+                                color: Colors.purple,
+                                onTap: () => Navigator.pushNamed(context, '/submit-feedback'),
+                              ),
+                            ],
+                          );
+                        },
                       ),
                     ),
                     const SizedBox(height: 32),
 
                     // Events Section
-                    const FadeInSlide(
+                    FadeInSlide(
                       delay: 0.7,
-                      child: Text('My Events', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      child: Text(AppLocalizations.of(context)!.myEvents, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                     ),
                     const SizedBox(height: 16),
 
                     if (_myEvents.isEmpty)
-                      const FadeInSlide(
+                      FadeInSlide(
                         delay: 0.8,
-                        child: Center(
-                          child: Column(
-                            children: [
-                              SizedBox(height: 40),
-                              Icon(Icons.event_busy, size: 64, color: Colors.grey),
-                              SizedBox(height: 16),
-                              Text('No events assigned to your teams yet', style: TextStyle(fontSize: 16, color: Colors.grey)),
-                            ],
-                          ),
+                        child: Builder(
+                          builder: (context) {
+                            final l10n = AppLocalizations.of(context)!;
+                            return Center(
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 40),
+                                  const Icon(Icons.event_busy, size: 64, color: Colors.grey),
+                                  const SizedBox(height: 16),
+                                  Text(l10n.noEventsAssignedYet, style: const TextStyle(fontSize: 16, color: Colors.grey)),
+                                ],
+                              ),
+                            );
+                          },
                         ),
                       )
                     else
@@ -361,45 +377,48 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
   }
 
   Widget _buildWelcomeHeader(String? name) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [Colors.blue.shade800, Colors.blue.shade500], begin: Alignment.topLeft, end: Alignment.bottomRight),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [BoxShadow(color: Colors.blue.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, 10))],
-      ),
-      child: Stack(
-        children: [
-          Positioned(right: -20, top: -20, child: Icon(Icons.admin_panel_settings, size: 150, color: Colors.white.withOpacity(0.1))),
-          Row(
+    return Builder(
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        return Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [Colors.blue.shade800, Colors.blue.shade500], begin: Alignment.topLeft, end: Alignment.bottomRight),
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [BoxShadow(color: Colors.blue.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, 10))],
+          ),
+          child: Stack(
             children: [
-              Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white.withOpacity(0.5), width: 2),
-                ),
-                child: CircleAvatar(
-                  radius: 36,
-                  backgroundColor: Colors.white,
-                  child: Text(
-                    name?.substring(0, 1).toUpperCase() ?? '?',
-                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.blue.shade800),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 20),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Welcome back,',
-                      style: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w500),
+              Positioned(right: -20, top: -20, child: Icon(Icons.admin_panel_settings, size: 150, color: Colors.white.withOpacity(0.1))),
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white.withOpacity(0.5), width: 2),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      name ?? 'Team Leader',
+                    child: CircleAvatar(
+                      radius: 36,
+                      backgroundColor: Colors.white,
+                      child: Text(
+                        name?.substring(0, 1).toUpperCase() ?? '?',
+                        style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.blue.shade800),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.welcomeBackName,
+                          style: const TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          name ?? l10n.teamLeader,
                       style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -460,7 +479,10 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
       return false;
     }).length;
 
-    return Card(
+    return Builder(
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -505,14 +527,15 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(color: Colors.green.withOpacity(0.1), borderRadius: BorderRadius.circular(20)),
                 child: Text(
-                  '$myShifts Shift${myShifts != 1 ? 's' : ''} Assigned',
+                  l10n.shiftsAssigned(myShifts, myShifts != 1 ? 's' : ''),
                   style: const TextStyle(fontSize: 12, color: Colors.green, fontWeight: FontWeight.w600),
                 ),
               ),
             ],
           ),
         ),
-      ),
+      );
+    },
     );
   }
 }
@@ -556,7 +579,8 @@ class _EventAssignmentPageState extends State<EventAssignmentPage> {
     _eventHelper.UpdateEvent(_event);
 
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(assign ? 'Member assigned' : 'Member removed'), duration: const Duration(seconds: 1)));
+      final l10n = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(assign ? l10n.memberAssigned : l10n.memberRemoved), duration: const Duration(seconds: 1)));
     }
   }
 
@@ -595,7 +619,7 @@ class _EventAssignmentPageState extends State<EventAssignmentPage> {
     return Scaffold(
       appBar: AppBar(title: Text(_event.name)),
       body: myShifts.isEmpty
-          ? const Center(child: Text('No shifts assigned to your teams'))
+          ? Center(child: Text(AppLocalizations.of(context)!.noShiftsAssignedToYourTeams))
           : ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: myShifts.length,
@@ -623,27 +647,30 @@ class _EventAssignmentPageState extends State<EventAssignmentPage> {
 
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
-      child: Column(
-        children: [
-          // Main shift section
-          if (manageMainShift)
-            ExpansionTile(
-              leading: const Icon(Icons.schedule),
-              title: Text('Main Shift: ${shift.startTime} - ${shift.endTime}'),
-              subtitle: _buildAssignmentSubtitle(shift.tempTeam?.memberIds.length ?? 0, _getAvailableVolunteers(shift).length),
-              children: [
-                _buildMemberAssignmentList(shift.tempTeam?.memberIds ?? [], _getAvailableVolunteers(shift), (memberId, assign) => _assignMemberToShift(shift, memberId, assign)),
-              ],
-            ),
-          // Sublocation sections
-          if (mySubLocations.isNotEmpty)
-            ...mySubLocations.map((subLoc) {
-              final availableVolunteers = _getAvailableVolunteersForSubLocation(shift, subLoc);
-              final assignedMemberIds = subLoc.tempTeam?.memberIds ?? [];
+      child: Builder(
+        builder: (context) {
+          final l10n = AppLocalizations.of(context)!;
+          return Column(
+            children: [
+              // Main shift section
+              if (manageMainShift)
+                ExpansionTile(
+                  leading: const Icon(Icons.schedule),
+                  title: Text('${l10n.mainShift}: ${shift.startTime} - ${shift.endTime}'),
+                  subtitle: _buildAssignmentSubtitle(shift.tempTeam?.memberIds.length ?? 0, _getAvailableVolunteers(shift).length),
+                  children: [
+                    _buildMemberAssignmentList(shift.tempTeam?.memberIds ?? [], _getAvailableVolunteers(shift), (memberId, assign) => _assignMemberToShift(shift, memberId, assign)),
+                  ],
+                ),
+              // Sublocation sections
+              if (mySubLocations.isNotEmpty)
+                ...mySubLocations.map((subLoc) {
+                  final availableVolunteers = _getAvailableVolunteersForSubLocation(shift, subLoc);
+                  final assignedMemberIds = subLoc.tempTeam?.memberIds ?? [];
 
-              return ExpansionTile(
-                leading: const Icon(Icons.place),
-                title: Text('SubLocation: ${subLoc.id}'),
+                  return ExpansionTile(
+                    leading: const Icon(Icons.place),
+                    title: Text('${l10n.subLocation}: ${subLoc.id}'),
                 subtitle: _buildAssignmentSubtitle(assignedMemberIds.length, availableVolunteers.length),
                 children: [_buildMemberAssignmentList(assignedMemberIds, availableVolunteers, (memberId, assign) => _assignMemberToSubLocation(shift, subLoc, memberId, assign))],
               );
@@ -654,17 +681,27 @@ class _EventAssignmentPageState extends State<EventAssignmentPage> {
   }
 
   Widget _buildAssignmentSubtitle(int assigned, int total) {
-    return Text('$assigned/$total members assigned');
+    return Builder(
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        return Text(l10n.membersAssigned(assigned, total));
+      },
+    );
   }
 
   Widget _buildMemberAssignmentList(List<String> assignedMemberIds, List<SystemUser> availableVolunteers, Function(String, bool) onAssign) {
     if (availableVolunteers.isEmpty) {
-      return const Padding(
-        padding: EdgeInsets.all(16),
-        child: Text(
-          'No team members available',
-          style: TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
-        ),
+      return Builder(
+        builder: (context) {
+          final l10n = AppLocalizations.of(context)!;
+          return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text(
+              l10n.noTeamMembersAvailable,
+              style: const TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
+            ),
+          );
+        },
       );
     }
 
@@ -702,9 +739,10 @@ class _EventAssignmentPageState extends State<EventAssignmentPage> {
     _eventHelper.UpdateEvent(_event);
 
     if (mounted) {
+      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text(assign ? 'Member assigned to sublocation' : 'Member removed from sublocation'), duration: const Duration(seconds: 1)));
+      ).showSnackBar(SnackBar(content: Text(assign ? l10n.memberAssignedToSublocation : l10n.memberRemovedFromSublocation), duration: const Duration(seconds: 1)));
     }
   }
 }

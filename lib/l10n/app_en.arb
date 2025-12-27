@@ -77,6 +77,54 @@
   "actions": "Actions",
   "activityOverview": "Activity Overview",
   "shiftsCompletedLast6Months": "Shifts completed in last 6 months",
+  "management": "Management",
+  "manageShifts": "Manage Shifts",
+  "assignVolunteersToShifts": "Assign volunteers to shifts",
+  "presenceChecks": "Presence Checks",
+  "checkVolunteerAttendance": "Check volunteer attendance",
+  "reviewVolunteerLeaveRequests": "Review volunteer leave requests",
+  "reportBugsOrSuggestIdeas": "Report bugs or suggest ideas",
+  "noEventsAssignedYet": "No events assigned to your teams yet",
+  "errorLoadingData": "Error loading data: {error}",
+  "@errorLoadingData": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "teamLeaderDashboard": "Team Leader Dashboard",
+  "myEvents": "My Events",
+  "shiftsAssigned": "{count} Shift{plural} Assigned",
+  "@shiftsAssigned": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "plural": {
+        "type": "String"
+      }
+    }
+  },
+  "noShiftsAssignedToYourTeams": "No shifts assigned to your teams",
+  "mainShift": "Main Shift",
+  "subLocation": "SubLocation",
+  "membersAssigned": "{assigned}/{total} members assigned",
+  "@membersAssigned": {
+    "placeholders": {
+      "assigned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "noTeamMembersAvailable": "No team members available",
+  "memberAssigned": "Member assigned",
+  "memberRemoved": "Member removed",
+  "memberAssignedToSublocation": "Member assigned to sublocation",
+  "memberRemovedFromSublocation": "Member removed from sublocation",
   
   "activeEventsCount": "Active Events",
   "volunteersCount": "Volunteers",

@@ -252,14 +252,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get volunteerRegistrationDescription =>
-      'Complete onboarding flow for new volunteers including form submission, review, and approval';
+      'Manage new sign-ups, review forms, and approve volunteers.';
 
   @override
   String get eventManagement => 'Event Management';
 
   @override
   String get eventManagementDescription =>
-      'Create events with recurrence, assign teams, manage shifts, and track attendance';
+      'Create events, assign shifts, and manage attendance.';
+
+  @override
+  String get startWorkflow => 'Start Workflow';
+
+  @override
+  String get members => 'members';
 
   @override
   String get volunteerWorkflow => 'Volunteer Workflow';
@@ -348,6 +354,78 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noUpcomingShifts => 'No upcoming shifts assigned.';
+
+  @override
+  String get applicationUnderReview => 'Application Under Review';
+
+  @override
+  String get applicationUnderReviewDesc =>
+      'Your volunteer application has been submitted and is currently under review. You will be notified once a decision has been made.';
+
+  @override
+  String get firstLevelApprovalTitle => 'First Level Approval';
+
+  @override
+  String get firstLevelApprovalDesc =>
+      'Your application has been approved at the first level. Waiting for final approval.';
+
+  @override
+  String get fullyApproved => 'Fully Approved';
+
+  @override
+  String get fullyApprovedDesc =>
+      'Congratulations! Your application has been fully approved.';
+
+  @override
+  String get activeVolunteer => 'Active Volunteer';
+
+  @override
+  String get activeVolunteerDesc =>
+      'You are an active volunteer in the system.';
+
+  @override
+  String get applicationRejected => 'Application Rejected';
+
+  @override
+  String get applicationRejectedFirstStage =>
+      'Your application was rejected at the first review stage.';
+
+  @override
+  String get applicationRejectedFinalStage =>
+      'Your application was rejected at the final review stage.';
+
+  @override
+  String get errorLoadingInfo =>
+      'Error loading your information. Please try again.';
+
+  @override
+  String get noVolunteerFormFound =>
+      'No volunteer form found. Please contact support.';
+
+  @override
+  String get myScheduleLocations => 'My Schedule & Locations';
+
+  @override
+  String get viewUpcomingShifts =>
+      'View your upcoming shifts, times, and locations';
+
+  @override
+  String get myProfile => 'My Profile';
+
+  @override
+  String get viewRatingAndInfo => 'View your rating and personal info';
+
+  @override
+  String get submitFeedback => 'Submit Feedback';
+
+  @override
+  String get reportBugsOrSuggest => 'Report bugs or suggest improvements';
+
+  @override
+  String get welcomeBackName => 'Welcome back,';
+
+  @override
+  String get volunteer => 'Volunteer';
 
   @override
   String get eventsManagement => 'Events Management';
@@ -870,9 +948,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get to => 'To';
-
-  @override
-  String get volunteer => 'Volunteer';
 
   @override
   String get teamLeader => 'Team Leader';
