@@ -100,12 +100,7 @@ class MyApp extends StatelessWidget {
             centerTitle: false,
             backgroundColor: Colors.white,
             foregroundColor: Color(0xFF0F172A), // Slate 900
-            titleTextStyle: TextStyle(
-              color: Color(0xFF0F172A),
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              letterSpacing: -0.5,
-            ),
+            titleTextStyle: TextStyle(color: Color(0xFF0F172A), fontSize: 20, fontWeight: FontWeight.w700, letterSpacing: -0.5),
             iconTheme: IconThemeData(color: Color(0xFF64748B)), // Slate 500
           ),
           navigationRailTheme: NavigationRailThemeData(
@@ -157,8 +152,6 @@ class MyApp extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(color: Color(0xFF2563EB), width: 2),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          ),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           ),
           floatingActionButtonTheme: const FloatingActionButtonThemeData(elevation: 4, shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16)))),
