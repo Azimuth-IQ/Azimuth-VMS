@@ -33,15 +33,13 @@ class AttendanceProvider with ChangeNotifier {
   AttendanceRecord? getCheckRecord(String userId, AttendanceCheckType checkType, {DateTime? date}) {
     final records = getRecordsForUser(userId);
     final targetDate = date ?? DateTime.now();
-    
+
     try {
       return records.firstWhere((r) {
         if (r.checkType != checkType) return false;
-        
+
         final recordDate = DateTime.parse(r.timestamp);
-        return recordDate.year == targetDate.year && 
-               recordDate.month == targetDate.month && 
-               recordDate.day == targetDate.day;
+        return recordDate.year == targetDate.year && recordDate.month == targetDate.month && recordDate.day == targetDate.day;
       });
     } catch (e) {
       return null;

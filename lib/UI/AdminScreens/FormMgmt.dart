@@ -249,8 +249,8 @@ class _FormMgmtState extends State<FormMgmt> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: () {
-          // Navigate to form details or edit page
-          Navigator.pushNamed(context, '/admin-form-fill', arguments: form).then((_) => _loadForms());
+          // Navigate to workflow screen
+          Navigator.pushNamed(context, '/volunteer-workflow', arguments: form).then((_) => _loadForms());
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(

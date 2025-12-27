@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:azimuth_vms/Models/Event.dart';
 import 'package:azimuth_vms/Models/Location.dart';
 import 'package:azimuth_vms/Providers/EventsProvider.dart';
+import 'package:azimuth_vms/UI/AdminScreens/EventWorkflowScreen.dart';
 import 'package:azimuth_vms/UI/Widgets/ArchiveDeleteWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
@@ -128,6 +129,13 @@ class EventTile extends StatelessWidget {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            IconButton(
+              icon: const Icon(Icons.timeline),
+              tooltip: 'View Workflow',
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => EventWorkflowScreen(event: event)));
+              },
+            ),
             IconButton(icon: const Icon(Icons.edit), onPressed: onEdit),
             ArchiveDeleteMenu(
               isArchived: event.archived,

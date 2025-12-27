@@ -20,7 +20,10 @@ import 'package:azimuth_vms/UI/AdminScreens/TeamLeadersMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/VolunteersMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/ShiftAssignmentScreen.dart';
 import 'package:azimuth_vms/UI/AdminScreens/PresenceCheckScreen.dart';
+import 'package:azimuth_vms/UI/AdminScreens/SendNotificationScreen.dart';
 import 'package:azimuth_vms/UI/AdminScreens/VolunteerRatingScreen.dart';
+import 'package:azimuth_vms/UI/AdminScreens/VolunteerWorkflowScreen.dart';
+import 'package:azimuth_vms/Models/VolunteerForm.dart';
 import 'package:azimuth_vms/UI/AdminScreens/RatingCriteriaManagementScreen.dart';
 import 'package:azimuth_vms/UI/AdminScreens/ManageFeedbackScreen.dart';
 import 'package:azimuth_vms/UI/AdminScreens/EventFeedbackReportScreen.dart';
@@ -265,6 +268,9 @@ class _AuthGuardState extends State<AuthGuard> {
       '/manage-feedback',
       '/event-feedback-report',
       '/submit-feedback',
+      '/send-notification',
+      '/leave-request-management',
+      '/volunteer-workflow',
     ];
 
     const teamLeaderRoutes = ['/teamleaders-dashboard', '/teamleader-shift-management', '/leave-request-management', '/presence-check-teamleader', '/submit-feedback'];
@@ -298,6 +304,10 @@ class _AuthGuardState extends State<AuthGuard> {
         return const TeamsMgmt();
       case '/team-leaders-mgmt':
         return const TeamLeadersMgmt();
+      case '/send-notification':
+        return const SendNotificationScreen();
+      case '/leave-request-management':
+        return const LeaveRequestManagementScreen();
       case '/event-mgmt':
         return const EventsMgmt();
       case '/volunteers-mgmt':
@@ -307,6 +317,11 @@ class _AuthGuardState extends State<AuthGuard> {
       case '/admin-form-fill':
         // Arguments will be passed via ModalRoute, no need to pass here
         return const Admin.FormFillPage();
+      case '/volunteer-workflow':
+        if (arguments is VolunteerForm) {
+          return VolunteerWorkflowScreen(form: arguments as VolunteerForm);
+        }
+        return _buildUnauthorizedScreen('Invalid arguments');
       case '/shift-assignment':
         return const ShiftAssignmentScreen();
       case '/presence-check-admin':

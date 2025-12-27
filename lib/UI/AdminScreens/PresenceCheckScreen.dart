@@ -8,6 +8,7 @@ import '../../Models/ShiftAssignment.dart';
 import '../../Providers/AttendanceProvider.dart';
 import '../../Providers/EventsProvider.dart';
 import '../../Providers/ShiftAssignmentProvider.dart';
+import 'LocationReassignmentDialog.dart';
 
 class PresenceCheckScreen extends StatelessWidget {
   const PresenceCheckScreen({super.key});
@@ -285,8 +286,22 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
                             ),
                         ],
                       ),
-                      trailing: attendanceRecord != null
-                          ? Column(
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (shift != null)
+                            IconButton(
+                              icon: const Icon(Icons.swap_horiz, color: Colors.blue),
+                              tooltip: 'Reassign Location',
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => LocationReassignmentDialog(assignment: assignment, event: _selectedEvent!, shift: shift),
+                                );
+                              },
+                            ),
+                          if (attendanceRecord != null)
+                            Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
@@ -297,7 +312,8 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
                                 Text(DateTime.parse(attendanceRecord.timestamp).toString().split('.')[0].split(' ')[1], style: const TextStyle(fontSize: 10)),
                               ],
                             )
-                          : Row(
+                          else
+                            Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 IconButton(
@@ -318,6 +334,8 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
                                 ),
                               ],
                             ),
+                        ],
+                      ),
                     ),
                   );
                 },

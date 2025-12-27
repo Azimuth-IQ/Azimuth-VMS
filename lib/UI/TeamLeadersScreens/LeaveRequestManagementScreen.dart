@@ -9,6 +9,9 @@ import '../../Models/ShiftAssignment.dart';
 import '../../Providers/EventsProvider.dart';
 import '../../Providers/LeaveRequestProvider.dart';
 
+import '../../Models/SystemUser.dart';
+import '../../Helpers/SystemUserHelperFirebase.dart';
+
 class LeaveRequestManagementScreen extends StatelessWidget {
   const LeaveRequestManagementScreen({super.key});
 
@@ -38,6 +41,7 @@ class LeaveRequestManagementView extends StatefulWidget {
 
 class _LeaveRequestManagementViewState extends State<LeaveRequestManagementView> {
   String? _currentUserPhone;
+  SystemUserRole? _currentUserRole;
   List<Event> _myEvents = [];
   Event? _selectedEvent;
 
@@ -47,13 +51,20 @@ class _LeaveRequestManagementViewState extends State<LeaveRequestManagementView>
     _loadCurrentUser();
   }
 
-  void _loadCurrentUser() {
+  void _loadCurrentUser() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      setState(() {
-        _currentUserPhone = user.email!.split('@').first;
-      });
-      _filterMyEvents();
+      final phone = user.email!.split('@').first;
+      final helper = SystemUserHelperFirebase();
+      final systemUser = await helper.GetSystemUserByPhone(phone);
+
+      if (mounted) {
+        setState(() {
+          _currentUserPhone = phone;
+          _currentUserRole = systemUser?.role;
+        });
+        _filterMyEvents();
+      }
     }
   }
 
@@ -61,6 +72,14 @@ class _LeaveRequestManagementViewState extends State<LeaveRequestManagementView>
     if (_currentUserPhone == null) return;
 
     final eventsProvider = context.read<EventsProvider>();
+
+    if (_currentUserRole == SystemUserRole.ADMIN) {
+      setState(() {
+        _myEvents = eventsProvider.events;
+      });
+      return;
+    }
+
     setState(() {
       _myEvents = eventsProvider.events.where((event) {
         return event.shifts.any((shift) {

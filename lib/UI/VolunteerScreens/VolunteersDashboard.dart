@@ -7,6 +7,9 @@ import 'package:azimuth_vms/Providers/VolunteerRatingProvider.dart';
 import 'package:azimuth_vms/UI/Widgets/ChangePasswordScreen.dart';
 import 'package:azimuth_vms/UI/Widgets/NotificationPanel.dart';
 import 'package:azimuth_vms/UI/VolunteerScreens/VolunteerScheduleScreen.dart';
+import 'package:azimuth_vms/UI/VolunteerScreens/VolunteerProfileScreen.dart';
+import 'package:azimuth_vms/UI/Widgets/VolunteerStatsChart.dart';
+import 'package:azimuth_vms/UI/Widgets/UpcomingShiftCard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -282,41 +285,57 @@ class _ApprovedDashboardView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildInfoCard('Welcome ', form.fullName),
-            const SizedBox(height: 8),
-            Consumer<VolunteerRatingProvider>(
-              builder: (context, ratingProvider, child) {
-                return FutureBuilder(
-                  future: SystemUserHelperFirebase().GetSystemUserByPhone(userPhone),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData && snapshot.data?.volunteerRating != null) {
-                      final rating = snapshot.data!.volunteerRating!;
-                      final average = ratingProvider.getAverageScore(rating);
-                      return _buildRatingCard(average);
-                    }
-                    return const SizedBox.shrink();
-                  },
-                );
-              },
-            ),
+            _buildWelcomeHeader(form.fullName),
+            const SizedBox(height: 24),
             if (isFullyApproved) ...[
-              const SizedBox(height: 24),
-              const Text('Quick Actions', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const Text('My Assignments', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               Consumer<ShiftAssignmentProvider>(
                 builder: (context, assignmentProvider, child) {
                   final assignmentCount = assignmentProvider.assignments.length;
-                  return _buildActionCardWithBadge(context, 'My Events', 'View your assigned events and shifts', Icons.event, Colors.blue, assignmentCount, () {
-                    Navigator.pushNamed(context, '/volunteer/events');
-                  });
+                  return _buildActionCardWithBadge(
+                    context,
+                    'My Schedule & Locations',
+                    'View your upcoming shifts, times, and locations',
+                    Icons.calendar_month,
+                    Colors.blue,
+                    assignmentCount,
+                    () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => VolunteerScheduleScreen(volunteerPhone: userPhone)));
+                    },
+                  );
                 },
               ),
-              _buildActionCard(context, 'My Schedule', 'View your volunteer schedule', Icons.calendar_today, Colors.purple, () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => VolunteerScheduleScreen(volunteerPhone: userPhone)));
-              }),
-              _buildActionCard(context, 'Profile', 'View and update your profile', Icons.person, Colors.teal, () {
-                // TODO: Navigate to profile page
-                Navigator.pushNamed(context, '/form-fill', arguments: form);
+              const SizedBox(height: 24),
+              const Text('Upcoming Shift', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              Consumer<ShiftAssignmentProvider>(
+                builder: (context, provider, child) {
+                  if (provider.assignments.isEmpty) {
+                    return const Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Center(child: Text("No upcoming shifts assigned.")),
+                      ),
+                    );
+                  }
+                  return UpcomingShiftCard(assignment: provider.assignments.first);
+                },
+              ),
+              const SizedBox(height: 24),
+              const Text('Activity', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              VolunteerStatsChart(userPhone: userPhone),
+              const SizedBox(height: 24),
+              const Text('Actions', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              _buildActionCard(context, 'My Profile', 'View your rating and personal info', Icons.person, Colors.teal, () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => VolunteerProfileScreen(form: form, userPhone: userPhone),
+                  ),
+                );
               }),
               _buildActionCard(context, 'Submit Feedback', 'Report bugs or suggest improvements', Icons.feedback, Colors.orange, () {
                 Navigator.pushNamed(context, '/submit-feedback');
@@ -328,52 +347,50 @@ class _ApprovedDashboardView extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoCard(String label, String? value) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: ListTile(
-        title: Text(label, style: const TextStyle(fontSize: 14, color: Colors.grey)),
-        subtitle: Text(
-          value ?? 'N/A',
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          textAlign: TextAlign.center,
-        ),
+  Widget _buildWelcomeHeader(String? name) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: [Colors.green.shade800, Colors.green.shade500], begin: Alignment.topLeft, end: Alignment.bottomRight),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [BoxShadow(color: Colors.green.withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 6))],
       ),
-    );
-  }
-
-  Widget _buildRatingCard(double averageScore) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      color: Colors.amber.shade50,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.star, color: Colors.amber, size: 32),
-            const SizedBox(width: 12),
-            Column(
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(3),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white, width: 2),
+            ),
+            child: CircleAvatar(
+              radius: 32,
+              backgroundColor: Colors.white,
+              child: Text(
+                name?.substring(0, 1).toUpperCase() ?? '?',
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.green.shade800),
+              ),
+            ),
+          ),
+          const SizedBox(width: 20),
+          Expanded(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Your Performance Rating',
-                  style: TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.w500),
+                  'Welcome back,',
+                  style: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text(
-                      averageScore.toStringAsFixed(1),
-                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black87),
-                    ),
-                    const Text(' / 5.0', style: TextStyle(fontSize: 16, color: Colors.grey)),
-                  ],
+                Text(
+                  name ?? 'Volunteer',
+                  style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

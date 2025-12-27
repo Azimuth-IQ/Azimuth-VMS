@@ -8,6 +8,7 @@ import 'package:azimuth_vms/UI/AdminScreens/LocationsMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/TeamLeadersMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/TeamsMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/VolunteersMgmt.dart';
+import 'package:azimuth_vms/UI/AdminScreens/SendNotificationScreen.dart';
 import 'package:azimuth_vms/UI/Widgets/ChangePasswordScreen.dart';
 import 'package:azimuth_vms/UI/Widgets/NotificationPanel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -50,6 +51,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
       const TeamLeadersMgmt(),
       const TeamsMgmt(),
       const LocationsMgmt(),
+      const SendNotificationScreen(),
     ];
 
     return LayoutBuilder(
@@ -79,6 +81,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     NavigationRailDestination(icon: Icon(Icons.supervisor_account_outlined), selectedIcon: Icon(Icons.supervisor_account), label: Text('Leaders')),
                     NavigationRailDestination(icon: Icon(Icons.groups_outlined), selectedIcon: Icon(Icons.groups), label: Text('Teams')),
                     NavigationRailDestination(icon: Icon(Icons.location_on_outlined), selectedIcon: Icon(Icons.location_on), label: Text('Locations')),
+                    NavigationRailDestination(icon: Icon(Icons.campaign_outlined), selectedIcon: Icon(Icons.campaign), label: Text('Send Notif')),
                   ],
                   trailing: Expanded(
                     child: Column(
@@ -116,6 +119,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 NavigationDestination(icon: Icon(Icons.supervisor_account_outlined), selectedIcon: Icon(Icons.supervisor_account), label: 'Leaders'),
                 NavigationDestination(icon: Icon(Icons.groups_outlined), selectedIcon: Icon(Icons.groups), label: 'Teams'),
                 NavigationDestination(icon: Icon(Icons.location_on_outlined), selectedIcon: Icon(Icons.location_on), label: 'Locations'),
+                NavigationDestination(icon: Icon(Icons.campaign_outlined), selectedIcon: Icon(Icons.campaign), label: 'Send Notif'),
               ],
             ),
           );
@@ -224,6 +228,10 @@ class _DashboardHome extends StatelessWidget {
               Text('Quick Actions', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               _buildQuickActionsGrid(context),
+              const SizedBox(height: 32),
+              Text('Workflow Scenarios', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              _buildWorkflowScenarios(context),
               const SizedBox(height: 32),
               Text('Active Events', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
@@ -351,14 +359,18 @@ class _DashboardHome extends StatelessWidget {
       _QuickAction(title: 'Presence Check', icon: Icons.fact_check, color: Colors.teal, onTap: () => Navigator.pushNamed(context, '/presence-check-admin')),
       _QuickAction(title: 'Forms Mgmt', icon: Icons.description, color: Colors.amber.shade700, onTap: () => Navigator.pushNamed(context, '/form-mgmt')),
       _QuickAction(title: 'Ratings', icon: Icons.star, color: Colors.pink, onTap: () => Navigator.pushNamed(context, '/volunteer-rating')),
+      _QuickAction(title: 'Leave Requests', icon: Icons.event_busy, color: Colors.orange, onTap: () => Navigator.pushNamed(context, '/leave-request-management')),
+      _QuickAction(title: 'System Feedback', icon: Icons.feedback, color: Colors.teal, onTap: () => Navigator.pushNamed(context, '/manage-feedback')),
+      _QuickAction(title: 'Event Feedback', icon: Icons.rate_review, color: Colors.purple, onTap: () => Navigator.pushNamed(context, '/event-feedback-report')),
+      _QuickAction(title: 'Send Notification', icon: Icons.send, color: Colors.cyan, onTap: () => Navigator.pushNamed(context, '/send-notification')),
     ];
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final count = constraints.maxWidth > 900
+        final count = constraints.maxWidth > 1100
             ? 4
-            : constraints.maxWidth > 600
-            ? 2
+            : constraints.maxWidth > 800
+            ? 3
             : 2;
         return GridView.count(
           crossAxisCount: count,
@@ -425,6 +437,91 @@ class _DashboardHome extends StatelessWidget {
           },
         );
       },
+    );
+  }
+
+  Widget _buildWorkflowScenarios(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Row(
+          children: [
+            Expanded(
+              child: _ScenarioCard(
+                title: 'Volunteer Registration',
+                description: 'Manage new sign-ups, review forms, and approve volunteers.',
+                icon: Icons.person_add,
+                color: Colors.blue,
+                onTap: () => Navigator.pushNamed(context, '/form-mgmt'),
+              ),
+            ),
+            if (constraints.maxWidth > 600) ...[
+              const SizedBox(width: 16),
+              Expanded(
+                child: _ScenarioCard(
+                  title: 'Event Management',
+                  description: 'Create events, assign shifts, and manage attendance.',
+                  icon: Icons.event,
+                  color: Colors.purple,
+                  onTap: () => onNavigate(1), // Switch to Events tab
+                ),
+              ),
+            ],
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _ScenarioCard extends StatelessWidget {
+  final String title;
+  final String description;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _ScenarioCard({required this.title, required this.description, required this.icon, required this.color, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+                child: Icon(icon, color: color, size: 32),
+              ),
+              const SizedBox(height: 16),
+              Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Text(description, style: TextStyle(color: Colors.grey.shade600)),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Text(
+                    'Start Workflow',
+                    style: TextStyle(color: color, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(width: 8),
+                  Icon(Icons.arrow_forward, size: 16, color: color),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

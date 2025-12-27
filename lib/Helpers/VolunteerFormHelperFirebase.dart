@@ -1,7 +1,11 @@
 import 'package:azimuth_vms/Models/VolunteerForm.dart';
+import 'package:azimuth_vms/Models/SystemUser.dart';
 import 'package:azimuth_vms/Static/FirebaseHelperStatics.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:azimuth_vms/firebase_options.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class VolunteerFormHelperFirebase {
   //1- Root Reference
@@ -14,15 +18,42 @@ class VolunteerFormHelperFirebase {
     form.status = VolunteerFormStatus.Sent;
     await rootRef.child(form.mobileNumber!).set(form.toJson());
 
-    // Create Firebase Auth user so volunteer can login
+    // Create SystemUser entry for the volunteer
     try {
-      await auth.createUserWithEmailAndPassword(
-        email: "${form.mobileNumber}@azimuth-vms.com",
-        password: form.mobileNumber!, // Use phone as default password
+      final systemUserRef = FirebaseDatabase.instance.ref().child(FirebaseHelperStatics.AppRoot).child("systemusers");
+      final systemUser = SystemUser(
+        id: form.mobileNumber!,
+        name: form.fullName ?? 'Volunteer',
+        phone: form.mobileNumber!,
+        password: form.mobileNumber!,
+        role: SystemUserRole.VOLUNTEER,
+        volunteerForm: form,
       );
-      print('Firebase Auth created for volunteer: ${form.mobileNumber}');
+      await systemUserRef.child(form.mobileNumber!).set(systemUser.toJson());
+      print('SystemUser created for volunteer: ${form.mobileNumber}');
     } catch (e) {
-      print('Error creating auth for volunteer (may already exist): $e');
+      print('Error creating SystemUser for volunteer: $e');
+    }
+
+    // Create Firebase Auth user so volunteer can login
+    // Using REST API to avoid signing out the current admin user
+    try {
+      final apiKey = DefaultFirebaseOptions.currentPlatform.apiKey;
+      final url = Uri.parse('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=$apiKey');
+
+      final response = await http.post(
+        url,
+        body: json.encode({'email': "${form.mobileNumber}@azimuth-vms.com", 'password': form.mobileNumber!, 'returnSecureToken': false}),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        print('Firebase Auth created for volunteer: ${form.mobileNumber}');
+      } else {
+        print('Error creating auth for volunteer: ${response.body}');
+      }
+    } catch (e) {
+      print('Error creating auth for volunteer: $e');
     }
   }
 
@@ -49,8 +80,8 @@ class VolunteerFormHelperFirebase {
   }
 
   //2.3- Update
-  void UpdateForm(VolunteerForm form) {
-    rootRef.child(form.mobileNumber!).update(form.toJson());
+  Future<void> UpdateForm(VolunteerForm form) async {
+    await rootRef.child(form.mobileNumber!).update(form.toJson());
   }
 
   //2.4- Archive

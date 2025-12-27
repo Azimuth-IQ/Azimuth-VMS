@@ -53,18 +53,23 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
   }
 
   Future<void> _loadData() async {
+    if (!mounted) return;
     setState(() => _isLoading = true);
     try {
       final teams = await _teamHelper.GetAllTeams();
       final events = await _eventHelper.GetAllEvents();
-      setState(() {
-        _teams = teams;
-        _events = events;
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _teams = teams;
+          _events = events;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
       print('Error loading data: $e');
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
