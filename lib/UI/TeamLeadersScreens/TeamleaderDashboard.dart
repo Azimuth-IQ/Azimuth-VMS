@@ -45,8 +45,12 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
     super.didChangeDependencies();
     // Load notifications after context is available
     if (!_hasLoadedNotifications && _currentUserPhone != null) {
-      _hasLoadedNotifications = true;
-      context.read<NotificationsProvider>().loadNotifications(_currentUserPhone!);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && !_hasLoadedNotifications) {
+          _hasLoadedNotifications = true;
+          context.read<NotificationsProvider>().loadNotifications(_currentUserPhone!);
+        }
+      });
     }
   }
 
@@ -268,7 +272,7 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                         physics: const NeverScrollableScrollPhysics(),
                         crossAxisSpacing: 16,
                         mainAxisSpacing: 16,
-                        childAspectRatio: 1.3,
+                        childAspectRatio: 0.9,
                         children: [
                           _buildManagementCard(
                             context,
