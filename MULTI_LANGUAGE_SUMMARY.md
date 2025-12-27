@@ -75,22 +75,26 @@ Multi-language support (English + Arabic) has been successfully implemented thro
 ### For Developers
 
 1. **Import localizations in any screen:**
+
 ```dart
 import 'package:azimuth_vms/l10n/app_localizations.dart';
 ```
 
 2. **Get localization instance:**
+
 ```dart
 final l10n = AppLocalizations.of(context)!;
 ```
 
 3. **Use translated strings:**
+
 ```dart
 Text(l10n.dashboard)
 Text(l10n.welcomeBack(userPhone))
 ```
 
 4. **Add language switcher:**
+
 ```dart
 const LanguageSwitcher(showLabel: false, isIconButton: true)
 ```
@@ -109,11 +113,13 @@ const LanguageSwitcher(showLabel: false, isIconButton: true)
 While the infrastructure is complete, **individual screens still need to be updated**. Here's the recommended approach:
 
 #### Priority 1: Core Screens (Update First)
+
 - [ ] [SignInScreen.dart](lib/UI/AdminScreens/SignInScreen.dart)
 - [ ] [VolunteersDashboard.dart](lib/UI/VolunteerScreens/VolunteersDashboard.dart)
 - [ ] [TeamLeaderDashboard.dart](lib/UI/TeamLeadersScreens/TeamleaderDashboard.dart)
 
 #### Priority 2: Admin Screens
+
 - [ ] [EventsMgmt.dart](lib/UI/AdminScreens/EventsMgmt.dart)
 - [ ] [FormMgmt.dart](lib/UI/AdminScreens/FormMgmt.dart)
 - [ ] [VolunteersMgmt.dart](lib/UI/AdminScreens/VolunteersMgmt.dart)
@@ -129,17 +135,20 @@ While the infrastructure is complete, **individual screens still need to be upda
 - [ ] [CarouselManagementScreen.dart](lib/UI/AdminScreens/CarouselManagementScreen.dart)
 
 #### Priority 3: Team Leader Screens
+
 - [ ] [TeamLeaderShiftManagementScreen.dart](lib/UI/TeamLeadersScreens/TeamLeaderShiftManagementScreen.dart)
 - [ ] [TeamLeaderPresenceCheckScreen.dart](lib/UI/TeamLeadersScreens/TeamLeaderPresenceCheckScreen.dart)
 - [ ] [LeaveRequestManagementScreen.dart](lib/UI/TeamLeadersScreens/LeaveRequestManagementScreen.dart)
 
 #### Priority 4: Volunteer Screens
+
 - [ ] [FormFillPage.dart](lib/UI/VolunteerScreens/FormFillPage.dart)
 - [ ] [VolunteerEventDetailsScreen.dart](lib/UI/VolunteerScreens/VolunteerEventDetailsScreen.dart)
 - [ ] [LeaveRequestScreen.dart](lib/UI/VolunteerScreens/LeaveRequestScreen.dart)
 - [ ] [SubmitEventFeedbackScreen.dart](lib/UI/VolunteerScreens/SubmitEventFeedbackScreen.dart)
 
 #### Priority 5: Shared/Widget Screens
+
 - [ ] [ChangePasswordScreen.dart](lib/UI/Widgets/ChangePasswordScreen.dart)
 - [ ] [NotificationPanel.dart](lib/UI/Widgets/NotificationPanel.dart)
 - [ ] [UpcomingShiftCard.dart](lib/UI/Widgets/UpcomingShiftCard.dart)
@@ -149,21 +158,24 @@ While the infrastructure is complete, **individual screens still need to be upda
 For each screen, follow this 4-step process:
 
 1. **Add import:**
+
 ```dart
 import 'package:azimuth_vms/l10n/app_localizations.dart';
 ```
 
 2. **Get l10n instance in build method:**
+
 ```dart
 final l10n = AppLocalizations.of(context)!;
 ```
 
 3. **Replace hardcoded strings:**
+
 ```dart
 // Before
 Text('Dashboard')
 
-// After  
+// After
 Text(l10n.dashboard)
 ```
 
@@ -176,11 +188,13 @@ If you find text that doesn't have a translation key:
 1. Add to both ARB files:
 
 **lib/l10n/app_en.arb:**
+
 ```json
 "myNewKey": "My English Text"
 ```
 
 **lib/l10n/app_ar.arb:**
+
 ```json
 "myNewKey": "النص العربي"
 ```
