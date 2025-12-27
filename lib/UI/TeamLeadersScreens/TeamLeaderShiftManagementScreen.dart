@@ -42,7 +42,6 @@ class TeamLeaderShiftManagementView extends StatefulWidget {
 
 class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagementView> {
   String? _currentUserPhone;
-  List<Event> _myEvents = [];
   Event? _selectedEvent;
   EventShift? _selectedShift;
   String? _selectedLocationId; // Can be main locationId or sublocationId
@@ -52,10 +51,6 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
   void initState() {
     super.initState();
     _loadCurrentUser();
-    // Wait for provider to load before filtering
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _filterMyEvents();
-    });
   }
 
   void _loadCurrentUser() {
@@ -64,85 +59,48 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
       setState(() {
         _currentUserPhone = user.email!.split('@').first;
       });
-      print('🔑 Team Leader logged in: $_currentUserPhone');
     }
   }
 
-  void _filterMyEvents() {
-    if (_currentUserPhone == null) {
-      print('⚠️ Cannot filter events - user phone is null');
-      return;
-    }
+  List<Event> _getFilteredEvents(EventsProvider provider) {
+    if (_currentUserPhone == null) return [];
 
-    final eventsProvider = context.read<EventsProvider>();
-    print('📊 Filtering events for team leader: $_currentUserPhone');
-    print('Total events: ${eventsProvider.events.length}');
-    print('Total teams: ${eventsProvider.teams.length}');
-
-    setState(() {
-      _myEvents = eventsProvider.events.where((event) {
-        final hasMyShift = event.shifts.any((shift) {
-          return _isMyShiftOrLocation(shift, eventsProvider);
-        });
-        if (hasMyShift) {
-          print('✓ Event "${event.name}" has shifts for this team leader');
-        }
-        return hasMyShift;
-      }).toList();
-    });
-
-    print('📋 Found ${_myEvents.length} events for this team leader');
+    return provider.events.where((event) {
+      return event.shifts.any((shift) {
+        return _isMyShiftOrLocation(shift, provider);
+      });
+    }).toList();
   }
 
   bool _isMyShiftOrLocation(EventShift shift, EventsProvider provider) {
-    print('  Checking shift ${shift.startTime}-${shift.endTime}...');
-
     // Check main location team
     if (shift.teamId != null) {
-      print('    Main location has teamId: ${shift.teamId}');
       final team = provider.teams.where((t) => t.id == shift.teamId).firstOrNull;
-      if (team != null) {
-        print('    Team found: ${team.name}, Leader: ${team.teamLeaderId}');
-        if (team.teamLeaderId == _currentUserPhone) {
-          print('    ✓ Match! This is my team');
-          return true;
-        }
-      } else {
-        print('    ⚠️ Team not found in provider.teams');
+      if (team != null && team.teamLeaderId == _currentUserPhone) {
+        return true;
       }
     }
     if (shift.tempTeam != null) {
-      print('    Main location has temp team, Leader: ${shift.tempTeam!.teamLeaderId}');
       if (shift.tempTeam!.teamLeaderId == _currentUserPhone) {
-        print('    ✓ Match! This is my temp team');
         return true;
       }
     }
 
     // Check sublocation teams
-    print('    Checking ${shift.subLocations.length} sublocations...');
     for (var subLoc in shift.subLocations) {
       if (subLoc.teamId != null) {
-        print('      Sublocation has teamId: ${subLoc.teamId}');
         final team = provider.teams.where((t) => t.id == subLoc.teamId).firstOrNull;
-        if (team != null) {
-          print('      Team found: ${team.name}, Leader: ${team.teamLeaderId}');
-          if (team.teamLeaderId == _currentUserPhone) {
-            print('      ✓ Match! This is my team in sublocation');
-            return true;
-          }
+        if (team != null && team.teamLeaderId == _currentUserPhone) {
+          return true;
         }
       }
       if (subLoc.tempTeam != null) {
-        print('      Sublocation has temp team, Leader: ${subLoc.tempTeam!.teamLeaderId}');
         if (subLoc.tempTeam!.teamLeaderId == _currentUserPhone) {
-          print('      ✓ Match! This is my temp team in sublocation');
           return true;
         }
       }
     }
 
-    print('    ✗ No match for this shift');
     return false;
   }
 
@@ -260,7 +218,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Assign My Team to Locations'),
+        title: const Text('Assign My Team'),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -269,7 +227,6 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
               provider.loadEvents();
               provider.loadTeams();
               provider.loadSystemUsers();
-              _filterMyEvents();
             },
           ),
         ],
@@ -284,7 +241,9 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
             return const Center(child: Text('Unable to identify current user'));
           }
 
-          if (_myEvents.isEmpty) {
+          final myEvents = _getFilteredEvents(provider);
+
+          if (myEvents.isEmpty) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -299,199 +258,250 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
             );
           }
 
-          return Row(
-            children: [
-              // Left panel: Event and Shift selection
-              Expanded(
-                flex: 2,
-                child: Card(
-                  margin: const EdgeInsets.all(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('My Events', style: Theme.of(context).textTheme.titleLarge),
-                            const SizedBox(height: 4),
-                            Text('Events where your team is assigned', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
-                          ],
-                        ),
-                      ),
-                      const Divider(),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: _myEvents.length,
-                          itemBuilder: (context, index) {
-                            final event = _myEvents[index];
-                            final isSelected = _selectedEvent?.id == event.id;
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final isDesktop = constraints.maxWidth > 900;
 
-                            return ExpansionTile(
-                              leading: Icon(Icons.event, color: isSelected ? Colors.blue : null),
-                              title: Text(event.name, style: TextStyle(fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
-                              subtitle: Text('${event.startDate} to ${event.endDate}'),
-                              children: event.shifts.map((shift) {
-                                // Only show shifts where this team leader's team is assigned
-                                if (!_isMyShiftOrLocation(shift, provider)) {
-                                  return const SizedBox.shrink();
-                                }
-
-                                final shiftSelected = _selectedShift?.id == shift.id;
-
-                                // Get location name
-                                final location = provider.locations.firstWhere(
-                                  (l) => l.id == shift.locationId,
-                                  orElse: () => Location(id: '', name: 'Unknown', description: '', latitude: '', longitude: ''),
-                                );
-
-                                return ListTile(
-                                  selected: shiftSelected,
-                                  leading: const Icon(Icons.schedule),
-                                  title: Text('${shift.startTime} - ${shift.endTime}'),
-                                  subtitle: Text('Location: ${location.name}'),
-                                  onTap: () {
-                                    setState(() {
-                                      _selectedEvent = event;
-                                      _selectedShift = shift;
-                                      _selectedLocationId = null;
-                                      _isMainLocation = true;
-                                    });
-                                    context.read<ShiftAssignmentProvider>().startListeningToEvent(event.id);
-                                  },
-                                );
-                              }).toList(),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              // Right panel: Location selection and assignment
-              Expanded(
-                flex: 3,
-                child: Card(
-                  margin: const EdgeInsets.all(8),
-                  child: _selectedEvent == null || _selectedShift == null
-                      ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.location_on, size: 64, color: Colors.grey[400]),
-                              const SizedBox(height: 16),
-                              Text('Select a shift to assign volunteers', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
-                              const SizedBox(height: 8),
-                              Text('You can assign different volunteers to each location', style: TextStyle(fontSize: 14, color: Colors.grey[500])),
-                            ],
-                          ),
-                        )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(_selectedEvent!.name, style: Theme.of(context).textTheme.titleLarge),
-                                  const SizedBox(height: 8),
-                                  Text('Shift: ${_selectedShift!.startTime} - ${_selectedShift!.endTime}', style: Theme.of(context).textTheme.titleMedium),
-                                  const SizedBox(height: 4),
-                                  Text('Date: ${_selectedEvent!.startDate}', style: TextStyle(color: Colors.grey[600])),
-                                ],
-                              ),
-                            ),
-                            const Divider(),
-                            Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Text('Select Location to Assign', style: Theme.of(context).textTheme.titleMedium),
-                                  const SizedBox(height: 8),
-                                  Text('Choose which location to assign your team members to:', style: TextStyle(fontSize: 14, color: Colors.grey[600])),
-                                  const SizedBox(height: 12),
-                                  _buildLocationDropdown(provider),
-                                  const SizedBox(height: 16),
-                                  ElevatedButton.icon(
-                                    onPressed: _selectedLocationId == null ? null : () => _assignVolunteersToLocation(context),
-                                    icon: const Icon(Icons.person_add),
-                                    label: const Text('Assign Volunteers to Location'),
-                                    style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16), disabledBackgroundColor: Colors.grey[300]),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const Divider(),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Consumer<ShiftAssignmentProvider>(
-                                  builder: (context, assignmentProvider, child) {
-                                    if (assignmentProvider.isLoading) {
-                                      return const Center(child: CircularProgressIndicator());
-                                    }
-
-                                    final assignments = assignmentProvider.assignments;
-
-                                    return Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text('Current Assignments', style: Theme.of(context).textTheme.titleMedium),
-                                        const SizedBox(height: 16),
-                                        Expanded(
-                                          child: assignments.isEmpty
-                                              ? Center(
-                                                  child: Text(
-                                                    'No volunteers assigned yet',
-                                                    style: TextStyle(color: Colors.grey[600], fontStyle: FontStyle.italic),
-                                                  ),
-                                                )
-                                              : ListView.builder(
-                                                  itemCount: assignments.length,
-                                                  itemBuilder: (context, index) {
-                                                    final assignment = assignments[index];
-                                                    final volunteer = provider.systemUsers.where((u) => u.phone == assignment.volunteerId).firstOrNull;
-
-                                                    // Get location name
-                                                    String locationName = 'Main Location';
-                                                    if (assignment.sublocationId != null) {
-                                                      final subLoc = provider.locations
-                                                          .expand((loc) => loc.subLocations ?? [])
-                                                          .where((sl) => sl.id == assignment.sublocationId)
-                                                          .firstOrNull;
-                                                      locationName = subLoc?.name ?? 'Unknown Sublocation';
-                                                    }
-
-                                                    return Card(
-                                                      child: ListTile(
-                                                        leading: Icon(Icons.person, color: assignment.status == ShiftAssignmentStatus.EXCUSED ? Colors.orange : Colors.green),
-                                                        title: Text(volunteer?.name ?? 'Unknown'),
-                                                        subtitle: Text('$locationName - ${assignment.status.name}'),
-                                                        trailing: Text('By: ${assignment.assignedBy}', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
-                                                      ),
-                                                    );
-                                                  },
-                                                ),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                ),
-              ),
-            ],
+              if (isDesktop) {
+                return _buildDesktopLayout(context, provider, myEvents);
+              } else {
+                return _buildMobileLayout(context, provider, myEvents);
+              }
+            },
           );
         },
       ),
+    );
+  }
+
+  Widget _buildDesktopLayout(BuildContext context, EventsProvider provider, List<Event> myEvents) {
+    return Row(
+      children: [
+        // Left panel: Event and Shift selection
+        Expanded(
+          flex: 2,
+          child: Card(
+            margin: const EdgeInsets.all(8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('My Events', style: Theme.of(context).textTheme.titleLarge),
+                      const SizedBox(height: 4),
+                      Text('Events where your team is assigned', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                    ],
+                  ),
+                ),
+                const Divider(),
+                Expanded(
+                  child: _buildEventsList(context, provider, myEvents),
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        // Right panel: Location selection and assignment
+        Expanded(
+          flex: 3,
+          child: Card(
+            margin: const EdgeInsets.all(8),
+            child: _selectedEvent == null || _selectedShift == null
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.location_on, size: 64, color: Colors.grey[400]),
+                        const SizedBox(height: 16),
+                        Text('Select a shift to assign volunteers', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                      ],
+                    ),
+                  )
+                : _buildAssignmentPanel(context, provider),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMobileLayout(BuildContext context, EventsProvider provider, List<Event> myEvents) {
+    if (_selectedEvent != null && _selectedShift != null) {
+      return WillPopScope(
+        onWillPop: () async {
+          setState(() {
+            _selectedEvent = null;
+            _selectedShift = null;
+          });
+          return false;
+        },
+        child: Column(
+          children: [
+            Container(
+              color: Colors.grey[100],
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () {
+                      setState(() {
+                        _selectedEvent = null;
+                        _selectedShift = null;
+                      });
+                    },
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(_selectedEvent!.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                        Text('${_selectedShift!.startTime} - ${_selectedShift!.endTime}', style: const TextStyle(fontSize: 12)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(child: _buildAssignmentPanel(context, provider)),
+          ],
+        ),
+      );
+    }
+
+    return _buildEventsList(context, provider, myEvents);
+  }
+
+  Widget _buildEventsList(BuildContext context, EventsProvider provider, List<Event> myEvents) {
+    return ListView.builder(
+      itemCount: myEvents.length,
+      itemBuilder: (context, index) {
+        final event = myEvents[index];
+        final isSelected = _selectedEvent?.id == event.id;
+
+        return ExpansionTile(
+          leading: Icon(Icons.event, color: isSelected ? Colors.blue : null),
+          title: Text(event.name, style: TextStyle(fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
+          subtitle: Text('${event.startDate} to ${event.endDate}'),
+          initiallyExpanded: isSelected,
+          children: event.shifts.map((shift) {
+            if (!_isMyShiftOrLocation(shift, provider)) {
+              return const SizedBox.shrink();
+            }
+
+            final shiftSelected = _selectedShift?.id == shift.id;
+
+            final location = provider.locations.firstWhere(
+              (l) => l.id == shift.locationId,
+              orElse: () => Location(id: '', name: 'Unknown', description: '', latitude: '', longitude: ''),
+            );
+
+            return ListTile(
+              selected: shiftSelected,
+              leading: const Icon(Icons.schedule),
+              title: Text('${shift.startTime} - ${shift.endTime}'),
+              subtitle: Text('Location: ${location.name}'),
+              onTap: () {
+                setState(() {
+                  _selectedEvent = event;
+                  _selectedShift = shift;
+                  _selectedLocationId = null;
+                  _isMainLocation = true;
+                });
+                context.read<ShiftAssignmentProvider>().startListeningToEvent(event.id);
+              },
+            );
+          }).toList(),
+        );
+      },
+    );
+  }
+
+  Widget _buildAssignmentPanel(BuildContext context, EventsProvider provider) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text('Select Location to Assign', style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 8),
+              Text('Choose which location to assign your team members to:', style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+              const SizedBox(height: 12),
+              _buildLocationDropdown(provider),
+              const SizedBox(height: 16),
+              ElevatedButton.icon(
+                onPressed: _selectedLocationId == null ? null : () => _assignVolunteersToLocation(context),
+                icon: const Icon(Icons.person_add),
+                label: const Text('Assign Volunteers'),
+                style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16), disabledBackgroundColor: Colors.grey[300]),
+              ),
+            ],
+          ),
+        ),
+        const Divider(),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Consumer<ShiftAssignmentProvider>(
+              builder: (context, assignmentProvider, child) {
+                if (assignmentProvider.isLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                final assignments = assignmentProvider.assignments;
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Current Assignments', style: Theme.of(context).textTheme.titleMedium),
+                    const SizedBox(height: 16),
+                    Expanded(
+                      child: assignments.isEmpty
+                          ? Center(
+                              child: Text(
+                                'No volunteers assigned yet',
+                                style: TextStyle(color: Colors.grey[600], fontStyle: FontStyle.italic),
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: assignments.length,
+                              itemBuilder: (context, index) {
+                                final assignment = assignments[index];
+                                final volunteer = provider.systemUsers.where((u) => u.phone == assignment.volunteerId).firstOrNull;
+
+                                String locationName = 'Main Location';
+                                if (assignment.sublocationId != null) {
+                                  final subLoc = provider.locations
+                                      .expand((loc) => loc.subLocations ?? [])
+                                      .where((sl) => sl.id == assignment.sublocationId)
+                                      .firstOrNull;
+                                  locationName = subLoc?.name ?? 'Unknown Sublocation';
+                                }
+
+                                return Card(
+                                  child: ListTile(
+                                    leading: Icon(Icons.person, color: assignment.status == ShiftAssignmentStatus.EXCUSED ? Colors.orange : Colors.green),
+                                    title: Text(volunteer?.name ?? 'Unknown'),
+                                    subtitle: Text('$locationName - ${assignment.status.name}'),
+                                    trailing: Text('By: ${assignment.assignedBy}', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                                  ),
+                                );
+                              },
+                            ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -540,7 +550,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
 
       if (isMySubTeam) {
         final subLocation = provider.locations
-            .expand((loc) => loc.subLocations ?? [])
+            .expand((loc) => loc.subLocations ?? > 600 ? 500 : MediaQuery.of(context).size.width * 0.9
             .firstWhere(
               (sl) => sl.id == subLoc.subLocationId,
               orElse: () => Location(id: '', name: 'Unknown', description: '', latitude: '0', longitude: '0'),
