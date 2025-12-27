@@ -253,10 +253,7 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                       child: Text('Activity', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                     ),
                     const SizedBox(height: 16),
-                    FadeInSlide(
-                      delay: 0.4,
-                      child: VolunteerStatsChart(userPhone: _currentUserPhone ?? ''),
-                    ),
+                    FadeInSlide(delay: 0.4, child: VolunteerStatsChart(userPhone: _currentUserPhone ?? '')),
                     const SizedBox(height: 24),
                     const FadeInSlide(
                       delay: 0.5,
@@ -332,10 +329,7 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                         ),
                       )
                     else
-                      ...List.generate(_myEvents.length, (index) => FadeInSlide(
-                        delay: 0.8 + (index * 0.1),
-                        child: _buildEventCard(_myEvents[index]),
-                      )),
+                      ...List.generate(_myEvents.length, (index) => FadeInSlide(delay: 0.8 + (index * 0.1), child: _buildEventCard(_myEvents[index]))),
                   ],
                 ),
               ),
@@ -347,31 +341,13 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.blue.shade800, Colors.blue.shade500],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        gradient: LinearGradient(colors: [Colors.blue.shade800, Colors.blue.shade500], begin: Alignment.topLeft, end: Alignment.bottomRight),
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.blue.withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.blue.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, 10))],
       ),
       child: Stack(
         children: [
-          Positioned(
-            right: -20,
-            top: -20,
-            child: Icon(
-              Icons.admin_panel_settings,
-              size: 150,
-              color: Colors.white.withOpacity(0.1),
-            ),
-          ),
+          Positioned(right: -20, top: -20, child: Icon(Icons.admin_panel_settings, size: 150, color: Colors.white.withOpacity(0.1))),
           Row(
             children: [
               Container(

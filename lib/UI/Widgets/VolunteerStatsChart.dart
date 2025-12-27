@@ -1,12 +1,112 @@
+import 'package:azimuth_vms/Helpers/AttendanceHelperFirebase.dart';
+import 'package:azimuth_vms/Models/AttendanceRecord.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class VolunteerStatsChart extends StatelessWidget {
+class VolunteerStatsChart extends StatefulWidget {
   final String userPhone;
   const VolunteerStatsChart({super.key, required this.userPhone});
 
   @override
+  State<VolunteerStatsChart> createState() => _VolunteerStatsChartState();
+}
+
+class _VolunteerStatsChartState extends State<VolunteerStatsChart> {
+  final AttendanceHelperFirebase _helper = AttendanceHelperFirebase();
+  List<BarChartGroupData> _barGroups = [];
+  List<String> _monthLabels = [];
+  bool _isLoading = true;
+  double _maxY = 5;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    try {
+      final records = await _helper.GetAttendanceRecordsByVolunteer(widget.userPhone);
+      _processData(records);
+    } catch (e) {
+      print('Error loading stats: $e');
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  void _processData(List<AttendanceRecord> records) {
+    final now = DateTime.now();
+    final Map<int, int> shiftsPerMonth = {};
+    final List<String> labels = [];
+
+    // Initialize last 6 months
+    for (int i = 5; i >= 0; i--) {
+      final monthDate = DateTime(now.year, now.month - i, 1);
+      final monthKey = monthDate.year * 100 + monthDate.month; // YYYYMM
+      shiftsPerMonth[monthKey] = 0;
+      labels.add(DateFormat('MMM').format(monthDate));
+    }
+
+    // Count unique shifts per month
+    final Set<String> processedShifts = {};
+    
+    for (var record in records) {
+      if (!record.present) continue;
+      
+      // Only count each shift once (even if multiple checks)
+      final shiftKey = '${record.eventId}_${record.shiftId}';
+      if (processedShifts.contains(shiftKey)) continue;
+      
+      try {
+        final date = DateTime.parse(record.timestamp);
+        final monthKey = date.year * 100 + date.month;
+        
+        if (shiftsPerMonth.containsKey(monthKey)) {
+          shiftsPerMonth[monthKey] = (shiftsPerMonth[monthKey] ?? 0) + 1;
+          processedShifts.add(shiftKey);
+        }
+      } catch (e) {
+        print('Error parsing date: ${record.timestamp}');
+      }
+    }
+
+    // Create bar groups
+    final List<BarChartGroupData> groups = [];
+    int index = 0;
+    double maxVal = 0;
+
+    shiftsPerMonth.forEach((key, count) {
+      if (count > maxVal) maxVal = count.toDouble();
+      groups.add(_makeGroupData(index, count.toDouble()));
+      index++;
+    });
+
+    if (mounted) {
+      setState(() {
+        _barGroups = groups;
+        _monthLabels = labels;
+        _maxY = (maxVal > 5 ? maxVal : 5) * 1.2; // Add some headroom
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Container(
+        height: 300,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+        ),
+        child: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Container(
       height: 300,
       padding: const EdgeInsets.all(24),
@@ -26,7 +126,7 @@ class VolunteerStatsChart extends StatelessWidget {
             child: BarChart(
               BarChartData(
                 alignment: BarChartAlignment.spaceAround,
-                maxY: 20,
+                maxY: _maxY,
                 barTouchData: BarTouchData(
                   enabled: true,
                   touchTooltipData: BarTouchTooltipData(
@@ -44,34 +144,11 @@ class VolunteerStatsChart extends StatelessWidget {
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
-                        const style = TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 12);
-                        String text;
-                        switch (value.toInt()) {
-                          case 0:
-                            text = 'Jul';
-                            break;
-                          case 1:
-                            text = 'Aug';
-                            break;
-                          case 2:
-                            text = 'Sep';
-                            break;
-                          case 3:
-                            text = 'Oct';
-                            break;
-                          case 4:
-                            text = 'Nov';
-                            break;
-                          case 5:
-                            text = 'Dec';
-                            break;
-                          default:
-                            text = '';
-                        }
+                        if (value < 0 || value >= _monthLabels.length) return const SizedBox.shrink();
                         return SideTitleWidget(
                           meta: meta,
                           space: 4,
-                          child: Text(text, style: style),
+                          child: Text(_monthLabels[value.toInt()], style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 12)),
                         );
                       },
                       reservedSize: 30,
@@ -85,7 +162,7 @@ class VolunteerStatsChart extends StatelessWidget {
                         if (value == 0) return const SizedBox.shrink();
                         return Text(value.toInt().toString(), style: const TextStyle(color: Colors.grey, fontSize: 12));
                       },
-                      interval: 5,
+                      interval: _maxY > 10 ? 5 : 1,
                     ),
                   ),
                   topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -94,13 +171,13 @@ class VolunteerStatsChart extends StatelessWidget {
                 gridData: FlGridData(
                   show: true,
                   drawVerticalLine: false,
-                  horizontalInterval: 5,
+                  horizontalInterval: _maxY > 10 ? 5 : 1,
                   getDrawingHorizontalLine: (value) {
                     return FlLine(color: Colors.grey.withOpacity(0.1), strokeWidth: 1);
                   },
                 ),
                 borderData: FlBorderData(show: false),
-                barGroups: [_makeGroupData(0, 5), _makeGroupData(1, 8), _makeGroupData(2, 12), _makeGroupData(3, 7), _makeGroupData(4, 15), _makeGroupData(5, 10)],
+                barGroups: _barGroups,
               ),
             ),
           ),
@@ -118,7 +195,7 @@ class VolunteerStatsChart extends StatelessWidget {
           color: Colors.blue,
           width: 16,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
-          backDrawRodData: BackgroundBarChartRodData(show: true, toY: 20, color: Colors.grey.withOpacity(0.1)),
+          backDrawRodData: BackgroundBarChartRodData(show: true, toY: _maxY, color: Colors.grey.withOpacity(0.1)),
         ),
       ],
     );

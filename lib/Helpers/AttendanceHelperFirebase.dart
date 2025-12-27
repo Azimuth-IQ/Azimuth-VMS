@@ -124,4 +124,21 @@ class AttendanceHelperFirebase {
       return records;
     });
   }
+
+  // Get all attendance records for a specific volunteer across all events
+  Future<List<AttendanceRecord>> GetAttendanceRecordsByVolunteer(String volunteerId) async {
+    List<AttendanceRecord> records = [];
+    DataSnapshot eventsSnapshot = await rootRef.get();
+    if (eventsSnapshot.exists) {
+      for (DataSnapshot eventSnapshot in eventsSnapshot.children) {
+        DataSnapshot userAttendanceSnapshot = eventSnapshot.child("attendance").child(volunteerId).child("checks");
+        if (userAttendanceSnapshot.exists) {
+          for (DataSnapshot d1 in userAttendanceSnapshot.children) {
+            records.add(AttendanceRecord.fromDataSnapshot(d1));
+          }
+        }
+      }
+    }
+    return records;
+  }
 }
