@@ -25,7 +25,7 @@ lib/
 Add this import to your screen file:
 
 ```dart
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:azimuth_vms/l10n/app_localizations.dart';
 ```
 
 ### Step 2: Get Localization Instance
@@ -346,7 +346,7 @@ For each screen, follow this checklist:
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:azimuth_vms/l10n/app_localizations.dart';
 import 'package:azimuth_vms/UI/Widgets/LanguageSwitcher.dart';
 
 class MyScreen extends StatelessWidget {

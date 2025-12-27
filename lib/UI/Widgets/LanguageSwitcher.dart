@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:azimuth_vms/l10n/app_localizations.dart';
 import 'package:azimuth_vms/Providers/LanguageProvider.dart';
 
 class LanguageSwitcher extends StatelessWidget {
