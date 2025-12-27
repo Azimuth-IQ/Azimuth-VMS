@@ -214,9 +214,7 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                   child: Text('Select Event & Shift', style: Theme.of(context).textTheme.titleLarge),
                 ),
                 const Divider(),
-                Expanded(
-                  child: _buildEventsList(context, provider),
-                ),
+                Expanded(child: _buildEventsList(context, provider)),
               ],
             ),
           ),
@@ -471,10 +469,7 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                                 // Get location name
                                 String locationName = 'Main Location';
                                 if (assignment.sublocationId != null) {
-                                  final subLoc = provider.locations
-                                      .expand((loc) => loc.subLocations ?? [])
-                                      .where((sl) => sl.id == assignment.sublocationId)
-                                      .firstOrNull;
+                                  final subLoc = provider.locations.expand((loc) => loc.subLocations ?? []).where((sl) => sl.id == assignment.sublocationId).firstOrNull;
                                   locationName = subLoc?.name ?? 'Unknown Sublocation';
                                 }
 
@@ -495,11 +490,7 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                                         const SizedBox(height: 4),
                                         Row(
                                           children: [
-                                            Icon(
-                                              isTeamLeader ? Icons.badge : Icons.admin_panel_settings,
-                                              size: 12,
-                                              color: isTeamLeader ? Colors.blue : Colors.purple,
-                                            ),
+                                            Icon(isTeamLeader ? Icons.badge : Icons.admin_panel_settings, size: 12, color: isTeamLeader ? Colors.blue : Colors.purple),
                                             const SizedBox(width: 4),
                                             Text(
                                               'By: ${assignedByUser?.name ?? assignment.assignedBy}',

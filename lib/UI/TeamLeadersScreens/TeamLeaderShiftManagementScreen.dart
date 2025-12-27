@@ -297,9 +297,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
                   ),
                 ),
                 const Divider(),
-                Expanded(
-                  child: _buildEventsList(context, provider, myEvents),
-                ),
+                Expanded(child: _buildEventsList(context, provider, myEvents)),
               ],
             ),
           ),
@@ -477,10 +475,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
 
                                 String locationName = 'Main Location';
                                 if (assignment.sublocationId != null) {
-                                  final subLoc = provider.locations
-                                      .expand((loc) => loc.subLocations ?? [])
-                                      .where((sl) => sl.id == assignment.sublocationId)
-                                      .firstOrNull;
+                                  final subLoc = provider.locations.expand((loc) => loc.subLocations ?? []).where((sl) => sl.id == assignment.sublocationId).firstOrNull;
                                   locationName = subLoc?.name ?? 'Unknown Sublocation';
                                 }
 
@@ -550,7 +545,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
 
       if (isMySubTeam) {
         final subLocation = provider.locations
-            .expand((loc) => loc.subLocations ?? > 600 ? 500 : MediaQuery.of(context).size.width * 0.9
+            .expand((loc) => loc.subLocations ?? [])
             .firstWhere(
               (sl) => sl.id == subLoc.subLocationId,
               orElse: () => Location(id: '', name: 'Unknown', description: '', latitude: '0', longitude: '0'),
