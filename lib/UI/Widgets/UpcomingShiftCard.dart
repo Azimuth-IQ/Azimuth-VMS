@@ -7,9 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class UpcomingShiftCard extends StatefulWidget {
-  final ShiftAssignment assignment;
+  final ShiftAssignment? assignment;
+  final Event? event;
+  final EventShift? shift;
+  final Location? location;
 
-  const UpcomingShiftCard({super.key, required this.assignment});
+  const UpcomingShiftCard({
+    super.key,
+    this.assignment,
+    this.event,
+    this.shift,
+    this.location,
+  });
 
   @override
   State<UpcomingShiftCard> createState() => _UpcomingShiftCardState();
@@ -27,15 +36,24 @@ class _UpcomingShiftCardState extends State<UpcomingShiftCard> {
   @override
   void initState() {
     super.initState();
-    _loadDetails();
+    if (widget.event != null && widget.shift != null) {
+      _event = widget.event;
+      _shift = widget.shift;
+      _location = widget.location;
+      _isLoading = false;
+    } else if (widget.assignment != null) {
+      _loadDetails();
+    } else {
+      _isLoading = false;
+    }
   }
 
   Future<void> _loadDetails() async {
     try {
-      final event = await _eventHelper.GetEventById(widget.assignment.eventId);
+      final event = await _eventHelper.GetEventById(widget.assignment!.eventId);
       if (event != null) {
         final shift = event.shifts.firstWhere(
-          (s) => s.id == widget.assignment.shiftId,
+          (s) => s.id == widget.assignment!.shiftId,
           orElse: () => event.shifts.first, // Fallback
         );
 
