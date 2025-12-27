@@ -37,9 +37,9 @@ class _EventsMgmtViewState extends State<EventsMgmtView> {
   bool _showArchived = false;
 
   void _showEventForm(BuildContext context, {Event? event}) async {
-    final eventsProvider = context.read<EventsProvider>();
+    EventsProvider eventsProvider = context.read<EventsProvider>();
 
-    final result = await showDialog<Event>(
+    Event? result = await showDialog<Event>(
       context: context,
       builder: (context) => MultiProvider(
         providers: [
@@ -69,7 +69,7 @@ class _EventsMgmtViewState extends State<EventsMgmtView> {
           });
         }
 
-        final displayEvents = _showArchived ? provider.archivedEvents : provider.activeEvents;
+        List<Event> displayEvents = _showArchived ? provider.archivedEvents : provider.activeEvents;
 
         return Scaffold(
           appBar: AppBar(
@@ -87,7 +87,7 @@ class _EventsMgmtViewState extends State<EventsMgmtView> {
                           : ListView.builder(
                               itemCount: displayEvents.length,
                               itemBuilder: (context, index) {
-                                final event = displayEvents[index];
+                                Event event = displayEvents[index];
                                 return EventTile(
                                   event: event,
                                   onEdit: () => _showEventForm(context, event: event),
@@ -112,7 +112,7 @@ class EventTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.read<EventsProvider>();
+    EventsProvider provider = context.read<EventsProvider>();
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -214,15 +214,15 @@ class EventFormDialog extends StatelessWidget {
     final DateTime? picked = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime(2020), lastDate: DateTime(2030));
 
     if (picked != null) {
-      final formattedDate = DateFormat('dd-MM-yyyy').format(picked);
+      String formattedDate = DateFormat('dd-MM-yyyy').format(picked);
       onDateSelected(formattedDate);
     }
   }
 
   void _showShiftForm(BuildContext context, {EventShift? shift, int? index}) async {
-    final eventsProvider = context.read<EventsProvider>();
+    EventsProvider eventsProvider = context.read<EventsProvider>();
 
-    final result = await showDialog<EventShift>(
+    EventShift? result = await showDialog<EventShift>(
       context: context,
       builder: (context) => MultiProvider(
         providers: [
@@ -234,7 +234,7 @@ class EventFormDialog extends StatelessWidget {
     );
 
     if (result != null) {
-      final eventFormProvider = context.read<EventFormProvider>();
+      EventFormProvider eventFormProvider = context.read<EventFormProvider>();
       if (shift == null) {
         eventFormProvider.addShift(result);
       } else {
@@ -245,9 +245,9 @@ class EventFormDialog extends StatelessWidget {
 
   void _save(BuildContext context, GlobalKey<FormState> formKey) {
     if (formKey.currentState!.validate()) {
-      final provider = context.read<EventFormProvider>();
+      EventFormProvider provider = context.read<EventFormProvider>();
 
-      final event = Event(
+      Event event = Event(
         id: isEdit ? provider.editingEvent?.id ?? const Uuid().v4() : const Uuid().v4(),
         name: provider.name,
         description: provider.description,
@@ -270,7 +270,7 @@ class EventFormDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
+    GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
     return Consumer<EventFormProvider>(
       builder: (context, provider, child) {
@@ -426,8 +426,8 @@ class EventFormDialog extends StatelessWidget {
                               )
                             else
                               ...provider.shifts.asMap().entries.map((entry) {
-                                final index = entry.key;
-                                final shift = entry.value;
+                                int index = entry.key;
+                                EventShift shift = entry.value;
                                 return Card(
                                   child: ListTile(
                                     leading: const Icon(Icons.schedule),
@@ -552,7 +552,7 @@ class ShiftFormDialog extends StatelessWidget {
     final TimeOfDay? picked = await showTimePicker(context: context, initialTime: TimeOfDay.now());
 
     if (picked != null) {
-      final formattedTime = '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
+      String formattedTime = '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
       onTimeSelected(formattedTime);
     }
   }
@@ -564,13 +564,13 @@ class ShiftFormDialog extends StatelessWidget {
       return;
     }
 
-    final eventsProvider = context.read<EventsProvider>();
+    EventsProvider eventsProvider = context.read<EventsProvider>();
     String? selectedSubLocationId = subLocation?.subLocationId;
     String? selectedTeamId = subLocation?.teamId;
     TempTeam? selectedTempTeam = subLocation?.tempTeam;
     bool useExistingTeam = subLocation?.teamId != null || (subLocation?.tempTeam == null && subLocation?.teamId == null);
 
-    final result = await showDialog<ShiftSubLocation>(
+    ShiftSubLocation? result = await showDialog<ShiftSubLocation>(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) {
@@ -732,7 +732,7 @@ class ShiftFormDialog extends StatelessWidget {
                     return;
                   }
 
-                  final newSubLocation = ShiftSubLocation(
+                  ShiftSubLocation newSubLocation = ShiftSubLocation(
                     id: subLocation?.id ?? const Uuid().v4(),
                     subLocationId: selectedSubLocationId!,
                     teamId: useExistingTeam ? selectedTeamId : null,
@@ -750,7 +750,7 @@ class ShiftFormDialog extends StatelessWidget {
     );
 
     if (result != null) {
-      final shiftFormProvider = context.read<ShiftFormProvider>();
+      ShiftFormProvider shiftFormProvider = context.read<ShiftFormProvider>();
       if (subLocation == null) {
         shiftFormProvider.addSubLocation(result);
       } else {
@@ -761,8 +761,8 @@ class ShiftFormDialog extends StatelessWidget {
 
   void _save(BuildContext context, GlobalKey<FormState> formKey) {
     if (formKey.currentState!.validate()) {
-      final provider = context.read<ShiftFormProvider>();
-      final shift = provider.buildShift();
+      ShiftFormProvider provider = context.read<ShiftFormProvider>();
+      EventShift shift = provider.buildShift();
       Navigator.of(context).pop(shift);
     }
   }
@@ -781,7 +781,7 @@ class ShiftFormDialog extends StatelessWidget {
                 if (provider.tempTeam == null)
                   ElevatedButton.icon(
                     onPressed: () async {
-                      final result = await _showTempTeamForm(context, eventsProvider);
+                      TempTeam? result = await _showTempTeamForm(context, eventsProvider);
                       if (result != null) provider.updateTempTeam(result);
                     },
                     icon: const Icon(Icons.add),
@@ -794,7 +794,7 @@ class ShiftFormDialog extends StatelessWidget {
                       IconButton(
                         icon: const Icon(Icons.edit),
                         onPressed: () async {
-                          final result = await _showTempTeamForm(context, eventsProvider, existingTempTeam: provider.tempTeam);
+                          TempTeam? result = await _showTempTeamForm(context, eventsProvider, existingTempTeam: provider.tempTeam);
                           if (result != null) provider.updateTempTeam(result);
                         },
                       ),
@@ -816,7 +816,7 @@ class ShiftFormDialog extends StatelessWidget {
                 const SizedBox(height: 8),
                 const Text('Members:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
                 ...provider.tempTeam!.memberIds.map((memberId) {
-                  final memberName = eventsProvider.volunteers.where((u) => u.phone == memberId).firstOrNull?.name ?? memberId;
+                  String memberName = eventsProvider.volunteers.where((u) => u.phone == memberId).firstOrNull?.name ?? memberId;
                   return Padding(
                     padding: const EdgeInsets.only(left: 16, top: 4),
                     child: Row(
@@ -854,7 +854,7 @@ class ShiftFormDialog extends StatelessWidget {
     String selectedLeaderId = existingTempTeam?.teamLeaderId ?? '';
     List<String> selectedMemberIds = List.from(existingTempTeam?.memberIds ?? []);
 
-    final result = await showDialog<TempTeam>(
+    TempTeam? result = await showDialog<TempTeam>(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) {
@@ -906,9 +906,9 @@ class ShiftFormDialog extends StatelessWidget {
                       )
                     else
                       ...selectedMemberIds.asMap().entries.map((entry) {
-                        final index = entry.key;
-                        final memberId = entry.value;
-                        final memberName = eventsProvider.volunteers.where((u) => u.phone == memberId).firstOrNull?.name ?? memberId;
+                        int index = entry.key;
+                        String memberId = entry.value;
+                        String memberName = eventsProvider.volunteers.where((u) => u.phone == memberId).firstOrNull?.name ?? memberId;
                         return ListTile(
                           dense: true,
                           leading: const Icon(Icons.person_outline, size: 16),
@@ -930,7 +930,7 @@ class ShiftFormDialog extends StatelessWidget {
                     return;
                   }
 
-                  final tempTeam = TempTeam(id: existingTempTeam?.id ?? const Uuid().v4(), teamLeaderId: selectedLeaderId, memberIds: selectedMemberIds);
+                  TempTeam tempTeam = TempTeam(id: existingTempTeam?.id ?? const Uuid().v4(), teamLeaderId: selectedLeaderId, memberIds: selectedMemberIds);
 
                   Navigator.of(context).pop(tempTeam);
                 },
@@ -982,12 +982,12 @@ class ShiftFormDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    final eventsProvider = context.read<EventsProvider>();
+    GlobalKey<FormState> formKey = GlobalKey<FormState>();
+    EventsProvider eventsProvider = context.read<EventsProvider>();
 
     return Consumer<ShiftFormProvider>(
       builder: (context, provider, child) {
-        final selectedLocation = eventsProvider.locations.where((loc) => loc.id == provider.locationId).firstOrNull;
+        Location? selectedLocation = eventsProvider.locations.where((loc) => loc.id == provider.locationId).firstOrNull;
 
         return Dialog(
           child: Container(
@@ -1052,27 +1052,35 @@ class ShiftFormDialog extends StatelessWidget {
                               ],
                             ),
                             const SizedBox(height: 16),
-                            DropdownButtonFormField<String>(
-                              initialValue: provider.locationId.isEmpty ? null : provider.locationId,
-                              decoration: const InputDecoration(
-                                labelText: 'Location *',
-                                border: OutlineInputBorder(),
-                                prefixIcon: Icon(Icons.location_on),
-                                hintText: 'Select location',
-                              ),
-                              items: eventsProvider.locations.map((location) {
-                                return DropdownMenuItem<String>(value: location.id, child: Text(location.name));
-                              }).toList(),
-                              onChanged: (value) {
-                                if (value != null) {
-                                  provider.updateLocationId(value);
-                                }
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please select a location';
-                                }
-                                return null;
+                            Builder(
+                              builder: (context) {
+                                final locationItems = eventsProvider.locations.map((location) {
+                                  return DropdownMenuItem<String>(value: location.id, child: Text(location.name));
+                                }).toList();
+
+                                final validLocationId = locationItems.any((item) => item.value == provider.locationId) ? provider.locationId : null;
+
+                                return DropdownButtonFormField<String>(
+                                  value: validLocationId,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Location *',
+                                    border: OutlineInputBorder(),
+                                    prefixIcon: Icon(Icons.location_on),
+                                    hintText: 'Select location',
+                                  ),
+                                  items: locationItems,
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      provider.updateLocationId(value);
+                                    }
+                                  },
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please select a location';
+                                    }
+                                    return null;
+                                  },
+                                );
                               },
                             ),
                             const SizedBox(height: 16),
@@ -1093,21 +1101,29 @@ class ShiftFormDialog extends StatelessWidget {
                             ),
                             const SizedBox(height: 16),
                             if (provider.useExistingTeam)
-                              DropdownButtonFormField<String>(
-                                initialValue: provider.teamId,
-                                decoration: const InputDecoration(
-                                  labelText: 'Team (Optional)',
-                                  border: OutlineInputBorder(),
-                                  prefixIcon: Icon(Icons.groups),
-                                  hintText: 'Select team',
-                                ),
-                                items: [
-                                  const DropdownMenuItem<String>(value: null, child: Text('None')),
-                                  ...eventsProvider.teams.map((team) {
-                                    return DropdownMenuItem<String>(value: team.id, child: Text(team.name));
-                                  }),
-                                ],
-                                onChanged: provider.updateTeamId,
+                              Builder(
+                                builder: (context) {
+                                  final teamItems = [
+                                    const DropdownMenuItem<String>(value: null, child: Text('None')),
+                                    ...eventsProvider.teams.map((team) {
+                                      return DropdownMenuItem<String>(value: team.id, child: Text(team.name));
+                                    }),
+                                  ];
+
+                                  final validTeamId = teamItems.any((item) => item.value == provider.teamId) ? provider.teamId : null;
+
+                                  return DropdownButtonFormField<String>(
+                                    value: validTeamId,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Team (Optional)',
+                                      border: OutlineInputBorder(),
+                                      prefixIcon: Icon(Icons.groups),
+                                      hintText: 'Select team',
+                                    ),
+                                    items: teamItems,
+                                    onChanged: provider.updateTeamId,
+                                  );
+                                },
                               )
                             else
                               _buildTempTeamSection(context, provider, eventsProvider),
@@ -1138,10 +1154,10 @@ class ShiftFormDialog extends StatelessWidget {
                               )
                             else
                               ...provider.subLocations.asMap().entries.map((entry) {
-                                final index = entry.key;
-                                final subLoc = entry.value;
-                                final subLocationName = selectedLocation?.subLocations?.where((s) => s.id == subLoc.subLocationId).firstOrNull?.name ?? 'Unknown';
-                                final teamName = eventsProvider.teams.where((t) => t.id == subLoc.teamId).firstOrNull?.name;
+                                int index = entry.key;
+                                ShiftSubLocation subLoc = entry.value;
+                                String subLocationName = selectedLocation?.subLocations?.where((s) => s.id == subLoc.subLocationId).firstOrNull?.name ?? 'Unknown';
+                                String? teamName = eventsProvider.teams.where((t) => t.id == subLoc.teamId).firstOrNull?.name;
 
                                 return Card(
                                   child: ListTile(

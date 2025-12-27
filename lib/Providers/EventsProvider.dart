@@ -50,10 +50,14 @@ class EventsProvider with ChangeNotifier {
 
   Future<void> loadLocations() async {
     try {
+      print('🔄 Loading locations...');
       _locations = await _locationHelper.GetAllLocations();
+      print('✅ Locations loaded: ${_locations.length} total');
       notifyListeners();
     } catch (e) {
-      print('Error loading locations: $e');
+      print('❌ Error loading locations: $e');
+      _errorMessage = 'Error loading locations: $e';
+      notifyListeners();
     }
   }
 

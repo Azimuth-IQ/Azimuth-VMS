@@ -44,19 +44,37 @@ class Location {
     DataSnapshot subLocsSnapshot = snapshot.child('subLocations');
     if (subLocsSnapshot.exists) {
       subLocations = [];
+      int subLocIndex = 0;
       for (DataSnapshot d1 in subLocsSnapshot.children) {
-        subLocations.add(Location.fromDataSnapshot(d1));
+        try {
+          Location subLoc = Location.fromDataSnapshot(d1);
+          subLocations.add(subLoc);
+          subLocIndex++;
+        } catch (e) {
+          print('✗ Error parsing sublocation #$subLocIndex in ${snapshot.child('name').value}: $e');
+        }
+      }
+      if (subLocations.isNotEmpty) {
+        print('  ↳ Parsed ${subLocations.length} sublocations for ${snapshot.child('name').value}');
       }
     }
 
+    String id = snapshot.child('id').value?.toString() ?? '';
+    String name = snapshot.child('name').value?.toString() ?? 'Unknown';
+    String description = snapshot.child('description').value?.toString() ?? '';
+    String? imageUrl = snapshot.child('imageUrl').value?.toString();
+    String longitude = snapshot.child('longitude').value?.toString() ?? '0';
+    String latitude = snapshot.child('latitude').value?.toString() ?? '0';
+    bool archived = snapshot.child('archived').value as bool? ?? false;
+
     return Location(
-      id: snapshot.child('id').value as String,
-      name: snapshot.child('name').value as String,
-      description: snapshot.child('description').value as String,
-      imageUrl: snapshot.child('imageUrl').value as String?,
-      longitude: snapshot.child('longitude').value as String,
-      latitude: snapshot.child('latitude').value as String,
-      archived: snapshot.child('archived').value as bool? ?? false,
+      id: id,
+      name: name,
+      description: description,
+      imageUrl: imageUrl,
+      longitude: longitude,
+      latitude: latitude,
+      archived: archived,
       subLocations: subLocations,
     );
   }

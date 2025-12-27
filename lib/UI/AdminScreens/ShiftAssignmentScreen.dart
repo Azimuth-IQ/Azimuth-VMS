@@ -365,46 +365,65 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                     orElse: () => Location(id: '', name: 'Unknown', description: '', latitude: '0', longitude: '0'),
                   );
 
+                  List<DropdownMenuItem<String>> locationItems = [];
+                  Set<String> addedLocationIds = {};
+
+                  void addLocationItem(String id, String name, bool isMain) {
+                    if (addedLocationIds.contains(id)) return;
+
+                    locationItems.add(
+                      DropdownMenuItem(
+                        value: id,
+                        child: Row(
+                          children: [
+                            Icon(isMain ? Icons.location_on : Icons.subdirectory_arrow_right, size: 18, color: isMain ? Colors.blue : Colors.green),
+                            const SizedBox(width: 8),
+                            Text(isMain ? '$name (Main)' : name),
+                          ],
+                        ),
+                      ),
+                    );
+                    addedLocationIds.add(id);
+                  }
+
+                  // Main location
+                  addLocationItem(_selectedShift!.locationId, mainLocation.name, true);
+
+                  // Sublocations
+                  for (var subLoc in _selectedShift!.subLocations) {
+                    final subLocation = provider.locations
+                        .expand((loc) => loc.subLocations ?? [])
+                        .firstWhere(
+                          (sl) => sl.id == subLoc.subLocationId,
+                          orElse: () => Location(id: '', name: 'Unknown', description: '', latitude: '0', longitude: '0'),
+                        );
+                    addLocationItem(subLoc.subLocationId, subLocation.name, false);
+                  }
+
+                  // Ensure selected value exists in items
+                  String? validSelectedLocationId = _selectedLocationId;
+                  bool valueExists = locationItems.any((item) => item.value == validSelectedLocationId);
+
+                  if (validSelectedLocationId != null && !valueExists) {
+                    validSelectedLocationId = null;
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (mounted && _selectedLocationId != null) {
+                        setState(() {
+                          _selectedLocationId = null;
+                        });
+                      }
+                    });
+                  }
+
                   return DropdownButtonFormField<String>(
-                    value: _selectedLocationId,
+                    value: validSelectedLocationId,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       labelText: 'Choose location to assign volunteers',
                     ),
                     hint: const Text('Select a location'),
-                    items: [
-                      // Main location
-                      DropdownMenuItem(
-                        value: _selectedShift!.locationId,
-                        child: Row(
-                          children: [
-                            const Icon(Icons.location_on, size: 18, color: Colors.blue),
-                            const SizedBox(width: 8),
-                            Text('${mainLocation.name} (Main)'),
-                          ],
-                        ),
-                      ),
-                      // Sublocations
-                      ..._selectedShift!.subLocations.map((subLoc) {
-                        final subLocation = provider.locations
-                            .expand((loc) => loc.subLocations ?? [])
-                            .firstWhere(
-                              (sl) => sl.id == subLoc.subLocationId,
-                              orElse: () => Location(id: '', name: 'Unknown', description: '', latitude: '0', longitude: '0'),
-                            );
-                        return DropdownMenuItem(
-                          value: subLoc.subLocationId,
-                          child: Row(
-                            children: [
-                              const Icon(Icons.subdirectory_arrow_right, size: 18, color: Colors.green),
-                              const SizedBox(width: 8),
-                              Text(subLocation.name),
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                    ],
+                    items: locationItems,
                     onChanged: (value) {
                       setState(() {
                         _selectedLocationId = value;

@@ -27,10 +27,16 @@ class LocationHelperFirebase {
     List<Location> locations = [];
     if (snapshot.exists) {
       for (DataSnapshot d1 in snapshot.children) {
-        print('Location snapshot key: ${d1.key}');
-        locations.add(Location.fromDataSnapshot(d1));
+        try {
+          Location location = Location.fromDataSnapshot(d1);
+          print('✓ Loaded location: ${location.name} (ID: ${location.id}) with ${location.subLocations?.length ?? 0} sublocations');
+          locations.add(location);
+        } catch (e) {
+          print('✗ Error parsing location ${d1.key}: $e');
+        }
       }
     }
+    print('📍 Total locations loaded: ${locations.length}');
     return locations;
   }
 

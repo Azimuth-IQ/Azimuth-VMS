@@ -508,6 +508,25 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
 
     // Build list of locations where current team leader's team is assigned
     List<DropdownMenuItem<String>> locationItems = [];
+    Set<String> addedLocationIds = {};
+
+    void addLocationItem(String id, String name, bool isMain) {
+      if (addedLocationIds.contains(id)) return;
+
+      locationItems.add(
+        DropdownMenuItem(
+          value: id,
+          child: Row(
+            children: [
+              Icon(isMain ? Icons.location_on : Icons.subdirectory_arrow_right, size: 18, color: isMain ? Colors.blue : Colors.green),
+              const SizedBox(width: 8),
+              Text(isMain ? '$name (Main)' : name),
+            ],
+          ),
+        ),
+      );
+      addedLocationIds.add(id);
+    }
 
     // Check if main location has this team leader's team
     bool isMyMainTeam = false;
@@ -519,18 +538,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
     }
 
     if (isMyMainTeam) {
-      locationItems.add(
-        DropdownMenuItem(
-          value: _selectedShift!.locationId,
-          child: Row(
-            children: [
-              const Icon(Icons.location_on, size: 18, color: Colors.blue),
-              const SizedBox(width: 8),
-              Text('${mainLocation.name} (Main)'),
-            ],
-          ),
-        ),
-      );
+      addLocationItem(_selectedShift!.locationId, mainLocation.name, true);
     }
 
     // Add sublocations where this team leader's team is assigned
@@ -551,23 +559,28 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
               orElse: () => Location(id: '', name: 'Unknown', description: '', latitude: '0', longitude: '0'),
             );
 
-        locationItems.add(
-          DropdownMenuItem(
-            value: subLoc.subLocationId,
-            child: Row(
-              children: [
-                const Icon(Icons.subdirectory_arrow_right, size: 18, color: Colors.green),
-                const SizedBox(width: 8),
-                Text(subLocation.name),
-              ],
-            ),
-          ),
-        );
+        addLocationItem(subLoc.subLocationId, subLocation.name, false);
       }
     }
 
+    // Ensure selected value exists in items
+    String? validSelectedLocationId = _selectedLocationId;
+    bool valueExists = locationItems.any((item) => item.value == validSelectedLocationId);
+
+    if (validSelectedLocationId != null && !valueExists) {
+      validSelectedLocationId = null;
+      // Schedule a state update to clear the invalid selection
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _selectedLocationId != null) {
+          setState(() {
+            _selectedLocationId = null;
+          });
+        }
+      });
+    }
+
     return DropdownButtonFormField<String>(
-      value: _selectedLocationId,
+      value: validSelectedLocationId,
       decoration: const InputDecoration(border: OutlineInputBorder(), contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), labelText: 'Choose location'),
       hint: const Text('Select a location'),
       items: locationItems,

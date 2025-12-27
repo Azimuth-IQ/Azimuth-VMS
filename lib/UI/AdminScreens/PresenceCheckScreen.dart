@@ -129,10 +129,7 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
                   children: [
                     // Left panel: Event selection
                     Expanded(
-                      child: Card(
-                        margin: const EdgeInsets.all(8),
-                        child: _buildEventList(context, eventsProvider),
-                      ),
+                      child: Card(margin: const EdgeInsets.all(8), child: _buildEventList(context, eventsProvider)),
                     ),
 
                     // Right panel: Attendance list
@@ -153,7 +150,10 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
                               )
                             : TabBarView(
                                 controller: _tabController,
-                                children: [_buildCheckTab(context, eventsProvider, AttendanceCheckType.DEPARTURE), _buildCheckTab(context, eventsProvider, AttendanceCheckType.ARRIVAL)],
+                                children: [
+                                  _buildCheckTab(context, eventsProvider, AttendanceCheckType.DEPARTURE),
+                                  _buildCheckTab(context, eventsProvider, AttendanceCheckType.ARRIVAL),
+                                ],
                               ),
                       ),
                     ),
@@ -199,7 +199,10 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
                         Expanded(
                           child: TabBarView(
                             controller: _tabController,
-                            children: [_buildCheckTab(context, eventsProvider, AttendanceCheckType.DEPARTURE), _buildCheckTab(context, eventsProvider, AttendanceCheckType.ARRIVAL)],
+                            children: [
+                              _buildCheckTab(context, eventsProvider, AttendanceCheckType.DEPARTURE),
+                              _buildCheckTab(context, eventsProvider, AttendanceCheckType.ARRIVAL),
+                            ],
                           ),
                         ),
                       ],

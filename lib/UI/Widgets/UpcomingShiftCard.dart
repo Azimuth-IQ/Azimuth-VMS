@@ -53,7 +53,17 @@ class _UpcomingShiftCardState extends State<UpcomingShiftCard> {
 
         Location? location;
         if (shift.locationId.isNotEmpty) {
-          location = await _locationHelper.GetLocationById(shift.locationId);
+          final mainLocation = await _locationHelper.GetLocationById(shift.locationId);
+
+          if (mainLocation != null) {
+            if (widget.assignment!.sublocationId != null && widget.assignment!.sublocationId!.isNotEmpty) {
+              // Try to find sublocation
+              final subLoc = mainLocation.subLocations?.firstWhere((sl) => sl.id == widget.assignment!.sublocationId, orElse: () => mainLocation);
+              location = subLoc ?? mainLocation;
+            } else {
+              location = mainLocation;
+            }
+          }
         }
 
         if (mounted) {
