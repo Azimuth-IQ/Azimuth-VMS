@@ -14,12 +14,20 @@ class EventsMgmt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final provider = context.read<EventsProvider>();
-      if (provider.activeEvents.isEmpty && !provider.isLoading) {
-        provider.loadEvents();
-        provider.loadLocations();
-        provider.loadTeams();
-        provider.loadSystemUsers();
+      EventsProvider provider = context.read<EventsProvider>();
+      if (!provider.isLoading) {
+        if (provider.events.isEmpty) {
+          provider.loadEvents();
+        }
+        if (provider.locations.isEmpty) {
+          provider.loadLocations();
+        }
+        if (provider.teams.isEmpty) {
+          provider.loadTeams();
+        }
+        if (provider.systemUsers.isEmpty) {
+          provider.loadSystemUsers();
+        }
       }
     });
     return const EventsMgmtView();
@@ -221,6 +229,24 @@ class EventFormDialog extends StatelessWidget {
 
   void _showShiftForm(BuildContext context, {EventShift? shift, int? index}) async {
     EventsProvider eventsProvider = context.read<EventsProvider>();
+
+    // Ensure data is loaded before showing dialog
+    if (eventsProvider.locations.isEmpty || eventsProvider.teams.isEmpty) {
+      print('📦 Loading required data for shift form...');
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
+
+      await Future.wait([
+        if (eventsProvider.locations.isEmpty) eventsProvider.loadLocations(),
+        if (eventsProvider.teams.isEmpty) eventsProvider.loadTeams(),
+        if (eventsProvider.systemUsers.isEmpty) eventsProvider.loadSystemUsers(),
+      ]);
+
+      if (context.mounted) Navigator.pop(context); // Close loading dialog
+    }
 
     EventShift? result = await showDialog<EventShift>(
       context: context,
@@ -1054,11 +1080,25 @@ class ShiftFormDialog extends StatelessWidget {
                             const SizedBox(height: 16),
                             Builder(
                               builder: (context) {
-                                final locationItems = eventsProvider.locations.map((location) {
+                                if (eventsProvider.locations.isEmpty) {
+                                  print('⚠️ No locations available in EventsProvider');
+                                  return TextFormField(
+                                    enabled: false,
+                                    decoration: InputDecoration(
+                                      labelText: 'Location *',
+                                      border: const OutlineInputBorder(),
+                                      prefixIcon: const Icon(Icons.location_on),
+                                      hintText: 'Loading locations...',
+                                      helperText: 'No locations loaded. Please wait or refresh.',
+                                    ),
+                                  );
+                                }
+                                print('✓ ${eventsProvider.locations.length} locations available');
+                                List<DropdownMenuItem<String>> locationItems = eventsProvider.locations.map((location) {
                                   return DropdownMenuItem<String>(value: location.id, child: Text(location.name));
                                 }).toList();
 
-                                final validLocationId = locationItems.any((item) => item.value == provider.locationId) ? provider.locationId : null;
+                                String? validLocationId = locationItems.any((item) => item.value == provider.locationId) ? provider.locationId : null;
 
                                 return DropdownButtonFormField<String>(
                                   value: validLocationId,
@@ -1103,14 +1143,28 @@ class ShiftFormDialog extends StatelessWidget {
                             if (provider.useExistingTeam)
                               Builder(
                                 builder: (context) {
-                                  final teamItems = [
+                                  if (eventsProvider.teams.isEmpty) {
+                                    print('⚠️ No teams available in EventsProvider');
+                                    return TextFormField(
+                                      enabled: false,
+                                      decoration: InputDecoration(
+                                        labelText: 'Team (Optional)',
+                                        border: const OutlineInputBorder(),
+                                        prefixIcon: const Icon(Icons.groups),
+                                        hintText: 'Loading teams...',
+                                        helperText: 'No teams loaded. Please wait or refresh.',
+                                      ),
+                                    );
+                                  }
+                                  print('✓ ${eventsProvider.teams.length} teams available');
+                                  List<DropdownMenuItem<String>> teamItems = [
                                     const DropdownMenuItem<String>(value: null, child: Text('None')),
                                     ...eventsProvider.teams.map((team) {
                                       return DropdownMenuItem<String>(value: team.id, child: Text(team.name));
                                     }),
                                   ];
 
-                                  final validTeamId = teamItems.any((item) => item.value == provider.teamId) ? provider.teamId : null;
+                                  String? validTeamId = teamItems.any((item) => item.value == provider.teamId) ? provider.teamId : null;
 
                                   return DropdownButtonFormField<String>(
                                     value: validTeamId,

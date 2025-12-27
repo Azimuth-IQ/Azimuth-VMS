@@ -1,10 +1,11 @@
 import 'package:azimuth_vms/Helpers/VolunteerFormHelperFirebase.dart';
-import 'package:azimuth_vms/Helpers/SystemUserHelperFirebase.dart';
 import 'package:azimuth_vms/Models/VolunteerForm.dart';
+import 'package:azimuth_vms/Providers/CarouselProvider.dart';
 import 'package:azimuth_vms/Providers/NotificationsProvider.dart';
 import 'package:azimuth_vms/Providers/ShiftAssignmentProvider.dart';
 import 'package:azimuth_vms/Providers/VolunteerRatingProvider.dart';
 import 'package:azimuth_vms/UI/Widgets/ChangePasswordScreen.dart';
+import 'package:azimuth_vms/UI/Widgets/ImageCarouselSlider.dart';
 import 'package:azimuth_vms/UI/Widgets/NotificationPanel.dart';
 import 'package:azimuth_vms/UI/VolunteerScreens/VolunteerScheduleScreen.dart';
 import 'package:azimuth_vms/UI/VolunteerScreens/VolunteerProfileScreen.dart';
@@ -287,6 +288,20 @@ class _ApprovedDashboardView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             FadeInSlide(child: _buildWelcomeHeader(form.fullName)),
+            const SizedBox(height: 24),
+            // Image Carousel Slider
+            FadeInSlide(
+              delay: 0.05,
+              child: Consumer<CarouselProvider>(
+                builder: (context, carouselProvider, child) {
+                  final visibleImages = carouselProvider.images.where((img) => img.isVisible).toList();
+                  if (visibleImages.isEmpty) {
+                    return const SizedBox.shrink(); // Don't show carousel if no images
+                  }
+                  return ImageCarouselSlider(images: visibleImages, height: 200);
+                },
+              ),
+            ),
             const SizedBox(height: 24),
             if (isFullyApproved) ...[
               const FadeInSlide(

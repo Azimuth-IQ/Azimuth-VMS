@@ -67,15 +67,6 @@ class Location {
     String latitude = snapshot.child('latitude').value?.toString() ?? '0';
     bool archived = snapshot.child('archived').value as bool? ?? false;
 
-    return Location(
-      id: id,
-      name: name,
-      description: description,
-      imageUrl: imageUrl,
-      longitude: longitude,
-      latitude: latitude,
-      archived: archived,
-      subLocations: subLocations,
-    );
+    return Location(id: id, name: name, description: description, imageUrl: imageUrl, longitude: longitude, latitude: latitude, archived: archived, subLocations: subLocations);
   }
 }

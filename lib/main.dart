@@ -9,6 +9,7 @@ import 'package:azimuth_vms/Providers/VolunteersProvider.dart';
 import 'package:azimuth_vms/Providers/TeamLeadersProvider.dart';
 import 'package:azimuth_vms/Providers/TeamsProvider.dart';
 import 'package:azimuth_vms/Providers/LocationsProvider.dart';
+import 'package:azimuth_vms/Providers/CarouselProvider.dart';
 import 'package:azimuth_vms/UI/AdminScreens/AdminDashboard.dart';
 import 'package:azimuth_vms/UI/AdminScreens/EventsMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/FormFillPage.dart' as Admin;
@@ -23,6 +24,7 @@ import 'package:azimuth_vms/UI/AdminScreens/PresenceCheckScreen.dart';
 import 'package:azimuth_vms/UI/AdminScreens/SendNotificationScreen.dart';
 import 'package:azimuth_vms/UI/AdminScreens/VolunteerRatingScreen.dart';
 import 'package:azimuth_vms/UI/AdminScreens/VolunteerWorkflowScreen.dart';
+import 'package:azimuth_vms/UI/AdminScreens/CarouselManagementScreen.dart';
 import 'package:azimuth_vms/Models/VolunteerForm.dart';
 import 'package:azimuth_vms/UI/AdminScreens/RatingCriteriaManagementScreen.dart';
 import 'package:azimuth_vms/UI/AdminScreens/ManageFeedbackScreen.dart';
@@ -68,6 +70,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<VolunteerRatingProvider>(create: (_) => VolunteerRatingProvider()),
         ChangeNotifierProvider<SystemFeedbackProvider>(create: (_) => SystemFeedbackProvider()),
         ChangeNotifierProvider<VolunteerEventFeedbackProvider>(create: (_) => VolunteerEventFeedbackProvider()),
+        ChangeNotifierProvider<CarouselProvider>(create: (_) => CarouselProvider()),
         // Add missing providers for Dashboard stats
         ChangeNotifierProvider<VolunteersProvider>(create: (_) => VolunteersProvider()),
         ChangeNotifierProvider<TeamLeadersProvider>(create: (_) => TeamLeadersProvider()),
@@ -270,6 +273,7 @@ class _AuthGuardState extends State<AuthGuard> {
       '/submit-feedback',
       '/send-notification',
       '/leave-request-management',
+      '/carousel-management',
       '/volunteer-workflow',
     ];
 
@@ -335,6 +339,8 @@ class _AuthGuardState extends State<AuthGuard> {
       case '/event-feedback-report':
         return const EventFeedbackReportScreen();
       case '/submit-feedback':
+      case '/carousel-management':
+        return const CarouselManagementScreen();
         return SubmitFeedbackScreen();
 
       // Team Leader routes

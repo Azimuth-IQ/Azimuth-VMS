@@ -54,7 +54,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
   }
 
   void _loadCurrentUser() {
-    final user = FirebaseAuth.instance.currentUser;
+    final User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       setState(() {
         _currentUserPhone = user.email!.split('@').first;
@@ -87,7 +87,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
     }
 
     // Check sublocation teams
-    for (var subLoc in shift.subLocations) {
+    for (ShiftSubLocation subLoc in shift.subLocations) {
       if (subLoc.teamId != null) {
         final team = provider.teams.where((t) => t.id == subLoc.teamId).firstOrNull;
         if (team != null && team.teamLeaderId == _currentUserPhone) {
@@ -110,7 +110,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
       return;
     }
 
-    final provider = context.read<EventsProvider>();
+    final EventsProvider provider = context.read<EventsProvider>();
 
     // Get team members based on selected location
     List<String> teamMemberIds = [];
@@ -128,7 +128,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
       }
     } else {
       // Sublocation team
-      final subLoc = _selectedShift!.subLocations.firstWhere((sl) => sl.subLocationId == _selectedLocationId);
+      final ShiftSubLocation subLoc = _selectedShift!.subLocations.firstWhere((sl) => sl.subLocationId == _selectedLocationId);
       if (subLoc.teamId != null) {
         try {
           final team = provider.teams.firstWhere((t) => t.id == subLoc.teamId);
@@ -147,11 +147,11 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
     }
 
     // Filter volunteers from team members
-    final volunteers = provider.systemUsers.where((u) {
+    final List<SystemUser> volunteers = provider.systemUsers.where((u) {
       if (!teamMemberIds.contains(u.phone)) return false;
       if (u.role != SystemUserRole.VOLUNTEER) return false;
       if (u.volunteerForm == null) return false;
-      final status = u.volunteerForm!.status;
+      final VolunteerFormStatus? status = u.volunteerForm!.status;
       return status == VolunteerFormStatus.Approved1 || status == VolunteerFormStatus.Approved2 || status == VolunteerFormStatus.Completed;
     }).toList();
 
@@ -161,7 +161,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
     }
 
     // Show selection dialog
-    final selectedVolunteers = await showDialog<List<SystemUser>>(
+    final List<SystemUser>? selectedVolunteers = await showDialog<List<SystemUser>>(
       context: context,
       builder: (context) => _VolunteerSelectionDialog(volunteers: volunteers),
     );
@@ -173,11 +173,11 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
 
   Future<void> _createAssignments(BuildContext context, List<SystemUser> volunteers, Event event, EventShift shift, String? sublocationId) async {
     try {
-      final helper = ShiftAssignmentHelperFirebase();
-      final notifHelper = NotificationHelperFirebase();
+      final ShiftAssignmentHelperFirebase helper = ShiftAssignmentHelperFirebase();
+      final NotificationHelperFirebase notifHelper = NotificationHelperFirebase();
 
-      for (var volunteer in volunteers) {
-        final assignment = ShiftAssignment(
+      for (SystemUser volunteer in volunteers) {
+        final ShiftAssignment assignment = ShiftAssignment(
           id: const Uuid().v4(),
           volunteerId: volunteer.phone,
           shiftId: shift.id,
@@ -223,7 +223,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              final provider = context.read<EventsProvider>();
+              final EventsProvider provider = context.read<EventsProvider>();
               provider.loadEvents();
               provider.loadTeams();
               provider.loadSystemUsers();
@@ -241,7 +241,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
             return const Center(child: Text('Unable to identify current user'));
           }
 
-          final myEvents = _getFilteredEvents(provider);
+          final List<Event> myEvents = _getFilteredEvents(provider);
 
           if (myEvents.isEmpty) {
             return Center(
@@ -260,7 +260,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
 
           return LayoutBuilder(
             builder: (context, constraints) {
-              final isDesktop = constraints.maxWidth > 900;
+              final bool isDesktop = constraints.maxWidth > 900;
 
               if (isDesktop) {
                 return _buildDesktopLayout(context, provider, myEvents);
@@ -377,8 +377,8 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
     return ListView.builder(
       itemCount: myEvents.length,
       itemBuilder: (context, index) {
-        final event = myEvents[index];
-        final isSelected = _selectedEvent?.id == event.id;
+        final Event event = myEvents[index];
+        final bool isSelected = _selectedEvent?.id == event.id;
 
         return ExpansionTile(
           leading: Icon(Icons.event, color: isSelected ? Colors.blue : null),
@@ -390,9 +390,9 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
               return const SizedBox.shrink();
             }
 
-            final shiftSelected = _selectedShift?.id == shift.id;
+            final bool shiftSelected = _selectedShift?.id == shift.id;
 
-            final location = provider.locations.firstWhere(
+            final Location location = provider.locations.firstWhere(
               (l) => l.id == shift.locationId,
               orElse: () => Location(id: '', name: 'Unknown', description: '', latitude: '', longitude: ''),
             );
@@ -452,7 +452,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                final assignments = assignmentProvider.assignments;
+                final List<ShiftAssignment> assignments = assignmentProvider.assignments;
 
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -470,12 +470,12 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
                           : ListView.builder(
                               itemCount: assignments.length,
                               itemBuilder: (context, index) {
-                                final assignment = assignments[index];
-                                final volunteer = provider.systemUsers.where((u) => u.phone == assignment.volunteerId).firstOrNull;
+                                final ShiftAssignment assignment = assignments[index];
+                                final SystemUser? volunteer = provider.systemUsers.where((u) => u.phone == assignment.volunteerId).firstOrNull;
 
                                 String locationName = 'Main Location';
                                 if (assignment.sublocationId != null) {
-                                  final subLoc = provider.locations.expand((loc) => loc.subLocations ?? []).where((sl) => sl.id == assignment.sublocationId).firstOrNull;
+                                  final Location? subLoc = provider.locations.expand((loc) => loc.subLocations ?? []).where((sl) => sl.id == assignment.sublocationId).firstOrNull;
                                   locationName = subLoc?.name ?? 'Unknown Sublocation';
                                 }
 
@@ -501,7 +501,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
   }
 
   Widget _buildLocationDropdown(EventsProvider provider) {
-    final mainLocation = provider.locations.firstWhere(
+    final Location mainLocation = provider.locations.firstWhere(
       (loc) => loc.id == _selectedShift!.locationId,
       orElse: () => Location(id: '', name: 'Unknown', description: '', latitude: '0', longitude: '0'),
     );
@@ -552,7 +552,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
       }
 
       if (isMySubTeam) {
-        final subLocation = provider.locations
+        final Location subLocation = provider.locations
             .expand((loc) => loc.subLocations ?? [])
             .firstWhere(
               (sl) => sl.id == subLoc.subLocationId,

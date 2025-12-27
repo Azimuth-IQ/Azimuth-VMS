@@ -1,4 +1,6 @@
+import 'package:azimuth_vms/Providers/CarouselProvider.dart';
 import 'package:azimuth_vms/Providers/EventsProvider.dart';
+import 'package:azimuth_vms/Providers/LocationsProvider.dart';
 import 'package:azimuth_vms/Providers/NotificationsProvider.dart';
 import 'package:azimuth_vms/Providers/TeamLeadersProvider.dart';
 import 'package:azimuth_vms/Providers/VolunteersProvider.dart';
@@ -10,6 +12,7 @@ import 'package:azimuth_vms/UI/AdminScreens/TeamsMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/VolunteersMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/SendNotificationScreen.dart';
 import 'package:azimuth_vms/UI/Widgets/ChangePasswordScreen.dart';
+import 'package:azimuth_vms/UI/Widgets/ImageCarouselSlider.dart';
 import 'package:azimuth_vms/UI/Widgets/NotificationPanel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +42,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
       context.read<VolunteersProvider>().loadVolunteers();
       context.read<TeamLeadersProvider>().loadTeamLeaders();
       context.read<TeamsProvider>().loadTeams();
+      context.read<LocationsProvider>().loadLocations();
+      context.read<CarouselProvider>().loadImages();
     });
   }
 
@@ -211,6 +216,8 @@ class _DashboardHome extends StatelessWidget {
           context.read<VolunteersProvider>().loadVolunteers();
           context.read<TeamLeadersProvider>().loadTeamLeaders();
           context.read<TeamsProvider>().loadTeams();
+          context.read<LocationsProvider>().loadLocations();
+          context.read<CarouselProvider>().loadImages();
           context.read<NotificationsProvider>().loadNotifications(userPhone);
         },
         child: SingleChildScrollView(
@@ -219,6 +226,21 @@ class _DashboardHome extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Image Carousel
+              Consumer<CarouselProvider>(
+                builder: (context, carouselProvider, child) {
+                  final List<dynamic> visibleImages = carouselProvider.images.where((img) => img.isVisible).toList();
+                  if (visibleImages.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+                  return Column(
+                    children: [
+                      ImageCarouselSlider(images: visibleImages.cast(), height: 200),
+                      const SizedBox(height: 24),
+                    ],
+                  );
+                },
+              ),
               _buildStatsRow(context),
               const SizedBox(height: 32),
               Text('Analytics', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
@@ -358,6 +380,7 @@ class _DashboardHome extends StatelessWidget {
       _QuickAction(title: 'Shift Assignment', icon: Icons.assignment_ind, color: Colors.indigo, onTap: () => Navigator.pushNamed(context, '/shift-assignment')),
       _QuickAction(title: 'Presence Check', icon: Icons.fact_check, color: Colors.teal, onTap: () => Navigator.pushNamed(context, '/presence-check-admin')),
       _QuickAction(title: 'Forms Mgmt', icon: Icons.description, color: Colors.amber.shade700, onTap: () => Navigator.pushNamed(context, '/form-mgmt')),
+      _QuickAction(title: 'Carousel Mgmt', icon: Icons.view_carousel, color: Colors.deepPurple, onTap: () => Navigator.pushNamed(context, '/carousel-management')),
       _QuickAction(title: 'Ratings', icon: Icons.star, color: Colors.pink, onTap: () => Navigator.pushNamed(context, '/volunteer-rating')),
       _QuickAction(title: 'Leave Requests', icon: Icons.event_busy, color: Colors.orange, onTap: () => Navigator.pushNamed(context, '/leave-request-management')),
       _QuickAction(title: 'System Feedback', icon: Icons.feedback, color: Colors.teal, onTap: () => Navigator.pushNamed(context, '/manage-feedback')),
@@ -412,8 +435,8 @@ class _DashboardHome extends StatelessWidget {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: provider.activeEvents.take(5).length,
-          separatorBuilder: (_, __) => const SizedBox(height: 12),
-          itemBuilder: (context, index) {
+          separatorBuilder: (BuildContext _, int __) => const SizedBox(height: 12),
+          itemBuilder: (BuildContext context, int index) {
             final event = provider.activeEvents[index];
             return Card(
               elevation: 0,
