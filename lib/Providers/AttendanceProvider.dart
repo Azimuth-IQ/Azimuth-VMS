@@ -29,11 +29,20 @@ class AttendanceProvider with ChangeNotifier {
     return records.any((r) => r.checkType == checkType && r.present);
   }
 
-  // Get specific check record for a user
-  AttendanceRecord? getCheckRecord(String userId, AttendanceCheckType checkType) {
+  // Get specific check record for a user on a specific date
+  AttendanceRecord? getCheckRecord(String userId, AttendanceCheckType checkType, {DateTime? date}) {
     final records = getRecordsForUser(userId);
+    final targetDate = date ?? DateTime.now();
+    
     try {
-      return records.firstWhere((r) => r.checkType == checkType);
+      return records.firstWhere((r) {
+        if (r.checkType != checkType) return false;
+        
+        final recordDate = DateTime.parse(r.timestamp);
+        return recordDate.year == targetDate.year && 
+               recordDate.month == targetDate.month && 
+               recordDate.day == targetDate.day;
+      });
     } catch (e) {
       return null;
     }

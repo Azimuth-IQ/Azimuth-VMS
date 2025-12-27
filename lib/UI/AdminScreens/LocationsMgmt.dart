@@ -88,11 +88,7 @@ class _LocationsMgmtViewState extends State<LocationsMgmtView> {
                     ),
                   ],
                 ),
-          floatingActionButton: FloatingActionButton(
-            heroTag: 'locations_mgmt_fab',
-            onPressed: () => _showLocationForm(context),
-            child: const Icon(Icons.add),
-          ),
+          floatingActionButton: FloatingActionButton(heroTag: 'locations_mgmt_fab', onPressed: () => _showLocationForm(context), child: const Icon(Icons.add)),
         );
       },
     );

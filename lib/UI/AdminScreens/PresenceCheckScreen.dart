@@ -264,7 +264,7 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
                     return const SizedBox.shrink();
                   }
 
-                  final attendanceRecord = attendanceProvider.getCheckRecord(volunteer.phone, checkType);
+                  final attendanceRecord = attendanceProvider.getCheckRecord(volunteer.phone, checkType, date: DateTime.now());
 
                   final shift = _selectedEvent!.shifts.where((s) => s.id == assignment.shiftId).firstOrNull;
 
@@ -348,7 +348,7 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
         continue;
       }
 
-      final record = attendanceProvider.getCheckRecord(assignment.volunteerId, checkType);
+      final record = attendanceProvider.getCheckRecord(assignment.volunteerId, checkType, date: DateTime.now());
 
       if (record == null) {
         notChecked++;

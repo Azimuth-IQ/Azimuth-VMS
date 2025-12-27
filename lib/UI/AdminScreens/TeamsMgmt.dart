@@ -18,7 +18,7 @@ class TeamsMgmt extends StatelessWidget {
         provider.loadTeams();
       }
     });
-    
+
     return const TeamsMgmtView();
   }
 }
@@ -90,11 +90,7 @@ class _TeamsMgmtViewState extends State<TeamsMgmtView> {
                     ),
                   ],
                 ),
-          floatingActionButton: FloatingActionButton(
-            heroTag: 'teams_mgmt_fab',
-            onPressed: () => _showTeamForm(context),
-            child: const Icon(Icons.add),
-          ),
+          floatingActionButton: FloatingActionButton(heroTag: 'teams_mgmt_fab', onPressed: () => _showTeamForm(context), child: const Icon(Icons.add)),
         );
       },
     );

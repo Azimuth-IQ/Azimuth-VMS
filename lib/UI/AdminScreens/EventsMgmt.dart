@@ -96,11 +96,7 @@ class _EventsMgmtViewState extends State<EventsMgmtView> {
                     ),
                   ],
                 ),
-          floatingActionButton: FloatingActionButton(
-            heroTag: 'events_mgmt_fab',
-            onPressed: () => _showEventForm(context),
-            child: const Icon(Icons.add),
-          ),
+          floatingActionButton: FloatingActionButton(heroTag: 'events_mgmt_fab', onPressed: () => _showEventForm(context), child: const Icon(Icons.add)),
         );
       },
     );
