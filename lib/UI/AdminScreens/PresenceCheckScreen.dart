@@ -120,75 +120,136 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
             return const Center(child: CircularProgressIndicator());
           }
 
-          return Row(
-            children: [
-              // Left panel: Event selection
-              Expanded(
-                child: Card(
-                  margin: const EdgeInsets.all(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Text('Select Event', style: Theme.of(context).textTheme.titleLarge),
-                      ),
-                      const Divider(),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: eventsProvider.events.length,
-                          itemBuilder: (context, index) {
-                            final event = eventsProvider.events[index];
-                            final isSelected = _selectedEvent?.id == event.id;
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final isDesktop = constraints.maxWidth > 900;
 
-                            return ListTile(
-                              selected: isSelected,
-                              leading: const Icon(Icons.event),
-                              title: Text(event.name),
-                              subtitle: Text(event.startDate),
-                              trailing: _buildPermissionBadge(event.presenceCheckPermissions),
-                              onTap: () {
-                                setState(() {
-                                  _selectedEvent = event;
-                                });
-                                context.read<ShiftAssignmentProvider>().startListeningToEvent(event.id);
-                                context.read<AttendanceProvider>().startListeningToEvent(event.id);
-                              },
-                            );
-                          },
-                        ),
+              if (isDesktop) {
+                return Row(
+                  children: [
+                    // Left panel: Event selection
+                    Expanded(
+                      child: Card(
+                        margin: const EdgeInsets.all(8),
+                        child: _buildEventList(context, eventsProvider),
                       ),
-                    ],
-                  ),
-                ),
-              ),
+                    ),
 
-              // Right panel: Attendance list
-              Expanded(
-                flex: 2,
-                child: Card(
-                  margin: const EdgeInsets.all(8),
-                  child: _selectedEvent == null
-                      ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                    // Right panel: Attendance list
+                    Expanded(
+                      flex: 2,
+                      child: Card(
+                        margin: const EdgeInsets.all(8),
+                        child: _selectedEvent == null
+                            ? Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.how_to_reg, size: 64, color: Colors.grey[400]),
+                                    const SizedBox(height: 16),
+                                    Text('Select an event to start presence check', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                                  ],
+                                ),
+                              )
+                            : TabBarView(
+                                controller: _tabController,
+                                children: [_buildCheckTab(context, eventsProvider, AttendanceCheckType.DEPARTURE), _buildCheckTab(context, eventsProvider, AttendanceCheckType.ARRIVAL)],
+                              ),
+                      ),
+                    ),
+                  ],
+                );
+              } else {
+                // Mobile Layout
+                if (_selectedEvent != null) {
+                  return WillPopScope(
+                    onWillPop: () async {
+                      setState(() {
+                        _selectedEvent = null;
+                      });
+                      return false;
+                    },
+                    child: Column(
+                      children: [
+                        Container(
+                          color: Colors.grey[100],
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                          child: Row(
                             children: [
-                              Icon(Icons.how_to_reg, size: 64, color: Colors.grey[400]),
-                              const SizedBox(height: 16),
-                              Text('Select an event to start presence check', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                              IconButton(
+                                icon: const Icon(Icons.arrow_back),
+                                onPressed: () {
+                                  setState(() {
+                                    _selectedEvent = null;
+                                  });
+                                },
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(_selectedEvent!.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                    Text(_selectedEvent!.startDate, style: const TextStyle(fontSize: 12)),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
-                        )
-                      : TabBarView(
-                          controller: _tabController,
-                          children: [_buildCheckTab(context, eventsProvider, AttendanceCheckType.DEPARTURE), _buildCheckTab(context, eventsProvider, AttendanceCheckType.ARRIVAL)],
                         ),
-                ),
-              ),
-            ],
+                        Expanded(
+                          child: TabBarView(
+                            controller: _tabController,
+                            children: [_buildCheckTab(context, eventsProvider, AttendanceCheckType.DEPARTURE), _buildCheckTab(context, eventsProvider, AttendanceCheckType.ARRIVAL)],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                return _buildEventList(context, eventsProvider);
+              }
+            },
           );
         },
       ),
+    );
+  }
+
+  Widget _buildEventList(BuildContext context, EventsProvider eventsProvider) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Text('Select Event', style: Theme.of(context).textTheme.titleLarge),
+        ),
+        const Divider(),
+        Expanded(
+          child: ListView.builder(
+            itemCount: eventsProvider.events.length,
+            itemBuilder: (context, index) {
+              final event = eventsProvider.events[index];
+              final isSelected = _selectedEvent?.id == event.id;
+
+              return ListTile(
+                selected: isSelected,
+                leading: const Icon(Icons.event),
+                title: Text(event.name),
+                subtitle: Text(event.startDate),
+                trailing: _buildPermissionBadge(event.presenceCheckPermissions),
+                onTap: () {
+                  setState(() {
+                    _selectedEvent = event;
+                  });
+                  context.read<ShiftAssignmentProvider>().startListeningToEvent(event.id);
+                  context.read<AttendanceProvider>().startListeningToEvent(event.id);
+                },
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 
