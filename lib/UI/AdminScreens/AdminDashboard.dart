@@ -2,6 +2,7 @@ import 'package:azimuth_vms/Providers/EventsProvider.dart';
 import 'package:azimuth_vms/Providers/NotificationsProvider.dart';
 import 'package:azimuth_vms/Providers/TeamLeadersProvider.dart';
 import 'package:azimuth_vms/Providers/VolunteersProvider.dart';
+import 'package:azimuth_vms/Providers/TeamsProvider.dart';
 import 'package:azimuth_vms/UI/AdminScreens/EventsMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/LocationsMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/TeamLeadersMgmt.dart';
@@ -36,6 +37,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
       context.read<EventsProvider>().loadEvents();
       context.read<VolunteersProvider>().loadVolunteers();
       context.read<TeamLeadersProvider>().loadTeamLeaders();
+      context.read<TeamsProvider>().loadTeams();
     });
   }
 
@@ -61,13 +63,13 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 NavigationRail(
                   selectedIndex: _selectedIndex,
                   onDestinationSelected: (index) => setState(() => _selectedIndex = index),
-                  labelType: NavigationRailLabelType.all,
+                  labelType: NavigationRailLabelType.none,
                   leading: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 24),
                     child: CircleAvatar(
-                      radius: 24,
+                      radius: 20,
                       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                      child: Icon(Icons.admin_panel_settings, color: Theme.of(context).colorScheme.primary),
+                      child: Icon(Icons.admin_panel_settings, color: Theme.of(context).colorScheme.primary, size: 20),
                     ),
                   ),
                   destinations: const [
@@ -204,6 +206,7 @@ class _DashboardHome extends StatelessWidget {
           context.read<EventsProvider>().loadEvents();
           context.read<VolunteersProvider>().loadVolunteers();
           context.read<TeamLeadersProvider>().loadTeamLeaders();
+          context.read<TeamsProvider>().loadTeams();
           context.read<NotificationsProvider>().loadNotifications(userPhone);
         },
         child: SingleChildScrollView(
@@ -213,6 +216,10 @@ class _DashboardHome extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildStatsRow(context),
+              const SizedBox(height: 32),
+              Text('Analytics', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              _buildAnalyticsSection(context),
               const SizedBox(height: 32),
               Text('Quick Actions', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
@@ -225,6 +232,71 @@ class _DashboardHome extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildAnalyticsSection(BuildContext context) {
+    return Consumer<TeamsProvider>(
+      builder: (context, provider, _) {
+        if (provider.isLoading) return const Center(child: CircularProgressIndicator());
+        if (provider.teams.isEmpty) return const SizedBox.shrink();
+
+        // Prepare data: Top 5 teams by member count
+        final teams = List.of(provider.teams);
+        teams.sort((a, b) => b.memberIds.length.compareTo(a.memberIds.length));
+        final topTeams = teams.take(5).toList();
+        final maxMembers = topTeams.isNotEmpty ? topTeams.first.memberIds.length : 1;
+
+        return Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.grey.shade200),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Volunteers per Team (Top 5)', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              const SizedBox(height: 24),
+              SizedBox(
+                height: 200,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: topTeams.map((team) {
+                    final heightFactor = team.memberIds.length / maxMembers;
+                    return Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Tooltip(
+                            message: '${team.memberIds.length} members',
+                            child: Container(
+                              height: 150 * heightFactor,
+                              width: 30,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                                borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            team.name.length > 8 ? '${team.name.substring(0, 6)}..' : team.name,
+                            style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -276,7 +348,7 @@ class _DashboardHome extends StatelessWidget {
   Widget _buildQuickActionsGrid(BuildContext context) {
     final actions = [
       _QuickAction(title: 'Shift Assignment', icon: Icons.assignment_ind, color: Colors.indigo, onTap: () => Navigator.pushNamed(context, '/shift-assignment')),
-      _QuickAction(title: 'Presence Check', icon: Icons.fact_check, color: Colors.teal, onTap: () => Navigator.pushNamed(context, '/presence-check')),
+      _QuickAction(title: 'Presence Check', icon: Icons.fact_check, color: Colors.teal, onTap: () => Navigator.pushNamed(context, '/presence-check-admin')),
       _QuickAction(title: 'Forms Mgmt', icon: Icons.description, color: Colors.amber.shade700, onTap: () => Navigator.pushNamed(context, '/form-mgmt')),
       _QuickAction(title: 'Ratings', icon: Icons.star, color: Colors.pink, onTap: () => Navigator.pushNamed(context, '/volunteer-rating')),
     ];
