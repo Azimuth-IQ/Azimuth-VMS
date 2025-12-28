@@ -8,15 +8,17 @@
 
 ## Overview
 
-This guide provides a streamlined approach to implementing a 3-theme design system for the VMS Flutter app. Each theme corresponds to a user role with distinct visual identity.
+This guide provides a streamlined approach to implementing a unified 3-theme design system for the VMS Flutter app. The entire platform uses ONE theme at a time, selected by administrators.
 
 ### The 3 Themes
 
-| Theme | User Role | Color Scheme | Platform Focus |
-|-------|-----------|--------------|----------------|
-| **Theme 1** | Admin | Red/Dark | Desktop + Mobile |
-| **Theme 2** | Volunteer | Green/Light | Mobile-First |
-| **Theme 3** | Team Leader | Gold/Dark | Mobile-First |
+| Theme | Color Scheme | Style | Platform Focus |
+|-------|--------------|-------|----------------|
+| **Theme 1** | Red/Dark | Authority & Urgency | Desktop + Mobile |
+| **Theme 2** | Green/Light | Growth & Community | Desktop + Mobile |
+| **Theme 3** | Gold/Dark | Warmth & Leadership | Desktop + Mobile |
+
+**Key Feature:** Admins can select which theme the entire platform uses via Theme Settings screen.
 
 ---
 
@@ -52,7 +54,7 @@ feature/theme-system-implementation
 3. **Open Pull Request:**
    - Go to GitHub repository
    - Create PR from `feature/theme-system-implementation` to `main`
-   - Title: "Implement 3-theme role-based design system"
+   - Title: "Implement unified 3-theme design system with admin selection"
    - Mark as draft (WIP)
 
 ### During Implementation
@@ -95,9 +97,11 @@ git push -f origin feature/theme-system-implementation
 **Checklist:**
 - [ ] All theme files created with explicit types
 - [ ] Color palettes match REDESIGN.md specifications
+- [ ] All color variables have purpose comments
 - [ ] Fonts configured in pubspec.yaml
 - [ ] ThemeProvider integrated in main.dart
-- [ ] Theme switches based on user role
+- [ ] Theme loads from Firebase on app start
+- [ ] Theme applies to entire platform (all users)
 - [ ] Commit: "Phase 1: Implement theme infrastructure"
 
 ---

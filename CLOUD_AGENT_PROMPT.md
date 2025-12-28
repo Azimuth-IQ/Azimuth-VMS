@@ -38,6 +38,13 @@ You are working on a Flutter-based Volunteer Management System (VMS) that uses:
 - **Platform:** Web (Chrome) primary, iOS/Android secondary
 - **Language:** Dart with Flutter
 
+**Companion Documentation:**
+- `THEME_IMPLEMENTATION_GUIDE.md` - Streamlined guide with git workflow and phase checklist
+- `REDESIGN.md` - Complete design specification with 47 pages of component details
+- `PRE_DELEGATION_CHECKLIST.md` - Pre-work checklist (fonts, git setup, verification)
+
+**Read these files for context, but follow THIS prompt for implementation instructions.**
+
 ---
 
 ## Objective
