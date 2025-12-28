@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
-import '../../Helpers/ShiftAssignmentHelperFirebase.dart';
+import 'package:provider/provider.dart';
 import '../../Helpers/EventHelperFirebase.dart';
 import '../../Models/ShiftAssignment.dart';
 import '../../Models/Event.dart';
+import '../../Providers/ShiftAssignmentProvider.dart';
 import '../../l10n/app_localizations.dart';
 
 class VolunteerScheduleScreen extends StatefulWidget {
@@ -17,14 +18,12 @@ class VolunteerScheduleScreen extends StatefulWidget {
 }
 
 class _VolunteerScheduleScreenState extends State<VolunteerScheduleScreen> {
-  final ShiftAssignmentHelperFirebase _assignmentHelper = ShiftAssignmentHelperFirebase();
   final EventHelperFirebase _eventHelper = EventHelperFirebase();
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
-  List<ShiftAssignment> _allAssignments = [];
   Map<String, Event> _eventCache = {};
   bool _isLoading = true;
 
@@ -32,69 +31,64 @@ class _VolunteerScheduleScreenState extends State<VolunteerScheduleScreen> {
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
-    _loadAssignments();
+    _loadEvents();
   }
 
-  Future<void> _loadAssignments() async {
+  Future<void> _loadEvents() async {
     setState(() => _isLoading = true);
     try {
-      print('📅 Loading assignments for volunteer: ${widget.volunteerPhone}');
-      final assignments = await _assignmentHelper.GetShiftAssignmentsByVolunteer(widget.volunteerPhone);
-      print('📅 Found ${assignments.length} assignments');
+      final provider = context.read<ShiftAssignmentProvider>();
+      print('📅 Loading events for ${provider.assignments.length} assignments');
+
+      if (provider.assignments.isEmpty) {
+        print('⚠️ No assignments found in provider!');
+      }
 
       // Load event details for each assignment
-      for (var assignment in assignments) {
+      for (var assignment in provider.assignments) {
+        print('📅 Processing assignment: ${assignment.eventId} for shift ${assignment.shiftId}');
         if (!_eventCache.containsKey(assignment.eventId)) {
           final event = await _eventHelper.GetEventById(assignment.eventId);
           if (event != null) {
             _eventCache[assignment.eventId] = event;
-            print('📅 Loaded event: ${event.name} (${event.startDate})');
+            print('📅 Loaded event: ${event.name} on ${event.startDate}');
           } else {
-            print('⚠️ Event not found: ${assignment.eventId}');
+            print('⚠️ Event not found for ID: ${assignment.eventId}');
           }
         }
       }
 
-      setState(() {
-        _allAssignments = assignments;
-        _isLoading = false;
-      });
-      print('✓ Schedule loaded successfully');
+      print('✓ Event cache contains ${_eventCache.length} events');
+      setState(() => _isLoading = false);
     } catch (e) {
-      print('❌ Error loading assignments: $e');
-      if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.errorLoadingSchedule(e.toString()))));
-      }
+      print('❌ Error loading events: $e');
       setState(() => _isLoading = false);
     }
   }
 
   List<ShiftAssignment> _getAssignmentsForDay(DateTime day) {
-    final assignments = _allAssignments.where((assignment) {
-      final event = _eventCache[assignment.eventId];
-      if (event == null) return false;
+    final provider = context.read<ShiftAssignmentProvider>();
+    print('📅 Checking assignments for ${DateFormat('yyyy-MM-dd').format(day)}');
+    print('📅 Total assignments: ${provider.assignments.length}');
+    print('📅 Event cache size: ${_eventCache.length}');
 
-      // Parse event start date (DD-MM-YYYY)
-      final parts = event.startDate.split('-');
-      if (parts.length != 3) {
-        print('⚠️ Invalid date format: ${event.startDate}');
+    final assignments = provider.assignments.where((assignment) {
+      final event = _eventCache[assignment.eventId];
+      if (event == null) {
+        print('⚠️ Event ${assignment.eventId} not in cache');
         return false;
       }
 
-      final eventDate = DateTime(
-        int.parse(parts[2]), // year
-        int.parse(parts[1]), // month
-        int.parse(parts[0]), // day
-      );
+      print('📅 Checking event: ${event.name} (Recurring: ${event.isRecurring}, Type: ${event.recurrenceType})');
 
-      return isSameDay(eventDate, day);
+      // Use the event's occursOnDate method to check if it occurs on this day
+      final matches = event.occursOnDate(day);
+      print('📅 Event "${event.name}" occurs on ${DateFormat('yyyy-MM-dd').format(day)} = $matches');
+
+      return matches;
     }).toList();
 
-    if (assignments.isNotEmpty) {
-      print('📅 Found ${assignments.length} assignments for ${DateFormat('yyyy-MM-dd').format(day)}');
-    }
-
+    print('📅 Found ${assignments.length} assignments for ${DateFormat('yyyy-MM-dd').format(day)}');
     return assignments;
   }
 
@@ -134,53 +128,59 @@ class _VolunteerScheduleScreenState extends State<VolunteerScheduleScreen> {
       appBar: AppBar(
         title: Text(l10n.mySchedule),
         elevation: 0,
-        actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _loadAssignments, tooltip: l10n.refresh)],
+        actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _loadEvents, tooltip: l10n.refresh)],
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                // Calendar
-                Card(
-                  margin: const EdgeInsets.all(16),
-                  elevation: 2,
-                  child: TableCalendar(
-                    firstDay: DateTime.utc(2024, 1, 1),
-                    lastDay: DateTime.utc(2026, 12, 31),
-                    focusedDay: _focusedDay,
-                    calendarFormat: _calendarFormat,
-                    selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                    eventLoader: _getAssignmentsForDay,
-                    onDaySelected: (selectedDay, focusedDay) {
-                      setState(() {
-                        _selectedDay = selectedDay;
-                        _focusedDay = focusedDay;
-                      });
-                    },
-                    onFormatChanged: (format) {
-                      setState(() {
-                        _calendarFormat = format;
-                      });
-                    },
-                    onPageChanged: (focusedDay) {
+      body: Consumer<ShiftAssignmentProvider>(
+        builder: (context, provider, child) {
+          if (_isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          return Column(
+            children: [
+              // Calendar
+              Card(
+                margin: const EdgeInsets.all(16),
+                elevation: 2,
+                child: TableCalendar(
+                  firstDay: DateTime.utc(2024, 1, 1),
+                  lastDay: DateTime.utc(2026, 12, 31),
+                  focusedDay: _focusedDay,
+                  calendarFormat: _calendarFormat,
+                  selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                  eventLoader: _getAssignmentsForDay,
+                  onDaySelected: (selectedDay, focusedDay) {
+                    setState(() {
+                      _selectedDay = selectedDay;
                       _focusedDay = focusedDay;
-                    },
-                    calendarStyle: CalendarStyle(
-                      todayDecoration: BoxDecoration(color: Colors.blue.withOpacity(0.3), shape: BoxShape.circle),
-                      selectedDecoration: const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
-                      markerDecoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
-                      outsideDaysVisible: false,
-                    ),
-                    headerStyle: const HeaderStyle(formatButtonVisible: true, titleCentered: true, formatButtonShowsNext: false),
+                    });
+                  },
+                  onFormatChanged: (format) {
+                    setState(() {
+                      _calendarFormat = format;
+                    });
+                  },
+                  onPageChanged: (focusedDay) {
+                    _focusedDay = focusedDay;
+                  },
+                  calendarStyle: CalendarStyle(
+                    todayDecoration: BoxDecoration(color: Colors.blue.withOpacity(0.3), shape: BoxShape.circle),
+                    selectedDecoration: const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
+                    markerDecoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                    outsideDaysVisible: false,
                   ),
+                  headerStyle: const HeaderStyle(formatButtonVisible: true, titleCentered: true, formatButtonShowsNext: false),
                 ),
+              ),
 
-                const SizedBox(height: 8),
+              const SizedBox(height: 8),
 
-                // Selected day's assignments
-                Expanded(child: _buildAssignmentsList()),
-              ],
-            ),
+              // Selected day's assignments
+              Expanded(child: _buildAssignmentsList()),
+            ],
+          );
+        },
+      ),
     );
   }
 

@@ -133,6 +133,90 @@ class Event {
       shifts: shifts,
     );
   }
+
+  // Check if a given date is an occurrence of this event
+  bool occursOnDate(DateTime date) {
+    // Parse the start date
+    final startParts = startDate.split('-');
+    if (startParts.length != 3) return false;
+
+    final eventStartDate = DateTime(
+      int.parse(startParts[2]), // year
+      int.parse(startParts[1]), // month
+      int.parse(startParts[0]), // day
+    );
+
+    // If date is before event start, it can't occur
+    if (date.isBefore(DateTime(eventStartDate.year, eventStartDate.month, eventStartDate.day))) {
+      return false;
+    }
+
+    // Check recurrence end date if it exists
+    if (recurrenceEndDate != null) {
+      final endParts = recurrenceEndDate!.split('-');
+      if (endParts.length == 3) {
+        final recurrenceEnd = DateTime(
+          int.parse(endParts[2]), // year
+          int.parse(endParts[1]), // month
+          int.parse(endParts[0]), // day
+        );
+        if (date.isAfter(recurrenceEnd)) {
+          return false;
+        }
+      }
+    }
+
+    // Non-recurring event - just check if it's the same day
+    if (!isRecurring || recurrenceType == 'NONE') {
+      return date.year == eventStartDate.year && date.month == eventStartDate.month && date.day == eventStartDate.day;
+    }
+
+    // Check recurrence pattern
+    switch (recurrenceType) {
+      case 'DAILY':
+        return true; // Every day from start to end
+
+      case 'WEEKLY':
+        if (weeklyDays == null || weeklyDays!.isEmpty) return false;
+        final allowedDays = weeklyDays!.split(',');
+        final dayName = _getDayOfWeekName(date.weekday);
+        return allowedDays.contains(dayName);
+
+      case 'MONTHLY':
+        if (monthlyDay == null) return false;
+        return date.day == int.parse(monthlyDay!);
+
+      case 'YEARLY':
+        if (yearlyMonth == null || yearlyDay == null) return false;
+        final monthEnum = MonthExtension.fromString(yearlyMonth!);
+        if (monthEnum == null) return false;
+        return date.month == monthEnum.monthNumber && date.day == int.parse(yearlyDay!);
+
+      default:
+        return false;
+    }
+  }
+
+  String _getDayOfWeekName(int weekday) {
+    switch (weekday) {
+      case DateTime.monday:
+        return 'MONDAY';
+      case DateTime.tuesday:
+        return 'TUESDAY';
+      case DateTime.wednesday:
+        return 'WEDNESDAY';
+      case DateTime.thursday:
+        return 'THURSDAY';
+      case DateTime.friday:
+        return 'FRIDAY';
+      case DateTime.saturday:
+        return 'SATURDAY';
+      case DateTime.sunday:
+        return 'SUNDAY';
+      default:
+        return '';
+    }
+  }
 }
 
 class EventShift {

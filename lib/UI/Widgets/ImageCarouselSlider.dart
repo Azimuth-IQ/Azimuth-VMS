@@ -25,7 +25,12 @@ class _ImageCarouselSliderState extends State<ImageCarouselSlider> {
     _pageController = PageController(initialPage: 0);
 
     if (widget.enableAutoPlay && widget.images.isNotEmpty) {
-      _startAutoPlay();
+      // Delay auto-play start until after first frame is built
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _startAutoPlay();
+        }
+      });
     }
   }
 
@@ -38,13 +43,19 @@ class _ImageCarouselSliderState extends State<ImageCarouselSlider> {
 
   void _startAutoPlay() {
     _autoPlayTimer = Timer.periodic(widget.autoPlayDuration, (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+
       if (_currentPage < widget.images.length - 1) {
         _currentPage++;
       } else {
         _currentPage = 0;
       }
 
-      if (_pageController.hasClients) {
+      // Check both hasClients and position initialization
+      if (_pageController.hasClients && _pageController.position.hasPixels) {
         _pageController.animateToPage(_currentPage, duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
       }
     });

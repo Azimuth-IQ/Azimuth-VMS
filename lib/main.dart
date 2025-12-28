@@ -353,9 +353,9 @@ class _AuthGuardState extends State<AuthGuard> {
       case '/event-feedback-report':
         return const EventFeedbackReportScreen();
       case '/submit-feedback':
+        return SubmitFeedbackScreen();
       case '/carousel-management':
         return const CarouselManagementScreen();
-        return SubmitFeedbackScreen();
 
       // Team Leader routes
       case '/teamleaders-dashboard':

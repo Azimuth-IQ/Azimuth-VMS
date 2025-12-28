@@ -3,6 +3,7 @@ import 'package:azimuth_vms/Providers/SystemFeedbackProvider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../l10n/app_localizations.dart';
 
 class SubmitFeedbackScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -12,12 +13,14 @@ class SubmitFeedbackScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final user = FirebaseAuth.instance.currentUser;
     final userPhone = user?.email?.split('@').first ?? '';
     final feedbackProvider = Provider.of<SystemFeedbackProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Submit Feedback'), backgroundColor: Theme.of(context).colorScheme.inversePrimary),
+      backgroundColor: Colors.grey[50],
+      appBar: AppBar(title: Text(l10n.submitFeedback), backgroundColor: Colors.grey[50], elevation: 0, foregroundColor: Colors.black87),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -33,10 +36,7 @@ class SubmitFeedbackScreen extends StatelessWidget {
                     Icon(Icons.info_outline, color: Colors.blue.shade700),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: Text(
-                        'Share your feedback, report bugs, or suggest improvements to help us make the system better.',
-                        style: TextStyle(color: Colors.blue.shade900, fontSize: 14),
-                      ),
+                      child: Text(l10n.shareFeedbackPrompt, style: TextStyle(color: Colors.blue.shade900, fontSize: 14)),
                     ),
                   ],
                 ),
@@ -54,18 +54,13 @@ class SubmitFeedbackScreen extends StatelessWidget {
                   TextFormField(
                     controller: _messageController,
                     maxLines: 8,
-                    decoration: const InputDecoration(
-                      labelText: 'Your Feedback',
-                      hintText: 'Describe the issue, bug, or suggestion in detail...',
-                      border: OutlineInputBorder(),
-                      alignLabelWithHint: true,
-                    ),
+                    decoration: InputDecoration(labelText: l10n.yourFeedback, hintText: l10n.describeFeedbackDetail, border: const OutlineInputBorder(), alignLabelWithHint: true),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Please enter your feedback';
+                        return l10n.pleaseEnterFeedback;
                       }
                       if (value.trim().length < 10) {
-                        return 'Please provide more details (at least 10 characters)';
+                        return l10n.provideMoreDetails;
                       }
                       return null;
                     },
@@ -82,19 +77,19 @@ class SubmitFeedbackScreen extends StatelessWidget {
                             await feedbackProvider.submitFeedback(userId: userPhone, userName: user?.displayName ?? userPhone, message: _messageController.text.trim());
 
                             if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Feedback submitted successfully!'), backgroundColor: Colors.green));
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.feedbackSubmittedSuccessfully), backgroundColor: Colors.green));
                               _messageController.clear();
                             }
                           } catch (e) {
                             print('Error submitting feedback: $e');
                             if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.errorOccurred(e.toString()))));
                             }
                           }
                         }
                       },
                       icon: const Icon(Icons.send),
-                      label: const Text('Submit Feedback'),
+                      label: Text(l10n.submitFeedback),
                       style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
                     ),
                   ),
@@ -106,7 +101,7 @@ class SubmitFeedbackScreen extends StatelessWidget {
             // My Previous Feedback Section
             const Divider(),
             const SizedBox(height: 16),
-            Text('My Previous Feedback', style: Theme.of(context).textTheme.titleLarge),
+            Text(l10n.myPreviousFeedback, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 16),
 
             // List of user's feedback
@@ -118,16 +113,16 @@ class SubmitFeedbackScreen extends StatelessWidget {
                 }
 
                 if (snapshot.hasError) {
-                  return Center(child: Text('Error loading feedback: ${snapshot.error}'));
+                  return Center(child: Text(l10n.errorLoadingFeedback(snapshot.error.toString())));
                 }
 
                 final myFeedback = snapshot.data ?? [];
                 if (myFeedback.isEmpty) {
-                  return const Card(
+                  return Card(
                     child: Padding(
-                      padding: EdgeInsets.all(24.0),
+                      padding: const EdgeInsets.all(24.0),
                       child: Center(
-                        child: Text('You haven\'t submitted any feedback yet', style: TextStyle(color: Colors.grey)),
+                        child: Text(l10n.noFeedbackYet, style: const TextStyle(color: Colors.grey)),
                       ),
                     ),
                   );
@@ -150,7 +145,7 @@ class SubmitFeedbackScreen extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildStatusBadge(feedback.status),
+                                _buildStatusBadge(context, feedback.status),
                                 Text(_formatDate(feedback.timestamp), style: const TextStyle(color: Colors.grey, fontSize: 12)),
                               ],
                             ),
@@ -177,7 +172,7 @@ class SubmitFeedbackScreen extends StatelessWidget {
                                         Icon(Icons.check_circle, color: Colors.green.shade700, size: 16),
                                         const SizedBox(width: 8),
                                         Text(
-                                          'Admin Response:',
+                                          l10n.adminResponse,
                                           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green.shade900, fontSize: 12),
                                         ),
                                       ],
@@ -202,7 +197,8 @@ class SubmitFeedbackScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusBadge(FeedbackStatus status) {
+  Widget _buildStatusBadge(BuildContext context, FeedbackStatus status) {
+    final l10n = AppLocalizations.of(context)!;
     Color color;
     IconData icon;
     String label;
@@ -211,22 +207,22 @@ class SubmitFeedbackScreen extends StatelessWidget {
       case FeedbackStatus.PENDING:
         color = Colors.orange;
         icon = Icons.schedule;
-        label = 'Pending';
+        label = l10n.pending;
         break;
       case FeedbackStatus.IN_PROGRESS:
         color = Colors.blue;
         icon = Icons.hourglass_bottom;
-        label = 'In Progress';
+        label = l10n.inProgress;
         break;
       case FeedbackStatus.RESOLVED:
         color = Colors.green;
         icon = Icons.check_circle;
-        label = 'Resolved';
+        label = l10n.resolved;
         break;
       case FeedbackStatus.CLOSED:
         color = Colors.grey;
         icon = Icons.close;
-        label = 'Closed';
+        label = l10n.closed;
         break;
     }
 

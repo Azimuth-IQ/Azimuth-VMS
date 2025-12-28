@@ -759,5 +759,56 @@
   
   "myProfile": "ملفي الشخصي",
   "unknownName": "اسم غير معروف",
-  "noPhone": "لا يوجد هاتف"
+  "noPhone": "لا يوجد هاتف",
+  
+  "performanceScore": "درجة الأداء",
+  "basedOnIHSCriteria": "بناءً على معايير IHS",
+  "personalInformation": "المعلومات الشخصية",
+  "education": "التعليم",
+  "birthDate": "تاريخ الميلاد",
+  "address": "العنوان",
+  "profession": "المهنة",
+  "jobTitle": "المسمى الوظيفي",
+  "department": "القسم",
+  "notApplicable": "غير متوفر",
+  
+  "nextShift": "المناوبة القادمة",
+  "unknownLocation": "موقع غير معروف",
+  
+  "mySchedule": "جدولي",
+  "requestLeave": "طلب إجازة",
+  "reasonForLeaveRequest": "سبب طلب الإجازة",
+  "userNotAuthenticated": "المستخدم غير مصادق عليه",
+  "leaveRequestSubmittedSuccessfully": "تم تقديم طلب الإجازة بنجاح",
+  "errorOccurred": "حدث خطأ: {error}",
+  
+  "submitEventFeedback": "تقديم تقييم الحدث",
+  "provideYourFeedback": "قدم تقييمك حول هذا الحدث",
+  "howWasYourExperience": "كيف كانت تجربتك؟",
+  "pleaseSelectRating": "الرجاء اختيار التقييم",
+  "yourFeedback": "تقييمك",
+  "shareFeedbackDetails": "شارك تفاصيل تقييمك هنا...",
+  "pleaseProvideFeedback": "الرجاء تقديم تقييمك",
+  "feedbackSubmittedSuccessfully": "شكراً! تم تقديم تقييمك بنجاح.",
+  "failedToSubmitFeedback": "فشل تقديم التقييم: {error}",
+  
+  "eventDetails": "تفاصيل الحدث",
+  "upcomingShift": "المناوبة القادمة",
+  "myAssignments": "تكليفاتي",
+  "myScheduleLocations": "جدولي والمواقع",
+  "viewUpcomingShifts": "عرض المناوبات القادمة والأوقات والمواقع",
+  "selectLanguage": "اختر اللغة",
+  "areYouSureSignOut": "هل أنت متأكد من تسجيل الخروج؟",
+  
+  "shareFeedbackPrompt": "شارك ملاحظاتك، أبلغ عن الأخطاء، أو اقترح تحسينات لمساعدتنا في تحسين النظام.",
+  "describeFeedbackDetail": "صف المشكلة أو الخطأ أو الاقتراح بالتفصيل...",
+  "pleaseEnterFeedback": "الرجاء إدخال ملاحظاتك",
+  "provideMoreDetails": "الرجاء تقديم المزيد من التفاصيل (10 أحرف على الأقل)",
+  "myPreviousFeedback": "ملاحظاتي السابقة",
+  "errorLoadingFeedback": "خطأ في تحميل الملاحظات: {error}",
+  "noFeedbackYet": "لم تقدم أي ملاحظات بعد",
+  "adminResponse": "رد المسؤول:",
+  "inProgress": "قيد المعالجة",
+  "resolved": "تم الحل",
+  "closed": "مغلق"
 }

@@ -3,6 +3,7 @@ import 'package:azimuth_vms/Models/AttendanceRecord.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../l10n/app_localizations.dart';
 
 class VolunteerStatsChart extends StatefulWidget {
   final String userPhone;
@@ -118,9 +119,9 @@ class _VolunteerStatsChartState extends State<VolunteerStatsChart> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Activity Overview', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text(AppLocalizations.of(context)!.activityOverview, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
-          const Text('Shifts completed in last 6 months', style: TextStyle(fontSize: 12, color: Colors.grey)),
+          Text(AppLocalizations.of(context)!.shiftsCompletedLast6Months, style: const TextStyle(fontSize: 12, color: Colors.grey)),
           const SizedBox(height: 24),
           Expanded(
             child: BarChart(

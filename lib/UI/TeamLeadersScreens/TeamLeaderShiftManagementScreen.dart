@@ -224,8 +224,12 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         title: Text(l10n.assignMyTeam),
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
+        foregroundColor: Colors.black87,
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),

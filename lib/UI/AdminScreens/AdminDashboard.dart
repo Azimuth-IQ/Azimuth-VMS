@@ -121,6 +121,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
             bottomNavigationBar: NavigationBar(
               selectedIndex: _selectedIndex,
               onDestinationSelected: (index) => setState(() => _selectedIndex = index),
+              labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
               destinations: [
                 NavigationDestination(icon: const Icon(Icons.dashboard_outlined), selectedIcon: const Icon(Icons.dashboard), label: l10n.home),
                 NavigationDestination(icon: const Icon(Icons.event_outlined), selectedIcon: const Icon(Icons.event), label: l10n.events),

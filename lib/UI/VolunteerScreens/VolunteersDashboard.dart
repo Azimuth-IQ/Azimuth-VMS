@@ -1,10 +1,10 @@
 import 'package:azimuth_vms/Helpers/VolunteerFormHelperFirebase.dart';
 import 'package:azimuth_vms/Models/VolunteerForm.dart';
 import 'package:azimuth_vms/Providers/CarouselProvider.dart';
+import 'package:azimuth_vms/Providers/LanguageProvider.dart';
 import 'package:azimuth_vms/Providers/NotificationsProvider.dart';
 import 'package:azimuth_vms/Providers/ShiftAssignmentProvider.dart';
 import 'package:azimuth_vms/Providers/VolunteerRatingProvider.dart';
-import 'package:azimuth_vms/UI/Widgets/ChangePasswordScreen.dart';
 import 'package:azimuth_vms/UI/Widgets/ImageCarouselSlider.dart';
 import 'package:azimuth_vms/UI/Widgets/NotificationPanel.dart';
 import 'package:azimuth_vms/UI/VolunteerScreens/VolunteerScheduleScreen.dart';
@@ -136,6 +136,7 @@ class VolunteersDashboard extends StatelessWidget {
 
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => CarouselProvider()..startListening()),
         ChangeNotifierProvider(create: (_) => NotificationsProvider()..loadNotifications(userPhone)),
         ChangeNotifierProvider(create: (_) => ShiftAssignmentProvider()..startListeningToVolunteer(userPhone)),
         ChangeNotifierProvider(create: (_) => VolunteerRatingProvider()),
@@ -229,237 +230,346 @@ class _ApprovedDashboardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(l10n.volunteerDashboard),
-        backgroundColor: Colors.green,
-        actions: [
-          // Notification Bell
-          Consumer<NotificationsProvider>(
-            builder: (context, notifProvider, child) {
-              return Stack(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.notifications_outlined),
-                    onPressed: () {
-                      final provider = context.read<NotificationsProvider>();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => ChangeNotifierProvider.value(value: provider, child: const NotificationPanel()),
-                        ),
-                      );
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isDesktop = constraints.maxWidth > 900;
+
+        final body = SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 1. Image Carousel Slider
+              FadeInSlide(
+                child: Consumer<CarouselProvider>(
+                  builder: (context, carouselProvider, child) {
+                    final visibleImages = carouselProvider.images.where((img) => img.isVisible).toList();
+                    if (visibleImages.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+                    return ImageCarouselSlider(images: visibleImages, height: 200);
+                  },
+                ),
+              ),
+              const SizedBox(height: 24),
+              if (isFullyApproved) ...[
+                // 2. Upcoming Shifts
+                FadeInSlide(
+                  delay: 0.1,
+                  child: Text(l10n.upcomingShift, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                ),
+                const SizedBox(height: 16),
+                FadeInSlide(
+                  delay: 0.15,
+                  child: Consumer<ShiftAssignmentProvider>(
+                    builder: (context, provider, child) {
+                      if (provider.assignments.isEmpty) {
+                        return Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Center(child: Text(l10n.noUpcomingShifts)),
+                          ),
+                        );
+                      }
+                      return UpcomingShiftCard(assignment: provider.assignments.first);
                     },
-                    tooltip: l10n.notifications,
                   ),
-                  if (notifProvider.unreadCount > 0)
-                    Positioned(
-                      right: 8,
-                      top: 8,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
-                        constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
-                        child: Text(
-                          notifProvider.unreadCount > 9 ? '9+' : '${notifProvider.unreadCount}',
-                          style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                ],
-              );
-            },
-          ),
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.account_circle),
-            onSelected: (value) {
-              if (value == 'change_password') {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordScreen(userPhone: userPhone)));
-              } else if (value == 'logout') {
-                FirebaseAuth.instance.signOut();
-                Navigator.pushReplacementNamed(context, '/sign-in');
-              }
-            },
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 'change_password',
-                child: Row(children: [const Icon(Icons.lock_reset, size: 20), const SizedBox(width: 8), Text(l10n.changePassword)]),
-              ),
-              PopupMenuItem(
-                value: 'logout',
-                child: Row(children: [const Icon(Icons.logout, size: 20), const SizedBox(width: 8), Text(l10n.signOut)]),
-              ),
+                ),
+                const SizedBox(height: 24),
+                // 3. My Assignments
+                FadeInSlide(
+                  delay: 0.2,
+                  child: Text(l10n.myAssignments, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                ),
+                const SizedBox(height: 16),
+                FadeInSlide(
+                  delay: 0.25,
+                  child: Consumer<ShiftAssignmentProvider>(
+                    builder: (context, assignmentProvider, child) {
+                      final assignmentCount = assignmentProvider.assignments.length;
+                      return _buildActionCardWithBadge(context, l10n.myScheduleLocations, l10n.viewUpcomingShifts, Icons.calendar_month, Colors.blue, assignmentCount, () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => ChangeNotifierProvider.value(
+                              value: assignmentProvider,
+                              child: VolunteerScheduleScreen(volunteerPhone: userPhone),
+                            ),
+                          ),
+                        );
+                      });
+                    },
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // 4. Activities
+                FadeInSlide(
+                  delay: 0.3,
+                  child: Text(l10n.activity, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                ),
+                const SizedBox(height: 16),
+                FadeInSlide(delay: 0.35, child: VolunteerStatsChart(userPhone: userPhone)),
+                SizedBox(height: isDesktop ? 24 : 80), // Extra space for bottom navigation on mobile
+              ],
             ],
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            FadeInSlide(child: _buildWelcomeHeader(form.fullName)),
-            const SizedBox(height: 24),
-            // Image Carousel Slider
-            FadeInSlide(
-              delay: 0.05,
-              child: Consumer<CarouselProvider>(
-                builder: (context, carouselProvider, child) {
-                  final visibleImages = carouselProvider.images.where((img) => img.isVisible).toList();
-                  if (visibleImages.isEmpty) {
-                    return const SizedBox.shrink(); // Don't show carousel if no images
-                  }
-                  return ImageCarouselSlider(images: visibleImages, height: 200);
-                },
-              ),
-            ),
-            const SizedBox(height: 24),
-            if (isFullyApproved) ...[
-              const FadeInSlide(
-                delay: 0.1,
-                child: Text('My Assignments', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              ),
-              const SizedBox(height: 16),
-              FadeInSlide(
-                delay: 0.2,
-                child: Consumer<ShiftAssignmentProvider>(
-                  builder: (context, assignmentProvider, child) {
-                    final assignmentCount = assignmentProvider.assignments.length;
-                    return _buildActionCardWithBadge(
-                      context,
-                      'My Schedule & Locations',
-                      'View your upcoming shifts, times, and locations',
-                      Icons.calendar_month,
-                      Colors.blue,
-                      assignmentCount,
-                      () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => VolunteerScheduleScreen(volunteerPhone: userPhone)));
+        );
+
+        if (isDesktop) {
+          return Scaffold(
+            backgroundColor: Colors.grey[50],
+            body: Row(
+              children: [
+                NavigationRail(
+                  selectedIndex: 0,
+                  onDestinationSelected: (index) {
+                    switch (index) {
+                      case 0: // Dashboard - already here
+                        break;
+                      case 1: // Profile
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => VolunteerProfileScreen(form: form, userPhone: userPhone),
+                          ),
+                        );
+                        break;
+                      case 2: // Feedback
+                        Navigator.pushNamed(context, '/submit-feedback');
+                        break;
+                      case 3: // Language
+                        _showLanguageDialog(context);
+                        break;
+                    }
+                  },
+                  labelType: NavigationRailLabelType.selected,
+                  leading: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 24),
+                    child: Consumer<NotificationsProvider>(
+                      builder: (context, notifProvider, child) {
+                        return Stack(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.notifications_outlined, size: 28),
+                              onPressed: () {
+                                final provider = context.read<NotificationsProvider>();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => ChangeNotifierProvider.value(value: provider, child: const NotificationPanel()),
+                                  ),
+                                );
+                              },
+                              tooltip: l10n.notifications,
+                            ),
+                            if (notifProvider.unreadCount > 0)
+                              Positioned(
+                                right: 8,
+                                top: 8,
+                                child: Container(
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                                  constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                                  child: Text(
+                                    notifProvider.unreadCount > 9 ? '9+' : '${notifProvider.unreadCount}',
+                                    style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        );
                       },
+                    ),
+                  ),
+                  destinations: [
+                    NavigationRailDestination(icon: Icon(Icons.dashboard_outlined), selectedIcon: Icon(Icons.dashboard), label: Text(l10n.home)),
+                    NavigationRailDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: Text(l10n.profile)),
+                    NavigationRailDestination(icon: Icon(Icons.feedback_outlined), selectedIcon: Icon(Icons.feedback), label: Text(l10n.submitFeedback)),
+                    NavigationRailDestination(icon: Icon(Icons.language), selectedIcon: Icon(Icons.language), label: Text(l10n.language)),
+                  ],
+                  trailing: Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(icon: const Icon(Icons.logout), onPressed: () => _showLogoutDialog(context), tooltip: l10n.signOut),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
+                  ),
+                ),
+                const VerticalDivider(thickness: 1, width: 1),
+                Expanded(
+                  child: Column(
+                    children: [
+                      AppBar(
+                        automaticallyImplyLeading: false,
+                        title: Text(l10n.volunteerDashboard),
+                        backgroundColor: Colors.grey[50],
+                        elevation: 0,
+                        foregroundColor: Colors.black87,
+                      ),
+                      Expanded(child: body),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          return Scaffold(
+            backgroundColor: Colors.grey[50],
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              title: Text(l10n.volunteerDashboard),
+              backgroundColor: Colors.grey[50],
+              elevation: 0,
+              foregroundColor: Colors.black87,
+              actions: [
+                // Notification Bell
+                Consumer<NotificationsProvider>(
+                  builder: (context, notifProvider, child) {
+                    return Stack(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.notifications_outlined),
+                          onPressed: () {
+                            final provider = context.read<NotificationsProvider>();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => ChangeNotifierProvider.value(value: provider, child: const NotificationPanel()),
+                              ),
+                            );
+                          },
+                          tooltip: l10n.notifications,
+                        ),
+                        if (notifProvider.unreadCount > 0)
+                          Positioned(
+                            right: 8,
+                            top: 8,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                              constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                              child: Text(
+                                notifProvider.unreadCount > 9 ? '9+' : '${notifProvider.unreadCount}',
+                                style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                      ],
                     );
                   },
                 ),
+              ],
+            ),
+            body: body,
+            bottomNavigationBar: _buildBottomNavigation(context, form),
+          );
+        }
+      },
+    );
+  }
+
+  Widget _buildBottomNavigation(BuildContext context, VolunteerForm form) {
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      selectedItemColor: Colors.green,
+      unselectedItemColor: Colors.grey,
+      currentIndex: 0,
+      showSelectedLabels: false,
+      showUnselectedLabels: false,
+      onTap: (index) {
+        switch (index) {
+          case 0:
+            // Already on dashboard
+            break;
+          case 1:
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => VolunteerProfileScreen(form: form, userPhone: userPhone),
               ),
-              const SizedBox(height: 24),
-              const FadeInSlide(
-                delay: 0.3,
-                child: Text('Upcoming Shift', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              ),
-              const SizedBox(height: 16),
-              FadeInSlide(
-                delay: 0.4,
-                child: Consumer<ShiftAssignmentProvider>(
-                  builder: (context, provider, child) {
-                    if (provider.assignments.isEmpty) {
-                      return const Card(
-                        child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Center(child: Text("No upcoming shifts assigned.")),
-                        ),
-                      );
-                    }
-                    return UpcomingShiftCard(assignment: provider.assignments.first);
-                  },
-                ),
-              ),
-              const SizedBox(height: 24),
-              FadeInSlide(
-                delay: 0.5,
-                child: Text(l10n.activity, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              ),
-              const SizedBox(height: 16),
-              FadeInSlide(delay: 0.6, child: VolunteerStatsChart(userPhone: userPhone)),
-              const SizedBox(height: 24),
-              FadeInSlide(
-                delay: 0.7,
-                child: Text(l10n.actions, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              ),
-              const SizedBox(height: 16),
-              FadeInSlide(
-                delay: 0.8,
-                child: _buildActionCard(context, l10n.myProfile, l10n.viewRatingAndInfo, Icons.person, Colors.teal, () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => VolunteerProfileScreen(form: form, userPhone: userPhone),
-                    ),
-                  );
-                }),
-              ),
-              FadeInSlide(
-                delay: 0.9,
-                child: _buildActionCard(context, l10n.submitFeedback, l10n.reportBugsOrSuggest, Icons.feedback, Colors.orange, () {
-                  Navigator.pushNamed(context, '/submit-feedback');
-                }),
-              ),
-            ],
+            );
+            break;
+          case 2:
+            Navigator.pushNamed(context, '/submit-feedback');
+            break;
+          case 3:
+            _showLanguageDialog(context);
+            break;
+          case 4:
+            _showLogoutDialog(context);
+            break;
+        }
+      },
+      items: const [
+        BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: ''),
+        BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
+        BottomNavigationBarItem(icon: Icon(Icons.feedback), label: ''),
+        BottomNavigationBarItem(icon: Icon(Icons.language), label: ''),
+        BottomNavigationBarItem(icon: Icon(Icons.logout), label: ''),
+      ],
+    );
+  }
+
+  void _showLanguageDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final languageProvider = context.read<LanguageProvider>();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.selectLanguage),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.language),
+              title: const Text('English'),
+              trailing: languageProvider.isEnglish ? const Icon(Icons.check, color: Colors.green) : null,
+              onTap: () async {
+                await languageProvider.setLocale(const Locale('en'));
+                if (context.mounted) Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.language),
+              title: const Text('العربية'),
+              trailing: languageProvider.isArabic ? const Icon(Icons.check, color: Colors.green) : null,
+              onTap: () async {
+                await languageProvider.setLocale(const Locale('ar'));
+                if (context.mounted) Navigator.pop(context);
+              },
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildWelcomeHeader(String? name) {
-    return Builder(
-      builder: (context) {
-        final l10n = AppLocalizations.of(context)!;
-        return Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [Colors.green.shade800, Colors.green.shade400], begin: Alignment.topLeft, end: Alignment.bottomRight),
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [BoxShadow(color: Colors.green.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, 10))],
+  void _showLogoutDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.signOut),
+        content: Text(l10n.areYouSureSignOut),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: Text(l10n.cancel)),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              FirebaseAuth.instance.signOut();
+              Navigator.pushReplacementNamed(context, '/sign-in');
+            },
+            child: Text(l10n.signOut),
           ),
-          child: Stack(
-            children: [
-              Positioned(right: -20, top: -20, child: Icon(Icons.volunteer_activism, size: 150, color: Colors.white.withOpacity(0.1))),
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white.withOpacity(0.5), width: 2),
-                    ),
-                    child: CircleAvatar(
-                      radius: 36,
-                      backgroundColor: Colors.white,
-                      child: Text(
-                        name?.substring(0, 1).toUpperCase() ?? '?',
-                        style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.green.shade800),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l10n.welcomeBackName,
-                          style: const TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w500),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          name ?? l10n.volunteer,
-                          style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
+        ],
+      ),
     );
-  }
-
-  Widget _buildActionCard(BuildContext context, String title, String description, IconData icon, Color color, VoidCallback onTap) {
-    return _buildActionCardWithBadge(context, title, description, icon, color, 0, onTap);
   }
 
   Widget _buildActionCardWithBadge(BuildContext context, String title, String description, IconData icon, Color color, int badgeCount, VoidCallback onTap) {

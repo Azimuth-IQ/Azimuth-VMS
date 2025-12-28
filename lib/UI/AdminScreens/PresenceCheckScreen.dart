@@ -95,10 +95,16 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         title: Text(l10n.presenceCheck),
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
+        foregroundColor: Colors.black87,
         bottom: TabBar(
           controller: _tabController,
+          labelColor: Colors.black87,
+          unselectedLabelColor: Colors.black54,
           tabs: [
             Tab(icon: const Icon(Icons.directions_bus), text: l10n.check1Departure),
             Tab(icon: const Icon(Icons.location_on), text: l10n.check2Arrival),

@@ -42,7 +42,8 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
     final userPhone = user?.email?.split('@').first ?? '';
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.eventFeedback), backgroundColor: Theme.of(context).colorScheme.inversePrimary),
+      backgroundColor: Colors.grey[50],
+      appBar: AppBar(title: Text(l10n.eventFeedback), backgroundColor: Colors.grey[50], elevation: 0, foregroundColor: Colors.black87),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -295,17 +296,18 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
   }
 
   String _getRatingLabel(int rating) {
+    final l10n = AppLocalizations.of(context)!;
     switch (rating) {
       case 1:
-        return 'Poor';
+        return l10n.poor;
       case 2:
-        return 'Fair';
+        return l10n.fair;
       case 3:
-        return 'Good';
+        return l10n.good;
       case 4:
-        return 'Very Good';
+        return l10n.veryGood;
       case 5:
-        return 'Excellent';
+        return l10n.excellent;
       default:
         return '';
     }

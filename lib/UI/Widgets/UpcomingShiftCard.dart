@@ -5,6 +5,7 @@ import 'package:azimuth_vms/Models/Location.dart';
 import 'package:azimuth_vms/Models/ShiftAssignment.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '../../l10n/app_localizations.dart';
 
 class UpcomingShiftCard extends StatefulWidget {
   final ShiftAssignment? assignment;
@@ -144,9 +145,9 @@ class _UpcomingShiftCardState extends State<UpcomingShiftCard> {
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(color: Colors.blue.shade200),
                       ),
-                      child: const Text(
-                        'NEXT SHIFT',
-                        style: TextStyle(color: Colors.blue, fontSize: 10, fontWeight: FontWeight.bold),
+                      child: Text(
+                        AppLocalizations.of(context)!.nextShift,
+                        style: const TextStyle(color: Colors.blue, fontSize: 10, fontWeight: FontWeight.bold),
                       ),
                     ),
                     const Spacer(),
@@ -169,7 +170,7 @@ class _UpcomingShiftCardState extends State<UpcomingShiftCard> {
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
-                        _location?.name ?? 'Unknown Location',
+                        _location?.name ?? AppLocalizations.of(context)!.unknownLocation,
                         style: TextStyle(color: Colors.grey.shade600),
                         overflow: TextOverflow.ellipsis,
                       ),

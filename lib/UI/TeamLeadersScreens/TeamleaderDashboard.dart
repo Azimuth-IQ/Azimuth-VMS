@@ -167,212 +167,337 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
       }
     }
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(AppLocalizations.of(context)!.teamLeaderDashboard),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-        actions: [
-          IconButton(icon: const Icon(Icons.refresh), onPressed: _loadData),
-          // Notification Bell
-          Consumer<NotificationsProvider>(
-            builder: (context, notifProvider, child) {
-              final l10n = AppLocalizations.of(context)!;
-              return Stack(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.notifications_outlined),
-                    onPressed: () {
-                      final provider = context.read<NotificationsProvider>();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => ChangeNotifierProvider.value(value: provider, child: const NotificationPanel()),
-                        ),
-                      );
-                    },
-                    tooltip: l10n.notifications,
-                  ),
-                  if (notifProvider.unreadCount > 0)
-                    Positioned(
-                      right: 8,
-                      top: 8,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
-                        constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
-                        child: Text(
-                          notifProvider.unreadCount > 9 ? '9+' : '${notifProvider.unreadCount}',
-                          style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
+    final l10n = AppLocalizations.of(context)!;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isDesktop = constraints.maxWidth > 900;
+
+        final body = _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : RefreshIndicator(
+                onRefresh: _loadData,
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Image Carousel Slider
+                      FadeInSlide(
+                        child: Consumer<CarouselProvider>(
+                          builder: (context, carouselProvider, child) {
+                            final visibleImages = carouselProvider.images.where((img) => img.isVisible).toList();
+                            if (visibleImages.isEmpty) {
+                              return const SizedBox.shrink();
+                            }
+                            return ImageCarouselSlider(images: visibleImages, height: 200);
+                          },
                         ),
                       ),
-                    ),
-                ],
-              );
-            },
-          ),
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.account_circle),
-            onSelected: (value) {
-              if (value == 'change_password') {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordScreen(userPhone: _currentUserPhone ?? '')));
-              } else if (value == 'logout') {
-                FirebaseAuth.instance.signOut();
-                Navigator.pushReplacementNamed(context, '/sign-in');
-              }
-            },
-            itemBuilder: (context) {
-              final l10n = AppLocalizations.of(context)!;
-              return [
-                PopupMenuItem(
-                  value: 'change_password',
-                  child: Row(children: [const Icon(Icons.lock_reset, size: 20), const SizedBox(width: 8), Text(l10n.changePassword)]),
-                ),
-                PopupMenuItem(
-                  value: 'logout',
-                  child: Row(children: [const Icon(Icons.logout, size: 20), const SizedBox(width: 8), Text(l10n.signOut)]),
-                ),
-              ];
-            },
-          ),
-        ],
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
-              onRefresh: _loadData,
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    FadeInSlide(child: _buildWelcomeHeader(_currentUser?.name)),
-                    const SizedBox(height: 24),
-                    // Image Carousel Slider
-                    FadeInSlide(
-                      delay: 0.05,
-                      child: Consumer<CarouselProvider>(
-                        builder: (context, carouselProvider, child) {
-                          final visibleImages = carouselProvider.images.where((img) => img.isVisible).toList();
-                          if (visibleImages.isEmpty) {
-                            return const SizedBox.shrink(); // Don't show carousel if no images
-                          }
-                          return ImageCarouselSlider(images: visibleImages, height: 200);
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    if (nextEvent != null && nextShift != null) ...[
+                      const SizedBox(height: 24),
+                      if (nextEvent != null && nextShift != null) ...[
+                        FadeInSlide(
+                          child: Text(l10n.upcomingShift, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        ),
+                        const SizedBox(height: 16),
+                        FadeInSlide(
+                          delay: 0.05,
+                          child: UpcomingShiftCard(event: nextEvent, shift: nextShift),
+                        ),
+                        const SizedBox(height: 24),
+                      ],
                       FadeInSlide(
                         delay: 0.1,
-                        child: Text(AppLocalizations.of(context)!.upcomingShift, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        child: Text(l10n.activity, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      ),
+                      const SizedBox(height: 16),
+                      FadeInSlide(delay: 0.15, child: VolunteerStatsChart(userPhone: _currentUserPhone ?? '')),
+                      const SizedBox(height: 24),
+                      FadeInSlide(
+                        delay: 0.2,
+                        child: Text(l10n.management, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                       ),
                       const SizedBox(height: 16),
                       FadeInSlide(
-                        delay: 0.2,
-                        child: UpcomingShiftCard(event: nextEvent, shift: nextShift),
+                        delay: 0.25,
+                        child: GridView.count(
+                          crossAxisCount: 2,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                          childAspectRatio: 0.9,
+                          children: [
+                            _buildManagementCard(
+                              context,
+                              title: l10n.manageShifts,
+                              subtitle: l10n.assignVolunteersToShifts,
+                              icon: Icons.assignment,
+                              color: Colors.blue,
+                              onTap: () => Navigator.pushNamed(context, '/teamleader-shift-management'),
+                            ),
+                            _buildManagementCard(
+                              context,
+                              title: l10n.leaveRequests,
+                              subtitle: l10n.reviewVolunteerLeaveRequests,
+                              icon: Icons.report_problem,
+                              color: Colors.orange,
+                              onTap: () => Navigator.pushNamed(context, '/leave-request-management'),
+                            ),
+                            _buildManagementCard(
+                              context,
+                              title: l10n.presenceChecks,
+                              subtitle: l10n.checkVolunteerAttendance,
+                              icon: Icons.how_to_reg,
+                              color: Colors.green,
+                              onTap: () => Navigator.pushNamed(context, '/presence-check-teamleader'),
+                            ),
+                            _buildManagementCard(
+                              context,
+                              title: l10n.submitFeedback,
+                              subtitle: l10n.reportBugsOrSuggestIdeas,
+                              icon: Icons.feedback,
+                              color: Colors.purple,
+                              onTap: () => Navigator.pushNamed(context, '/submit-feedback'),
+                            ),
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 24),
-                    ],
-                    FadeInSlide(
-                      delay: 0.3,
-                      child: Text(AppLocalizations.of(context)!.activity, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                    ),
-                    const SizedBox(height: 16),
-                    FadeInSlide(delay: 0.4, child: VolunteerStatsChart(userPhone: _currentUserPhone ?? '')),
-                    const SizedBox(height: 24),
-                    FadeInSlide(
-                      delay: 0.5,
-                      child: Text(AppLocalizations.of(context)!.management, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                    ),
-                    const SizedBox(height: 16),
-                    FadeInSlide(
-                      delay: 0.6,
-                      child: Builder(
-                        builder: (context) {
-                          final l10n = AppLocalizations.of(context)!;
-                          return GridView.count(
-                            crossAxisCount: 2,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
-                            childAspectRatio: 0.9,
-                            children: [
-                              _buildManagementCard(
-                                context,
-                                title: l10n.manageShifts,
-                                subtitle: l10n.assignVolunteersToShifts,
-                                icon: Icons.assignment,
-                                color: Colors.blue,
-                                onTap: () => Navigator.pushNamed(context, '/teamleader-shift-management'),
-                              ),
-                              _buildManagementCard(
-                                context,
-                                title: l10n.leaveRequests,
-                                subtitle: l10n.reviewVolunteerLeaveRequests,
-                                icon: Icons.report_problem,
-                                color: Colors.orange,
-                                onTap: () => Navigator.pushNamed(context, '/leave-request-management'),
-                              ),
-                              _buildManagementCard(
-                                context,
-                                title: l10n.presenceChecks,
-                                subtitle: l10n.checkVolunteerAttendance,
-                                icon: Icons.how_to_reg,
-                                color: Colors.green,
-                                onTap: () => Navigator.pushNamed(context, '/presence-check-teamleader'),
-                              ),
-                              _buildManagementCard(
-                                context,
-                                title: l10n.submitFeedback,
-                                subtitle: l10n.reportBugsOrSuggestIdeas,
-                                icon: Icons.feedback,
-                                color: Colors.purple,
-                                onTap: () => Navigator.pushNamed(context, '/submit-feedback'),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 32),
+                      const SizedBox(height: 32),
 
-                    // Events Section
-                    FadeInSlide(
-                      delay: 0.7,
-                      child: Text(AppLocalizations.of(context)!.myEvents, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                    ),
-                    const SizedBox(height: 16),
-
-                    if (_myEvents.isEmpty)
+                      // Events Section
                       FadeInSlide(
-                        delay: 0.8,
-                        child: Builder(
-                          builder: (context) {
-                            final l10n = AppLocalizations.of(context)!;
-                            return Center(
-                              child: Column(
-                                children: [
-                                  const SizedBox(height: 40),
-                                  const Icon(Icons.event_busy, size: 64, color: Colors.grey),
-                                  const SizedBox(height: 16),
-                                  Text(l10n.noEventsAssignedYet, style: const TextStyle(fontSize: 16, color: Colors.grey)),
-                                ],
+                        delay: 0.3,
+                        child: Text(l10n.myEvents, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      ),
+                      const SizedBox(height: 16),
+
+                      if (_myEvents.isEmpty)
+                        FadeInSlide(
+                          delay: 0.35,
+                          child: Center(
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 40),
+                                const Icon(Icons.event_busy, size: 64, color: Colors.grey),
+                                const SizedBox(height: 16),
+                                Text(l10n.noEventsAssignedYet, style: const TextStyle(fontSize: 16, color: Colors.grey)),
+                              ],
+                            ),
+                          ),
+                        )
+                      else
+                        ...List.generate(_myEvents.length, (index) => FadeInSlide(delay: 0.4 + (index * 0.05), child: _buildEventCard(_myEvents[index]))),
+                      SizedBox(height: isDesktop ? 24 : 80),
+                    ],
+                  ),
+                ),
+              );
+
+        if (isDesktop) {
+          return Scaffold(
+            backgroundColor: Colors.grey[50],
+            body: Row(
+              children: [
+                NavigationRail(
+                  selectedIndex: 0,
+                  onDestinationSelected: (index) {
+                    switch (index) {
+                      case 0: // Dashboard - already here
+                        break;
+                      case 1: // Manage Shifts
+                        Navigator.pushNamed(context, '/teamleader-shift-management');
+                        break;
+                      case 2: // Presence Checks
+                        Navigator.pushNamed(context, '/presence-check-teamleader');
+                        break;
+                      case 3: // Leave Requests
+                        Navigator.pushNamed(context, '/leave-request-management');
+                        break;
+                      case 4: // Profile/Settings
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordScreen(userPhone: _currentUserPhone ?? '')));
+                        break;
+                    }
+                  },
+                  labelType: NavigationRailLabelType.selected,
+                  leading: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 24),
+                    child: Consumer<NotificationsProvider>(
+                      builder: (context, notifProvider, child) {
+                        return Stack(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.notifications_outlined, size: 28),
+                              onPressed: () {
+                                final provider = context.read<NotificationsProvider>();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => ChangeNotifierProvider.value(value: provider, child: const NotificationPanel()),
+                                  ),
+                                );
+                              },
+                              tooltip: l10n.notifications,
+                            ),
+                            if (notifProvider.unreadCount > 0)
+                              Positioned(
+                                right: 8,
+                                top: 8,
+                                child: Container(
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                                  constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                                  child: Text(
+                                    notifProvider.unreadCount > 9 ? '9+' : '${notifProvider.unreadCount}',
+                                    style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                  destinations: [
+                    NavigationRailDestination(icon: Icon(Icons.dashboard_outlined), selectedIcon: Icon(Icons.dashboard), label: Text(l10n.home)),
+                    NavigationRailDestination(icon: Icon(Icons.assignment_outlined), selectedIcon: Icon(Icons.assignment), label: Text(l10n.manageShifts)),
+                    NavigationRailDestination(icon: Icon(Icons.how_to_reg_outlined), selectedIcon: Icon(Icons.how_to_reg), label: Text(l10n.presenceCheck)),
+                    NavigationRailDestination(icon: Icon(Icons.report_problem_outlined), selectedIcon: Icon(Icons.report_problem), label: Text(l10n.leaveRequests)),
+                    NavigationRailDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: Text(l10n.profile)),
+                  ],
+                  trailing: Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.logout),
+                          onPressed: () {
+                            FirebaseAuth.instance.signOut();
+                            Navigator.pushReplacementNamed(context, '/sign-in');
+                          },
+                          tooltip: l10n.signOut,
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
+                  ),
+                ),
+                const VerticalDivider(thickness: 1, width: 1),
+                Expanded(
+                  child: Column(
+                    children: [
+                      AppBar(
+                        automaticallyImplyLeading: false,
+                        title: Text(l10n.teamLeaderDashboard),
+                        backgroundColor: Colors.grey[50],
+                        elevation: 0,
+                        foregroundColor: Colors.black87,
+                        actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _loadData)],
+                      ),
+                      Expanded(child: body),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          return Scaffold(
+            backgroundColor: Colors.grey[50],
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              title: Text(l10n.teamLeaderDashboard),
+              backgroundColor: Colors.grey[50],
+              elevation: 0,
+              foregroundColor: Colors.black87,
+              actions: [
+                IconButton(icon: const Icon(Icons.refresh), onPressed: _loadData),
+                Consumer<NotificationsProvider>(
+                  builder: (context, notifProvider, child) {
+                    return Stack(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.notifications_outlined),
+                          onPressed: () {
+                            final provider = context.read<NotificationsProvider>();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => ChangeNotifierProvider.value(value: provider, child: const NotificationPanel()),
                               ),
                             );
                           },
+                          tooltip: l10n.notifications,
                         ),
-                      )
-                    else
-                      ...List.generate(_myEvents.length, (index) => FadeInSlide(delay: 0.8 + (index * 0.1), child: _buildEventCard(_myEvents[index]))),
-                  ],
+                        if (notifProvider.unreadCount > 0)
+                          Positioned(
+                            right: 8,
+                            top: 8,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                              constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                              child: Text(
+                                notifProvider.unreadCount > 9 ? '9+' : '${notifProvider.unreadCount}',
+                                style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                      ],
+                    );
+                  },
                 ),
-              ),
+              ],
             ),
+            body: body,
+            bottomNavigationBar: _buildBottomNavigation(context),
+          );
+        }
+      },
+    );
+  }
+
+  Widget _buildBottomNavigation(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      selectedItemColor: Colors.blue,
+      unselectedItemColor: Colors.grey,
+      currentIndex: 0,
+      showSelectedLabels: false,
+      showUnselectedLabels: false,
+      onTap: (index) {
+        switch (index) {
+          case 0: // Dashboard - already here
+            break;
+          case 1: // Manage Shifts
+            Navigator.pushNamed(context, '/teamleader-shift-management');
+            break;
+          case 2: // Presence Checks
+            Navigator.pushNamed(context, '/presence-check-teamleader');
+            break;
+          case 3: // Leave Requests
+            Navigator.pushNamed(context, '/leave-request-management');
+            break;
+          case 4: // Profile
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordScreen(userPhone: _currentUserPhone ?? '')));
+            break;
+          case 5: // Logout
+            FirebaseAuth.instance.signOut();
+            Navigator.pushReplacementNamed(context, '/sign-in');
+            break;
+        }
+      },
+      items: const [
+        BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: ''),
+        BottomNavigationBarItem(icon: Icon(Icons.assignment), label: ''),
+        BottomNavigationBarItem(icon: Icon(Icons.how_to_reg), label: ''),
+        BottomNavigationBarItem(icon: Icon(Icons.report_problem), label: ''),
+        BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
+        BottomNavigationBarItem(icon: Icon(Icons.logout), label: ''),
+      ],
     );
   }
 

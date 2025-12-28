@@ -1360,5 +1360,77 @@
   
   "myProfile": "My Profile",
   "unknownName": "Unknown Name",
-  "noPhone": "No Phone"
+  "noPhone": "No Phone",
+  
+  "performanceScore": "Performance Score",
+  "basedOnIHSCriteria": "Based on IHS Criteria",
+  "personalInformation": "Personal Information",
+  "education": "Education",
+  "birthDate": "Birth Date",
+  "address": "Address",
+  "profession": "Profession",
+  "jobTitle": "Job Title",
+  "department": "Department",
+  "notApplicable": "N/A",
+  
+  "nextShift": "NEXT SHIFT",
+  "unknownLocation": "Unknown Location",
+  
+  "mySchedule": "My Schedule",
+  "requestLeave": "Request Leave",
+  "reasonForLeaveRequest": "Reason for Leave Request",
+  "userNotAuthenticated": "User not authenticated",
+  "leaveRequestSubmittedSuccessfully": "Leave request submitted successfully",
+  "errorOccurred": "Error occurred: {error}",
+  "@errorOccurred": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "submitEventFeedback": "Submit Event Feedback",
+  "provideYourFeedback": "Provide your feedback about this event",
+  "howWasYourExperience": "How was your experience?",
+  "pleaseSelectRating": "Please select a rating",
+  "yourFeedback": "Your Feedback",
+  "shareFeedbackDetails": "Share your feedback details here...",
+  "pleaseProvideFeedback": "Please provide your feedback",
+  "feedbackSubmittedSuccessfully": "Thank you! Your feedback has been submitted successfully.",
+  "failedToSubmitFeedback": "Failed to submit feedback: {error}",
+  "@failedToSubmitFeedback": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "eventDetails": "Event Details",
+  "upcomingShift": "Upcoming Shift",
+  "myAssignments": "My Assignments",
+  "myScheduleLocations": "My Schedule & Locations",
+  "viewUpcomingShifts": "View your upcoming shifts, times, and locations",
+  "selectLanguage": "Select Language",
+  "areYouSureSignOut": "Are you sure you want to sign out?",
+  
+  "shareFeedbackPrompt": "Share your feedback, report bugs, or suggest improvements to help us make the system better.",
+  "describeFeedbackDetail": "Describe the issue, bug, or suggestion in detail...",
+  "pleaseEnterFeedback": "Please enter your feedback",
+  "provideMoreDetails": "Please provide more details (at least 10 characters)",
+  "myPreviousFeedback": "My Previous Feedback",
+  "errorLoadingFeedback": "Error loading feedback: {error}",
+  "@errorLoadingFeedback": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "noFeedbackYet": "You haven't submitted any feedback yet",
+  "adminResponse": "Admin Response:",
+  "inProgress": "In Progress",
+  "resolved": "Resolved",
+  "closed": "Closed"
 }

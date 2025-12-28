@@ -1697,7 +1697,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String errorOccurred(String error) {
-    return 'Error: $error';
+    return 'Error occurred: $error';
   }
 
   @override
@@ -2024,4 +2024,102 @@ class AppLocalizationsEn extends AppLocalizations {
   String locationId(String id) {
     return 'Location ID: $id';
   }
+
+  @override
+  String get performanceScore => 'Performance Score';
+
+  @override
+  String get basedOnIHSCriteria => 'Based on IHS Criteria';
+
+  @override
+  String get personalInformation => 'Personal Information';
+
+  @override
+  String get education => 'Education';
+
+  @override
+  String get birthDate => 'Birth Date';
+
+  @override
+  String get profession => 'Profession';
+
+  @override
+  String get jobTitle => 'Job Title';
+
+  @override
+  String get department => 'Department';
+
+  @override
+  String get notApplicable => 'N/A';
+
+  @override
+  String get nextShift => 'NEXT SHIFT';
+
+  @override
+  String get unknownLocation => 'Unknown Location';
+
+  @override
+  String get provideYourFeedback => 'Provide your feedback about this event';
+
+  @override
+  String get howWasYourExperience => 'How was your experience?';
+
+  @override
+  String get pleaseSelectRating => 'Please select a rating';
+
+  @override
+  String get yourFeedback => 'Your Feedback';
+
+  @override
+  String get shareFeedbackDetails => 'Share your feedback details here...';
+
+  @override
+  String get pleaseProvideFeedback => 'Please provide your feedback';
+
+  @override
+  String get feedbackSubmittedSuccessfully =>
+      'Thank you! Your feedback has been submitted successfully.';
+
+  @override
+  String failedToSubmitFeedback(String error) {
+    return 'Failed to submit feedback: $error';
+  }
+
+  @override
+  String get eventDetails => 'Event Details';
+
+  @override
+  String get selectLanguage => 'Select Language';
+
+  @override
+  String get areYouSureSignOut => 'Are you sure you want to sign out?';
+
+  @override
+  String get shareFeedbackPrompt =>
+      'Share your feedback, report bugs, or suggest improvements to help us make the system better.';
+
+  @override
+  String get describeFeedbackDetail =>
+      'Describe the issue, bug, or suggestion in detail...';
+
+  @override
+  String get pleaseEnterFeedback => 'Please enter your feedback';
+
+  @override
+  String get provideMoreDetails =>
+      'Please provide more details (at least 10 characters)';
+
+  @override
+  String get myPreviousFeedback => 'My Previous Feedback';
+
+  @override
+  String errorLoadingFeedback(String error) {
+    return 'Error loading feedback: $error';
+  }
+
+  @override
+  String get noFeedbackYet => 'You haven\'t submitted any feedback yet';
+
+  @override
+  String get adminResponse => 'Admin Response:';
 }

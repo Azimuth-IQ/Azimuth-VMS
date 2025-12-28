@@ -417,10 +417,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get redirectingToForm => 'جاري التوجيه إلى النموذج...';
 
   @override
-  String get myAssignments => 'تعييناتي';
+  String get myAssignments => 'تكليفاتي';
 
   @override
-  String get upcomingShift => 'الوردية القادمة';
+  String get upcomingShift => 'المناوبة القادمة';
 
   @override
   String get noUpcomingShifts => 'لا توجد ورديات قادمة معينة.';
@@ -474,7 +474,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get myScheduleLocations => 'جدولي والمواقع';
 
   @override
-  String get viewUpcomingShifts => 'عرض الورديات القادمة، الأوقات، والمواقع';
+  String get viewUpcomingShifts => 'عرض المناوبات القادمة والأوقات والمواقع';
 
   @override
   String get myProfile => 'ملفي الشخصي';
@@ -1115,7 +1115,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get allFeedback => 'جميع التعليقات';
 
   @override
-  String get inProgress => 'قيد التنفيذ';
+  String get inProgress => 'قيد المعالجة';
 
   @override
   String get resolved => 'تم الحل';
@@ -1689,7 +1689,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String errorOccurred(String error) {
-    return 'خطأ: $error';
+    return 'حدث خطأ: $error';
   }
 
   @override
@@ -1896,7 +1896,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get viewOnMap => 'عرض على الخريطة';
 
   @override
-  String get submitEventFeedback => 'تقديم ملاحظات الفعالية';
+  String get submitEventFeedback => 'تقديم تقييم الحدث';
 
   @override
   String contactLabel(String phone) {
@@ -2007,4 +2007,101 @@ class AppLocalizationsAr extends AppLocalizations {
   String locationId(String id) {
     return 'معرف الموقع: $id';
   }
+
+  @override
+  String get performanceScore => 'درجة الأداء';
+
+  @override
+  String get basedOnIHSCriteria => 'بناءً على معايير IHS';
+
+  @override
+  String get personalInformation => 'المعلومات الشخصية';
+
+  @override
+  String get education => 'التعليم';
+
+  @override
+  String get birthDate => 'تاريخ الميلاد';
+
+  @override
+  String get profession => 'المهنة';
+
+  @override
+  String get jobTitle => 'المسمى الوظيفي';
+
+  @override
+  String get department => 'القسم';
+
+  @override
+  String get notApplicable => 'غير متوفر';
+
+  @override
+  String get nextShift => 'المناوبة القادمة';
+
+  @override
+  String get unknownLocation => 'موقع غير معروف';
+
+  @override
+  String get provideYourFeedback => 'قدم تقييمك حول هذا الحدث';
+
+  @override
+  String get howWasYourExperience => 'كيف كانت تجربتك؟';
+
+  @override
+  String get pleaseSelectRating => 'الرجاء اختيار التقييم';
+
+  @override
+  String get yourFeedback => 'تقييمك';
+
+  @override
+  String get shareFeedbackDetails => 'شارك تفاصيل تقييمك هنا...';
+
+  @override
+  String get pleaseProvideFeedback => 'الرجاء تقديم تقييمك';
+
+  @override
+  String get feedbackSubmittedSuccessfully => 'شكراً! تم تقديم تقييمك بنجاح.';
+
+  @override
+  String failedToSubmitFeedback(String error) {
+    return 'فشل تقديم التقييم: $error';
+  }
+
+  @override
+  String get eventDetails => 'تفاصيل الحدث';
+
+  @override
+  String get selectLanguage => 'اختر اللغة';
+
+  @override
+  String get areYouSureSignOut => 'هل أنت متأكد من تسجيل الخروج؟';
+
+  @override
+  String get shareFeedbackPrompt =>
+      'شارك ملاحظاتك، أبلغ عن الأخطاء، أو اقترح تحسينات لمساعدتنا في تحسين النظام.';
+
+  @override
+  String get describeFeedbackDetail =>
+      'صف المشكلة أو الخطأ أو الاقتراح بالتفصيل...';
+
+  @override
+  String get pleaseEnterFeedback => 'الرجاء إدخال ملاحظاتك';
+
+  @override
+  String get provideMoreDetails =>
+      'الرجاء تقديم المزيد من التفاصيل (10 أحرف على الأقل)';
+
+  @override
+  String get myPreviousFeedback => 'ملاحظاتي السابقة';
+
+  @override
+  String errorLoadingFeedback(String error) {
+    return 'خطأ في تحميل الملاحظات: $error';
+  }
+
+  @override
+  String get noFeedbackYet => 'لم تقدم أي ملاحظات بعد';
+
+  @override
+  String get adminResponse => 'رد المسؤول:';
 }

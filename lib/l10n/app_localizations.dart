@@ -3179,7 +3179,7 @@ abstract class AppLocalizations {
   /// No description provided for @errorOccurred.
   ///
   /// In en, this message translates to:
-  /// **'Error: {error}'**
+  /// **'Error occurred: {error}'**
   String errorOccurred(String error);
 
   /// No description provided for @markAllRead.
@@ -3739,6 +3739,186 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Location ID: {id}'**
   String locationId(String id);
+
+  /// No description provided for @performanceScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Performance Score'**
+  String get performanceScore;
+
+  /// No description provided for @basedOnIHSCriteria.
+  ///
+  /// In en, this message translates to:
+  /// **'Based on IHS Criteria'**
+  String get basedOnIHSCriteria;
+
+  /// No description provided for @personalInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Information'**
+  String get personalInformation;
+
+  /// No description provided for @education.
+  ///
+  /// In en, this message translates to:
+  /// **'Education'**
+  String get education;
+
+  /// No description provided for @birthDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Birth Date'**
+  String get birthDate;
+
+  /// No description provided for @profession.
+  ///
+  /// In en, this message translates to:
+  /// **'Profession'**
+  String get profession;
+
+  /// No description provided for @jobTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Title'**
+  String get jobTitle;
+
+  /// No description provided for @department.
+  ///
+  /// In en, this message translates to:
+  /// **'Department'**
+  String get department;
+
+  /// No description provided for @notApplicable.
+  ///
+  /// In en, this message translates to:
+  /// **'N/A'**
+  String get notApplicable;
+
+  /// No description provided for @nextShift.
+  ///
+  /// In en, this message translates to:
+  /// **'NEXT SHIFT'**
+  String get nextShift;
+
+  /// No description provided for @unknownLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Location'**
+  String get unknownLocation;
+
+  /// No description provided for @provideYourFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Provide your feedback about this event'**
+  String get provideYourFeedback;
+
+  /// No description provided for @howWasYourExperience.
+  ///
+  /// In en, this message translates to:
+  /// **'How was your experience?'**
+  String get howWasYourExperience;
+
+  /// No description provided for @pleaseSelectRating.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a rating'**
+  String get pleaseSelectRating;
+
+  /// No description provided for @yourFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Feedback'**
+  String get yourFeedback;
+
+  /// No description provided for @shareFeedbackDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your feedback details here...'**
+  String get shareFeedbackDetails;
+
+  /// No description provided for @pleaseProvideFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Please provide your feedback'**
+  String get pleaseProvideFeedback;
+
+  /// No description provided for @feedbackSubmittedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you! Your feedback has been submitted successfully.'**
+  String get feedbackSubmittedSuccessfully;
+
+  /// No description provided for @failedToSubmitFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to submit feedback: {error}'**
+  String failedToSubmitFeedback(String error);
+
+  /// No description provided for @eventDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Event Details'**
+  String get eventDetails;
+
+  /// No description provided for @selectLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Language'**
+  String get selectLanguage;
+
+  /// No description provided for @areYouSureSignOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to sign out?'**
+  String get areYouSureSignOut;
+
+  /// No description provided for @shareFeedbackPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your feedback, report bugs, or suggest improvements to help us make the system better.'**
+  String get shareFeedbackPrompt;
+
+  /// No description provided for @describeFeedbackDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the issue, bug, or suggestion in detail...'**
+  String get describeFeedbackDetail;
+
+  /// No description provided for @pleaseEnterFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your feedback'**
+  String get pleaseEnterFeedback;
+
+  /// No description provided for @provideMoreDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Please provide more details (at least 10 characters)'**
+  String get provideMoreDetails;
+
+  /// No description provided for @myPreviousFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'My Previous Feedback'**
+  String get myPreviousFeedback;
+
+  /// No description provided for @errorLoadingFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading feedback: {error}'**
+  String errorLoadingFeedback(String error);
+
+  /// No description provided for @noFeedbackYet.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t submitted any feedback yet'**
+  String get noFeedbackYet;
+
+  /// No description provided for @adminResponse.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Response:'**
+  String get adminResponse;
 }
 
 class _AppLocalizationsDelegate

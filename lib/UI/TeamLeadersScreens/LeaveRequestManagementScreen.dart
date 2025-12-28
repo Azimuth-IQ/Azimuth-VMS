@@ -154,8 +154,12 @@ class _LeaveRequestManagementViewState extends State<LeaveRequestManagementView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         title: const Text('Leave Requests'),
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
+        foregroundColor: Colors.black87,
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
