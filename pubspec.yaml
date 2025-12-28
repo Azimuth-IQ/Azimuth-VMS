@@ -98,44 +98,16 @@ flutter:
   fonts:
     - family: Inter
       fonts:
-        - asset: assets/fonts/Inter-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/Inter-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/Inter-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/Inter-Bold.ttf
-          weight: 700
+        - asset: assets/fonts/Inter-VariableFont_opsz,wght.ttf
     - family: Lexend
       fonts:
-        - asset: assets/fonts/Lexend-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/Lexend-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/Lexend-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/Lexend-Bold.ttf
-          weight: 700
+        - asset: assets/fonts/Lexend-VariableFont_wght.ttf
     - family: Noto Serif
       fonts:
-        - asset: assets/fonts/NotoSerif-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/NotoSerif-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/NotoSerif-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/NotoSerif-Bold.ttf
-          weight: 700
+        - asset: assets/fonts/NotoSerif-VariableFont_wdth,wght.ttf
     - family: Noto Sans
       fonts:
-        - asset: assets/fonts/NotoSans-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/NotoSans-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/NotoSans-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/NotoSans-Bold.ttf
-          weight: 700
+        - asset: assets/fonts/NotoSans-VariableFont_wdth,wght.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

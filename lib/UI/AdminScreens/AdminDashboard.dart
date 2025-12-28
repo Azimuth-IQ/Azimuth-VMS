@@ -11,6 +11,7 @@ import 'package:azimuth_vms/UI/AdminScreens/TeamLeadersMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/TeamsMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/VolunteersMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/SendNotificationScreen.dart';
+import 'package:azimuth_vms/UI/AdminScreens/ThemeSettingsScreen.dart';
 import 'package:azimuth_vms/UI/Widgets/ChangePasswordScreen.dart';
 import 'package:azimuth_vms/UI/Widgets/ImageCarouselSlider.dart';
 import 'package:azimuth_vms/UI/Widgets/NotificationPanel.dart';
@@ -61,6 +62,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
       const TeamsMgmt(),
       const LocationsMgmt(),
       const SendNotificationScreen(),
+      const ThemeSettingsScreen(),
     ];
 
     return LayoutBuilder(
@@ -91,6 +93,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     NavigationRailDestination(icon: const Icon(Icons.groups_outlined), selectedIcon: const Icon(Icons.groups), label: Text(l10n.teams)),
                     NavigationRailDestination(icon: const Icon(Icons.location_on_outlined), selectedIcon: const Icon(Icons.location_on), label: Text(l10n.locations)),
                     NavigationRailDestination(icon: const Icon(Icons.campaign_outlined), selectedIcon: const Icon(Icons.campaign), label: Text(l10n.sendNotif)),
+                    NavigationRailDestination(icon: const Icon(Icons.palette_outlined), selectedIcon: const Icon(Icons.palette), label: const Text('Themes')),
                   ],
                   trailing: Expanded(
                     child: Column(
@@ -130,6 +133,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 NavigationDestination(icon: const Icon(Icons.groups_outlined), selectedIcon: const Icon(Icons.groups), label: l10n.teams),
                 NavigationDestination(icon: const Icon(Icons.location_on_outlined), selectedIcon: const Icon(Icons.location_on), label: l10n.locations),
                 NavigationDestination(icon: const Icon(Icons.campaign_outlined), selectedIcon: const Icon(Icons.campaign), label: l10n.sendNotif),
+                NavigationDestination(icon: const Icon(Icons.palette_outlined), selectedIcon: const Icon(Icons.palette), label: 'Themes'),
               ],
             ),
           );
