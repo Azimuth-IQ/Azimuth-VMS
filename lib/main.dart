@@ -11,6 +11,7 @@ import 'package:azimuth_vms/Providers/TeamLeadersProvider.dart';
 import 'package:azimuth_vms/Providers/TeamsProvider.dart';
 import 'package:azimuth_vms/Providers/LocationsProvider.dart';
 import 'package:azimuth_vms/Providers/CarouselProvider.dart';
+import 'package:azimuth_vms/UI/Theme/ThemeProvider.dart';
 import 'package:azimuth_vms/UI/AdminScreens/AdminDashboard.dart';
 import 'package:azimuth_vms/UI/AdminScreens/EventsMgmt.dart';
 import 'package:azimuth_vms/UI/AdminScreens/FormFillPage.dart' as Admin;
@@ -65,24 +66,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<LanguageProvider>(create: (_) => LanguageProvider()),
-        ChangeNotifierProvider<AppProvider>(create: (_) => AppProvider()),
-        ChangeNotifierProvider<EventsProvider>(create: (_) => EventsProvider()),
-        ChangeNotifierProvider<ShiftAssignmentProvider>(create: (_) => ShiftAssignmentProvider()),
-        ChangeNotifierProvider<NotificationsProvider>(create: (_) => NotificationsProvider()),
-        ChangeNotifierProvider<VolunteerRatingProvider>(create: (_) => VolunteerRatingProvider()),
-        ChangeNotifierProvider<SystemFeedbackProvider>(create: (_) => SystemFeedbackProvider()),
-        ChangeNotifierProvider<VolunteerEventFeedbackProvider>(create: (_) => VolunteerEventFeedbackProvider()),
-        ChangeNotifierProvider<CarouselProvider>(create: (_) => CarouselProvider()),
+      providers: <ChangeNotifierProvider<dynamic>>[
+        ChangeNotifierProvider<LanguageProvider>(create: (BuildContext _) => LanguageProvider()),
+        ChangeNotifierProvider<ThemeProvider>(create: (BuildContext _) => ThemeProvider()),
+        ChangeNotifierProvider<AppProvider>(create: (BuildContext _) => AppProvider()),
+        ChangeNotifierProvider<EventsProvider>(create: (BuildContext _) => EventsProvider()),
+        ChangeNotifierProvider<ShiftAssignmentProvider>(create: (BuildContext _) => ShiftAssignmentProvider()),
+        ChangeNotifierProvider<NotificationsProvider>(create: (BuildContext _) => NotificationsProvider()),
+        ChangeNotifierProvider<VolunteerRatingProvider>(create: (BuildContext _) => VolunteerRatingProvider()),
+        ChangeNotifierProvider<SystemFeedbackProvider>(create: (BuildContext _) => SystemFeedbackProvider()),
+        ChangeNotifierProvider<VolunteerEventFeedbackProvider>(create: (BuildContext _) => VolunteerEventFeedbackProvider()),
+        ChangeNotifierProvider<CarouselProvider>(create: (BuildContext _) => CarouselProvider()),
         // Add missing providers for Dashboard stats
-        ChangeNotifierProvider<VolunteersProvider>(create: (_) => VolunteersProvider()),
-        ChangeNotifierProvider<TeamLeadersProvider>(create: (_) => TeamLeadersProvider()),
-        ChangeNotifierProvider<TeamsProvider>(create: (_) => TeamsProvider()),
-        ChangeNotifierProvider<LocationsProvider>(create: (_) => LocationsProvider()),
+        ChangeNotifierProvider<VolunteersProvider>(create: (BuildContext _) => VolunteersProvider()),
+        ChangeNotifierProvider<TeamLeadersProvider>(create: (BuildContext _) => TeamLeadersProvider()),
+        ChangeNotifierProvider<TeamsProvider>(create: (BuildContext _) => TeamsProvider()),
+        ChangeNotifierProvider<LocationsProvider>(create: (BuildContext _) => LocationsProvider()),
       ],
-      child: Consumer<LanguageProvider>(
-        builder: (context, languageProvider, child) => MaterialApp(
+      child: Consumer2<LanguageProvider, ThemeProvider>(
+        builder: (BuildContext context, LanguageProvider languageProvider, ThemeProvider themeProvider, Widget? child) => MaterialApp(
           title: 'Azimuth VMS',
           debugShowCheckedModeBanner: false,
           locale: languageProvider.currentLocale,
@@ -92,89 +94,8 @@ class MyApp extends StatelessWidget {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          supportedLocales: const [Locale('en'), Locale('ar')],
-          theme: ThemeData(
-            useMaterial3: true,
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color(0xFF2563EB), // Modern Blue
-              brightness: Brightness.light,
-              surface: Colors.white,
-              background: const Color(0xFFF8FAFC), // Slate 50
-              primary: const Color(0xFF2563EB),
-              secondary: const Color(0xFF0EA5E9), // Sky 500
-              tertiary: const Color(0xFF6366F1), // Indigo 500
-            ),
-            scaffoldBackgroundColor: const Color(0xFFF8FAFC),
-            cardTheme: CardThemeData(
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-                side: BorderSide(color: Colors.grey.shade200),
-              ),
-              color: Colors.white,
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            ),
-            appBarTheme: const AppBarTheme(
-              elevation: 0,
-              centerTitle: false,
-              backgroundColor: Colors.white,
-              foregroundColor: Color(0xFF0F172A), // Slate 900
-              titleTextStyle: TextStyle(color: Color(0xFF0F172A), fontSize: 20, fontWeight: FontWeight.w700, letterSpacing: -0.5),
-              iconTheme: IconThemeData(color: Color(0xFF64748B)), // Slate 500
-            ),
-            navigationRailTheme: NavigationRailThemeData(
-              backgroundColor: Colors.white,
-              selectedIconTheme: const IconThemeData(color: Color(0xFF2563EB)),
-              unselectedIconTheme: const IconThemeData(color: Color(0xFF64748B)),
-              selectedLabelTextStyle: const TextStyle(color: Color(0xFF2563EB), fontWeight: FontWeight.w600),
-              unselectedLabelTextStyle: const TextStyle(color: Color(0xFF64748B)),
-              indicatorColor: const Color(0xFFEFF6FF), // Blue 50
-              labelType: NavigationRailLabelType.all,
-            ),
-            navigationBarTheme: NavigationBarThemeData(
-              backgroundColor: Colors.white,
-              indicatorColor: const Color(0xFFEFF6FF),
-              labelTextStyle: MaterialStateProperty.resolveWith((states) {
-                if (states.contains(MaterialState.selected)) {
-                  return const TextStyle(color: Color(0xFF2563EB), fontWeight: FontWeight.w600);
-                }
-                return const TextStyle(color: Color(0xFF64748B));
-              }),
-              iconTheme: MaterialStateProperty.resolveWith((states) {
-                if (states.contains(MaterialState.selected)) {
-                  return const IconThemeData(color: Color(0xFF2563EB));
-                }
-                return const IconThemeData(color: Color(0xFF64748B));
-              }),
-            ),
-            elevatedButtonTheme: ElevatedButtonThemeData(
-              style: ElevatedButton.styleFrom(
-                elevation: 0,
-                backgroundColor: const Color(0xFF2563EB),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              ),
-            ),
-            inputDecorationTheme: InputDecorationTheme(
-              filled: true,
-              fillColor: Colors.white,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Colors.grey.shade200),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Colors.grey.shade200),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Color(0xFF2563EB), width: 2),
-              ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            ),
-            floatingActionButtonTheme: const FloatingActionButtonThemeData(elevation: 4, shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16)))),
-          ),
+          supportedLocales: const <Locale>[Locale('en'), Locale('ar')],
+          theme: themeProvider.currentTheme,
           home: SignInScreen(),
           onGenerateRoute: (settings) => _generateRoute(settings),
         ),

@@ -1,9 +1,11 @@
 import 'package:azimuth_vms/Helpers/SystemUserHelperFirebase.dart';
 import 'package:azimuth_vms/Models/Seed.dart';
 import 'package:azimuth_vms/Models/SystemUser.dart';
+import 'package:azimuth_vms/UI/Theme/ThemeProvider.dart';
 import 'package:azimuth_vms/l10n/app_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
@@ -15,16 +17,21 @@ class SignInScreen extends StatelessWidget {
   //Auth Check
   void checkAuthStatus(BuildContext context) async {
     //1- Check with Firebase Auth
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User? user = auth.currentUser;
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? user = auth.currentUser;
     if (user != null) {
       print("User is already signed in: ${user.email!.split('@').first}");
       // Check User Role from Database
-      SystemUserHelperFirebase systemUserHelperFirebase = SystemUserHelperFirebase();
-      SystemUser? systemUser = await systemUserHelperFirebase.GetSystemUserByPhone(user.email!.split('@').first);
+      final SystemUserHelperFirebase systemUserHelperFirebase = SystemUserHelperFirebase();
+      final SystemUser? systemUser = await systemUserHelperFirebase.GetSystemUserByPhone(user.email!.split('@').first);
       print("Fetched user: ${systemUser?.name}");
       print("User role: ${systemUser?.role}");
       if (systemUser != null) {
+        // Set theme based on user role
+        final ThemeProvider themeProvider = context.read<ThemeProvider>();
+        final UserRole userRole = _mapSystemUserRoleToUserRole(systemUser.role);
+        themeProvider.setThemeByRole(userRole);
+        
         //TODO: Implement Teamleader and Volunteer Dashboards
         //TODO: Implement Current User Provider
         if (systemUser.role == SystemUserRole.ADMIN) {
@@ -43,15 +50,20 @@ class SignInScreen extends StatelessWidget {
   //SignIn
   void signIn(BuildContext context, String phone, String password) async {
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: "$phone@azimuth-vms.com", password: password);
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: "$phone@azimuth-vms.com", password: password);
       print("Signed in: ${userCredential.user?.uid}");
       // Check User Role from Database
-      SystemUserHelperFirebase systemUserHelperFirebase = SystemUserHelperFirebase();
+      final SystemUserHelperFirebase systemUserHelperFirebase = SystemUserHelperFirebase();
       print("Fetching user with phone: ${userCredential.user?.email}");
-      SystemUser? systemUser = await systemUserHelperFirebase.GetSystemUserByPhone(phone);
+      final SystemUser? systemUser = await systemUserHelperFirebase.GetSystemUserByPhone(phone);
       print("Fetched user: ${systemUser?.name}");
       print("User role: ${systemUser?.role}");
       if (systemUser != null) {
+        // Set theme based on user role
+        final ThemeProvider themeProvider = context.read<ThemeProvider>();
+        final UserRole userRole = _mapSystemUserRoleToUserRole(systemUser.role);
+        themeProvider.setThemeByRole(userRole);
+        
         if (systemUser.role == SystemUserRole.ADMIN) {
           Navigator.pushReplacementNamed(context, '/admin-dashboard');
         } else if (systemUser.role == SystemUserRole.TEAMLEADER) {
@@ -61,11 +73,24 @@ class SignInScreen extends StatelessWidget {
         }
       }
     } on FirebaseAuthException catch (e) {
+      print('FirebaseAuthException: ${e.code}');
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
       } else if (e.code == 'wrong-password') {
         print('Wrong password provided for that user.');
       }
+    }
+  }
+  
+  /// Map SystemUserRole to UserRole enum
+  UserRole _mapSystemUserRoleToUserRole(SystemUserRole role) {
+    switch (role) {
+      case SystemUserRole.ADMIN:
+        return UserRole.admin;
+      case SystemUserRole.TEAMLEADER:
+        return UserRole.teamLeader;
+      case SystemUserRole.VOLUNTEER:
+        return UserRole.volunteer;
     }
   }
 
