@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Team Leader Dashboard Overview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700;900&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#f4c025",
+              "primary-dark": "#d6a410",
+              "background-light": "#f8f8f5",
+              "background-dark": "#013220", 
+              "background-card": "#004d33",
+              "text-off-white": "#F5F5DC",
+            },
+            fontFamily: {
+              "display": ["Noto Serif", "sans-serif"],
+              "sans": ["Noto Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }.scrollbar-hide::-webkit-scrollbar {
+          display: none;
+      }.scrollbar-hide {
+          -ms-overflow-style: none;scrollbar-width: none;}
+    </style>
+</head>
+<body class="font-sans bg-gray-900 flex justify-center min-h-screen">
+<div class="w-full max-w-md bg-background-dark shadow-2xl overflow-hidden flex flex-col h-screen relative border-x border-white/5">
+<header class="flex-none flex items-center justify-between px-5 py-4 bg-[#00281a] shadow-md z-20 border-b border-white/5">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-full border-2 border-primary bg-cover bg-center shrink-0" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDKRcaHmW-cWFpdTYHo0RYe2LIeKTyGlE_sDAf66__Lce8ylD7bvOTN-fBdcdO2me01H8-lMe3_rZuspNsMXITU92IXr9jqIJAXVIm-hz7DNi0DZyeAtGYAFM08nxmmrMwfGZ_zgHa58R3XjI9Uw8W5IJyK2KBILLZNwmuqQvt-JZihJjbycGL0vCV-O16Q-nCTJmSM-oe2CaKNk5MHZGNziCzk5ZCFbdMOKudra5gUIZrfVDE7Ly05v3QXGwW-jELorD8crcyATBWs");'></div>
+<div>
+<h1 class="text-text-off-white font-display font-bold text-lg leading-tight">Ahmed Al-Mansoori</h1>
+<span class="text-xs text-primary font-medium tracking-wide uppercase">Team Leader</span>
+</div>
+</div>
+<button class="text-primary hover:text-white transition-colors p-1">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<main class="flex-1 overflow-y-auto p-5 pb-24 space-y-6 scrollbar-hide bg-background-dark">
+<section>
+<div class="flex items-center justify-between mb-3 px-1">
+<h2 class="text-text-off-white font-display font-bold text-lg">Upcoming Shift</h2>
+<span class="text-xs bg-primary/20 text-primary px-2.5 py-1 rounded-full font-bold border border-primary/20">In 1h 15m</span>
+</div>
+<div class="bg-background-card rounded-xl overflow-hidden border border-white/10 shadow-lg">
+<div class="h-36 bg-[#035436] relative w-full flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#f4c025 1px, transparent 1px); background-size: 20px 20px;"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background-card via-transparent to-transparent"></div>
+<div class="relative z-10 flex flex-col items-center -mt-2">
+<span class="material-symbols-outlined text-red-500 text-4xl drop-shadow-md">location_on</span>
+<div class="w-8 h-2 bg-black/30 rounded-full blur-sm"></div>
+</div>
+<div class="absolute bottom-3 left-4 right-4 flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-text-off-white bg-black/40 backdrop-blur-sm px-2 py-1 rounded-lg">
+<span class="material-symbols-outlined text-primary text-sm">my_location</span>
+<span class="text-xs font-medium">1.2km away</span>
+</div>
+</div>
+</div>
+<div class="p-4">
+<h3 class="text-xl text-text-off-white font-bold font-display mb-1">Annual Pilgrimage Gathering</h3>
+<div class="flex items-center gap-2 text-white/70 text-sm mb-1">
+<span class="material-symbols-outlined text-base text-primary">location_on</span>
+<span class="font-medium">Main Courtyard - Gate 7</span>
+</div>
+<div class="flex items-center gap-2 text-white/70 text-sm">
+<span class="material-symbols-outlined text-base text-primary">schedule</span>
+<span>08:00 AM - 12:00 PM</span>
+</div>
+<button class="mt-4 w-full bg-primary hover:bg-primary-dark text-background-dark font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-lg shadow-black/20">
+<span class="material-symbols-outlined text-xl">near_me</span>
+<span>Navigate to Location</span>
+</button>
+</div>
+</div>
+</section>
+<section>
+<div class="flex items-center justify-between mb-3 px-1">
+<h2 class="text-text-off-white font-display font-bold text-lg">Activity Monitor</h2>
+<button class="text-primary text-xs font-bold uppercase tracking-wide hover:underline">See All</button>
+</div>
+<div class="bg-black/20 rounded-xl border border-white/5 p-4 space-y-4">
+<div class="flex items-start gap-3">
+<div class="mt-0.5 h-10 w-10 rounded-lg bg-green-900/50 border border-green-500/30 text-green-400 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<p class="text-text-off-white font-bold text-sm">Shift Completed</p>
+<span class="text-white/40 text-[10px] font-medium">Yesterday</span>
+</div>
+<p class="text-white/60 text-xs mt-0.5">Medical Assistant</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="text-white/40 text-[10px]">Duration:</span>
+<span class="text-primary text-[10px] font-bold">4h 30m</span>
+</div>
+</div>
+</div>
+<div class="w-full h-px bg-white/5"></div>
+<div class="flex items-start gap-3">
+<div class="mt-0.5 h-10 w-10 rounded-lg bg-blue-900/50 border border-blue-500/30 text-blue-400 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined">school</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<p class="text-text-off-white font-bold text-sm">Training Session</p>
+<span class="text-white/40 text-[10px] font-medium">Oct 28</span>
+</div>
+<p class="text-white/60 text-xs mt-0.5">First Aid Refresh</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="text-white/40 text-[10px]">Duration:</span>
+<span class="text-primary text-[10px] font-bold">2h 00m</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section>
+<h2 class="text-text-off-white font-display font-bold text-lg mb-3 px-1">Quick Actions</h2>
+<div class="grid grid-cols-2 gap-3">
+<button class="bg-black/20 border border-white/5 p-4 rounded-xl flex flex-col items-center gap-3 hover:bg-white/5 transition-colors text-center group active:scale-95 duration-200">
+<div class="h-12 w-12 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-background-dark transition-colors ring-1 ring-primary/20">
+<span class="material-symbols-outlined">toggle_on</span>
+</div>
+<span class="text-text-off-white font-medium text-sm leading-tight">Shift<br/>Status</span>
+</button>
+<button class="bg-black/20 border border-white/5 p-4 rounded-xl flex flex-col items-center gap-3 hover:bg-white/5 transition-colors text-center group active:scale-95 duration-200">
+<div class="h-12 w-12 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-background-dark transition-colors ring-1 ring-primary/20">
+<span class="material-symbols-outlined">history_edu</span>
+</div>
+<span class="text-text-off-white font-medium text-sm leading-tight">Leave<br/>Reports</span>
+</button>
+<button class="bg-black/20 border border-white/5 p-4 rounded-xl flex flex-col items-center gap-3 hover:bg-white/5 transition-colors text-center group active:scale-95 duration-200">
+<div class="h-12 w-12 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-background-dark transition-colors ring-1 ring-primary/20">
+<span class="material-symbols-outlined">fact_check</span>
+</div>
+<span class="text-text-off-white font-medium text-sm leading-tight">Presence<br/>Checklist</span>
+</button>
+<button class="bg-black/20 border border-white/5 p-4 rounded-xl flex flex-col items-center gap-3 hover:bg-white/5 transition-colors text-center group active:scale-95 duration-200">
+<div class="h-12 w-12 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-background-dark transition-colors ring-1 ring-primary/20">
+<span class="material-symbols-outlined">thumbs_up_down</span>
+</div>
+<span class="text-text-off-white font-medium text-sm leading-tight">Submit<br/>Feedback</span>
+</button>
+</div>
+</section>
+<section>
+<h2 class="text-text-off-white font-display font-bold text-lg mb-3 px-1">My Events</h2>
+<div class="space-y-3">
+<div class="bg-black/20 border border-white/5 p-4 rounded-xl flex items-center gap-4 relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+<div class="text-center bg-white/5 p-2 rounded-lg min-w-[60px] border border-white/10">
+<span class="block text-primary font-bold text-xl font-display">12</span>
+<span class="block text-white/50 text-[10px] font-bold uppercase tracking-wider">Dec</span>
+</div>
+<div>
+<h4 class="text-text-off-white font-bold text-base line-clamp-1">Community Clean-up</h4>
+<div class="flex items-center gap-3 mt-1 text-white/50 text-xs">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">schedule</span> 09:00 AM</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">location_on</span> North Gate</span>
+</div>
+</div>
+</div>
+<div class="bg-black/20 border border-white/5 p-4 rounded-xl flex items-center gap-4 relative overflow-hidden opacity-80">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-white/20"></div>
+<div class="text-center bg-white/5 p-2 rounded-lg min-w-[60px] border border-white/10">
+<span class="block text-white/80 font-bold text-xl font-display">15</span>
+<span class="block text-white/50 text-[10px] font-bold uppercase tracking-wider">Dec</span>
+</div>
+<div>
+<h4 class="text-text-off-white font-bold text-base line-clamp-1">Visitor Guide Training</h4>
+<div class="flex items-center gap-3 mt-1 text-white/50 text-xs">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">schedule</span> 02:00 PM</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">location_on</span> Hall B</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<nav class="flex-none bg-[#00281a] border-t border-white/10 flex items-center justify-between px-2 pb-5 pt-3 z-20">
+<button class="flex-1 flex flex-col items-center gap-1.5 py-1 text-primary relative group">
+<span class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">home</span>
+<span class="text-[10px] font-bold tracking-wide">Home</span>
+<span class="absolute -top-3 w-8 h-1 bg-primary rounded-b-full shadow-[0_0_10px_rgba(244,192,37,0.5)]"></span>
+</button>
+<button class="flex-1 flex flex-col items-center gap-1.5 py-1 text-white/40 hover:text-white transition-colors group">
+<span class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">assignment_ind</span>
+<span class="text-[10px] font-medium tracking-wide">Assign</span>
+</button>
+<button class="flex-1 flex flex-col items-center gap-1.5 py-1 text-white/40 hover:text-white transition-colors group">
+<span class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">fact_check</span>
+<span class="text-[10px] font-medium tracking-wide">Presence</span>
+</button>
+<button class="flex-1 flex flex-col items-center gap-1.5 py-1 text-white/40 hover:text-white transition-colors group">
+<span class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">event_busy</span>
+<span class="text-[10px] font-medium tracking-wide">Leave</span>
+</button>
+<button class="flex-1 flex flex-col items-center gap-1.5 py-1 text-white/40 hover:text-white transition-colors group">
+<span class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">person</span>
+<span class="text-[10px] font-medium tracking-wide">Profile</span>
+</button>
+</nav>
+</div>
+
+</body></html>

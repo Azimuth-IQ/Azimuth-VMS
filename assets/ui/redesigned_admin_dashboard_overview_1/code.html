@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Khidma Admin - Events Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec1313",
+                        "primary-hover": "#c91010",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#09090b", // Matching zinc-950 for Command Mode
+                        "surface-dark": "#18181b", // zinc-900
+                        "surface-border": "#27272a", // zinc-800
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.375rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #18181b; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3f3f46; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #52525b; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-zinc-100 font-display antialiased overflow-hidden">
+<div class="flex h-screen w-full overflow-hidden">
+<aside class="w-72 flex-shrink-0 flex flex-col border-r border-zinc-200 dark:border-surface-border bg-white dark:bg-background-dark z-20">
+<div class="h-16 flex items-center px-6 border-b border-zinc-200 dark:border-surface-border">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-xl">volunteer_activism</span>
+</div>
+<h1 class="text-lg font-bold tracking-tight">Khidma Admin</h1>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto py-6 px-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-slate-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-surface-dark hover:text-slate-900 dark:hover:text-zinc-100 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md bg-primary/10 text-primary font-medium" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span>Events Management</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-slate-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-surface-dark hover:text-slate-900 dark:hover:text-zinc-100 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">group</span>
+<span>Volunteers</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-slate-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-surface-dark hover:text-slate-900 dark:hover:text-zinc-100 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">supervisor_account</span>
+<span>Team Leaders</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-slate-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-surface-dark hover:text-slate-900 dark:hover:text-zinc-100 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">diversity_3</span>
+<span>Teams</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-slate-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-surface-dark hover:text-slate-900 dark:hover:text-zinc-100 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">location_on</span>
+<span>Locations</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-slate-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-surface-dark hover:text-slate-900 dark:hover:text-zinc-100 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">notifications_active</span>
+<span class="flex-1">Alerts</span>
+<span class="bg-primary text-white text-xs font-bold px-1.5 py-0.5 rounded-full">3</span>
+</a>
+<div class="pt-4 mt-4 border-t border-zinc-200 dark:border-surface-border">
+<p class="px-3 text-xs font-semibold text-slate-400 dark:text-zinc-500 uppercase tracking-wider mb-2">System</p>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-slate-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-surface-dark hover:text-slate-900 dark:hover:text-zinc-100 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">bar_chart</span>
+<span>Reports</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-slate-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-surface-dark hover:text-slate-900 dark:hover:text-zinc-100 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">settings</span>
+<span>Settings</span>
+</a>
+</div>
+</nav>
+<div class="p-4 border-t border-zinc-200 dark:border-surface-border">
+<div class="flex items-center gap-3 p-2 rounded-md hover:bg-zinc-100 dark:hover:bg-surface-dark cursor-pointer transition-colors">
+<div class="size-8 rounded-full bg-slate-200 dark:bg-zinc-700 bg-cover bg-center" data-alt="User avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDFtg1HGS5l0cemWf-i_hUaQnvcE_2493OOnlsGRilcnRpboURIRc9BihSOd1hxwcM59MKqmH0KtRo7DNK5R7imE5cD24wgDFSlcvKRXrvuwE3KXm2g_6e6iWVpo9JkFHM8d-mB_oaT3EwkqEZv0KvdrVNGLthhJmQXjbfdAoV16eBwTIS_ay7iKE3lQVli5WtKdB9V997YmEpfZ7BK4tumqoJzgDJgh_ORRsG-rC6atScXCnIhN6bMwuvaI5uWjWXi2Prka5EZU6kP");'></div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-medium truncate text-slate-900 dark:text-white">Admin User</p>
+<p class="text-xs text-slate-500 dark:text-zinc-400 truncate">admin@khidma.org</p>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 flex flex-col min-w-0 bg-white dark:bg-background-dark">
+<header class="h-16 flex items-center justify-between px-8 border-b border-zinc-200 dark:border-surface-border bg-white dark:bg-background-dark">
+<div class="flex-1 max-w-lg">
+<label class="relative flex items-center w-full">
+<span class="absolute left-3 text-slate-400 dark:text-zinc-500 material-symbols-outlined text-[20px]">search</span>
+<input class="w-full h-10 pl-10 pr-4 rounded-md bg-slate-100 dark:bg-surface-dark border-transparent focus:bg-white dark:focus:bg-black focus:border-primary focus:ring-0 text-sm transition-all placeholder-slate-400 dark:placeholder-zinc-500" placeholder="Search events, volunteers, or reports..." type="text"/>
+</label>
+</div>
+<div class="flex items-center gap-4">
+<button class="relative p-2 rounded-full hover:bg-slate-100 dark:hover:bg-surface-dark text-slate-500 dark:text-zinc-400 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2.5 bg-primary border-2 border-white dark:border-background-dark rounded-full"></span>
+</button>
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-surface-dark text-slate-500 dark:text-zinc-400 transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+</header>
+<div class="flex-1 overflow-y-auto p-8">
+<div class="max-w-7xl mx-auto flex flex-col gap-6">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div>
+<h2 class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Events Management</h2>
+<p class="text-sm text-slate-500 dark:text-zinc-400 mt-1">Manage event lifecycles, assign teams, and monitor ongoing activities.</p>
+</div>
+<button class="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-5 py-2.5 rounded-md font-medium text-sm transition-all shadow-lg shadow-red-900/20">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+                            Create New Event
+                        </button>
+</div>
+<div class="bg-white dark:bg-surface-dark border border-zinc-200 dark:border-surface-border rounded-lg p-4">
+<div class="flex flex-col md:flex-row gap-4">
+<div class="flex-1 min-w-[200px]">
+<div class="relative">
+<span class="absolute left-3 top-2.5 text-zinc-500 material-symbols-outlined text-[20px]">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-md text-sm text-slate-900 dark:text-zinc-200 focus:ring-1 focus:ring-primary focus:border-primary placeholder-zinc-500" placeholder="Search events..." type="text"/>
+</div>
+</div>
+<div class="w-full md:w-40">
+<select class="w-full py-2 pl-3 pr-8 bg-slate-50 dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-md text-sm text-slate-900 dark:text-zinc-200 focus:ring-1 focus:ring-primary focus:border-primary">
+<option value="">All Statuses</option>
+<option value="active">Active</option>
+<option value="upcoming">Upcoming</option>
+<option value="completed">Completed</option>
+<option value="draft">Draft</option>
+</select>
+</div>
+<div class="w-full md:w-48">
+<select class="w-full py-2 pl-3 pr-8 bg-slate-50 dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-md text-sm text-slate-900 dark:text-zinc-200 focus:ring-1 focus:ring-primary focus:border-primary">
+<option value="">All Locations</option>
+<option value="downtown">Downtown Center</option>
+<option value="north">North Sector</option>
+<option value="south">South Bay</option>
+</select>
+</div>
+<div class="w-full md:w-40">
+<div class="relative">
+<span class="absolute left-3 top-2.5 text-zinc-500 material-symbols-outlined text-[20px]">calendar_today</span>
+<input class="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-md text-sm text-slate-900 dark:text-zinc-200 focus:ring-1 focus:ring-primary focus:border-primary placeholder-zinc-500" placeholder="Date Range" type="text"/>
+</div>
+</div>
+<button class="px-4 py-2 bg-slate-50 dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-md text-sm font-medium text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">sort</span>
+                                Sort
+                            </button>
+</div>
+</div>
+<div class="bg-white dark:bg-surface-dark border border-zinc-200 dark:border-surface-border rounded-lg overflow-hidden flex flex-col shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-zinc-200 dark:border-surface-border bg-slate-50 dark:bg-zinc-900/50">
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider w-1/4">Event Name</th>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">Date &amp; Time</th>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">Location</th>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">Team Leader</th>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+<tr class="group hover:bg-slate-50 dark:hover:bg-black/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="font-medium text-slate-900 dark:text-white">Emergency Response Training</span>
+<span class="text-xs text-slate-500 dark:text-zinc-500">ID: EVT-2023-089</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-zinc-300">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-zinc-500">schedule</span>
+                                                Oct 24, 2023 <br/> 09:00 AM
+                                            </div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-zinc-300">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-zinc-500">place</span>
+                                                Central HQ
+                                            </div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-slate-200 dark:bg-zinc-700 bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBrMMn1EDVZi7HeioYnDJp2n8QqVGcrSutKb7ilWMF5_ExYjanCHYSsVOU-_Hhec9XqzWsF4boPUYPgi42MA7qFX649BvjwPMY--pHPSuGFO_vWwP_P6uvwnFyxMfWrrkBNJ7v25kvT7wOkjDrz3I-NJzWscB3kmes34WtIznqAelXCj-3QyEE9TPMV6fz_RMbL1YLd5QoStKR-7V0p5Wy5HEttQa1ipc44brGtF1IJCax12jOHNzt4X-OzCXfkhI8DztJfEk7_KI4x");'></div>
+<span class="text-sm text-slate-600 dark:text-zinc-300">Sarah Jenkins</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800">
+                                                Active
+                                            </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors" title="View/Edit Details">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+<button class="p-1.5 rounded-md text-zinc-400 hover:text-primary hover:bg-zinc-700 transition-colors" title="Manage Teams">
+<span class="material-symbols-outlined text-[18px]">groups</span>
+</button>
+<button class="p-1.5 rounded-md text-zinc-400 hover:text-red-500 hover:bg-zinc-700 transition-colors" title="Delete Event">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="group hover:bg-slate-50 dark:hover:bg-black/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="font-medium text-slate-900 dark:text-white">City Food Drive</span>
+<span class="text-xs text-slate-500 dark:text-zinc-500">ID: EVT-2023-092</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-zinc-300">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-zinc-500">schedule</span>
+                                                Oct 28, 2023 <br/> 08:00 AM
+                                            </div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-zinc-300">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-zinc-500">place</span>
+                                                Downtown Plaza
+                                            </div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-slate-200 dark:bg-zinc-700 bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBCqbuK9Gehhq3YlfC4ZBwTxF3fGUfxLIWJ0on82r4vocDjS7slu-h2AGNJ14JvtWf7C-Ddu4OXqOQrjeSRIlVi1Ehu0ezyEZD9LBLF9LoPNOzh15ONY8dPvk3LUTUOHO-i1JvSlwYQEcVl36EklnYN8Z0NixJ_uyLicBEesvk80L4iSX57UBnvqthlrFksOZjZl8CiuDqw1EJLXiLGYUDmkBXtGINlJseIhW500WJI8aoDDd0gMhck9muwBtt6cXo6DZ7KDUYbAwrF");'></div>
+<span class="text-sm text-slate-600 dark:text-zinc-300">Ahmed Raza</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800">
+                                                Upcoming
+                                            </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors" title="View/Edit Details">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+<button class="p-1.5 rounded-md text-zinc-400 hover:text-primary hover:bg-zinc-700 transition-colors" title="Manage Teams">
+<span class="material-symbols-outlined text-[18px]">groups</span>
+</button>
+<button class="p-1.5 rounded-md text-zinc-400 hover:text-red-500 hover:bg-zinc-700 transition-colors" title="Delete Event">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="group hover:bg-slate-50 dark:hover:bg-black/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="font-medium text-slate-900 dark:text-white">Beach Cleanup Initiative</span>
+<span class="text-xs text-slate-500 dark:text-zinc-500">ID: EVT-2023-085</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-zinc-300">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-zinc-500">schedule</span>
+                                                Oct 15, 2023 <br/> 10:00 AM
+                                            </div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-zinc-300">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-zinc-500">place</span>
+                                                North Shore
+                                            </div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-slate-200 dark:bg-zinc-700 bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBC4zC6RLhgqmknC_DPmHoSGVtINCOl0L26NOfsjk36pPTJV7fnqpGmHispeaUmJIGM6fGmHfDKOASn90K8LzYLEIz-EOpigCYSdTdmu6IUwF2W5y3GNRjAdDyUnmWEamivNpOVmeQf5bsTyZCuY9RE9c7pBROlCnTAoY9IDUpewNImhy1csYyML_XTJydVNfKxQgsngfva4RKBbX3EMQ3ors-fgSxJ2VweyXuhaCjUtcWKvyxbTe6BjN4wM5xX_xxmLeZeOOo6VbCC");'></div>
+<span class="text-sm text-slate-600 dark:text-zinc-300">Emily Chen</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700">
+                                                Completed
+                                            </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors" title="View/Edit Details">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+<button class="p-1.5 rounded-md text-zinc-400 hover:text-primary hover:bg-zinc-700 transition-colors" title="Manage Teams">
+<span class="material-symbols-outlined text-[18px]">groups</span>
+</button>
+<button class="p-1.5 rounded-md text-zinc-400 hover:text-red-500 hover:bg-zinc-700 transition-colors" title="Delete Event">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="group hover:bg-slate-50 dark:hover:bg-black/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="font-medium text-slate-900 dark:text-white">Annual Fundraising Gala</span>
+<span class="text-xs text-slate-500 dark:text-zinc-500">ID: EVT-2023-101</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-zinc-300">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-zinc-500">schedule</span>
+                                                Dec 01, 2023 <br/> 06:00 PM
+                                            </div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-zinc-300">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-zinc-500">place</span>
+                                                Grand Hotel
+                                            </div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-xs text-zinc-500">
+                                                    ?
+                                                </div>
+<span class="text-sm text-slate-400 dark:text-zinc-500 italic">Unassigned</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-500 border border-yellow-200 dark:border-yellow-900/30">
+                                                Draft
+                                            </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors" title="View/Edit Details">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 rounded-md text-zinc-400 hover:text-primary hover:bg-zinc-700 transition-colors" title="Manage Teams">
+<span class="material-symbols-outlined text-[18px]">groups</span>
+</button>
+<button class="p-1.5 rounded-md text-zinc-400 hover:text-red-500 hover:bg-zinc-700 transition-colors" title="Delete Event">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="group hover:bg-slate-50 dark:hover:bg-black/30 transition-colors bg-red-50/50 dark:bg-red-900/5">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-medium text-slate-900 dark:text-white">Flood Relief Operation</span>
+<span class="size-2 rounded-full bg-red-500 animate-pulse"></span>
+</div>
+<span class="text-xs text-slate-500 dark:text-zinc-500">ID: EVT-2023-099</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-zinc-300">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-zinc-500">schedule</span>
+                                                Now <br/> Ongoing
+                                            </div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-zinc-300">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-zinc-500">place</span>
+                                                East District
+                                            </div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-slate-200 dark:bg-zinc-700 bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBrMMn1EDVZi7HeioYnDJp2n8QqVGcrSutKb7ilWMF5_ExYjanCHYSsVOU-_Hhec9XqzWsF4boPUYPgi42MA7qFX649BvjwPMY--pHPSuGFO_vWwP_P6uvwnFyxMfWrrkBNJ7v25kvT7wOkjDrz3I-NJzWscB3kmes34WtIznqAelXCj-3QyEE9TPMV6fz_RMbL1YLd5QoStKR-7V0p5Wy5HEttQa1ipc44brGtF1IJCax12jOHNzt4X-OzCXfkhI8DztJfEk7_KI4x");'></div>
+<span class="text-sm text-slate-600 dark:text-zinc-300">Sarah Jenkins</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary text-white border border-red-600 animate-pulse">
+                                                Urgent
+                                            </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors" title="View/Edit Details">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+<button class="p-1.5 rounded-md text-zinc-400 hover:text-primary hover:bg-zinc-700 transition-colors" title="Manage Teams">
+<span class="material-symbols-outlined text-[18px]">groups</span>
+</button>
+<button class="p-1.5 rounded-md text-zinc-400 hover:text-red-500 hover:bg-zinc-700 transition-colors" title="Delete Event">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="border-t border-zinc-200 dark:border-surface-border bg-white dark:bg-surface-dark px-4 py-3 flex items-center justify-between sm:px-6">
+<div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+<div>
+<p class="text-sm text-slate-700 dark:text-zinc-400">
+                                        Showing <span class="font-medium text-slate-900 dark:text-white">1</span> to <span class="font-medium text-slate-900 dark:text-white">5</span> of <span class="font-medium text-slate-900 dark:text-white">24</span> results
+                                    </p>
+</div>
+<div>
+<nav aria-label="Pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+<a class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-black text-sm font-medium text-slate-500 dark:text-zinc-400 hover:bg-slate-50 dark:hover:bg-zinc-800" href="#">
+<span class="sr-only">Previous</span>
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</a>
+<a aria-current="page" class="z-10 bg-primary/10 border-primary text-primary relative inline-flex items-center px-4 py-2 border text-sm font-medium" href="#">1</a>
+<a class="bg-white dark:bg-black border-zinc-300 dark:border-zinc-700 text-slate-500 dark:text-zinc-400 hover:bg-slate-50 dark:hover:bg-zinc-800 relative inline-flex items-center px-4 py-2 border text-sm font-medium" href="#">2</a>
+<a class="bg-white dark:bg-black border-zinc-300 dark:border-zinc-700 text-slate-500 dark:text-zinc-400 hover:bg-slate-50 dark:hover:bg-zinc-800 relative inline-flex items-center px-4 py-2 border text-sm font-medium" href="#">3</a>
+<a class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-black text-sm font-medium text-slate-500 dark:text-zinc-400 hover:bg-slate-50 dark:hover:bg-zinc-800" href="#">
+<span class="sr-only">Next</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</a>
+</nav>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>

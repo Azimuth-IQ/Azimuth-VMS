@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Send Feedback (Mobile Web) Page</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#059669", // emerald-600
+              "primary-hover": "#047857", // emerald-700
+              "background-light": "#f0fdf4", // green-50
+              "background-dark": "#064e3b",
+              "card": "#ffffff",
+              "card-dark": "#065f46",
+              "text-primary": "#022c22", // emerald-950
+              "text-primary-dark": "#ecfdf5",
+              "text-secondary": "#065f46", // emerald-800
+              "text-secondary-dark": "#a7f3d0",
+              "border-color": "#d1fae5", // emerald-100
+              "border-color-dark": "#047857",
+            },
+            fontFamily: {
+              "display": ["Lexend", "sans-serif"]
+            },
+            borderRadius: {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+          },
+        },
+      }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-text-primary dark:text-text-primary-dark">
+<div class="relative flex h-full min-h-screen w-full flex-col max-w-md mx-auto bg-white dark:bg-zinc-900 shadow-xl overflow-x-hidden pb-20">
+<header class="w-full bg-emerald-600 text-white relative shadow-sm z-20">
+<div class="flex items-center justify-between px-4 py-3">
+<h1 class="text-lg font-bold">The Helper</h1>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+<div class="size-8 rounded-full bg-emerald-200 bg-center bg-cover" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCqH-G4Kj2t40zTfIe5b-xfQ1R5tgWzhdDK0jiySSQqKrZxhOmp64LFsHx9SUUq9eu2eAhgyR4mFUToLFk7plOkPsgC2fZhFO6C7-3PHgI5PMeV-TLUqrxl1xD7qdFuxyvUShQ4us9mSAIu9BscePmVHEm2vkVg-sWk_Ha_6E2zvalkXTfHbf_iQA3Ff80dQ8MpBndGoz_xud3KJTnQEKOaQ7hHLa7r7UwEUALUNCDKQQXVLTmJzVNoUVk61EWq2oNlhZs10XR_84C5");'></div>
+</div>
+</div>
+<div class="h-1 w-full bg-emerald-700"></div>
+</header>
+<main class="flex-1 p-5 flex flex-col">
+<div class="mb-6">
+<h2 class="text-2xl font-bold text-emerald-950 dark:text-white">Send Feedback</h2>
+<p class="text-sm text-emerald-600/80 dark:text-emerald-300 mt-1">We value your input. Let us know how we can improve your volunteering experience.</p>
+</div>
+<form action="#" class="flex flex-col gap-5 flex-1" onsubmit="event.preventDefault();">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-emerald-900 dark:text-emerald-100 ml-1" for="category">Topic</label>
+<div class="relative">
+<select class="w-full rounded-xl border border-emerald-100 bg-emerald-50/50 px-4 py-3 text-emerald-900 focus:border-emerald-500 focus:ring-emerald-500 dark:bg-card-dark dark:border-emerald-700 dark:text-white appearance-none shadow-sm transition-colors outline-none cursor-pointer" id="category">
+<option>General Feedback</option>
+<option>Report a Bug</option>
+<option>Suggestion</option>
+<option>Appreciation</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-emerald-600">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-emerald-900 dark:text-emerald-100 ml-1" for="message">Your Message</label>
+<textarea class="w-full rounded-xl border border-emerald-100 bg-emerald-50/50 p-4 text-emerald-900 placeholder-emerald-400 focus:border-emerald-500 focus:ring-emerald-500 dark:bg-card-dark dark:border-emerald-700 dark:text-white shadow-sm transition-colors resize-none outline-none" id="message" placeholder="Type your feedback here..." rows="8"></textarea>
+<div class="flex justify-end items-center px-1">
+<span class="text-xs text-emerald-400 font-medium">0/500 characters</span>
+</div>
+</div>
+<div class="flex flex-col gap-2 mt-1">
+<label class="text-sm font-semibold text-emerald-900 dark:text-emerald-100 ml-1">Rate your experience</label>
+<div class="flex justify-between items-center bg-emerald-50/50 dark:bg-card-dark p-4 rounded-xl border border-emerald-100 dark:border-emerald-700 shadow-sm">
+<button class="flex flex-col items-center gap-1 group w-full border-r border-emerald-100 dark:border-emerald-800 last:border-0" type="button">
+<span class="material-symbols-outlined text-3xl text-emerald-300 group-hover:text-emerald-500 transition-colors">sentiment_dissatisfied</span>
+</button>
+<button class="flex flex-col items-center gap-1 group w-full border-r border-emerald-100 dark:border-emerald-800 last:border-0" type="button">
+<span class="material-symbols-outlined text-3xl text-emerald-300 group-hover:text-emerald-500 transition-colors">sentiment_neutral</span>
+</button>
+<button class="flex flex-col items-center gap-1 group w-full border-r border-emerald-100 dark:border-emerald-800 last:border-0" type="button">
+<span class="material-symbols-outlined text-3xl text-emerald-600 transition-colors" style="font-variation-settings: 'FILL' 1;">sentiment_satisfied</span>
+</button>
+<button class="flex flex-col items-center gap-1 group w-full last:border-0" type="button">
+<span class="material-symbols-outlined text-3xl text-emerald-300 group-hover:text-emerald-500 transition-colors">sentiment_very_satisfied</span>
+</button>
+</div>
+</div>
+<div class="flex-grow min-h-[20px]"></div>
+<button class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-200/50 dark:shadow-none transition-transform active:scale-[0.99] flex justify-center items-center gap-2 mt-4">
+<span>Submit Feedback</span>
+<span class="material-symbols-outlined text-[20px]">send</span>
+</button>
+</form>
+</main>
+<nav class="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-zinc-900 border-t border-emerald-100 dark:border-zinc-800 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] max-w-md mx-auto">
+<div class="flex justify-around items-center h-16">
+<a class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-emerald-500 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:scale-110 transition-transform">home</span>
+<span class="text-[10px] font-medium mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-emerald-600" href="#">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">forum</span>
+<span class="text-[10px] font-medium mt-1">Feedback</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-emerald-500 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:scale-110 transition-transform">person</span>
+<span class="text-[10px] font-medium mt-1">Profile</span>
+</a>
+</div>
+</nav>
+</div>
+
+</body></html>
