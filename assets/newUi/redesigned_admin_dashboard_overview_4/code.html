@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Khidma Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec1313",
+                        "primary-hover": "#c91010",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#09090b", // Matching zinc-950 for Command Mode
+                        "surface-dark": "#18181b", // zinc-900
+                        "surface-border": "#27272a", // zinc-800
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.375rem", // rounded-md matches user request
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom Scrollbar for Command Mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #18181b; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3f3f46; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #52525b; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-zinc-100 font-display antialiased overflow-hidden">
+<div class="flex h-screen w-full overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="w-72 flex-shrink-0 flex flex-col border-r border-zinc-200 dark:border-surface-border bg-white dark:bg-background-dark z-20">
+<div class="h-16 flex items-center px-6 border-b border-zinc-200 dark:border-surface-border">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-xl">volunteer_activism</span>
+</div>
+<h1 class="text-lg font-bold tracking-tight">Khidma Admin</h1>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto py-6 px-4 space-y-1">
+<!-- Navigation Items -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md bg-primary/10 text-primary font-medium" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-slate-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-surface-dark hover:text-slate-900 dark:hover:text-zinc-100 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">calendar_month</span>
+<span>Events Management</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-slate-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-surface-dark hover:text-slate-900 dark:hover:text-zinc-100 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">group</span>
+<span>Volunteers</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-slate-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-surface-dark hover:text-slate-900 dark:hover:text-zinc-100 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">supervisor_account</span>
+<span>Team Leaders</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-slate-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-surface-dark hover:text-slate-900 dark:hover:text-zinc-100 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">diversity_3</span>
+<span>Teams</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-slate-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-surface-dark hover:text-slate-900 dark:hover:text-zinc-100 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">location_on</span>
+<span>Locations</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-slate-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-surface-dark hover:text-slate-900 dark:hover:text-zinc-100 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">notifications_active</span>
+<span class="flex-1">Alerts</span>
+<span class="bg-primary text-white text-xs font-bold px-1.5 py-0.5 rounded-full">3</span>
+</a>
+<div class="pt-4 mt-4 border-t border-zinc-200 dark:border-surface-border">
+<p class="px-3 text-xs font-semibold text-slate-400 dark:text-zinc-500 uppercase tracking-wider mb-2">System</p>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-slate-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-surface-dark hover:text-slate-900 dark:hover:text-zinc-100 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">bar_chart</span>
+<span>Reports</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-slate-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-surface-dark hover:text-slate-900 dark:hover:text-zinc-100 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">settings</span>
+<span>Settings</span>
+</a>
+</div>
+</nav>
+<div class="p-4 border-t border-zinc-200 dark:border-surface-border">
+<div class="flex items-center gap-3 p-2 rounded-md hover:bg-zinc-100 dark:hover:bg-surface-dark cursor-pointer transition-colors">
+<div class="size-8 rounded-full bg-slate-200 dark:bg-zinc-700 bg-cover bg-center" data-alt="User avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDFtg1HGS5l0cemWf-i_hUaQnvcE_2493OOnlsGRilcnRpboURIRc9BihSOd1hxwcM59MKqmH0KtRo7DNK5R7imE5cD24wgDFSlcvKRXrvuwE3KXm2g_6e6iWVpo9JkFHM8d-mB_oaT3EwkqEZv0KvdrVNGLthhJmQXjbfdAoV16eBwTIS_ay7iKE3lQVli5WtKdB9V997YmEpfZ7BK4tumqoJzgDJgh_ORRsG-rC6atScXCnIhN6bMwuvaI5uWjWXi2Prka5EZU6kP");'></div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-medium truncate text-slate-900 dark:text-white">Admin User</p>
+<p class="text-xs text-slate-500 dark:text-zinc-400 truncate">admin@khidma.org</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col min-w-0 bg-white dark:bg-background-dark">
+<!-- Top Header -->
+<header class="h-16 flex items-center justify-between px-8 border-b border-zinc-200 dark:border-surface-border bg-white dark:bg-background-dark">
+<div class="flex-1 max-w-lg">
+<label class="relative flex items-center w-full">
+<span class="absolute left-3 text-slate-400 dark:text-zinc-500 material-symbols-outlined text-[20px]">search</span>
+<input class="w-full h-10 pl-10 pr-4 rounded-md bg-slate-100 dark:bg-surface-dark border-transparent focus:bg-white dark:focus:bg-black focus:border-primary focus:ring-0 text-sm transition-all placeholder-slate-400 dark:placeholder-zinc-500" placeholder="Search events, volunteers, or reports..." type="text"/>
+</label>
+</div>
+<div class="flex items-center gap-4">
+<button class="relative p-2 rounded-full hover:bg-slate-100 dark:hover:bg-surface-dark text-slate-500 dark:text-zinc-400 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2.5 bg-primary border-2 border-white dark:border-background-dark rounded-full"></span>
+</button>
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-surface-dark text-slate-500 dark:text-zinc-400 transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+</header>
+<!-- Scrollable Dashboard Content -->
+<div class="flex-1 overflow-y-auto p-8">
+<div class="max-w-7xl mx-auto flex flex-col gap-8">
+<!-- Hero Ad Slider -->
+<div class="relative w-full rounded-xl overflow-hidden bg-surface-dark min-h-[200px] group cursor-pointer border border-zinc-200 dark:border-surface-border">
+<!-- Background Image -->
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="Red abstract geometric pattern background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBHrRz3gIDMcDFUOLpx-FJIIiaGqi6wKjyPQhEG9Dya0BrP0355Gob46uxnLwPQ5oC2Rd8JuYFoLZ9Vu_2S2Bmvogf9ednoBt55mP4mP1BxL1JC8mlGkYGcxx6zEUdheCSOWCkSn3pQHYXxVkddCH_YczEA8xQ5Wpnjq2h5N_OUdx22h5Oh7vewtrAIoVgpOGyZ5S0nUYhs3I_PlwC2ZVfFaWCytgsV4eBOa1XvoG2t1EfkwihmhSruhUtATPY1eOPQVLwG4QO0N5He");'>
+</div>
+<!-- Gradient Overlay -->
+<div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent"></div>
+<!-- Content -->
+<div class="relative h-full flex flex-col justify-center px-10 py-8 max-w-2xl">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30 w-fit mb-4">
+<span class="size-2 rounded-full bg-primary animate-pulse"></span>
+<span class="text-xs font-bold text-primary uppercase tracking-wider">Featured Campaign</span>
+</div>
+<h2 class="text-3xl font-bold text-white mb-2 leading-tight">Emergency Response Training</h2>
+<p class="text-zinc-300 text-lg mb-6 max-w-lg">New modules are available for your teams. Ensure all volunteers are certified for the upcoming season.</p>
+<button class="bg-primary hover:bg-primary-hover text-white px-6 py-2.5 rounded-md font-medium text-sm w-fit transition-colors flex items-center gap-2">
+                                Sign up Teams
+                                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<!-- Slider Controls (Visual Only) -->
+<div class="absolute bottom-4 right-4 flex gap-2">
+<button class="size-8 rounded-full bg-black/50 hover:bg-primary/80 flex items-center justify-center text-white backdrop-blur-sm border border-white/10 transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="size-8 rounded-full bg-black/50 hover:bg-primary/80 flex items-center justify-center text-white backdrop-blur-sm border border-white/10 transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Metrics Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Metric Card 1 -->
+<div class="bg-white dark:bg-surface-dark border border-zinc-200 dark:border-surface-border rounded-lg p-5 flex flex-col justify-between hover:border-primary/50 transition-colors group">
+<div class="flex justify-between items-start mb-4">
+<p class="text-slate-500 dark:text-zinc-400 font-medium text-sm">Pending Approvals</p>
+<span class="material-symbols-outlined text-primary bg-primary/10 p-1.5 rounded-md">person_add</span>
+</div>
+<div>
+<h3 class="text-3xl font-bold text-primary">14</h3>
+<p class="text-xs text-slate-400 dark:text-zinc-500 mt-1">Requires immediate review</p>
+</div>
+</div>
+<!-- Metric Card 2 -->
+<div class="bg-white dark:bg-surface-dark border border-zinc-200 dark:border-surface-border rounded-lg p-5 flex flex-col justify-between hover:border-zinc-300 dark:hover:border-zinc-600 transition-colors">
+<div class="flex justify-between items-start mb-4">
+<p class="text-slate-500 dark:text-zinc-400 font-medium text-sm">Active Events</p>
+<span class="material-symbols-outlined text-zinc-400 bg-zinc-100 dark:bg-zinc-800 p-1.5 rounded-md">event_available</span>
+</div>
+<div>
+<h3 class="text-3xl font-bold text-slate-900 dark:text-white">8</h3>
+<p class="text-xs text-slate-400 dark:text-zinc-500 mt-1">Across 3 major locations</p>
+</div>
+</div>
+<!-- Metric Card 3 -->
+<div class="bg-white dark:bg-surface-dark border border-zinc-200 dark:border-surface-border rounded-lg p-5 flex flex-col justify-between hover:border-primary/50 transition-colors group">
+<div class="flex justify-between items-start mb-4">
+<p class="text-slate-500 dark:text-zinc-400 font-medium text-sm">Urgent Leave Requests</p>
+<span class="material-symbols-outlined text-orange-500 bg-orange-500/10 p-1.5 rounded-md">priority_high</span>
+</div>
+<div>
+<h3 class="text-3xl font-bold text-white group-hover:text-orange-500 transition-colors">3</h3>
+<p class="text-xs text-slate-400 dark:text-zinc-500 mt-1">Within next 48 hours</p>
+</div>
+</div>
+<!-- Metric Card 4 -->
+<div class="bg-white dark:bg-surface-dark border border-zinc-200 dark:border-surface-border rounded-lg p-5 flex flex-col justify-between hover:border-zinc-300 dark:hover:border-zinc-600 transition-colors">
+<div class="flex justify-between items-start mb-4">
+<p class="text-slate-500 dark:text-zinc-400 font-medium text-sm">Total Volunteers</p>
+<span class="material-symbols-outlined text-zinc-400 bg-zinc-100 dark:bg-zinc-800 p-1.5 rounded-md">groups</span>
+</div>
+<div>
+<h3 class="text-3xl font-bold text-slate-900 dark:text-white">1,240</h3>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-xs text-green-500">trending_up</span>
+<p class="text-xs text-green-500 font-medium">+12% this month</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Charts & Visualization Row -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Main Chart -->
+<div class="lg:col-span-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-surface-border rounded-lg p-6">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Volunteer Activity</h3>
+<select class="bg-slate-100 dark:bg-black border-none text-xs rounded px-2 py-1 text-slate-500 dark:text-zinc-400 focus:ring-1 focus:ring-primary">
+<option>Last 7 Days</option>
+<option>Last 30 Days</option>
+</select>
+</div>
+<div class="h-64 w-full">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 800 300">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#ec1313" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#ec1313" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Grid lines -->
+<line stroke="#27272a" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="800" y1="225" y2="225"></line>
+<line stroke="#27272a" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="800" y1="150" y2="150"></line>
+<line stroke="#27272a" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="800" y1="75" y2="75"></line>
+<!-- Area Path -->
+<path d="M0,225 C100,200 150,100 250,120 C350,140 400,200 500,150 C600,100 700,50 800,80 V300 H0 Z" fill="url(#chartGradient)"></path>
+<!-- Line Path -->
+<path d="M0,225 C100,200 150,100 250,120 C350,140 400,200 500,150 C600,100 700,50 800,80" fill="none" stroke="#ec1313" stroke-linecap="round" stroke-width="3"></path>
+<!-- Data Points -->
+<circle cx="250" cy="120" fill="#09090b" r="4" stroke="#ec1313" stroke-width="2"></circle>
+<circle cx="500" cy="150" fill="#09090b" r="4" stroke="#ec1313" stroke-width="2"></circle>
+<circle cx="800" cy="80" fill="#09090b" r="4" stroke="#ec1313" stroke-width="2"></circle>
+</svg>
+</div>
+</div>
+<!-- Secondary Chart (Distribution) -->
+<div class="bg-white dark:bg-surface-dark border border-zinc-200 dark:border-surface-border rounded-lg p-6 flex flex-col">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Role Distribution</h3>
+<div class="flex-1 flex items-center justify-center relative">
+<!-- Simple Donut Chart Representation -->
+<div class="relative size-40 rounded-full border-[12px] border-zinc-800 flex items-center justify-center" style="background: conic-gradient(#ec1313 75%, transparent 0);">
+<div class="absolute inset-0 rounded-full bg-white dark:bg-surface-dark m-3 flex flex-col items-center justify-center">
+<span class="text-2xl font-bold text-slate-900 dark:text-white">75%</span>
+<span class="text-xs text-slate-400 dark:text-zinc-500">Volunteers</span>
+</div>
+</div>
+</div>
+<div class="flex gap-4 justify-center mt-6">
+<div class="flex items-center gap-2">
+<span class="size-3 rounded-full bg-primary"></span>
+<span class="text-xs text-slate-400 dark:text-zinc-400">Volunteers</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="size-3 rounded-full bg-zinc-700"></span>
+<span class="text-xs text-slate-400 dark:text-zinc-400">Leaders</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Split Section -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Urgent Leave Requests -->
+<div class="bg-white dark:bg-surface-dark border border-zinc-200 dark:border-surface-border rounded-lg overflow-hidden">
+<div class="p-6 border-b border-zinc-200 dark:border-surface-border flex justify-between items-center">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Urgent Leave Requests</h3>
+<a class="text-xs font-medium text-primary hover:text-primary-hover" href="#">View all</a>
+</div>
+<div class="p-0">
+<table class="w-full text-left">
+<tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+<!-- Row 1 -->
+<tr class="group hover:bg-slate-50 dark:hover:bg-black/30 transition-colors">
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-200 dark:bg-zinc-700 bg-cover bg-center" data-alt="User avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBrMMn1EDVZi7HeioYnDJp2n8QqVGcrSutKb7ilWMF5_ExYjanCHYSsVOU-_Hhec9XqzWsF4boPUYPgi42MA7qFX649BvjwPMY--pHPSuGFO_vWwP_P6uvwnFyxMfWrrkBNJ7v25kvT7wOkjDrz3I-NJzWscB3kmes34WtIznqAelXCj-3QyEE9TPMV6fz_RMbL1YLd5QoStKR-7V0p5Wy5HEttQa1ipc44brGtF1IJCax12jOHNzt4X-OzCXfkhI8DztJfEk7_KI4x");'></div>
+<div>
+<p class="font-medium text-sm text-slate-900 dark:text-white">Sarah Jenkins</p>
+<p class="text-xs text-slate-500 dark:text-zinc-500">Medical Emergency</p>
+</div>
+</div>
+</td>
+<td class="p-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded hover:bg-zinc-800 text-zinc-400 hover:text-red-500" title="Reject">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+<button class="p-2 rounded bg-primary hover:bg-primary-hover text-white" title="Approve">
+<span class="material-symbols-outlined text-[20px]">check</span>
+</button>
+</div>
+<span class="text-xs text-zinc-500 group-hover:hidden">Today, 09:41 AM</span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-slate-50 dark:hover:bg-black/30 transition-colors">
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-200 dark:bg-zinc-700 bg-cover bg-center" data-alt="User avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBCqbuK9Gehhq3YlfC4ZBwTxF3fGUfxLIWJ0on82r4vocDjS7slu-h2AGNJ14JvtWf7C-Ddu4OXqOQrjeSRIlVi1Ehu0ezyEZD9LBLF9LoPNOzh15ONY8dPvk3LUTUOHO-i1JvSlwYQEcVl36EklnYN8Z0NixJ_uyLicBEesvk80L4iSX57UBnvqthlrFksOZjZl8CiuDqw1EJLXiLGYUDmkBXtGINlJseIhW500WJI8aoDDd0gMhck9muwBtt6cXo6DZ7KDUYbAwrF");'></div>
+<div>
+<p class="font-medium text-sm text-slate-900 dark:text-white">Ahmed Raza</p>
+<p class="text-xs text-slate-500 dark:text-zinc-500">Family Obligation</p>
+</div>
+</div>
+</td>
+<td class="p-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded hover:bg-zinc-800 text-zinc-400 hover:text-red-500" title="Reject">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+<button class="p-2 rounded bg-primary hover:bg-primary-hover text-white" title="Approve">
+<span class="material-symbols-outlined text-[20px]">check</span>
+</button>
+</div>
+<span class="text-xs text-zinc-500 group-hover:hidden">Yesterday, 4:20 PM</span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="group hover:bg-slate-50 dark:hover:bg-black/30 transition-colors">
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-200 dark:bg-zinc-700 bg-cover bg-center" data-alt="User avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBC4zC6RLhgqmknC_DPmHoSGVtINCOl0L26NOfsjk36pPTJV7fnqpGmHispeaUmJIGM6fGmHfDKOASn90K8LzYLEIz-EOpigCYSdTdmu6IUwF2W5y3GNRjAdDyUnmWEamivNpOVmeQf5bsTyZCuY9RE9c7pBROlCnTAoY9IDUpewNImhy1csYyML_XTJydVNfKxQgsngfva4RKBbX3EMQ3ors-fgSxJ2VweyXuhaCjUtcWKvyxbTe6BjN4wM5xX_xxmLeZeOOo6VbCC");'></div>
+<div>
+<p class="font-medium text-sm text-slate-900 dark:text-white">Emily Chen</p>
+<p class="text-xs text-slate-500 dark:text-zinc-500">Transport Issue</p>
+</div>
+</div>
+</td>
+<td class="p-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded hover:bg-zinc-800 text-zinc-400 hover:text-red-500" title="Reject">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+<button class="p-2 rounded bg-primary hover:bg-primary-hover text-white" title="Approve">
+<span class="material-symbols-outlined text-[20px]">check</span>
+</button>
+</div>
+<span class="text-xs text-zinc-500 group-hover:hidden">Yesterday, 1:15 PM</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- System Alerts Feed -->
+<div class="bg-white dark:bg-surface-dark border border-zinc-200 dark:border-surface-border rounded-lg overflow-hidden flex flex-col">
+<div class="p-6 border-b border-zinc-200 dark:border-surface-border flex justify-between items-center">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Recent Alerts</h3>
+<button class="text-zinc-500 hover:text-white">
+<span class="material-symbols-outlined text-sm">refresh</span>
+</button>
+</div>
+<div class="p-0 flex-1 overflow-y-auto">
+<div class="flex flex-col">
+<!-- Alert Item 1 -->
+<div class="flex gap-4 p-4 border-b border-zinc-200 dark:border-zinc-800 hover:bg-slate-50 dark:hover:bg-black/30 transition-colors">
+<div class="flex-shrink-0 mt-1">
+<span class="material-symbols-outlined text-red-500">warning</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-semibold text-slate-900 dark:text-white">Location Capacity Reached</p>
+<p class="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">Downtown Center has reached max volunteer capacity (50/50).</p>
+</div>
+<span class="text-[10px] text-zinc-500 whitespace-nowrap">2m ago</span>
+</div>
+<!-- Alert Item 2 -->
+<div class="flex gap-4 p-4 border-b border-zinc-200 dark:border-zinc-800 hover:bg-slate-50 dark:hover:bg-black/30 transition-colors">
+<div class="flex-shrink-0 mt-1">
+<span class="material-symbols-outlined text-primary">diversity_3</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-semibold text-slate-900 dark:text-white">New Team Created</p>
+<p class="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">"North Sector Response" created by Admin.</p>
+</div>
+<span class="text-[10px] text-zinc-500 whitespace-nowrap">1h ago</span>
+</div>
+<!-- Alert Item 3 -->
+<div class="flex gap-4 p-4 hover:bg-slate-50 dark:hover:bg-black/30 transition-colors">
+<div class="flex-shrink-0 mt-1">
+<span class="material-symbols-outlined text-yellow-500">cloud_off</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-semibold text-slate-900 dark:text-white">System Sync Delay</p>
+<p class="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">Data sync with mobile app is delayed by 5 mins.</p>
+</div>
+<span class="text-[10px] text-zinc-500 whitespace-nowrap">3h ago</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
