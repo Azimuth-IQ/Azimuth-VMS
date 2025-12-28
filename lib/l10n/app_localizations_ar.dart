@@ -171,6 +171,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sendNotification => 'إرسال إشعار';
 
   @override
+  String get sending => 'جاري الإرسال...';
+
+  @override
   String get profile => 'الملف الشخصي';
 
   @override
@@ -258,7 +261,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get mainShift => 'الوردية الرئيسية';
 
   @override
-  String get subLocation => 'الموقع الفرعي';
+  String get subLocation => 'موقع فرعي';
 
   @override
   String membersAssigned(int assigned, int total) {
@@ -324,7 +327,7 @@ class AppLocalizationsAr extends AppLocalizations {
       'سير عمل كامل لتأهيل المتطوعين الجدد بما في ذلك تقديم النموذج والمراجعة والموافقة';
 
   @override
-  String get eventManagement => 'إدارة الفعاليات';
+  String get eventManagement => 'إدارة الفعالية';
 
   @override
   String get eventManagementDescription =>
@@ -480,7 +483,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get viewRatingAndInfo => 'عرض تقييمك ومعلوماتك الشخصية';
 
   @override
-  String get submitFeedback => 'تقديم ملاحظات';
+  String get submitFeedback => 'تقديم الملاحظات';
 
   @override
   String get reportBugsOrSuggest => 'الإبلاغ عن الأخطاء أو اقتراح تحسينات';
@@ -556,7 +559,7 @@ class AppLocalizationsAr extends AppLocalizations {
       'لا توجد فعاليات نشطة.\nاضغط + لإضافة فعالية جديدة.';
 
   @override
-  String get selectEvent => 'اختر فعالية';
+  String get selectEvent => 'اختر الحدث';
 
   @override
   String get viewWorkflow => 'عرض سير العمل';
@@ -601,7 +604,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get shifts => 'الورديات';
 
   @override
-  String get shiftTime => 'وقت الوردية';
+  String get shiftTime => 'وقت المناوبة';
 
   @override
   String get startTime => 'وقت البدء';
@@ -658,7 +661,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get teamOptional => 'الفريق (اختياري)';
 
   @override
-  String get selectTeam => 'اختر فريق';
+  String get selectTeam => 'اختر الفريق';
 
   @override
   String get none => 'لا شيء';
@@ -679,13 +682,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String get leader => 'القائد';
 
   @override
-  String get leaderColon => 'القائد:';
+  String leaderColon(String id) {
+    return 'القائد: $id';
+  }
 
   @override
   String get membersColon => 'الأعضاء:';
 
   @override
   String get teamMembers => 'أعضاء الفريق';
+
+  @override
+  String get teamMembersColon => 'أعضاء الفريق:';
+
+  @override
+  String get tapPlusToAddFirstTeamLeader => 'اضغط + لإضافة قائد فريق جديد';
 
   @override
   String get noMembers => 'لا يوجد أعضاء';
@@ -807,31 +818,29 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noLocations => 'لا توجد مواقع';
 
   @override
-  String get selectLocation => 'اختر موقعاً';
+  String get selectLocation => 'اختر الموقع';
 
   @override
   String get assignMyTeam => 'تعيين فريقي';
 
   @override
-  String get unableToIdentifyCurrentUser =>
-      'غير قادر على تحديد المستخدم الحالي';
+  String get unableToIdentifyCurrentUser => 'تعذر تحديد المستخدم الحالي';
 
   @override
-  String get noEventsAssignedToYourTeams => 'لا توجد فعاليات معينة لفرقك';
+  String get noEventsAssignedToYourTeams => 'لا توجد أحداث معينة لفرقك';
 
   @override
   String get contactAdminToAssignYourTeam =>
       'اتصل بالمسؤول لتعيين فريقك للفعاليات';
 
   @override
-  String get selectEventAndShift => 'اختر وردية لتعيين المتطوعين';
+  String get selectEventAndShift => 'اختر الحدث والوردية';
 
   @override
-  String get eventsWhereYourTeamIsAssigned =>
-      'الفعاليات التي تم تعيين فريقك لها';
+  String get eventsWhereYourTeamIsAssigned => 'الأحداث التي تم تعيين فريقك لها';
 
   @override
-  String get selectLocationToAssign => 'اختر موقعاً للتعيين';
+  String get selectLocationToAssign => 'اختر الموقع للتعيين';
 
   @override
   String get chooseLocationToAssignTeam =>
@@ -845,7 +854,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String by(String assignedBy) {
-    return 'بواسطة: $assignedBy';
+    return 'بواسطة:';
   }
 
   @override
@@ -933,24 +942,24 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get uploadingImages => 'جاري رفع الصور...';
+  String get uploadingImages => 'جاري تحميل الصور...';
 
   @override
-  String imageUploaded(String name) {
-    return 'تم رفع الصورة: $name';
+  String imageUploaded(String imageName) {
+    return 'تم تحميل الصورة: $imageName';
   }
 
   @override
-  String errorUploadingImage(String name, String error) {
-    return 'خطأ في رفع $name: $error';
+  String errorUploadingImage(String imageName, String error) {
+    return 'خطأ في تحميل $imageName: $error';
   }
 
   @override
-  String get pdfDownloadedSuccessfully => 'تم تحميل ملف PDF بنجاح!';
+  String get pdfDownloadedSuccessfully => 'تم تنزيل ملف PDF بنجاح!';
 
   @override
   String errorDownloading(String error) {
-    return 'خطأ في التحميل: $error';
+    return 'خطأ في التنزيل: $error';
   }
 
   @override
@@ -1005,7 +1014,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String averageRating(String rating) {
-    return 'المتوسط: $rating/5';
+    return 'المتوسط التقييمي: $rating / 5';
   }
 
   @override
@@ -1024,7 +1033,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get criterionName => 'اسم المعيار';
 
   @override
-  String get criterionPlaceholder => 'مثل: مهارات الاتصال';
+  String get criterionPlaceholder => 'مثال: مهارات التواصل';
 
   @override
   String get criterionAdded => 'تمت إضافة المعيار. لا تنسَ الحفظ!';
@@ -1103,7 +1112,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get manageSystemFeedback => 'إدارة ملاحظات النظام';
 
   @override
-  String get allFeedback => 'جميع الملاحظات';
+  String get allFeedback => 'جميع التعليقات';
 
   @override
   String get inProgress => 'قيد التنفيذ';
@@ -1197,4 +1206,784 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noPhone => 'لا يوجد هاتف';
+
+  @override
+  String get volunteersManagement => 'إدارة المتطوعين';
+
+  @override
+  String get addVolunteer => 'إضافة متطوع';
+
+  @override
+  String get editVolunteer => 'تعديل متطوع';
+
+  @override
+  String get deleteVolunteer => 'حذف متطوع';
+
+  @override
+  String get archiveVolunteer => 'أرشفة متطوع';
+
+  @override
+  String get restoreVolunteer => 'استعادة متطوع';
+
+  @override
+  String get tapPlusToAddVolunteer => 'اضغط + لإضافة متطوع جديد';
+
+  @override
+  String get assignTeam => 'تعيين فريق';
+
+  @override
+  String selectTeamFor(String name) {
+    return 'اختر فريقاً لـ $name:';
+  }
+
+  @override
+  String get noTeam => 'بدون فريق';
+
+  @override
+  String assignedToTeam(String name, String teamName) {
+    return 'تم تعيين $name إلى $teamName';
+  }
+
+  @override
+  String archiveVolunteerConfirm(String name) {
+    return 'أرشفة $name؟\n\nسيؤدي هذا إلى إخفاء المتطوع مع الاحتفاظ ببياناته.';
+  }
+
+  @override
+  String get archive => 'أرشفة';
+
+  @override
+  String get restore => 'استعادة';
+
+  @override
+  String restoreVolunteerConfirm(String name) {
+    return 'استعادة $name؟';
+  }
+
+  @override
+  String deleteVolunteerConfirm(String name) {
+    return 'حذف $name نهائياً؟\n\nلا يمكن التراجع عن هذا الإجراء!';
+  }
+
+  @override
+  String get tapPlusToAddTeam => 'اضغط + لإضافة فريق جديد';
+
+  @override
+  String get noMembersAdded => 'لم تتم إضافة أعضاء';
+
+  @override
+  String get addTeamMember => 'إضافة عضو للفريق';
+
+  @override
+  String get noVolunteersAvailable => 'لا يوجد متطوعون متاحون';
+
+  @override
+  String get added => 'تمت الإضافة';
+
+  @override
+  String teamLeaderID(String id) {
+    return 'معرف قائد الفريق: $id';
+  }
+
+  @override
+  String get tapPlusToAddLocation => 'اضغط + لإضافة موقع جديد';
+
+  @override
+  String get noLocationsFound => 'لم يتم العثور على مواقع';
+
+  @override
+  String latLon(String lat, String lon) {
+    return 'خط العرض: $lat، خط الطول: $lon';
+  }
+
+  @override
+  String get subLocations => 'المواقع الفرعية:';
+
+  @override
+  String get subLocationsColon => 'المواقع الفرعية:';
+
+  @override
+  String get noSubLocationsAdded => 'لم تتم إضافة مواقع فرعية';
+
+  @override
+  String get pickLocationOnMap => 'اختر الموقع على الخريطة';
+
+  @override
+  String get pickLocation => 'اختيار الموقع';
+
+  @override
+  String get tapOnMapToSelectLocation =>
+      'انقر على الخريطة أو اسحب العلامة لاختيار الموقع';
+
+  @override
+  String get confirmLocation => 'تأكيد الموقع';
+
+  @override
+  String get pickOnMap => 'اختر من الخريطة';
+
+  @override
+  String get pleaseSelectTeamLeader => 'الرجاء اختيار قائد فريق';
+
+  @override
+  String get team => 'الفريق';
+
+  @override
+  String teamColon(String name) {
+    return 'الفريق: $name';
+  }
+
+  @override
+  String get membersColonBold => 'الأعضاء:';
+
+  @override
+  String get leaderColon2 => 'القائد:';
+
+  @override
+  String teamLeaderIDColon(String id) {
+    return 'معرّف قائد الفريق: $id';
+  }
+
+  @override
+  String leaderColonWithId(String id) {
+    return 'القائد: $id';
+  }
+
+  @override
+  String latLonCoordinates(String lat, String lon) {
+    return 'خط العرض: $lat، خط الطول: $lon';
+  }
+
+  @override
+  String get subLocationsColon2 => 'المواقع الفرعية:';
+
+  @override
+  String get noSublocationsAdded => 'لم تتم إضافة مواقع فرعية';
+
+  @override
+  String get carouselManagement => 'إدارة الشرائح';
+
+  @override
+  String get noCarouselImagesYet => 'لا توجد صور شرائح حتى الآن';
+
+  @override
+  String get tapPlusToAddFirstImage => 'اضغط + لإضافة الصورة الأولى';
+
+  @override
+  String get deleteImage => 'حذف الصورة';
+
+  @override
+  String areYouSureDeleteImage(String title) {
+    return 'هل أنت متأكد من حذف \"$title\"؟';
+  }
+
+  @override
+  String get imageDeletedSuccessfully => 'تم حذف الصورة بنجاح';
+
+  @override
+  String get errorCouldNotReadFile => 'خطأ: تعذر قراءة الملف';
+
+  @override
+  String get imageUploadedSuccessfully => 'تم تحميل الصورة بنجاح!';
+
+  @override
+  String uploadFailed(String error) {
+    return 'فشل التحميل: $error';
+  }
+
+  @override
+  String get titleAndImageRequired => 'العنوان وعنوان URL للصورة مطلوبان';
+
+  @override
+  String get invalidImageURL => 'عنوان URL للصورة غير صالح';
+
+  @override
+  String get visibleToUsers => 'مرئي للمستخدمين';
+
+  @override
+  String get ratingCriteriaManagement => 'إدارة معايير التقييم';
+
+  @override
+  String get eventWorkflow => 'سير عمل الفعالية';
+
+  @override
+  String get planning => 'التخطيط';
+
+  @override
+  String get eventCreatedAndScheduled => 'تم إنشاء وجدولة الفعالية';
+
+  @override
+  String get eventInPlanningPhase =>
+      'الفعالية في مرحلة التخطيط. يمكنك تعيين النوبات والمتطوعين.';
+
+  @override
+  String get eventIsCurrentlyRunning => 'الفعالية قيد التنفيذ حالياً';
+
+  @override
+  String get eventIsActive =>
+      'الفعالية نشطة. يمكن للمتطوعين تسجيل الحضور والانصراف.';
+
+  @override
+  String get eventDateHasPassed => 'انتهى تاريخ الفعالية';
+
+  @override
+  String get eventHasEnded => 'انتهت الفعالية. يمكنك مراجعة الحضور والملاحظات.';
+
+  @override
+  String get eventIsArchived => 'الفعالية مؤرشفة';
+
+  @override
+  String get eventIsArchivedHidden =>
+      'الفعالية مؤرشفة ومخفية عن القوائم الرئيسية.';
+
+  @override
+  String get closed => 'مغلق';
+
+  @override
+  String submittedDate(String date) {
+    return 'تاريخ التقديم: $date';
+  }
+
+  @override
+  String reviewedBy(String name) {
+    return 'تمت المراجعة بواسطة: $name';
+  }
+
+  @override
+  String get updateStatus => 'تحديث الحالة';
+
+  @override
+  String get updateFeedbackStatus => 'تحديث حالة التعليقات';
+
+  @override
+  String get statusColon => 'الحالة:';
+
+  @override
+  String get resolutionNotesOptional => 'ملاحظات الحل (اختياري):';
+
+  @override
+  String get feedbackUpdatedSuccessfully => 'تم تحديث التعليقات بنجاح';
+
+  @override
+  String get deleteFeedback => 'حذف التعليقات';
+
+  @override
+  String get deleteFeedbackConfirmation =>
+      'هل أنت متأكد من حذف هذه التعليقات؟ لا يمكن التراجع عن هذا الإجراء.';
+
+  @override
+  String get feedbackDeletedSuccessfully => 'تم حذف التعليقات بنجاح';
+
+  @override
+  String get reassignLocation => 'إعادة تعيين الموقع';
+
+  @override
+  String eventColon(String name) {
+    return 'الفعالية: $name';
+  }
+
+  @override
+  String shiftTimeRange(String start, String end) {
+    return 'النوبة: $start - $end';
+  }
+
+  @override
+  String get selectNewLocation => 'اختر موقعاً جديداً:';
+
+  @override
+  String mainLocationColon(String name) {
+    return 'الموقع الرئيسي: $name';
+  }
+
+  @override
+  String get sublocationsColon => 'المواقع الفرعية:';
+
+  @override
+  String get reassign => 'إعادة التعيين';
+
+  @override
+  String get pleaseSelectARole => 'الرجاء اختيار دور';
+
+  @override
+  String get pleaseSelectATeam => 'الرجاء اختيار فريق';
+
+  @override
+  String get pleaseSelectAnEvent => 'الرجاء اختيار فعالية';
+
+  @override
+  String get noUsersFoundForAudience =>
+      'لم يتم العثور على مستخدمين للجمهور المحدد';
+
+  @override
+  String notificationSentToUsers(int count) {
+    return 'تم إرسال الإشعار إلى $count مستخدم';
+  }
+
+  @override
+  String errorSendingNotifications(String error) {
+    return 'خطأ في إرسال الإشعارات: $error';
+  }
+
+  @override
+  String get notificationType => 'نوع الإشعار';
+
+  @override
+  String get title => 'العنوان';
+
+  @override
+  String get message => 'الرسالة';
+
+  @override
+  String get sendTo => 'إرسال إلى';
+
+  @override
+  String get allUsers => 'جميع المستخدمين';
+
+  @override
+  String get byRole => 'حسب الدور';
+
+  @override
+  String get byTeam => 'حسب الفريق';
+
+  @override
+  String get eventParticipants => 'المشاركون في الفعالية';
+
+  @override
+  String get selectRole => 'اختر الدور';
+
+  @override
+  String get chooseARole => 'اختر دوراً';
+
+  @override
+  String get chooseATeam => 'اختر فريقاً';
+
+  @override
+  String get chooseAnEvent => 'اختر فعالية';
+
+  @override
+  String get sendNotificationsToGroups =>
+      'إرسال إشعارات إلى مجموعات محددة من المستخدمين في النظام';
+
+  @override
+  String get noEventsAvailable => 'لا توجد فعاليات متاحة';
+
+  @override
+  String get chooseEventToViewFeedback => 'اختر فعالية لعرض التعليقات';
+
+  @override
+  String get selectEventToViewFeedback => 'اختر فعالية لعرض التعليقات';
+
+  @override
+  String get noFeedbackReceivedYet => 'لم يتم استلام تعليقات لهذه الفعالية بعد';
+
+  @override
+  String errorLoadingAverages(String error) {
+    return 'خطأ في تحميل المتوسطات: $error';
+  }
+
+  @override
+  String individualFeedback(int count) {
+    return 'تعليقات فردية ($count)';
+  }
+
+  @override
+  String get overallRating => 'التقييم العام';
+
+  @override
+  String basedOnResponses(int count, String plural) {
+    return 'بناءً على $count استجابة$plural';
+  }
+
+  @override
+  String errorLoadingForms(String error) {
+    return 'خطأ في تحميل النماذج: $error';
+  }
+
+  @override
+  String syncedVolunteersWithForms(int count) {
+    return 'تمت مزامنة $count متطوع مع نماذجهم';
+  }
+
+  @override
+  String get volunteerFormsManagement => 'إدارة نماذج المتطوعين';
+
+  @override
+  String get newForm => 'نموذج جديد';
+
+  @override
+  String get filterByStatus => 'التصفية حسب الحالة:';
+
+  @override
+  String get allStatuses => 'جميع الحالات';
+
+  @override
+  String get createNewFormToGetStarted => 'أنشئ نموذجاً جديداً للبدء';
+
+  @override
+  String get documentsColon => 'المستندات:';
+
+  @override
+  String formNumber(String number) {
+    return 'نموذج #$number';
+  }
+
+  @override
+  String statusUpdatedButErrorCreatingAccount(String error) {
+    return 'تم تحديث الحالة ولكن حدث خطأ في إنشاء الحساب: $error';
+  }
+
+  @override
+  String get enterNotificationTitle => 'أدخل عنوان الإشعار';
+
+  @override
+  String get enterNotificationMessage => 'أدخل رسالة الإشعار';
+
+  @override
+  String archiveItem(String itemType) {
+    return 'أرشفة $itemType؟';
+  }
+
+  @override
+  String get unarchive => 'إلغاء الأرشفة';
+
+  @override
+  String unarchiveItem(String itemType) {
+    return 'إلغاء أرشفة $itemType؟';
+  }
+
+  @override
+  String deleteItem(String itemType) {
+    return 'حذف $itemType؟';
+  }
+
+  @override
+  String confirmArchiveItem(String itemName) {
+    return 'هل أنت متأكد من أرشفة \"$itemName\"؟';
+  }
+
+  @override
+  String confirmUnarchiveItem(String itemName) {
+    return 'هل أنت متأكد من استعادة \"$itemName\" إلى الحالة النشطة؟';
+  }
+
+  @override
+  String confirmDeleteItem(String itemName) {
+    return 'هل أنت متأكد من حذف \"$itemName\" نهائياً؟';
+  }
+
+  @override
+  String archiveWarning(String itemType) {
+    return 'سيؤدي هذا إلى إخفاء $itemType من القوائم النشطة مع الاحتفاظ بجميع البيانات.';
+  }
+
+  @override
+  String deleteWarning(String itemType) {
+    return 'لا يمكن التراجع عن هذا الإجراء. سيتم إزالة جميع البيانات المرتبطة بـ $itemType نهائياً.';
+  }
+
+  @override
+  String get deleteWarningGeneric =>
+      'لا يمكن التراجع عن هذا الإجراء! سيتم حذف جميع البيانات المرتبطة نهائياً.';
+
+  @override
+  String get showArchived => 'عرض المؤرشف';
+
+  @override
+  String errorOccurred(String error) {
+    return 'خطأ: $error';
+  }
+
+  @override
+  String get markAllRead => 'تعليم الكل كمقروء';
+
+  @override
+  String get errorLoadingNotifications => 'خطأ في تحميل الإشعارات';
+
+  @override
+  String get noNotificationsYet => 'لا توجد إشعارات حتى الآن';
+
+  @override
+  String get notificationsWillAppearHere => 'ستظهر الإشعارات هنا عند استلامها';
+
+  @override
+  String get notificationDeleted => 'تم حذف الإشعار';
+
+  @override
+  String get check1Departure => 'الفحص الأول: المغادرة';
+
+  @override
+  String get check2Arrival => 'الفحص الثاني: الوصول';
+
+  @override
+  String get selectAnEventToStartPresenceCheck => 'اختر حدثاً لبدء فحص الحضور';
+
+  @override
+  String get adminOnly => 'مدير فقط';
+
+  @override
+  String get tlOnly => 'قائد فقط';
+
+  @override
+  String get both => 'كلاهما';
+
+  @override
+  String get noVolunteersAssignedToThisEvent =>
+      'لا توجد متطوعين مخصصين لهذا الحدث';
+
+  @override
+  String get departureCheckOnBus => 'فحص المغادرة (في الحافلة)';
+
+  @override
+  String get arrivalCheckOnLocation => 'فحص الوصول (في الموقع)';
+
+  @override
+  String get excusedLeaveApproved => 'معذور (تم الموافقة على الإجازة)';
+
+  @override
+  String get present => 'حاضر';
+
+  @override
+  String get presentUpper => 'حاضر';
+
+  @override
+  String get absent => 'غائب';
+
+  @override
+  String get absentUpper => 'غائب';
+
+  @override
+  String get markAbsent => 'تعليم كغائب';
+
+  @override
+  String get markPresent => 'تعليم كحاضر';
+
+  @override
+  String get notChecked => 'لم يتم الفحص';
+
+  @override
+  String get excused => 'معذور';
+
+  @override
+  String errorMarkingAttendance(String error) {
+    return 'خطأ في تسجيل الحضور: $error';
+  }
+
+  @override
+  String get selectAnEventAndShiftToAssignVolunteers =>
+      'اختر حدثاً ووردية لتعيين المتطوعين';
+
+  @override
+  String get pleaseSelectEventShiftAndLocationFirst =>
+      'يرجى اختيار حدث ووردية وموقع أولاً';
+
+  @override
+  String get noApprovedVolunteersAvailable => 'لا يوجد متطوعون معتمدون متاحون';
+
+  @override
+  String assignedVolunteersToSubLocation(int count) {
+    return 'تم تعيين $count متطوع للموقع الفرعي بنجاح';
+  }
+
+  @override
+  String errorCreatingAssignments(String error) {
+    return 'خطأ في إنشاء التعيينات: $error';
+  }
+
+  @override
+  String get chooseLocationToAssignVolunteers => 'اختر موقعاً لتعيين المتطوعين';
+
+  @override
+  String get selectALocation => 'اختر موقعاً';
+
+  @override
+  String get assignVolunteersToLocation => 'تعيين متطوعين للموقع';
+
+  @override
+  String get assigned => 'معين';
+
+  @override
+  String get noVolunteersAssignedYet => 'لم يتم تعيين متطوعين بعد';
+
+  @override
+  String get teamLeadersShouldAssignFirst => 'يجب على قادة الفرق التعيين أولاً';
+
+  @override
+  String get mainSuffix => '(رئيسي)';
+
+  @override
+  String get unknownSubLocation => 'موقع فرعي غير معروف';
+
+  @override
+  String selectedCount(int count) {
+    return 'المحدد: $count';
+  }
+
+  @override
+  String get event => 'الحدث';
+
+  @override
+  String errorReassigningLocation(String error) {
+    return 'خطأ في إعادة تعيين الموقع: $error';
+  }
+
+  @override
+  String get contactAdminToAssignYourTeamToEvents =>
+      'اتصل بالمسؤول لتعيين فريقك للأحداث';
+
+  @override
+  String get selectAShiftToAssignVolunteers => 'اختر وردية لتعيين المتطوعين';
+
+  @override
+  String get noTeamAssignedToThisLocation => 'لا يوجد فريق معين لهذا الموقع';
+
+  @override
+  String get noApprovedVolunteersAvailableInYourTeam =>
+      'لا يوجد متطوعون معتمدون متاحون في فريقك';
+
+  @override
+  String get chooseWhichLocationToAssignYourTeamMembersTo =>
+      'اختر الموقع الذي تريد تعيين أعضاء فريقك له:';
+
+  @override
+  String get requestLeave => 'طلب إجازة';
+
+  @override
+  String get userNotAuthenticated => 'المستخدم غير مصادق عليه';
+
+  @override
+  String get leaveRequestSubmittedSuccessfully => 'تم تقديم طلب الإجازة بنجاح';
+
+  @override
+  String get reasonForLeaveRequest => 'سبب طلب الإجازة';
+
+  @override
+  String get provideDetailedReasonForLeave =>
+      'يرجى تقديم سبب مفصل لطلب الإجازة. سيساعد هذا قائد فريقك على اتخاذ قرار مستنير.';
+
+  @override
+  String get enterYourReasonHere => 'أدخل سببك هنا...';
+
+  @override
+  String get pleaseProvideAReason => 'يرجى تقديم السبب';
+
+  @override
+  String get pleaseProvideMoreDetailedReason =>
+      'يرجى تقديم سبب أكثر تفصيلاً (10 أحرف على الأقل)';
+
+  @override
+  String get teamLeaderWillReviewRequest =>
+      'سيقوم قائد فريقك بمراجعة هذا الطلب. سيتم إخطارك بقرارهم.';
+
+  @override
+  String get submitting => 'جاري الإرسال...';
+
+  @override
+  String get submitRequest => 'تقديم الطلب';
+
+  @override
+  String get dateLabel => 'التاريخ';
+
+  @override
+  String get shiftTimeLabel => 'وقت المناوبة';
+
+  @override
+  String get noEventsAssignedToYou => 'لا توجد فعاليات مخصصة لك';
+
+  @override
+  String get contactTeamLeaderToBeAssignedToEvents =>
+      'اتصل بقائد فريقك ليتم تعيينك للفعاليات';
+
+  @override
+  String get viewOnMap => 'عرض على الخريطة';
+
+  @override
+  String get submitEventFeedback => 'تقديم ملاحظات الفعالية';
+
+  @override
+  String contactLabel(String phone) {
+    return 'الاتصال: $phone';
+  }
+
+  @override
+  String yourShift(String shiftId) {
+    return 'مناوبتك: $shiftId';
+  }
+
+  @override
+  String locationField(String location) {
+    return 'الموقع: $location';
+  }
+
+  @override
+  String get notAssigned => 'غير مخصص';
+
+  @override
+  String get rateYourExperience => 'قيّم تجربتك';
+
+  @override
+  String get rateEventManagementAspects =>
+      'يرجى تقييم الجوانب التالية لإدارة الفعالية (1 = ضعيف، 5 = ممتاز)';
+
+  @override
+  String get additionalCommentsOptional => 'تعليقات إضافية (اختياري)';
+
+  @override
+  String get shareAnyAdditionalThoughts =>
+      'شارك أي أفكار أو اقتراحات إضافية...';
+
+  @override
+  String get thankYouForFeedback => 'شكراً لملاحظاتك!';
+
+  @override
+  String get poor => 'ضعيف';
+
+  @override
+  String get fair => 'مقبول';
+
+  @override
+  String get good => 'جيد';
+
+  @override
+  String get veryGood => 'جيد جداً';
+
+  @override
+  String get excellent => 'ممتاز';
+
+  @override
+  String get imageSizeExceedsLimit => 'يجب ألا يتجاوز حجم الصورة 500 كيلوبايت.';
+
+  @override
+  String get formSubmittedForReview => 'تم تقديم النموذج للمراجعة!';
+
+  @override
+  String get errorLabel => 'خطأ';
+
+  @override
+  String get sublocation => 'الموقع الفرعي';
+
+  @override
+  String get organizationPlanning => 'التنظيم والتخطيط';
+
+  @override
+  String get howWellWasEventOrganized => 'كيف كان مستوى تنظيم وتخطيط الفعالية؟';
+
+  @override
+  String get logisticsResources => 'اللوجستيات والموارد';
+
+  @override
+  String get wereResourcesAdequatelyProvided =>
+      'هل تم توفير الموارد واللوجستيات بشكل كافٍ؟';
+
+  @override
+  String get communication => 'التواصل';
+
+  @override
+  String get howEffectiveWasCommunication =>
+      'ما مدى فعالية التواصل قبل وأثناء الفعالية؟';
+
+  @override
+  String get howWellWasEventManaged => 'كيف كانت إدارة الفعالية بشكل عام؟';
+
+  @override
+  String get shareYourThoughts =>
+      'شارك أفكارك أو اقتراحاتك أو أي مشاكل واجهتها...';
 }

@@ -9,6 +9,7 @@ import '../../Models/Notification.dart';
 import '../../Models/SystemUser.dart';
 import '../../Models/Team.dart';
 import '../../Models/Event.dart';
+import '../../l10n/app_localizations.dart';
 
 class SendNotificationScreen extends StatefulWidget {
   const SendNotificationScreen({super.key});
@@ -113,15 +114,15 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
 
     // Validate audience selection
     if (_selectedAudience == 'by_role' && _selectedRole == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select a role')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.pleaseSelectARole)));
       return;
     }
     if (_selectedAudience == 'by_team' && _selectedTeamId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select a team')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.pleaseSelectATeam)));
       return;
     }
     if (_selectedAudience == 'by_event' && _selectedEventId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select an event')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.pleaseSelectAnEvent)));
       return;
     }
 
@@ -131,7 +132,7 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
       final targetPhones = await _getTargetUserPhones();
 
       if (targetPhones.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No users found for selected audience')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.noUsersFoundForAudience)));
         setState(() => _isSending = false);
         return;
       }
@@ -150,13 +151,13 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
       }
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Notification sent to ${targetPhones.length} user(s)')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.notificationSentToUsers(targetPhones.length))));
         Navigator.pop(context);
       }
     } catch (e) {
       print('Error sending notifications: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error sending notifications: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.errorSendingNotifications(e.toString()))));
       }
     } finally {
       if (mounted) {
@@ -168,7 +169,7 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Send Notification'), elevation: 0),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.sendNotification), elevation: 0),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
@@ -188,7 +189,7 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
                             Icon(Icons.info_outline, color: Colors.blue.shade700),
                             const SizedBox(width: 12),
                             Expanded(
-                              child: Text('Send notifications to specific groups of users in the system', style: TextStyle(color: Colors.blue.shade700)),
+                              child: Text(AppLocalizations.of(context)!.sendNotificationsToGroups, style: TextStyle(color: Colors.blue.shade700)),
                             ),
                           ],
                         ),
@@ -197,7 +198,7 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
                     const SizedBox(height: 24),
 
                     // Notification Type
-                    const Text('Notification Type', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    Text(AppLocalizations.of(context)!.notificationType, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     DropdownButtonFormField<NotificationType>(
                       value: _selectedType,
@@ -241,11 +242,11 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
                     const SizedBox(height: 24),
 
                     // Title
-                    const Text('Title', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    Text(AppLocalizations.of(context)!.title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _titleController,
-                      decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Enter notification title', prefixIcon: Icon(Icons.title)),
+                      decoration: InputDecoration(border: OutlineInputBorder(), hintText: AppLocalizations.of(context)!.enterNotificationTitle, prefixIcon: Icon(Icons.title)),
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
                           return 'Title is required';
@@ -256,13 +257,13 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
                     const SizedBox(height: 24),
 
                     // Message
-                    const Text('Message', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    Text(AppLocalizations.of(context)!.message, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _messageController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         border: OutlineInputBorder(),
-                        hintText: 'Enter notification message',
+                        hintText: AppLocalizations.of(context)!.enterNotificationMessage,
                         prefixIcon: Icon(Icons.message),
                         alignLabelWithHint: true,
                       ),
@@ -277,16 +278,16 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
                     const SizedBox(height: 24),
 
                     // Audience Selection
-                    const Text('Send To', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    Text(AppLocalizations.of(context)!.sendTo, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     DropdownButtonFormField<String>(
                       value: _selectedAudience,
                       decoration: const InputDecoration(border: OutlineInputBorder(), prefixIcon: Icon(Icons.people)),
-                      items: const [
-                        DropdownMenuItem(value: 'all_users', child: Text('All Users')),
-                        DropdownMenuItem(value: 'by_role', child: Text('By Role')),
-                        DropdownMenuItem(value: 'by_team', child: Text('By Team')),
-                        DropdownMenuItem(value: 'by_event', child: Text('Event Participants')),
+                      items: [
+                        DropdownMenuItem(value: 'all_users', child: Text(AppLocalizations.of(context)!.allUsers)),
+                        DropdownMenuItem(value: 'by_role', child: Text(AppLocalizations.of(context)!.byRole)),
+                        DropdownMenuItem(value: 'by_team', child: Text(AppLocalizations.of(context)!.byTeam)),
+                        DropdownMenuItem(value: 'by_event', child: Text(AppLocalizations.of(context)!.eventParticipants)),
                       ],
                       onChanged: (value) {
                         setState(() {
@@ -301,12 +302,12 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
 
                     // Role Selector (shown when by_role is selected)
                     if (_selectedAudience == 'by_role') ...[
-                      const Text('Select Role', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                      Text(AppLocalizations.of(context)!.selectRole, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                       const SizedBox(height: 8),
                       DropdownButtonFormField<String>(
                         value: _selectedRole,
                         decoration: const InputDecoration(border: OutlineInputBorder(), prefixIcon: Icon(Icons.badge)),
-                        hint: const Text('Choose a role'),
+                        hint: Text(AppLocalizations.of(context)!.chooseARole),
                         items: SystemUserRole.values.map((role) {
                           return DropdownMenuItem(value: role.toString().split('.').last, child: Text(role.toString().split('.').last));
                         }).toList(),
@@ -319,12 +320,12 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
 
                     // Team Selector (shown when by_team is selected)
                     if (_selectedAudience == 'by_team') ...[
-                      const Text('Select Team', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                      Text(AppLocalizations.of(context)!.selectTeam, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                       const SizedBox(height: 8),
                       DropdownButtonFormField<String>(
                         value: _selectedTeamId,
                         decoration: const InputDecoration(border: OutlineInputBorder(), prefixIcon: Icon(Icons.group)),
-                        hint: const Text('Choose a team'),
+                        hint: Text(AppLocalizations.of(context)!.chooseATeam),
                         items: _teams.map((team) {
                           return DropdownMenuItem(value: team.id, child: Text(team.name));
                         }).toList(),
@@ -337,12 +338,12 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
 
                     // Event Selector (shown when by_event is selected)
                     if (_selectedAudience == 'by_event') ...[
-                      const Text('Select Event', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                      Text(AppLocalizations.of(context)!.selectEvent, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                       const SizedBox(height: 8),
                       DropdownButtonFormField<String>(
                         value: _selectedEventId,
                         decoration: const InputDecoration(border: OutlineInputBorder(), prefixIcon: Icon(Icons.event)),
-                        hint: const Text('Choose an event'),
+                        hint: Text(AppLocalizations.of(context)!.chooseAnEvent),
                         items: _events.map((event) {
                           return DropdownMenuItem(value: event.id, child: Text(event.name));
                         }).toList(),
@@ -364,7 +365,7 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
                         icon: _isSending
                             ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(Colors.white)))
                             : const Icon(Icons.send),
-                        label: Text(_isSending ? 'Sending...' : 'Send Notification'),
+                        label: Text(_isSending ? AppLocalizations.of(context)!.sending : AppLocalizations.of(context)!.sendNotification),
                         style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white),
                       ),
                     ),

@@ -8,6 +8,7 @@ import '../../Models/ShiftAssignment.dart';
 import '../../Models/SystemUser.dart';
 import '../../Providers/EventsProvider.dart';
 import '../../Providers/ShiftAssignmentProvider.dart';
+import '../../l10n/app_localizations.dart';
 
 class VolunteerEventDetailsScreen extends StatelessWidget {
   const VolunteerEventDetailsScreen({super.key});
@@ -47,9 +48,10 @@ class _VolunteerEventDetailsViewState extends State<VolunteerEventDetailsView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Events'),
+        title: Text(l10n.myEvents),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -64,12 +66,13 @@ class _VolunteerEventDetailsViewState extends State<VolunteerEventDetailsView> {
       ),
       body: Consumer2<ShiftAssignmentProvider, EventsProvider>(
         builder: (context, assignmentProvider, eventsProvider, child) {
+          final l10n = AppLocalizations.of(context)!;
           if (assignmentProvider.isLoading || eventsProvider.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
           if (_currentUserPhone == null) {
-            return const Center(child: Text('Unable to identify current user'));
+            return Center(child: Text(l10n.unableToIdentifyCurrentUser));
           }
 
           final myAssignments = assignmentProvider.assignments;
@@ -81,7 +84,7 @@ class _VolunteerEventDetailsViewState extends State<VolunteerEventDetailsView> {
                 children: [
                   Icon(Icons.event_busy, size: 64, color: Colors.grey[400]),
                   const SizedBox(height: 16),
-                  Text('No events assigned to you', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                  Text(l10n.noEventsAssignedToYou, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
                 ],
               ),
             );
@@ -157,6 +160,7 @@ class _EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
       elevation: 4,
@@ -203,26 +207,26 @@ class _EventCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Shift info
-                _buildInfoRow(Icons.schedule, 'Shift Time', '${shift.startTime} - ${shift.endTime}'),
+                _buildInfoRow(Icons.schedule, l10n.shiftTime, '${shift.startTime} - ${shift.endTime}'),
                 const SizedBox(height: 12),
 
                 // Location info
                 if (location != null) ...[
                   _buildInfoRow(
                     Icons.location_on,
-                    assignment.sublocationId != null ? 'Sublocation' : 'Location',
-                    assignment.sublocationId != null ? location!.subLocations?.where((s) => s.id == assignment.sublocationId).firstOrNull?.name ?? 'Unknown' : location!.name,
+                    assignment.sublocationId != null ? l10n.sublocation : l10n.location,
+                    assignment.sublocationId != null ? location!.subLocations?.where((s) => s.id == assignment.sublocationId).firstOrNull?.name ?? l10n.unknown : location!.name,
                   ),
                   const SizedBox(height: 12),
                 ],
 
                 // Team leader info
                 if (teamLeader != null) ...[
-                  _buildInfoRow(Icons.person, 'Team Leader', teamLeader!.name),
+                  _buildInfoRow(Icons.person, l10n.teamLeader, teamLeader!.name),
                   const SizedBox(height: 4),
                   Padding(
                     padding: const EdgeInsets.only(left: 40),
-                    child: Text('Contact: ${teamLeader!.phone}', style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                    child: Text(l10n.contactLabel(teamLeader!.phone), style: TextStyle(color: Colors.grey[600], fontSize: 12)),
                   ),
                   const SizedBox(height: 16),
                 ],
@@ -231,7 +235,7 @@ class _EventCard extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: ElevatedButton.icon(onPressed: location == null ? null : () => _showMapView(context), icon: const Icon(Icons.map), label: const Text('View on Map')),
+                      child: ElevatedButton.icon(onPressed: location == null ? null : () => _showMapView(context), icon: const Icon(Icons.map), label: Text(l10n.viewOnMap)),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
@@ -242,7 +246,7 @@ class _EventCard extends StatelessWidget {
                                 Navigator.pushNamed(context, '/volunteer/leave-request', arguments: {'event': event, 'shift': shift, 'assignment': assignment});
                               },
                         icon: const Icon(Icons.report_problem),
-                        label: const Text('Request Leave'),
+                        label: Text(l10n.requestLeave),
                       ),
                     ),
                   ],
@@ -256,7 +260,7 @@ class _EventCard extends StatelessWidget {
                       Navigator.pushNamed(context, '/submit-event-feedback', arguments: {'event': event, 'assignment': assignment});
                     },
                     icon: const Icon(Icons.rate_review),
-                    label: const Text('Submit Event Feedback'),
+                    label: Text(l10n.submitEventFeedback),
                     style: OutlinedButton.styleFrom(foregroundColor: Colors.blue),
                   ),
                 ),

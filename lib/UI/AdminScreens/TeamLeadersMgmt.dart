@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:azimuth_vms/Models/SystemUser.dart';
 import 'package:azimuth_vms/Providers/TeamLeadersProvider.dart';
 import 'package:azimuth_vms/UI/Widgets/ArchiveDeleteWidget.dart';
+import 'package:azimuth_vms/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class TeamLeadersMgmt extends StatelessWidget {
@@ -62,7 +63,7 @@ class _TeamLeadersMgmtViewState extends State<TeamLeadersMgmtView> {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Team Leaders Management'),
+            title: Text(AppLocalizations.of(context)!.teamLeadersManagement),
             actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: () => provider.loadTeamLeaders())],
           ),
           body: provider.isLoading
@@ -87,7 +88,7 @@ class _TeamLeadersMgmtViewState extends State<TeamLeadersMgmtView> {
                                     style: TextStyle(fontSize: 18, color: Colors.grey[600], fontWeight: FontWeight.w500),
                                   ),
                                   const SizedBox(height: 8),
-                                  Text('Tap + to add a new team leader', style: TextStyle(fontSize: 14, color: Colors.grey[500])),
+                                  Text(AppLocalizations.of(context)!.tapPlusToAddFirstTeamLeader, style: TextStyle(fontSize: 14, color: Colors.grey[500])),
                                 ],
                               ),
                             )
@@ -109,7 +110,7 @@ class _TeamLeadersMgmtViewState extends State<TeamLeadersMgmtView> {
             heroTag: 'team_leaders_mgmt_fab',
             onPressed: () => _showTeamLeaderForm(context),
             icon: const Icon(Icons.add),
-            label: const Text('Add Team Leader'),
+            label: Text(AppLocalizations.of(context)!.addTeamLeader),
           ),
         );
       },
@@ -303,7 +304,7 @@ class TeamLeaderFormDialog extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+                    TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.cancel)),
                     const SizedBox(width: 8),
                     ElevatedButton(onPressed: () => _save(context, formKey), child: Text(isEdit ? 'Update' : 'Add')),
                   ],

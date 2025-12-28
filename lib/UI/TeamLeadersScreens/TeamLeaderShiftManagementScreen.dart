@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../l10n/app_localizations.dart';
 import '../../Helpers/NotificationHelperFirebase.dart';
 import '../../Helpers/ShiftAssignmentHelperFirebase.dart';
 import '../../Models/Event.dart';
@@ -105,8 +106,9 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
   }
 
   void _assignVolunteersToLocation(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     if (_selectedEvent == null || _selectedShift == null || _selectedLocationId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select an event, shift, and location first')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.pleaseSelectEventShiftAndLocationFirst)));
       return;
     }
 
@@ -142,7 +144,8 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
     }
 
     if (teamMemberIds.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No team assigned to this location')));
+      final l10n = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.noTeamAssignedToThisLocation)));
       return;
     }
 
@@ -156,7 +159,8 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
     }).toList();
 
     if (volunteers.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No approved volunteers available in your team')));
+      final l10n = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.noApprovedVolunteersAvailableInYourTeam)));
       return;
     }
 
@@ -196,8 +200,9 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
       }
 
       if (!context.mounted) return;
-      final locationMsg = sublocationId != null ? ' to sublocation' : '';
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Assigned ${volunteers.length} volunteers$locationMsg successfully')));
+      final l10n = AppLocalizations.of(context)!;
+      final message = sublocationId != null ? l10n.assignedVolunteersToSubLocation(volunteers.length) : l10n.assignedVolunteersSuccessfully(volunteers.length);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
 
       // Reset selection
       setState(() {
@@ -210,15 +215,17 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
     } catch (e) {
       print('Error creating assignments: $e');
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      final l10n = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.errorCreatingAssignments(e.toString()))));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Assign My Team'),
+        title: Text(l10n.assignMyTeam),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -238,7 +245,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
           }
 
           if (_currentUserPhone == null) {
-            return const Center(child: Text('Unable to identify current user'));
+            return Center(child: Text(AppLocalizations.of(context)!.unableToIdentifyCurrentUser));
           }
 
           final List<Event> myEvents = _getFilteredEvents(provider);
@@ -250,9 +257,9 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
                 children: [
                   Icon(Icons.event_busy, size: 64, color: Colors.grey[400]),
                   const SizedBox(height: 16),
-                  Text('No events assigned to your teams', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                  Text(AppLocalizations.of(context)!.noEventsAssignedToYourTeams, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
                   const SizedBox(height: 8),
-                  Text('Contact admin to assign your team to events', style: TextStyle(fontSize: 14, color: Colors.grey[500])),
+                  Text(AppLocalizations.of(context)!.contactAdminToAssignYourTeamToEvents, style: TextStyle(fontSize: 14, color: Colors.grey[500])),
                 ],
               ),
             );
@@ -315,7 +322,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
                       children: [
                         Icon(Icons.location_on, size: 64, color: Colors.grey[400]),
                         const SizedBox(height: 16),
-                        Text('Select a shift to assign volunteers', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                        Text(AppLocalizations.of(context)!.selectAShiftToAssignVolunteers, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
                       ],
                     ),
                   )
@@ -427,16 +434,16 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text('Select Location to Assign', style: Theme.of(context).textTheme.titleMedium),
+              Text(AppLocalizations.of(context)!.selectLocationToAssign, style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 8),
-              Text('Choose which location to assign your team members to:', style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+              Text(AppLocalizations.of(context)!.chooseWhichLocationToAssignYourTeamMembersTo, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
               const SizedBox(height: 12),
               _buildLocationDropdown(provider),
               const SizedBox(height: 16),
               ElevatedButton.icon(
                 onPressed: _selectedLocationId == null ? null : () => _assignVolunteersToLocation(context),
                 icon: const Icon(Icons.person_add),
-                label: const Text('Assign Volunteers'),
+                label: Text(AppLocalizations.of(context)!.assignVolunteers),
                 style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16), disabledBackgroundColor: Colors.grey[300]),
               ),
             ],
@@ -616,7 +623,7 @@ class __VolunteerSelectionDialogState extends State<_VolunteerSelectionDialog> {
           children: [
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Text('Select Volunteers', style: Theme.of(context).textTheme.titleLarge),
+              child: Text(AppLocalizations.of(context)!.selectVolunteers, style: Theme.of(context).textTheme.titleLarge),
             ),
             const Divider(),
             Expanded(
@@ -649,10 +656,10 @@ class __VolunteerSelectionDialogState extends State<_VolunteerSelectionDialog> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Selected: ${_selectedIds.length}'),
+                  Text(AppLocalizations.of(context)!.selectedCount(_selectedIds.length)),
                   Row(
                     children: [
-                      TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+                      TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.cancel)),
                       const SizedBox(width: 8),
                       ElevatedButton(
                         onPressed: _selectedIds.isEmpty
@@ -661,7 +668,7 @@ class __VolunteerSelectionDialogState extends State<_VolunteerSelectionDialog> {
                                 final selected = widget.volunteers.where((v) => _selectedIds.contains(v.phone)).toList();
                                 Navigator.of(context).pop(selected);
                               },
-                        child: const Text('Assign'),
+                        child: Text(AppLocalizations.of(context)!.assign),
                       ),
                     ],
                   ),

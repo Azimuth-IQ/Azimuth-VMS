@@ -273,6 +273,7 @@ class _DashboardHome extends StatelessWidget {
   }
 
   Widget _buildAnalyticsSection(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Consumer<TeamsProvider>(
       builder: (context, provider, _) {
         if (provider.isLoading) return const Center(child: CircularProgressIndicator());
@@ -344,7 +345,8 @@ class _DashboardHome extends StatelessWidget {
         final isMobile = constraints.maxWidth < 600;
         final children = [
           Consumer<EventsProvider>(
-            builder: (context, provider, _) => _StatCard(title: l10n.activeEventsCount, value: provider.activeEvents.length.toString(), icon: Icons.event_available, color: Colors.blue),
+            builder: (context, provider, _) =>
+                _StatCard(title: l10n.activeEventsCount, value: provider.activeEvents.length.toString(), icon: Icons.event_available, color: Colors.blue),
           ),
           Consumer<VolunteersProvider>(
             builder: (context, provider, _) => _StatCard(title: l10n.volunteers, value: provider.volunteers.length.toString(), icon: Icons.people, color: Colors.green),
@@ -488,7 +490,7 @@ class _DashboardHome extends StatelessWidget {
                 onTap: () => Navigator.pushNamed(context, '/form-mgmt'),
               ),
             ),
-            if (constraints.maxWidth > 600) ..[
+            if (constraints.maxWidth > 600) ...[
               const SizedBox(width: 16),
               Expanded(
                 child: _ScenarioCard(

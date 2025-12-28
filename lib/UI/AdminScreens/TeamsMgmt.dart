@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:azimuth_vms/Models/Team.dart';
 import 'package:azimuth_vms/Providers/TeamsProvider.dart';
 import 'package:azimuth_vms/UI/Widgets/ArchiveDeleteWidget.dart';
+import 'package:azimuth_vms/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -66,7 +67,7 @@ class _TeamsMgmtViewState extends State<TeamsMgmtView> {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Teams Management'),
+            title: Text(AppLocalizations.of(context)!.teamsManagement),
             actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: () => provider.loadTeams())],
           ),
           body: provider.isLoading
@@ -114,7 +115,7 @@ class TeamTile extends StatelessWidget {
         title: Text(team.name),
         subtitle: Row(
           children: [
-            Expanded(child: Text('Team Leader ID: ${team.teamLeaderId}')),
+            Expanded(child: Text(AppLocalizations.of(context)!.teamLeaderIDColon(team.teamLeaderId))),
             if (team.archived) const SizedBox(width: 8),
             if (team.archived) const ArchivedBadge(),
           ],
@@ -154,10 +155,10 @@ class TeamTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(children: [const Icon(Icons.person, size: 16), const SizedBox(width: 8), Text('Leader: ${team.teamLeaderId}')]),
+                Row(children: [const Icon(Icons.person, size: 16), const SizedBox(width: 8), Text(AppLocalizations.of(context)!.leaderColonWithId(team.teamLeaderId))]),
                 if (team.memberIds.isNotEmpty) ...[
                   const SizedBox(height: 16),
-                  const Text('Team Members:', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(AppLocalizations.of(context)!.teamMembersColon, style: const TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
                   ...team.memberIds.map(
                     (memberId) => Padding(
@@ -191,14 +192,14 @@ class TeamFormDialog extends StatelessWidget {
     final provider = context.read<TeamFormProvider>();
 
     if (provider.volunteers.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No volunteers available')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.noVolunteersAvailable)));
       return;
     }
 
     final memberId = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Add Team Member'),
+        title: Text(AppLocalizations.of(context)!.addTeamMember),
         content: SizedBox(
           width: double.maxFinite,
           child: ListView.builder(
@@ -214,8 +215,8 @@ class TeamFormDialog extends StatelessWidget {
                 title: Text(volunteer.name, style: TextStyle(color: isAlreadyAdded ? Colors.grey : null)),
                 subtitle: Text(volunteer.phone, style: TextStyle(color: isAlreadyAdded ? Colors.grey : null)),
                 trailing: isAlreadyAdded
-                    ? const Chip(
-                        label: Text('Added', style: TextStyle(fontSize: 10)),
+                    ? Chip(
+                        label: Text(AppLocalizations.of(context)!.added, style: TextStyle(fontSize: 10)),
                         padding: EdgeInsets.symmetric(horizontal: 4),
                       )
                     : null,
@@ -224,7 +225,7 @@ class TeamFormDialog extends StatelessWidget {
             },
           ),
         ),
-        actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel'))],
+        actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.cancel))],
       ),
     );
 
@@ -309,14 +310,14 @@ class TeamFormDialog extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Team Members', style: Theme.of(context).textTheme.titleMedium),
+                          Text(AppLocalizations.of(context)!.teamMembers, style: Theme.of(context).textTheme.titleMedium),
                           IconButton(icon: const Icon(Icons.add_circle), onPressed: () => _addMember(context), tooltip: 'Add Member'),
                         ],
                       ),
                       if (provider.memberIds.isEmpty)
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text('No members added', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey)),
+                          child: Text(AppLocalizations.of(context)!.noMembersAdded, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey)),
                         )
                       else
                         ...provider.memberIds.asMap().entries.map((entry) {
@@ -342,7 +343,7 @@ class TeamFormDialog extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+                          TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.cancel)),
                           const SizedBox(width: 8),
                           ElevatedButton(onPressed: () => _save(context, formKey), child: Text(isEdit ? 'Update' : 'Create')),
                         ],

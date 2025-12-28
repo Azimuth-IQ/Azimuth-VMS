@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:azimuth_vms/Models/Location.dart';
 import 'package:azimuth_vms/Providers/LocationsProvider.dart';
 import 'package:azimuth_vms/UI/Widgets/ArchiveDeleteWidget.dart';
+import 'package:azimuth_vms/l10n/app_localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
@@ -64,7 +65,7 @@ class _LocationsMgmtViewState extends State<LocationsMgmtView> {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Locations Management'),
+            title: Text(AppLocalizations.of(context)!.locationsManagement),
             actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: () => provider.loadLocations())],
           ),
           body: provider.isLoading
@@ -152,7 +153,13 @@ class LocationTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(children: [const Icon(Icons.gps_fixed, size: 16), const SizedBox(width: 8), Text('Lat: ${location.latitude}, Lon: ${location.longitude}')]),
+                Row(
+                  children: [
+                    const Icon(Icons.gps_fixed, size: 16),
+                    const SizedBox(width: 8),
+                    Text(AppLocalizations.of(context)!.latLonCoordinates(location.latitude, location.longitude)),
+                  ],
+                ),
                 if (location.imageUrl != null) ...[
                   const SizedBox(height: 8),
                   Row(
@@ -165,7 +172,7 @@ class LocationTile extends StatelessWidget {
                 ],
                 if (location.subLocations != null && location.subLocations!.isNotEmpty) ...[
                   const SizedBox(height: 16),
-                  const Text('Sub-locations:', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(AppLocalizations.of(context)!.subLocationsColon2, style: const TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
                   ...location.subLocations!.map(
                     (subLoc) => Padding(
@@ -350,7 +357,7 @@ class LocationFormDialog extends StatelessWidget {
                         child: OutlinedButton.icon(
                           onPressed: () => _pickLocationOnMap(context),
                           icon: const Icon(Icons.map),
-                          label: const Text('Pick Location on Map'),
+                          label: Text(AppLocalizations.of(context)!.pickLocationOnMap),
                           style: OutlinedButton.styleFrom(padding: const EdgeInsets.all(16)),
                         ),
                       ),
@@ -358,14 +365,14 @@ class LocationFormDialog extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Sub-locations', style: Theme.of(context).textTheme.titleMedium),
+                          Text(AppLocalizations.of(context)!.subLocations, style: Theme.of(context).textTheme.titleMedium),
                           IconButton(icon: const Icon(Icons.add_circle), onPressed: () => _addSubLocation(context), tooltip: 'Add Sub-location'),
                         ],
                       ),
                       if (provider.subLocations.isEmpty)
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text('No sub-locations added', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey)),
+                          child: Text(AppLocalizations.of(context)!.noSublocationsAdded, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey)),
                         )
                       else
                         ...provider.subLocations.asMap().entries.map((entry) {
@@ -399,7 +406,7 @@ class LocationFormDialog extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+                          TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.cancel)),
                           const SizedBox(width: 8),
                           ElevatedButton(onPressed: () => _save(context, formKey), child: Text(isEdit ? 'Update' : 'Create')),
                         ],
@@ -443,7 +450,7 @@ class _MapPickerDialogState extends State<MapPickerDialog> {
         child: Column(
           children: [
             AppBar(
-              title: const Text('Pick Location'),
+              title: Text(AppLocalizations.of(context)!.pickLocation),
               leading: IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.of(context).pop()),
             ),
             Expanded(
@@ -474,7 +481,7 @@ class _MapPickerDialogState extends State<MapPickerDialog> {
               color: Colors.grey[200],
               child: Column(
                 children: [
-                  Text('Tap on map or drag marker to select location', style: Theme.of(context).textTheme.bodySmall),
+                  Text(AppLocalizations.of(context)!.tapOnMapToSelectLocation, style: Theme.of(context).textTheme.bodySmall),
                   const SizedBox(height: 8),
                   Text(
                     'Lat: ${_selectedLocation.latitude.toStringAsFixed(6)}, '
@@ -485,11 +492,11 @@ class _MapPickerDialogState extends State<MapPickerDialog> {
                   Row(
                     children: [
                       Expanded(
-                        child: OutlinedButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+                        child: OutlinedButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.cancel)),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
-                        child: ElevatedButton(onPressed: () => Navigator.of(context).pop(_selectedLocation), child: const Text('Confirm Location')),
+                        child: ElevatedButton(onPressed: () => Navigator.of(context).pop(_selectedLocation), child: Text(AppLocalizations.of(context)!.confirmLocation)),
                       ),
                     ],
                   ),
@@ -637,13 +644,13 @@ class SubLocationFormDialog extends StatelessWidget {
                       const SizedBox(height: 16),
                       SizedBox(
                         width: double.infinity,
-                        child: OutlinedButton.icon(onPressed: () => _pickLocationOnMap(context), icon: const Icon(Icons.map), label: const Text('Pick on Map')),
+                        child: OutlinedButton.icon(onPressed: () => _pickLocationOnMap(context), icon: const Icon(Icons.map), label: Text(AppLocalizations.of(context)!.pickOnMap)),
                       ),
                       const SizedBox(height: 24),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+                          TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.cancel)),
                           const SizedBox(width: 8),
                           ElevatedButton(onPressed: () => _save(context, formKey), child: Text(isEdit ? 'Update' : 'Add')),
                         ],

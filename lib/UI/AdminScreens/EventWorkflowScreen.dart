@@ -1,4 +1,5 @@
 import 'package:azimuth_vms/Models/Event.dart';
+import 'package:azimuth_vms/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -126,7 +127,7 @@ class _EventWorkflowScreenState extends State<EventWorkflowScreen> {
           state: currentStep > 2 ? StepState.complete : (currentStep == 2 ? StepState.editing : StepState.indexed),
         ),
         Step(
-          title: const Text('Archived'),
+          title: Text(AppLocalizations.of(context)!.archived),
           subtitle: const Text('Event is archived'),
           content: const Text('Event is archived and hidden from main lists.'),
           isActive: currentStep >= 3,

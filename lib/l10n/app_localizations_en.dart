@@ -171,6 +171,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sendNotification => 'Send Notification';
 
   @override
+  String get sending => 'Sending...';
+
+  @override
   String get profile => 'Profile';
 
   @override
@@ -258,7 +261,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mainShift => 'Main Shift';
 
   @override
-  String get subLocation => 'Sub Location';
+  String get subLocation => 'SubLocation';
 
   @override
   String membersAssigned(int assigned, int total) {
@@ -567,7 +570,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get viewWorkflow => 'View Workflow';
 
   @override
-  String get archived => 'archived';
+  String get archived => 'Archived';
 
   @override
   String get restored => 'restored';
@@ -664,7 +667,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get teamOptional => 'Team (Optional)';
 
   @override
-  String get selectTeam => 'Select team';
+  String get selectTeam => 'Select Team';
 
   @override
   String get none => 'None';
@@ -685,13 +688,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get leader => 'Leader';
 
   @override
-  String get leaderColon => 'Leader:';
+  String leaderColon(String id) {
+    return 'Leader: $id';
+  }
 
   @override
   String get membersColon => 'Members:';
 
   @override
   String get teamMembers => 'Team Members';
+
+  @override
+  String get teamMembersColon => 'Team Members:';
+
+  @override
+  String get tapPlusToAddFirstTeamLeader => 'Tap + to add a new team leader';
 
   @override
   String get noMembers => 'No members';
@@ -813,7 +824,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noLocations => 'No locations found';
 
   @override
-  String get selectLocation => 'Select a location';
+  String get selectLocation => 'Select Location';
 
   @override
   String get assignMyTeam => 'Assign My Team';
@@ -829,7 +840,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Contact admin to assign your team to events';
 
   @override
-  String get selectEventAndShift => 'Select a shift to assign volunteers';
+  String get selectEventAndShift => 'Select Event & Shift';
 
   @override
   String get eventsWhereYourTeamIsAssigned =>
@@ -850,7 +861,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String by(String assignedBy) {
-    return 'By: $assignedBy';
+    return 'By:';
   }
 
   @override
@@ -906,19 +917,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editVolunteerForm => 'Edit Volunteer Form';
 
   @override
-  String get basicInformation => 'المعلومات الأساسية';
+  String get basicInformation => 'Basic Information';
 
   @override
-  String get contactInformation => 'معلومات الاتصال';
+  String get contactInformation => 'Contact Information';
 
   @override
-  String get professionalInformation => 'المعلومات المهنية';
+  String get professionalInformation => 'Professional Information';
 
   @override
-  String get documentInformation => 'معلومات الوثائق';
+  String get documentInformation => 'Document Information';
 
   @override
-  String get attachments => 'المرفقات';
+  String get attachments => 'Attachments';
 
   @override
   String get createPdf => 'إنشاء PDF';
@@ -942,17 +953,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get uploadingImages => 'Uploading images...';
 
   @override
-  String imageUploaded(String name) {
-    return 'Image uploaded: $name';
+  String imageUploaded(String imageName) {
+    return 'Image uploaded: $imageName';
   }
 
   @override
-  String errorUploadingImage(String name, String error) {
-    return 'Error uploading $name: $error';
+  String errorUploadingImage(String imageName, String error) {
+    return 'Error uploading $imageName: $error';
   }
 
   @override
-  String get pdfDownloadedSuccessfully => 'تم تحميل ملف PDF بنجاح!';
+  String get pdfDownloadedSuccessfully => 'PDF downloaded successfully!';
 
   @override
   String errorDownloading(String error) {
@@ -1012,7 +1023,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String averageRating(String rating) {
-    return 'Average: $rating/5';
+    return 'Average Rating: $rating / 5';
   }
 
   @override
@@ -1204,4 +1215,792 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noPhone => 'No Phone';
+
+  @override
+  String get volunteersManagement => 'Volunteers Management';
+
+  @override
+  String get addVolunteer => 'Add Volunteer';
+
+  @override
+  String get editVolunteer => 'Edit Volunteer';
+
+  @override
+  String get deleteVolunteer => 'Delete Volunteer';
+
+  @override
+  String get archiveVolunteer => 'Archive Volunteer';
+
+  @override
+  String get restoreVolunteer => 'Restore Volunteer';
+
+  @override
+  String get tapPlusToAddVolunteer => 'Tap + to add a new volunteer';
+
+  @override
+  String get assignTeam => 'Assign Team';
+
+  @override
+  String selectTeamFor(String name) {
+    return 'Select a team for $name:';
+  }
+
+  @override
+  String get noTeam => 'No team';
+
+  @override
+  String assignedToTeam(String name, String teamName) {
+    return 'Assigned $name to $teamName';
+  }
+
+  @override
+  String archiveVolunteerConfirm(String name) {
+    return 'Archive $name?\n\nThis will hide the volunteer but keep their data.';
+  }
+
+  @override
+  String get archive => 'Archive';
+
+  @override
+  String get restore => 'Restore';
+
+  @override
+  String restoreVolunteerConfirm(String name) {
+    return 'Restore $name?';
+  }
+
+  @override
+  String deleteVolunteerConfirm(String name) {
+    return 'Delete $name permanently?\n\nThis action cannot be undone!';
+  }
+
+  @override
+  String get tapPlusToAddTeam => 'Tap + to add a new team';
+
+  @override
+  String get noMembersAdded => 'No members added';
+
+  @override
+  String get addTeamMember => 'Add Team Member';
+
+  @override
+  String get noVolunteersAvailable => 'No volunteers available';
+
+  @override
+  String get added => 'Added';
+
+  @override
+  String teamLeaderID(String id) {
+    return 'Team Leader ID: $id';
+  }
+
+  @override
+  String get tapPlusToAddLocation => 'Tap + to add a new location';
+
+  @override
+  String get noLocationsFound => 'No locations found';
+
+  @override
+  String latLon(String lat, String lon) {
+    return 'Lat: $lat, Lon: $lon';
+  }
+
+  @override
+  String get subLocations => 'Sublocations:';
+
+  @override
+  String get subLocationsColon => 'Sub-locations:';
+
+  @override
+  String get noSubLocationsAdded => 'No sub-locations added';
+
+  @override
+  String get pickLocationOnMap => 'Pick Location on Map';
+
+  @override
+  String get pickLocation => 'Pick Location';
+
+  @override
+  String get tapOnMapToSelectLocation =>
+      'Tap on map or drag marker to select location';
+
+  @override
+  String get confirmLocation => 'Confirm Location';
+
+  @override
+  String get pickOnMap => 'Pick on Map';
+
+  @override
+  String get pleaseSelectTeamLeader => 'Please select a team leader';
+
+  @override
+  String get team => 'Team';
+
+  @override
+  String teamColon(String name) {
+    return 'Team: $name';
+  }
+
+  @override
+  String get membersColonBold => 'Members:';
+
+  @override
+  String get leaderColon2 => 'Leader:';
+
+  @override
+  String teamLeaderIDColon(String id) {
+    return 'Team Leader ID: $id';
+  }
+
+  @override
+  String leaderColonWithId(String id) {
+    return 'Leader: $id';
+  }
+
+  @override
+  String latLonCoordinates(String lat, String lon) {
+    return 'Lat: $lat, Lon: $lon';
+  }
+
+  @override
+  String get subLocationsColon2 => 'Sub-locations:';
+
+  @override
+  String get noSublocationsAdded => 'No sub-locations added';
+
+  @override
+  String get carouselManagement => 'Carousel Management';
+
+  @override
+  String get noCarouselImagesYet => 'No carousel images yet';
+
+  @override
+  String get tapPlusToAddFirstImage => 'Tap + to add your first image';
+
+  @override
+  String get deleteImage => 'Delete Image';
+
+  @override
+  String areYouSureDeleteImage(String title) {
+    return 'Are you sure you want to delete \"$title\"?';
+  }
+
+  @override
+  String get imageDeletedSuccessfully => 'Image deleted successfully';
+
+  @override
+  String get errorCouldNotReadFile => 'Error: Could not read file';
+
+  @override
+  String get imageUploadedSuccessfully => 'Image uploaded successfully!';
+
+  @override
+  String uploadFailed(String error) {
+    return 'Upload failed: $error';
+  }
+
+  @override
+  String get titleAndImageRequired => 'Title and Image URL are required';
+
+  @override
+  String get invalidImageURL => 'Invalid Image URL';
+
+  @override
+  String get visibleToUsers => 'Visible to Users';
+
+  @override
+  String get ratingCriteriaManagement => 'Rating Criteria Management';
+
+  @override
+  String get eventWorkflow => 'Event Workflow';
+
+  @override
+  String get planning => 'Planning';
+
+  @override
+  String get eventCreatedAndScheduled => 'Event created and scheduled';
+
+  @override
+  String get eventInPlanningPhase =>
+      'Event is in planning phase. You can assign shifts and volunteers.';
+
+  @override
+  String get eventIsCurrentlyRunning => 'Event is currently running';
+
+  @override
+  String get eventIsActive => 'Event is active. Volunteers can check in/out.';
+
+  @override
+  String get eventDateHasPassed => 'Event date has passed';
+
+  @override
+  String get eventHasEnded =>
+      'Event has ended. You can review attendance and feedback.';
+
+  @override
+  String get eventIsArchived => 'Event is archived';
+
+  @override
+  String get eventIsArchivedHidden =>
+      'Event is archived and hidden from main lists.';
+
+  @override
+  String get closed => 'Closed';
+
+  @override
+  String submittedDate(String date) {
+    return 'Submitted: $date';
+  }
+
+  @override
+  String reviewedBy(String name) {
+    return 'Reviewed by: $name';
+  }
+
+  @override
+  String get updateStatus => 'Update Status';
+
+  @override
+  String get updateFeedbackStatus => 'Update Feedback Status';
+
+  @override
+  String get statusColon => 'Status:';
+
+  @override
+  String get resolutionNotesOptional => 'Resolution Notes (optional):';
+
+  @override
+  String get feedbackUpdatedSuccessfully => 'Feedback updated successfully';
+
+  @override
+  String get deleteFeedback => 'Delete Feedback';
+
+  @override
+  String get deleteFeedbackConfirmation =>
+      'Are you sure you want to delete this feedback? This action cannot be undone.';
+
+  @override
+  String get feedbackDeletedSuccessfully => 'Feedback deleted successfully';
+
+  @override
+  String get reassignLocation => 'Reassign Location';
+
+  @override
+  String eventColon(String name) {
+    return 'Event: $name';
+  }
+
+  @override
+  String shiftTimeRange(String start, String end) {
+    return 'Shift: $start - $end';
+  }
+
+  @override
+  String get selectNewLocation => 'Select new location:';
+
+  @override
+  String mainLocationColon(String name) {
+    return 'Main Location: $name';
+  }
+
+  @override
+  String get sublocationsColon => 'Sublocations:';
+
+  @override
+  String get reassign => 'Reassign';
+
+  @override
+  String get pleaseSelectARole => 'Please select a role';
+
+  @override
+  String get pleaseSelectATeam => 'Please select a team';
+
+  @override
+  String get pleaseSelectAnEvent => 'Please select an event';
+
+  @override
+  String get noUsersFoundForAudience => 'No users found for selected audience';
+
+  @override
+  String notificationSentToUsers(int count) {
+    return 'Notification sent to $count user(s)';
+  }
+
+  @override
+  String errorSendingNotifications(String error) {
+    return 'Error sending notifications: $error';
+  }
+
+  @override
+  String get notificationType => 'Notification Type';
+
+  @override
+  String get title => 'Title';
+
+  @override
+  String get message => 'Message';
+
+  @override
+  String get sendTo => 'Send To';
+
+  @override
+  String get allUsers => 'All Users';
+
+  @override
+  String get byRole => 'By Role';
+
+  @override
+  String get byTeam => 'By Team';
+
+  @override
+  String get eventParticipants => 'Event Participants';
+
+  @override
+  String get selectRole => 'Select Role';
+
+  @override
+  String get chooseARole => 'Choose a role';
+
+  @override
+  String get chooseATeam => 'Choose a team';
+
+  @override
+  String get chooseAnEvent => 'Choose an event';
+
+  @override
+  String get sendNotificationsToGroups =>
+      'Send notifications to specific groups of users in the system';
+
+  @override
+  String get noEventsAvailable => 'No events available';
+
+  @override
+  String get chooseEventToViewFeedback => 'Choose an event to view feedback';
+
+  @override
+  String get selectEventToViewFeedback => 'Select an event to view feedback';
+
+  @override
+  String get noFeedbackReceivedYet => 'No feedback received for this event yet';
+
+  @override
+  String errorLoadingAverages(String error) {
+    return 'Error loading averages: $error';
+  }
+
+  @override
+  String individualFeedback(int count) {
+    return 'Individual Feedback ($count)';
+  }
+
+  @override
+  String get overallRating => 'Overall Rating';
+
+  @override
+  String basedOnResponses(int count, String plural) {
+    return 'Based on $count response$plural';
+  }
+
+  @override
+  String errorLoadingForms(String error) {
+    return 'Error loading forms: $error';
+  }
+
+  @override
+  String syncedVolunteersWithForms(int count) {
+    return 'Synced $count volunteer(s) with their forms';
+  }
+
+  @override
+  String get volunteerFormsManagement => 'Volunteer Forms Management';
+
+  @override
+  String get newForm => 'New Form';
+
+  @override
+  String get filterByStatus => 'Filter by status:';
+
+  @override
+  String get allStatuses => 'All Statuses';
+
+  @override
+  String get createNewFormToGetStarted => 'Create a new form to get started';
+
+  @override
+  String get documentsColon => 'Documents:';
+
+  @override
+  String formNumber(String number) {
+    return 'Form #$number';
+  }
+
+  @override
+  String statusUpdatedButErrorCreatingAccount(String error) {
+    return 'Status updated but error creating account: $error';
+  }
+
+  @override
+  String get enterNotificationTitle => 'Enter notification title';
+
+  @override
+  String get enterNotificationMessage => 'Enter notification message';
+
+  @override
+  String archiveItem(String itemType) {
+    return 'Archive $itemType?';
+  }
+
+  @override
+  String get unarchive => 'Unarchive';
+
+  @override
+  String unarchiveItem(String itemType) {
+    return 'Unarchive $itemType?';
+  }
+
+  @override
+  String deleteItem(String itemType) {
+    return 'Delete $itemType?';
+  }
+
+  @override
+  String confirmArchiveItem(String itemName) {
+    return 'Are you sure you want to archive \"$itemName\"?';
+  }
+
+  @override
+  String confirmUnarchiveItem(String itemName) {
+    return 'Are you sure you want to restore \"$itemName\" to active status?';
+  }
+
+  @override
+  String confirmDeleteItem(String itemName) {
+    return 'Are you sure you want to permanently delete \"$itemName\"?';
+  }
+
+  @override
+  String archiveWarning(String itemType) {
+    return 'This will hide the $itemType from active lists but keep all data intact.';
+  }
+
+  @override
+  String deleteWarning(String itemType) {
+    return 'This action cannot be undone. All data associated with this $itemType will be permanently removed.';
+  }
+
+  @override
+  String get deleteWarningGeneric =>
+      'This action cannot be undone! All associated data will be permanently deleted.';
+
+  @override
+  String get showArchived => 'Show Archived';
+
+  @override
+  String errorOccurred(String error) {
+    return 'Error: $error';
+  }
+
+  @override
+  String get markAllRead => 'Mark all read';
+
+  @override
+  String get errorLoadingNotifications => 'Error loading notifications';
+
+  @override
+  String get noNotificationsYet => 'No notifications yet';
+
+  @override
+  String get notificationsWillAppearHere =>
+      'You\'ll see notifications here when you get them';
+
+  @override
+  String get notificationDeleted => 'Notification deleted';
+
+  @override
+  String get check1Departure => 'Check 1: Departure';
+
+  @override
+  String get check2Arrival => 'Check 2: Arrival';
+
+  @override
+  String get selectAnEventToStartPresenceCheck =>
+      'Select an event to start presence check';
+
+  @override
+  String get adminOnly => 'Admin Only';
+
+  @override
+  String get tlOnly => 'TL Only';
+
+  @override
+  String get both => 'Both';
+
+  @override
+  String get noVolunteersAssignedToThisEvent =>
+      'No volunteers assigned to this event';
+
+  @override
+  String get departureCheckOnBus => 'Departure Check (On Bus)';
+
+  @override
+  String get arrivalCheckOnLocation => 'Arrival Check (On Location)';
+
+  @override
+  String get excusedLeaveApproved => 'EXCUSED (Leave Approved)';
+
+  @override
+  String get present => 'Present';
+
+  @override
+  String get presentUpper => 'PRESENT';
+
+  @override
+  String get absent => 'Absent';
+
+  @override
+  String get absentUpper => 'ABSENT';
+
+  @override
+  String get markAbsent => 'Mark Absent';
+
+  @override
+  String get markPresent => 'Mark Present';
+
+  @override
+  String get notChecked => 'Not Checked';
+
+  @override
+  String get excused => 'Excused';
+
+  @override
+  String errorMarkingAttendance(String error) {
+    return 'Error marking attendance: $error';
+  }
+
+  @override
+  String get selectAnEventAndShiftToAssignVolunteers =>
+      'Select an event and shift to assign volunteers';
+
+  @override
+  String get pleaseSelectEventShiftAndLocationFirst =>
+      'Please select an event, shift, and location first';
+
+  @override
+  String get noApprovedVolunteersAvailable =>
+      'No approved volunteers available';
+
+  @override
+  String assignedVolunteersToSubLocation(int count) {
+    return 'Assigned $count volunteers to sublocation successfully';
+  }
+
+  @override
+  String errorCreatingAssignments(String error) {
+    return 'Error creating assignments: $error';
+  }
+
+  @override
+  String get chooseLocationToAssignVolunteers =>
+      'Choose location to assign volunteers';
+
+  @override
+  String get selectALocation => 'Select a location';
+
+  @override
+  String get assignVolunteersToLocation => 'Assign Volunteers to Location';
+
+  @override
+  String get assigned => 'assigned';
+
+  @override
+  String get noVolunteersAssignedYet => 'No volunteers assigned yet';
+
+  @override
+  String get teamLeadersShouldAssignFirst => 'Team leaders should assign first';
+
+  @override
+  String get mainSuffix => '(Main)';
+
+  @override
+  String get unknownSubLocation => 'Unknown Sublocation';
+
+  @override
+  String selectedCount(int count) {
+    return 'Selected: $count';
+  }
+
+  @override
+  String get event => 'Event';
+
+  @override
+  String errorReassigningLocation(String error) {
+    return 'Error reassigning location: $error';
+  }
+
+  @override
+  String get contactAdminToAssignYourTeamToEvents =>
+      'Contact admin to assign your team to events';
+
+  @override
+  String get selectAShiftToAssignVolunteers =>
+      'Select a shift to assign volunteers';
+
+  @override
+  String get noTeamAssignedToThisLocation =>
+      'No team assigned to this location';
+
+  @override
+  String get noApprovedVolunteersAvailableInYourTeam =>
+      'No approved volunteers available in your team';
+
+  @override
+  String get chooseWhichLocationToAssignYourTeamMembersTo =>
+      'Choose which location to assign your team members to:';
+
+  @override
+  String get requestLeave => 'Request Leave';
+
+  @override
+  String get userNotAuthenticated => 'User not authenticated';
+
+  @override
+  String get leaveRequestSubmittedSuccessfully =>
+      'Leave request submitted successfully';
+
+  @override
+  String get reasonForLeaveRequest => 'Reason for Leave Request';
+
+  @override
+  String get provideDetailedReasonForLeave =>
+      'Please provide a detailed reason for your leave request. This will help your team leader make an informed decision.';
+
+  @override
+  String get enterYourReasonHere => 'Enter your reason here...';
+
+  @override
+  String get pleaseProvideAReason => 'Please provide a reason';
+
+  @override
+  String get pleaseProvideMoreDetailedReason =>
+      'Please provide a more detailed reason (at least 10 characters)';
+
+  @override
+  String get teamLeaderWillReviewRequest =>
+      'Your team leader will review this request. You will be notified of their decision.';
+
+  @override
+  String get submitting => 'Submitting...';
+
+  @override
+  String get submitRequest => 'Submit Request';
+
+  @override
+  String get dateLabel => 'Date';
+
+  @override
+  String get shiftTimeLabel => 'Shift Time';
+
+  @override
+  String get noEventsAssignedToYou => 'No events assigned to you';
+
+  @override
+  String get contactTeamLeaderToBeAssignedToEvents =>
+      'Contact your team leader to be assigned to events';
+
+  @override
+  String get viewOnMap => 'View on Map';
+
+  @override
+  String get submitEventFeedback => 'Submit Event Feedback';
+
+  @override
+  String contactLabel(String phone) {
+    return 'Contact: $phone';
+  }
+
+  @override
+  String yourShift(String shiftId) {
+    return 'Your shift: $shiftId';
+  }
+
+  @override
+  String locationField(String location) {
+    return 'Location: $location';
+  }
+
+  @override
+  String get notAssigned => 'Not assigned';
+
+  @override
+  String get rateYourExperience => 'Rate Your Experience';
+
+  @override
+  String get rateEventManagementAspects =>
+      'Please rate the following aspects of the event management (1 = Poor, 5 = Excellent)';
+
+  @override
+  String get additionalCommentsOptional => 'Additional Comments (Optional)';
+
+  @override
+  String get shareAnyAdditionalThoughts =>
+      'Share any additional thoughts or suggestions...';
+
+  @override
+  String get thankYouForFeedback => 'Thank you for your feedback!';
+
+  @override
+  String get poor => 'Poor';
+
+  @override
+  String get fair => 'Fair';
+
+  @override
+  String get good => 'Good';
+
+  @override
+  String get veryGood => 'Very Good';
+
+  @override
+  String get excellent => 'Excellent';
+
+  @override
+  String get imageSizeExceedsLimit => 'Image size should not exceed 500 KB.';
+
+  @override
+  String get formSubmittedForReview => 'Form submitted for review!';
+
+  @override
+  String get errorLabel => 'Error';
+
+  @override
+  String get sublocation => 'Sublocation';
+
+  @override
+  String get organizationPlanning => 'Organization & Planning';
+
+  @override
+  String get howWellWasEventOrganized =>
+      'How well was the event organized and planned?';
+
+  @override
+  String get logisticsResources => 'Logistics & Resources';
+
+  @override
+  String get wereResourcesAdequatelyProvided =>
+      'Were resources and logistics adequately provided?';
+
+  @override
+  String get communication => 'Communication';
+
+  @override
+  String get howEffectiveWasCommunication =>
+      'How effective was the communication before and during the event?';
+
+  @override
+  String get howWellWasEventManaged =>
+      'How well was the event managed overall?';
+
+  @override
+  String get shareYourThoughts =>
+      'Share your thoughts, suggestions, or any issues you experienced...';
 }

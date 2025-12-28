@@ -4,6 +4,7 @@ import 'package:azimuth_vms/Providers/VolunteerEventFeedbackProvider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../l10n/app_localizations.dart';
 
 class SubmitEventFeedbackScreen extends StatefulWidget {
   final Event event;
@@ -36,11 +37,12 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final user = FirebaseAuth.instance.currentUser;
     final userPhone = user?.email?.split('@').first ?? '';
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Event Feedback'), backgroundColor: Theme.of(context).colorScheme.inversePrimary),
+      appBar: AppBar(title: Text(l10n.eventFeedback), backgroundColor: Theme.of(context).colorScheme.inversePrimary),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -67,9 +69,9 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
                       ],
                     ),
                     const SizedBox(height: 8),
-                    Text('Your shift: ${widget.assignment.shiftId}', style: TextStyle(color: Colors.blue.shade800, fontSize: 14)),
+                    Text(l10n.yourShift(widget.assignment.shiftId), style: TextStyle(color: Colors.blue.shade800, fontSize: 14)),
                     const SizedBox(height: 4),
-                    Text('Location: ${widget.assignment.sublocationId ?? 'Not assigned'}', style: TextStyle(color: Colors.blue.shade800, fontSize: 14)),
+                    Text(l10n.locationField(widget.assignment.sublocationId ?? l10n.notAssigned), style: TextStyle(color: Colors.blue.shade800, fontSize: 14)),
                   ],
                 ),
               ),
@@ -77,9 +79,9 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
             const SizedBox(height: 24),
 
             // Instructions
-            Text('Rate Your Experience', style: Theme.of(context).textTheme.titleLarge),
+            Text(l10n.rateYourExperience, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
-            Text('Please rate the following aspects of the event management (1 = Poor, 5 = Excellent)', style: TextStyle(color: Colors.grey.shade700, fontSize: 14)),
+            Text(l10n.rateEventManagementAspects, style: TextStyle(color: Colors.grey.shade700, fontSize: 14)),
             const SizedBox(height: 24),
 
             // Rating Form
@@ -90,8 +92,8 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
                 children: [
                   // Organization Rating
                   _buildRatingSlider(
-                    'Organization & Planning',
-                    'How well was the event organized and planned?',
+                    l10n.organizationPlanning,
+                    l10n.howWellWasEventOrganized,
                     _organizationRating,
                     (value) => setState(() => _organizationRating = value),
                     Icons.calendar_today,
@@ -100,8 +102,8 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
 
                   // Logistics Rating
                   _buildRatingSlider(
-                    'Logistics & Resources',
-                    'Were resources and logistics adequately provided?',
+                    l10n.logisticsResources,
+                    l10n.wereResourcesAdequatelyProvided,
                     _logisticsRating,
                     (value) => setState(() => _logisticsRating = value),
                     Icons.inventory_2,
@@ -110,8 +112,8 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
 
                   // Communication Rating
                   _buildRatingSlider(
-                    'Communication',
-                    'How effective was the communication before and during the event?',
+                    l10n.communication,
+                    l10n.howEffectiveWasCommunication,
                     _communicationRating,
                     (value) => setState(() => _communicationRating = value),
                     Icons.chat,
@@ -120,8 +122,8 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
 
                   // Management Rating
                   _buildRatingSlider(
-                    'Event Management',
-                    'How well was the event managed overall?',
+                    l10n.eventManagement,
+                    l10n.howWellWasEventManaged,
                     _managementRating,
                     (value) => setState(() => _managementRating = value),
                     Icons.manage_accounts,
@@ -142,7 +144,7 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
                         Icon(Icons.star, color: Colors.amber.shade700, size: 32),
                         const SizedBox(width: 12),
                         Text(
-                          'Average Rating: ${_averageRating.toStringAsFixed(1)} / 5',
+                          l10n.averageRating(_averageRating.toStringAsFixed(1)),
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green.shade900),
                         ),
                       ],
@@ -151,12 +153,12 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
                   const SizedBox(height: 24),
 
                   // Additional Comments
-                  const Text('Additional Comments (Optional)', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  Text(l10n.additionalCommentsOptional, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _messageController,
                     maxLines: 5,
-                    decoration: const InputDecoration(hintText: 'Share your thoughts, suggestions, or any issues you experienced...', border: OutlineInputBorder()),
+                    decoration: InputDecoration(hintText: l10n.shareYourThoughts, border: const OutlineInputBorder()),
                   ),
                   const SizedBox(height: 24),
 
@@ -182,19 +184,19 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
                             );
 
                             if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Thank you for your feedback!'), backgroundColor: Colors.green));
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.thankYouForFeedback), backgroundColor: Colors.green));
                               Navigator.pop(context);
                             }
                           } catch (e) {
                             print('Error submitting event feedback: $e');
                             if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.errorOccurred(e.toString()))));
                             }
                           }
                         }
                       },
                       icon: const Icon(Icons.send),
-                      label: const Text('Submit Feedback'),
+                      label: Text(l10n.submitFeedback),
                       style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16), backgroundColor: Colors.blue, foregroundColor: Colors.white),
                     ),
                   ),
@@ -208,6 +210,7 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
   }
 
   Widget _buildRatingSlider(String title, String description, int currentValue, Function(int) onChanged, IconData icon) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -262,11 +265,11 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Poor', style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
-              Text('Fair', style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
-              Text('Good', style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
-              Text('Very Good', style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
-              Text('Excellent', style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+              Text(l10n.poor, style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+              Text(l10n.fair, style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+              Text(l10n.good, style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+              Text(l10n.veryGood, style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+              Text(l10n.excellent, style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
             ],
           ),
         ],

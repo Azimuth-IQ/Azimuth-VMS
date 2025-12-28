@@ -83,7 +83,7 @@ class VolunteerRatingHelperFirebase {
   // Create or update volunteer rating
   static Future<void> SaveVolunteerRating(String volunteerId, VolunteerRating rating) async {
     try {
-      final userRef = _ref.child('ihs/systemUsers/$volunteerId');
+      final userRef = _ref.child('ihs/systemusers/$volunteerId');
 
       // Save rating to user's volunteerRating field
       await userRef.child('volunteerRating').set(rating.toJson());
@@ -98,7 +98,7 @@ class VolunteerRatingHelperFirebase {
   // Get volunteer rating
   static Future<VolunteerRating?> GetVolunteerRating(String volunteerId) async {
     try {
-      final snapshot = await _ref.child('ihs/systemUsers/$volunteerId/volunteerRating').get();
+      final snapshot = await _ref.child('ihs/systemusers/$volunteerId/volunteerRating').get();
 
       if (!snapshot.exists) {
         return null;
@@ -128,7 +128,7 @@ class VolunteerRatingHelperFirebase {
   // Get all volunteers with their ratings
   static Future<Map<SystemUser, VolunteerRating?>> GetAllVolunteersWithRatings() async {
     try {
-      final snapshot = await _ref.child('ihs/systemUsers').get();
+      final snapshot = await _ref.child('ihs/systemusers').get();
 
       Map<SystemUser, VolunteerRating?> result = {};
 
@@ -150,24 +150,34 @@ class VolunteerRatingHelperFirebase {
 
   // Stream all volunteers with ratings (for real-time updates)
   static Stream<Map<SystemUser, VolunteerRating?>> StreamVolunteersWithRatings() {
-    return _ref.child('ihs/systemUsers').onValue.map((event) {
+    return _ref.child('ihs/systemusers').onValue.map((event) {
       Map<SystemUser, VolunteerRating?> result = {};
 
+      print('🔍 StreamVolunteersWithRatings: Snapshot exists: ${event.snapshot.exists}');
+
       if (event.snapshot.exists) {
+        print('🔍 Total children in systemUsers: ${event.snapshot.children.length}');
+
         for (DataSnapshot d1 in event.snapshot.children) {
           try {
             SystemUser user = SystemUser.fromDataSnapshot(d1);
+            print('🔍 Found user: ${user.name}, Role: ${user.role}, Phone: ${user.phone}');
 
             // Only include volunteers and team leaders
             if (user.role == SystemUserRole.VOLUNTEER || user.role == SystemUserRole.TEAMLEADER) {
               result[user] = user.volunteerRating;
+              print('✅ Added user to result: ${user.name}');
+            } else {
+              print('⏭️  Skipped user ${user.name} - role is ${user.role}');
             }
           } catch (e) {
-            print('Error parsing user in stream: $e');
+            print('❌ Error parsing user in stream: $e');
+            print('   Snapshot key: ${d1.key}');
           }
         }
       }
 
+      print('🔍 Final result count: ${result.length}');
       return result;
     });
   }

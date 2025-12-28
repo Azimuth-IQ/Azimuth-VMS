@@ -136,7 +136,13 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EventAssignmentPage(event: event, myTeams: _myTeams, volunteers: _volunteers, currentUserPhone: _currentUserPhone!, onUpdate: () => _loadData()),
+        builder: (context) => EventAssignmentPage(
+          event: event,
+          myTeams: _myTeams,
+          volunteers: _volunteers,
+          currentUserPhone: _currentUserPhone!,
+          onUpdate: _loadData,
+        ),
       ),
     );
   }
@@ -419,18 +425,16 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                         const SizedBox(height: 4),
                         Text(
                           name ?? l10n.teamLeader,
-                          style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+                      style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 
@@ -603,49 +607,6 @@ class _EventAssignmentPageState extends State<EventAssignmentPage> {
     return [];
   }
 
-  List<SystemUser> _getAvailableVolunteersForSubLocation(EventShift shift, ShiftSubLocation subLoc) {
-    if (subLoc.tempTeam != null && subLoc.tempTeam!.teamLeaderId == widget.currentUserPhone) {
-      return widget.volunteers;
-    } else if (subLoc.teamId != null) {
-      final team = widget.myTeams.where((t) => t.id == subLoc.teamId).firstOrNull;
-      if (team != null) {
-        return widget.volunteers.where((v) => team.memberIds.contains(v.phone)).toList();
-      }
-    }
-    return [];
-  }
-
-  Widget _buildAssignmentSubtitle(int assignedCount, int totalCount) {
-    return Text('$assignedCount / $totalCount volunteers assigned', style: TextStyle(fontSize: 14, color: Colors.grey[600]));
-  }
-
-  Widget _buildMemberAssignmentList(List<String> assignedMemberIds, List<SystemUser> availableVolunteers, Function(String, bool) onAssign) {
-    if (availableVolunteers.isEmpty) {
-      return const Padding(padding: EdgeInsets.all(16.0), child: Text('No volunteers available for assignment'));
-    }
-
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: availableVolunteers.length,
-      itemBuilder: (context, index) {
-        final volunteer = availableVolunteers[index];
-        final isAssigned = assignedMemberIds.contains(volunteer.phone);
-
-        return CheckboxListTile(
-          title: Text(volunteer.name),
-          subtitle: Text(volunteer.phone),
-          value: isAssigned,
-          onChanged: (bool? value) {
-            if (value != null) {
-              onAssign(volunteer.phone, value);
-            }
-          },
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final myShifts = _event.shifts.where((shift) {
@@ -705,11 +666,7 @@ class _EventAssignmentPageState extends State<EventAssignmentPage> {
                   title: Text('${l10n.mainShift}: ${shift.startTime} - ${shift.endTime}'),
                   subtitle: _buildAssignmentSubtitle(shift.tempTeam?.memberIds.length ?? 0, _getAvailableVolunteers(shift).length),
                   children: [
-                    _buildMemberAssignmentList(
-                      shift.tempTeam?.memberIds ?? [],
-                      _getAvailableVolunteers(shift),
-                      (memberId, assign) => _assignMemberToShift(shift, memberId, assign),
-                    ),
+                    _buildMemberAssignmentList(shift.tempTeam?.memberIds ?? [], _getAvailableVolunteers(shift), (memberId, assign) => _assignMemberToShift(shift, memberId, assign)),
                   ],
                 ),
               // Sublocation sections
@@ -722,9 +679,7 @@ class _EventAssignmentPageState extends State<EventAssignmentPage> {
                     leading: const Icon(Icons.place),
                     title: Text('${l10n.subLocation}: ${subLoc.id}'),
                     subtitle: _buildAssignmentSubtitle(assignedMemberIds.length, availableVolunteers.length),
-                    children: [
-                      _buildMemberAssignmentList(assignedMemberIds, availableVolunteers, (memberId, assign) => _assignMemberToSubLocation(shift, subLoc, memberId, assign)),
-                    ],
+                    children: [_buildMemberAssignmentList(assignedMemberIds, availableVolunteers, (memberId, assign) => _assignMemberToSubLocation(shift, subLoc, memberId, assign))],
                   );
                 }),
             ],
@@ -732,6 +687,51 @@ class _EventAssignmentPageState extends State<EventAssignmentPage> {
         },
       ),
     );
+  }
+
+  Widget _buildAssignmentSubtitle(int assigned, int total) {
+    return Builder(
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        return Text(l10n.membersAssigned(assigned, total));
+      },
+    );
+  }
+
+  Widget _buildMemberAssignmentList(List<String> assignedMemberIds, List<SystemUser> availableVolunteers, Function(String, bool) onAssign) {
+    if (availableVolunteers.isEmpty) {
+      return Builder(
+        builder: (context) {
+          final l10n = AppLocalizations.of(context)!;
+          return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text(
+              l10n.noTeamMembersAvailable,
+              style: const TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
+            ),
+          );
+        },
+      );
+    }
+
+    return Column(
+      children: availableVolunteers.map((volunteer) {
+        final isAssigned = assignedMemberIds.contains(volunteer.phone);
+        return CheckboxListTile(title: Text(volunteer.name), subtitle: Text(volunteer.phone), value: isAssigned, onChanged: (value) => onAssign(volunteer.phone, value ?? false));
+      }).toList(),
+    );
+  }
+
+  List<SystemUser> _getAvailableVolunteersForSubLocation(EventShift shift, ShiftSubLocation subLoc) {
+    if (subLoc.tempTeam != null && subLoc.tempTeam!.teamLeaderId == widget.currentUserPhone) {
+      return widget.volunteers;
+    } else if (subLoc.teamId != null) {
+      final team = widget.myTeams.where((t) => t.id == subLoc.teamId).firstOrNull;
+      if (team != null) {
+        return widget.volunteers.where((v) => team.memberIds.contains(v.phone)).toList();
+      }
+    }
+    return [];
   }
 
   void _assignMemberToSubLocation(EventShift shift, ShiftSubLocation subLoc, String memberId, bool assign) {

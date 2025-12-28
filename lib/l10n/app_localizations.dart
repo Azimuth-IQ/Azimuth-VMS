@@ -422,6 +422,12 @@ abstract class AppLocalizations {
   /// **'Send Notification'**
   String get sendNotification;
 
+  /// No description provided for @sending.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending...'**
+  String get sending;
+
   /// No description provided for @profile.
   ///
   /// In en, this message translates to:
@@ -587,7 +593,7 @@ abstract class AppLocalizations {
   /// No description provided for @subLocation.
   ///
   /// In en, this message translates to:
-  /// **'Sub Location'**
+  /// **'SubLocation'**
   String get subLocation;
 
   /// No description provided for @membersAssigned.
@@ -1169,7 +1175,7 @@ abstract class AppLocalizations {
   /// No description provided for @archived.
   ///
   /// In en, this message translates to:
-  /// **'archived'**
+  /// **'Archived'**
   String get archived;
 
   /// No description provided for @restored.
@@ -1361,7 +1367,7 @@ abstract class AppLocalizations {
   /// No description provided for @selectTeam.
   ///
   /// In en, this message translates to:
-  /// **'Select team'**
+  /// **'Select Team'**
   String get selectTeam;
 
   /// No description provided for @none.
@@ -1403,8 +1409,8 @@ abstract class AppLocalizations {
   /// No description provided for @leaderColon.
   ///
   /// In en, this message translates to:
-  /// **'Leader:'**
-  String get leaderColon;
+  /// **'Leader: {id}'**
+  String leaderColon(String id);
 
   /// No description provided for @membersColon.
   ///
@@ -1417,6 +1423,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Team Members'**
   String get teamMembers;
+
+  /// No description provided for @teamMembersColon.
+  ///
+  /// In en, this message translates to:
+  /// **'Team Members:'**
+  String get teamMembersColon;
+
+  /// No description provided for @tapPlusToAddFirstTeamLeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap + to add a new team leader'**
+  String get tapPlusToAddFirstTeamLeader;
 
   /// No description provided for @noMembers.
   ///
@@ -1643,7 +1661,7 @@ abstract class AppLocalizations {
   /// No description provided for @selectLocation.
   ///
   /// In en, this message translates to:
-  /// **'Select a location'**
+  /// **'Select Location'**
   String get selectLocation;
 
   /// No description provided for @assignMyTeam.
@@ -1673,7 +1691,7 @@ abstract class AppLocalizations {
   /// No description provided for @selectEventAndShift.
   ///
   /// In en, this message translates to:
-  /// **'Select a shift to assign volunteers'**
+  /// **'Select Event & Shift'**
   String get selectEventAndShift;
 
   /// No description provided for @eventsWhereYourTeamIsAssigned.
@@ -1709,7 +1727,7 @@ abstract class AppLocalizations {
   /// No description provided for @by.
   ///
   /// In en, this message translates to:
-  /// **'By: {assignedBy}'**
+  /// **'By:'**
   String by(String assignedBy);
 
   /// No description provided for @selectVolunteers.
@@ -1805,31 +1823,31 @@ abstract class AppLocalizations {
   /// No description provided for @basicInformation.
   ///
   /// In en, this message translates to:
-  /// **'المعلومات الأساسية'**
+  /// **'Basic Information'**
   String get basicInformation;
 
   /// No description provided for @contactInformation.
   ///
   /// In en, this message translates to:
-  /// **'معلومات الاتصال'**
+  /// **'Contact Information'**
   String get contactInformation;
 
   /// No description provided for @professionalInformation.
   ///
   /// In en, this message translates to:
-  /// **'المعلومات المهنية'**
+  /// **'Professional Information'**
   String get professionalInformation;
 
   /// No description provided for @documentInformation.
   ///
   /// In en, this message translates to:
-  /// **'معلومات الوثائق'**
+  /// **'Document Information'**
   String get documentInformation;
 
   /// No description provided for @attachments.
   ///
   /// In en, this message translates to:
-  /// **'المرفقات'**
+  /// **'Attachments'**
   String get attachments;
 
   /// No description provided for @createPdf.
@@ -1871,19 +1889,19 @@ abstract class AppLocalizations {
   /// No description provided for @imageUploaded.
   ///
   /// In en, this message translates to:
-  /// **'Image uploaded: {name}'**
-  String imageUploaded(String name);
+  /// **'Image uploaded: {imageName}'**
+  String imageUploaded(String imageName);
 
   /// No description provided for @errorUploadingImage.
   ///
   /// In en, this message translates to:
-  /// **'Error uploading {name}: {error}'**
-  String errorUploadingImage(String name, String error);
+  /// **'Error uploading {imageName}: {error}'**
+  String errorUploadingImage(String imageName, String error);
 
   /// No description provided for @pdfDownloadedSuccessfully.
   ///
   /// In en, this message translates to:
-  /// **'تم تحميل ملف PDF بنجاح!'**
+  /// **'PDF downloaded successfully!'**
   String get pdfDownloadedSuccessfully;
 
   /// No description provided for @errorDownloading.
@@ -1979,7 +1997,7 @@ abstract class AppLocalizations {
   /// No description provided for @averageRating.
   ///
   /// In en, this message translates to:
-  /// **'Average: {rating}/5'**
+  /// **'Average Rating: {rating} / 5'**
   String averageRating(String rating);
 
   /// No description provided for @manageRatingCriteria.
@@ -2353,6 +2371,1344 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No Phone'**
   String get noPhone;
+
+  /// No description provided for @volunteersManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Volunteers Management'**
+  String get volunteersManagement;
+
+  /// No description provided for @addVolunteer.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Volunteer'**
+  String get addVolunteer;
+
+  /// No description provided for @editVolunteer.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Volunteer'**
+  String get editVolunteer;
+
+  /// No description provided for @deleteVolunteer.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Volunteer'**
+  String get deleteVolunteer;
+
+  /// No description provided for @archiveVolunteer.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive Volunteer'**
+  String get archiveVolunteer;
+
+  /// No description provided for @restoreVolunteer.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore Volunteer'**
+  String get restoreVolunteer;
+
+  /// No description provided for @tapPlusToAddVolunteer.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap + to add a new volunteer'**
+  String get tapPlusToAddVolunteer;
+
+  /// No description provided for @assignTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign Team'**
+  String get assignTeam;
+
+  /// No description provided for @selectTeamFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a team for {name}:'**
+  String selectTeamFor(String name);
+
+  /// No description provided for @noTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'No team'**
+  String get noTeam;
+
+  /// No description provided for @assignedToTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Assigned {name} to {teamName}'**
+  String assignedToTeam(String name, String teamName);
+
+  /// No description provided for @archiveVolunteerConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive {name}?\n\nThis will hide the volunteer but keep their data.'**
+  String archiveVolunteerConfirm(String name);
+
+  /// No description provided for @archive.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get archive;
+
+  /// No description provided for @restore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get restore;
+
+  /// No description provided for @restoreVolunteerConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore {name}?'**
+  String restoreVolunteerConfirm(String name);
+
+  /// No description provided for @deleteVolunteerConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {name} permanently?\n\nThis action cannot be undone!'**
+  String deleteVolunteerConfirm(String name);
+
+  /// No description provided for @tapPlusToAddTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap + to add a new team'**
+  String get tapPlusToAddTeam;
+
+  /// No description provided for @noMembersAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'No members added'**
+  String get noMembersAdded;
+
+  /// No description provided for @addTeamMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Team Member'**
+  String get addTeamMember;
+
+  /// No description provided for @noVolunteersAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No volunteers available'**
+  String get noVolunteersAvailable;
+
+  /// No description provided for @added.
+  ///
+  /// In en, this message translates to:
+  /// **'Added'**
+  String get added;
+
+  /// No description provided for @teamLeaderID.
+  ///
+  /// In en, this message translates to:
+  /// **'Team Leader ID: {id}'**
+  String teamLeaderID(String id);
+
+  /// No description provided for @tapPlusToAddLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap + to add a new location'**
+  String get tapPlusToAddLocation;
+
+  /// No description provided for @noLocationsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No locations found'**
+  String get noLocationsFound;
+
+  /// No description provided for @latLon.
+  ///
+  /// In en, this message translates to:
+  /// **'Lat: {lat}, Lon: {lon}'**
+  String latLon(String lat, String lon);
+
+  /// No description provided for @subLocations.
+  ///
+  /// In en, this message translates to:
+  /// **'Sublocations:'**
+  String get subLocations;
+
+  /// No description provided for @subLocationsColon.
+  ///
+  /// In en, this message translates to:
+  /// **'Sub-locations:'**
+  String get subLocationsColon;
+
+  /// No description provided for @noSubLocationsAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'No sub-locations added'**
+  String get noSubLocationsAdded;
+
+  /// No description provided for @pickLocationOnMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick Location on Map'**
+  String get pickLocationOnMap;
+
+  /// No description provided for @pickLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick Location'**
+  String get pickLocation;
+
+  /// No description provided for @tapOnMapToSelectLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap on map or drag marker to select location'**
+  String get tapOnMapToSelectLocation;
+
+  /// No description provided for @confirmLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Location'**
+  String get confirmLocation;
+
+  /// No description provided for @pickOnMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick on Map'**
+  String get pickOnMap;
+
+  /// No description provided for @pleaseSelectTeamLeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a team leader'**
+  String get pleaseSelectTeamLeader;
+
+  /// No description provided for @team.
+  ///
+  /// In en, this message translates to:
+  /// **'Team'**
+  String get team;
+
+  /// No description provided for @teamColon.
+  ///
+  /// In en, this message translates to:
+  /// **'Team: {name}'**
+  String teamColon(String name);
+
+  /// No description provided for @membersColonBold.
+  ///
+  /// In en, this message translates to:
+  /// **'Members:'**
+  String get membersColonBold;
+
+  /// No description provided for @leaderColon2.
+  ///
+  /// In en, this message translates to:
+  /// **'Leader:'**
+  String get leaderColon2;
+
+  /// No description provided for @teamLeaderIDColon.
+  ///
+  /// In en, this message translates to:
+  /// **'Team Leader ID: {id}'**
+  String teamLeaderIDColon(String id);
+
+  /// No description provided for @leaderColonWithId.
+  ///
+  /// In en, this message translates to:
+  /// **'Leader: {id}'**
+  String leaderColonWithId(String id);
+
+  /// No description provided for @latLonCoordinates.
+  ///
+  /// In en, this message translates to:
+  /// **'Lat: {lat}, Lon: {lon}'**
+  String latLonCoordinates(String lat, String lon);
+
+  /// No description provided for @subLocationsColon2.
+  ///
+  /// In en, this message translates to:
+  /// **'Sub-locations:'**
+  String get subLocationsColon2;
+
+  /// No description provided for @noSublocationsAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'No sub-locations added'**
+  String get noSublocationsAdded;
+
+  /// No description provided for @carouselManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Carousel Management'**
+  String get carouselManagement;
+
+  /// No description provided for @noCarouselImagesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No carousel images yet'**
+  String get noCarouselImagesYet;
+
+  /// No description provided for @tapPlusToAddFirstImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap + to add your first image'**
+  String get tapPlusToAddFirstImage;
+
+  /// No description provided for @deleteImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Image'**
+  String get deleteImage;
+
+  /// No description provided for @areYouSureDeleteImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{title}\"?'**
+  String areYouSureDeleteImage(String title);
+
+  /// No description provided for @imageDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Image deleted successfully'**
+  String get imageDeletedSuccessfully;
+
+  /// No description provided for @errorCouldNotReadFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: Could not read file'**
+  String get errorCouldNotReadFile;
+
+  /// No description provided for @imageUploadedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Image uploaded successfully!'**
+  String get imageUploadedSuccessfully;
+
+  /// No description provided for @uploadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload failed: {error}'**
+  String uploadFailed(String error);
+
+  /// No description provided for @titleAndImageRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Title and Image URL are required'**
+  String get titleAndImageRequired;
+
+  /// No description provided for @invalidImageURL.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid Image URL'**
+  String get invalidImageURL;
+
+  /// No description provided for @visibleToUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Visible to Users'**
+  String get visibleToUsers;
+
+  /// No description provided for @ratingCriteriaManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating Criteria Management'**
+  String get ratingCriteriaManagement;
+
+  /// No description provided for @eventWorkflow.
+  ///
+  /// In en, this message translates to:
+  /// **'Event Workflow'**
+  String get eventWorkflow;
+
+  /// No description provided for @planning.
+  ///
+  /// In en, this message translates to:
+  /// **'Planning'**
+  String get planning;
+
+  /// No description provided for @eventCreatedAndScheduled.
+  ///
+  /// In en, this message translates to:
+  /// **'Event created and scheduled'**
+  String get eventCreatedAndScheduled;
+
+  /// No description provided for @eventInPlanningPhase.
+  ///
+  /// In en, this message translates to:
+  /// **'Event is in planning phase. You can assign shifts and volunteers.'**
+  String get eventInPlanningPhase;
+
+  /// No description provided for @eventIsCurrentlyRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Event is currently running'**
+  String get eventIsCurrentlyRunning;
+
+  /// No description provided for @eventIsActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Event is active. Volunteers can check in/out.'**
+  String get eventIsActive;
+
+  /// No description provided for @eventDateHasPassed.
+  ///
+  /// In en, this message translates to:
+  /// **'Event date has passed'**
+  String get eventDateHasPassed;
+
+  /// No description provided for @eventHasEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'Event has ended. You can review attendance and feedback.'**
+  String get eventHasEnded;
+
+  /// No description provided for @eventIsArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Event is archived'**
+  String get eventIsArchived;
+
+  /// No description provided for @eventIsArchivedHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Event is archived and hidden from main lists.'**
+  String get eventIsArchivedHidden;
+
+  /// No description provided for @closed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get closed;
+
+  /// No description provided for @submittedDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted: {date}'**
+  String submittedDate(String date);
+
+  /// No description provided for @reviewedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Reviewed by: {name}'**
+  String reviewedBy(String name);
+
+  /// No description provided for @updateStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Status'**
+  String get updateStatus;
+
+  /// No description provided for @updateFeedbackStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Feedback Status'**
+  String get updateFeedbackStatus;
+
+  /// No description provided for @statusColon.
+  ///
+  /// In en, this message translates to:
+  /// **'Status:'**
+  String get statusColon;
+
+  /// No description provided for @resolutionNotesOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolution Notes (optional):'**
+  String get resolutionNotesOptional;
+
+  /// No description provided for @feedbackUpdatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback updated successfully'**
+  String get feedbackUpdatedSuccessfully;
+
+  /// No description provided for @deleteFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Feedback'**
+  String get deleteFeedback;
+
+  /// No description provided for @deleteFeedbackConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this feedback? This action cannot be undone.'**
+  String get deleteFeedbackConfirmation;
+
+  /// No description provided for @feedbackDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback deleted successfully'**
+  String get feedbackDeletedSuccessfully;
+
+  /// No description provided for @reassignLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Reassign Location'**
+  String get reassignLocation;
+
+  /// No description provided for @eventColon.
+  ///
+  /// In en, this message translates to:
+  /// **'Event: {name}'**
+  String eventColon(String name);
+
+  /// No description provided for @shiftTimeRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Shift: {start} - {end}'**
+  String shiftTimeRange(String start, String end);
+
+  /// No description provided for @selectNewLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Select new location:'**
+  String get selectNewLocation;
+
+  /// No description provided for @mainLocationColon.
+  ///
+  /// In en, this message translates to:
+  /// **'Main Location: {name}'**
+  String mainLocationColon(String name);
+
+  /// No description provided for @sublocationsColon.
+  ///
+  /// In en, this message translates to:
+  /// **'Sublocations:'**
+  String get sublocationsColon;
+
+  /// No description provided for @reassign.
+  ///
+  /// In en, this message translates to:
+  /// **'Reassign'**
+  String get reassign;
+
+  /// No description provided for @pleaseSelectARole.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a role'**
+  String get pleaseSelectARole;
+
+  /// No description provided for @pleaseSelectATeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a team'**
+  String get pleaseSelectATeam;
+
+  /// No description provided for @pleaseSelectAnEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select an event'**
+  String get pleaseSelectAnEvent;
+
+  /// No description provided for @noUsersFoundForAudience.
+  ///
+  /// In en, this message translates to:
+  /// **'No users found for selected audience'**
+  String get noUsersFoundForAudience;
+
+  /// No description provided for @notificationSentToUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification sent to {count} user(s)'**
+  String notificationSentToUsers(int count);
+
+  /// No description provided for @errorSendingNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Error sending notifications: {error}'**
+  String errorSendingNotifications(String error);
+
+  /// No description provided for @notificationType.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Type'**
+  String get notificationType;
+
+  /// No description provided for @title.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get title;
+
+  /// No description provided for @message.
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get message;
+
+  /// No description provided for @sendTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Send To'**
+  String get sendTo;
+
+  /// No description provided for @allUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'All Users'**
+  String get allUsers;
+
+  /// No description provided for @byRole.
+  ///
+  /// In en, this message translates to:
+  /// **'By Role'**
+  String get byRole;
+
+  /// No description provided for @byTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'By Team'**
+  String get byTeam;
+
+  /// No description provided for @eventParticipants.
+  ///
+  /// In en, this message translates to:
+  /// **'Event Participants'**
+  String get eventParticipants;
+
+  /// No description provided for @selectRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Role'**
+  String get selectRole;
+
+  /// No description provided for @chooseARole.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a role'**
+  String get chooseARole;
+
+  /// No description provided for @chooseATeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a team'**
+  String get chooseATeam;
+
+  /// No description provided for @chooseAnEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an event'**
+  String get chooseAnEvent;
+
+  /// No description provided for @sendNotificationsToGroups.
+  ///
+  /// In en, this message translates to:
+  /// **'Send notifications to specific groups of users in the system'**
+  String get sendNotificationsToGroups;
+
+  /// No description provided for @noEventsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No events available'**
+  String get noEventsAvailable;
+
+  /// No description provided for @chooseEventToViewFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an event to view feedback'**
+  String get chooseEventToViewFeedback;
+
+  /// No description provided for @selectEventToViewFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Select an event to view feedback'**
+  String get selectEventToViewFeedback;
+
+  /// No description provided for @noFeedbackReceivedYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No feedback received for this event yet'**
+  String get noFeedbackReceivedYet;
+
+  /// No description provided for @errorLoadingAverages.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading averages: {error}'**
+  String errorLoadingAverages(String error);
+
+  /// No description provided for @individualFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Individual Feedback ({count})'**
+  String individualFeedback(int count);
+
+  /// No description provided for @overallRating.
+  ///
+  /// In en, this message translates to:
+  /// **'Overall Rating'**
+  String get overallRating;
+
+  /// No description provided for @basedOnResponses.
+  ///
+  /// In en, this message translates to:
+  /// **'Based on {count} response{plural}'**
+  String basedOnResponses(int count, String plural);
+
+  /// No description provided for @errorLoadingForms.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading forms: {error}'**
+  String errorLoadingForms(String error);
+
+  /// No description provided for @syncedVolunteersWithForms.
+  ///
+  /// In en, this message translates to:
+  /// **'Synced {count} volunteer(s) with their forms'**
+  String syncedVolunteersWithForms(int count);
+
+  /// No description provided for @volunteerFormsManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Volunteer Forms Management'**
+  String get volunteerFormsManagement;
+
+  /// No description provided for @newForm.
+  ///
+  /// In en, this message translates to:
+  /// **'New Form'**
+  String get newForm;
+
+  /// No description provided for @filterByStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by status:'**
+  String get filterByStatus;
+
+  /// No description provided for @allStatuses.
+  ///
+  /// In en, this message translates to:
+  /// **'All Statuses'**
+  String get allStatuses;
+
+  /// No description provided for @createNewFormToGetStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a new form to get started'**
+  String get createNewFormToGetStarted;
+
+  /// No description provided for @documentsColon.
+  ///
+  /// In en, this message translates to:
+  /// **'Documents:'**
+  String get documentsColon;
+
+  /// No description provided for @formNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Form #{number}'**
+  String formNumber(String number);
+
+  /// No description provided for @statusUpdatedButErrorCreatingAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Status updated but error creating account: {error}'**
+  String statusUpdatedButErrorCreatingAccount(String error);
+
+  /// No description provided for @enterNotificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter notification title'**
+  String get enterNotificationTitle;
+
+  /// No description provided for @enterNotificationMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter notification message'**
+  String get enterNotificationMessage;
+
+  /// No description provided for @archiveItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive {itemType}?'**
+  String archiveItem(String itemType);
+
+  /// No description provided for @unarchive.
+  ///
+  /// In en, this message translates to:
+  /// **'Unarchive'**
+  String get unarchive;
+
+  /// No description provided for @unarchiveItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Unarchive {itemType}?'**
+  String unarchiveItem(String itemType);
+
+  /// No description provided for @deleteItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {itemType}?'**
+  String deleteItem(String itemType);
+
+  /// No description provided for @confirmArchiveItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to archive \"{itemName}\"?'**
+  String confirmArchiveItem(String itemName);
+
+  /// No description provided for @confirmUnarchiveItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to restore \"{itemName}\" to active status?'**
+  String confirmUnarchiveItem(String itemName);
+
+  /// No description provided for @confirmDeleteItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to permanently delete \"{itemName}\"?'**
+  String confirmDeleteItem(String itemName);
+
+  /// No description provided for @archiveWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This will hide the {itemType} from active lists but keep all data intact.'**
+  String archiveWarning(String itemType);
+
+  /// No description provided for @deleteWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This action cannot be undone. All data associated with this {itemType} will be permanently removed.'**
+  String deleteWarning(String itemType);
+
+  /// No description provided for @deleteWarningGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'This action cannot be undone! All associated data will be permanently deleted.'**
+  String get deleteWarningGeneric;
+
+  /// No description provided for @showArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Archived'**
+  String get showArchived;
+
+  /// No description provided for @errorOccurred.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String errorOccurred(String error);
+
+  /// No description provided for @markAllRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all read'**
+  String get markAllRead;
+
+  /// No description provided for @errorLoadingNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading notifications'**
+  String get errorLoadingNotifications;
+
+  /// No description provided for @noNotificationsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications yet'**
+  String get noNotificationsYet;
+
+  /// No description provided for @notificationsWillAppearHere.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll see notifications here when you get them'**
+  String get notificationsWillAppearHere;
+
+  /// No description provided for @notificationDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification deleted'**
+  String get notificationDeleted;
+
+  /// No description provided for @check1Departure.
+  ///
+  /// In en, this message translates to:
+  /// **'Check 1: Departure'**
+  String get check1Departure;
+
+  /// No description provided for @check2Arrival.
+  ///
+  /// In en, this message translates to:
+  /// **'Check 2: Arrival'**
+  String get check2Arrival;
+
+  /// No description provided for @selectAnEventToStartPresenceCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Select an event to start presence check'**
+  String get selectAnEventToStartPresenceCheck;
+
+  /// No description provided for @adminOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Only'**
+  String get adminOnly;
+
+  /// No description provided for @tlOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'TL Only'**
+  String get tlOnly;
+
+  /// No description provided for @both.
+  ///
+  /// In en, this message translates to:
+  /// **'Both'**
+  String get both;
+
+  /// No description provided for @noVolunteersAssignedToThisEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'No volunteers assigned to this event'**
+  String get noVolunteersAssignedToThisEvent;
+
+  /// No description provided for @departureCheckOnBus.
+  ///
+  /// In en, this message translates to:
+  /// **'Departure Check (On Bus)'**
+  String get departureCheckOnBus;
+
+  /// No description provided for @arrivalCheckOnLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Arrival Check (On Location)'**
+  String get arrivalCheckOnLocation;
+
+  /// No description provided for @excusedLeaveApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'EXCUSED (Leave Approved)'**
+  String get excusedLeaveApproved;
+
+  /// No description provided for @present.
+  ///
+  /// In en, this message translates to:
+  /// **'Present'**
+  String get present;
+
+  /// No description provided for @presentUpper.
+  ///
+  /// In en, this message translates to:
+  /// **'PRESENT'**
+  String get presentUpper;
+
+  /// No description provided for @absent.
+  ///
+  /// In en, this message translates to:
+  /// **'Absent'**
+  String get absent;
+
+  /// No description provided for @absentUpper.
+  ///
+  /// In en, this message translates to:
+  /// **'ABSENT'**
+  String get absentUpper;
+
+  /// No description provided for @markAbsent.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark Absent'**
+  String get markAbsent;
+
+  /// No description provided for @markPresent.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark Present'**
+  String get markPresent;
+
+  /// No description provided for @notChecked.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Checked'**
+  String get notChecked;
+
+  /// No description provided for @excused.
+  ///
+  /// In en, this message translates to:
+  /// **'Excused'**
+  String get excused;
+
+  /// No description provided for @errorMarkingAttendance.
+  ///
+  /// In en, this message translates to:
+  /// **'Error marking attendance: {error}'**
+  String errorMarkingAttendance(String error);
+
+  /// No description provided for @selectAnEventAndShiftToAssignVolunteers.
+  ///
+  /// In en, this message translates to:
+  /// **'Select an event and shift to assign volunteers'**
+  String get selectAnEventAndShiftToAssignVolunteers;
+
+  /// No description provided for @pleaseSelectEventShiftAndLocationFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select an event, shift, and location first'**
+  String get pleaseSelectEventShiftAndLocationFirst;
+
+  /// No description provided for @noApprovedVolunteersAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No approved volunteers available'**
+  String get noApprovedVolunteersAvailable;
+
+  /// No description provided for @assignedVolunteersToSubLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Assigned {count} volunteers to sublocation successfully'**
+  String assignedVolunteersToSubLocation(int count);
+
+  /// No description provided for @errorCreatingAssignments.
+  ///
+  /// In en, this message translates to:
+  /// **'Error creating assignments: {error}'**
+  String errorCreatingAssignments(String error);
+
+  /// No description provided for @chooseLocationToAssignVolunteers.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose location to assign volunteers'**
+  String get chooseLocationToAssignVolunteers;
+
+  /// No description provided for @selectALocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a location'**
+  String get selectALocation;
+
+  /// No description provided for @assignVolunteersToLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign Volunteers to Location'**
+  String get assignVolunteersToLocation;
+
+  /// No description provided for @assigned.
+  ///
+  /// In en, this message translates to:
+  /// **'assigned'**
+  String get assigned;
+
+  /// No description provided for @noVolunteersAssignedYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No volunteers assigned yet'**
+  String get noVolunteersAssignedYet;
+
+  /// No description provided for @teamLeadersShouldAssignFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Team leaders should assign first'**
+  String get teamLeadersShouldAssignFirst;
+
+  /// No description provided for @mainSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **'(Main)'**
+  String get mainSuffix;
+
+  /// No description provided for @unknownSubLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Sublocation'**
+  String get unknownSubLocation;
+
+  /// No description provided for @selectedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected: {count}'**
+  String selectedCount(int count);
+
+  /// No description provided for @event.
+  ///
+  /// In en, this message translates to:
+  /// **'Event'**
+  String get event;
+
+  /// No description provided for @errorReassigningLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Error reassigning location: {error}'**
+  String errorReassigningLocation(String error);
+
+  /// No description provided for @contactAdminToAssignYourTeamToEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact admin to assign your team to events'**
+  String get contactAdminToAssignYourTeamToEvents;
+
+  /// No description provided for @selectAShiftToAssignVolunteers.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a shift to assign volunteers'**
+  String get selectAShiftToAssignVolunteers;
+
+  /// No description provided for @noTeamAssignedToThisLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'No team assigned to this location'**
+  String get noTeamAssignedToThisLocation;
+
+  /// No description provided for @noApprovedVolunteersAvailableInYourTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'No approved volunteers available in your team'**
+  String get noApprovedVolunteersAvailableInYourTeam;
+
+  /// No description provided for @chooseWhichLocationToAssignYourTeamMembersTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose which location to assign your team members to:'**
+  String get chooseWhichLocationToAssignYourTeamMembersTo;
+
+  /// No description provided for @requestLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Leave'**
+  String get requestLeave;
+
+  /// No description provided for @userNotAuthenticated.
+  ///
+  /// In en, this message translates to:
+  /// **'User not authenticated'**
+  String get userNotAuthenticated;
+
+  /// No description provided for @leaveRequestSubmittedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave request submitted successfully'**
+  String get leaveRequestSubmittedSuccessfully;
+
+  /// No description provided for @reasonForLeaveRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason for Leave Request'**
+  String get reasonForLeaveRequest;
+
+  /// No description provided for @provideDetailedReasonForLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Please provide a detailed reason for your leave request. This will help your team leader make an informed decision.'**
+  String get provideDetailedReasonForLeave;
+
+  /// No description provided for @enterYourReasonHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your reason here...'**
+  String get enterYourReasonHere;
+
+  /// No description provided for @pleaseProvideAReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Please provide a reason'**
+  String get pleaseProvideAReason;
+
+  /// No description provided for @pleaseProvideMoreDetailedReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Please provide a more detailed reason (at least 10 characters)'**
+  String get pleaseProvideMoreDetailedReason;
+
+  /// No description provided for @teamLeaderWillReviewRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Your team leader will review this request. You will be notified of their decision.'**
+  String get teamLeaderWillReviewRequest;
+
+  /// No description provided for @submitting.
+  ///
+  /// In en, this message translates to:
+  /// **'Submitting...'**
+  String get submitting;
+
+  /// No description provided for @submitRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Request'**
+  String get submitRequest;
+
+  /// No description provided for @dateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get dateLabel;
+
+  /// No description provided for @shiftTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Shift Time'**
+  String get shiftTimeLabel;
+
+  /// No description provided for @noEventsAssignedToYou.
+  ///
+  /// In en, this message translates to:
+  /// **'No events assigned to you'**
+  String get noEventsAssignedToYou;
+
+  /// No description provided for @contactTeamLeaderToBeAssignedToEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact your team leader to be assigned to events'**
+  String get contactTeamLeaderToBeAssignedToEvents;
+
+  /// No description provided for @viewOnMap.
+  ///
+  /// In en, this message translates to:
+  /// **'View on Map'**
+  String get viewOnMap;
+
+  /// No description provided for @submitEventFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Event Feedback'**
+  String get submitEventFeedback;
+
+  /// No description provided for @contactLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact: {phone}'**
+  String contactLabel(String phone);
+
+  /// No description provided for @yourShift.
+  ///
+  /// In en, this message translates to:
+  /// **'Your shift: {shiftId}'**
+  String yourShift(String shiftId);
+
+  /// No description provided for @locationField.
+  ///
+  /// In en, this message translates to:
+  /// **'Location: {location}'**
+  String locationField(String location);
+
+  /// No description provided for @notAssigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Not assigned'**
+  String get notAssigned;
+
+  /// No description provided for @rateYourExperience.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate Your Experience'**
+  String get rateYourExperience;
+
+  /// No description provided for @rateEventManagementAspects.
+  ///
+  /// In en, this message translates to:
+  /// **'Please rate the following aspects of the event management (1 = Poor, 5 = Excellent)'**
+  String get rateEventManagementAspects;
+
+  /// No description provided for @additionalCommentsOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional Comments (Optional)'**
+  String get additionalCommentsOptional;
+
+  /// No description provided for @shareAnyAdditionalThoughts.
+  ///
+  /// In en, this message translates to:
+  /// **'Share any additional thoughts or suggestions...'**
+  String get shareAnyAdditionalThoughts;
+
+  /// No description provided for @thankYouForFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for your feedback!'**
+  String get thankYouForFeedback;
+
+  /// No description provided for @poor.
+  ///
+  /// In en, this message translates to:
+  /// **'Poor'**
+  String get poor;
+
+  /// No description provided for @fair.
+  ///
+  /// In en, this message translates to:
+  /// **'Fair'**
+  String get fair;
+
+  /// No description provided for @good.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get good;
+
+  /// No description provided for @veryGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Very Good'**
+  String get veryGood;
+
+  /// No description provided for @excellent.
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent'**
+  String get excellent;
+
+  /// No description provided for @imageSizeExceedsLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Image size should not exceed 500 KB.'**
+  String get imageSizeExceedsLimit;
+
+  /// No description provided for @formSubmittedForReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Form submitted for review!'**
+  String get formSubmittedForReview;
+
+  /// No description provided for @errorLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get errorLabel;
+
+  /// No description provided for @sublocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Sublocation'**
+  String get sublocation;
+
+  /// No description provided for @organizationPlanning.
+  ///
+  /// In en, this message translates to:
+  /// **'Organization & Planning'**
+  String get organizationPlanning;
+
+  /// No description provided for @howWellWasEventOrganized.
+  ///
+  /// In en, this message translates to:
+  /// **'How well was the event organized and planned?'**
+  String get howWellWasEventOrganized;
+
+  /// No description provided for @logisticsResources.
+  ///
+  /// In en, this message translates to:
+  /// **'Logistics & Resources'**
+  String get logisticsResources;
+
+  /// No description provided for @wereResourcesAdequatelyProvided.
+  ///
+  /// In en, this message translates to:
+  /// **'Were resources and logistics adequately provided?'**
+  String get wereResourcesAdequatelyProvided;
+
+  /// No description provided for @communication.
+  ///
+  /// In en, this message translates to:
+  /// **'Communication'**
+  String get communication;
+
+  /// No description provided for @howEffectiveWasCommunication.
+  ///
+  /// In en, this message translates to:
+  /// **'How effective was the communication before and during the event?'**
+  String get howEffectiveWasCommunication;
+
+  /// No description provided for @howWellWasEventManaged.
+  ///
+  /// In en, this message translates to:
+  /// **'How well was the event managed overall?'**
+  String get howWellWasEventManaged;
+
+  /// No description provided for @shareYourThoughts.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your thoughts, suggestions, or any issues you experienced...'**
+  String get shareYourThoughts;
 }
 
 class _AppLocalizationsDelegate

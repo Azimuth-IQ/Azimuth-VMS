@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../l10n/app_localizations.dart';
 import '../../Helpers/NotificationHelperFirebase.dart';
 import '../../Helpers/ShiftAssignmentHelperFirebase.dart';
 import '../../Models/Event.dart';
@@ -68,7 +69,8 @@ class _LocationReassignmentDialogState extends State<LocationReassignmentDialog>
     } catch (e) {
       print('Error reassigning location: $e');
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      final l10n = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.errorReassigningLocation(e.toString()))));
       setState(() {
         _isLoading = false;
       });
@@ -77,6 +79,7 @@ class _LocationReassignmentDialogState extends State<LocationReassignmentDialog>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Consumer<EventsProvider>(
       builder: (context, provider, child) {
         // Get main location
@@ -86,21 +89,21 @@ class _LocationReassignmentDialogState extends State<LocationReassignmentDialog>
         );
 
         return AlertDialog(
-          title: const Text('Reassign Location'),
+          title: Text(l10n.reassignLocation),
           content: SizedBox(
             width: 400,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Event: ${widget.event.name}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text('${l10n.event}: ${widget.event.name}', style: const TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
-                Text('Shift: ${widget.shift.startTime} - ${widget.shift.endTime}'),
+                Text('${l10n.shift}: ${widget.shift.startTime} - ${widget.shift.endTime}'),
                 const SizedBox(height: 16),
-                const Text('Select new location:'),
+                Text(l10n.selectNewLocation),
                 const SizedBox(height: 8),
                 RadioListTile<String?>(
-                  title: Text('Main Location: ${mainLocation.name}'),
+                  title: Text(l10n.mainLocationColon(mainLocation.name)),
                   value: null,
                   groupValue: _selectedSublocationId,
                   onChanged: (value) {
@@ -111,7 +114,7 @@ class _LocationReassignmentDialogState extends State<LocationReassignmentDialog>
                 ),
                 if (mainLocation.subLocations != null && mainLocation.subLocations!.isNotEmpty) ...[
                   const Divider(),
-                  const Text('Sublocations:', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(l10n.subLocations, style: const TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
                   ...mainLocation.subLocations!.map((subloc) {
                     return RadioListTile<String?>(
@@ -131,10 +134,10 @@ class _LocationReassignmentDialogState extends State<LocationReassignmentDialog>
             ),
           ),
           actions: [
-            TextButton(onPressed: _isLoading ? null : () => Navigator.of(context).pop(), child: const Text('Cancel')),
+            TextButton(onPressed: _isLoading ? null : () => Navigator.of(context).pop(), child: Text(l10n.cancel)),
             ElevatedButton(
               onPressed: _isLoading ? null : () => _saveReassignment(context),
-              child: _isLoading ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)) : const Text('Reassign'),
+              child: _isLoading ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)) : Text(l10n.reassign),
             ),
           ],
         );

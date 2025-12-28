@@ -94,7 +94,7 @@ class _ImageCarouselSliderState extends State<ImageCarouselSlider> {
                       height: widget.height,
                       child: Image.network(
                         image.imageUrl,
-                        fit: BoxFit.contain,
+                        fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) => Container(
                           color: Colors.grey[300],
                           child: Column(

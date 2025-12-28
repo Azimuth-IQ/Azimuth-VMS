@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:azimuth_vms/l10n/app_localizations.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
@@ -52,7 +53,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       await dbRef.update({'password': _newPasswordController.text});
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Password changed successfully!'), backgroundColor: Colors.green, duration: Duration(seconds: 3)));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.passwordChangedSuccessfully), backgroundColor: Colors.green, duration: const Duration(seconds: 3)));
         Navigator.pop(context);
       }
     } on FirebaseAuthException catch (e) {
@@ -73,7 +76,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     } catch (e) {
       print('Error changing password: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.errorOccurred(e.toString())), backgroundColor: Colors.red));
       }
     } finally {
       if (mounted) {
@@ -85,7 +88,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Change Password'), centerTitle: true),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.changePassword), centerTitle: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Form(
@@ -198,7 +201,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 ),
                 child: _isLoading
                     ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                    : const Text('Change Password', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    : Text(AppLocalizations.of(context)!.changePassword, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(height: 20),
 

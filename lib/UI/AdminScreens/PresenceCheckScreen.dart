@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
+import '../../l10n/app_localizations.dart';
 import '../../Models/AttendanceRecord.dart';
 import '../../Models/Event.dart';
 import '../../Models/ShiftAssignment.dart';
@@ -85,20 +86,22 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
     } catch (e) {
       print('Error marking attendance: $e');
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      final l10n = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.errorMarkingAttendance(e.toString()))));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Presence Check'),
+        title: Text(l10n.presenceCheck),
         bottom: TabBar(
           controller: _tabController,
-          tabs: const [
-            Tab(icon: Icon(Icons.directions_bus), text: 'Check 1: Departure'),
-            Tab(icon: Icon(Icons.location_on), text: 'Check 2: Arrival'),
+          tabs: [
+            Tab(icon: const Icon(Icons.directions_bus), text: l10n.check1Departure),
+            Tab(icon: const Icon(Icons.location_on), text: l10n.check2Arrival),
           ],
         ),
         actions: [
@@ -144,7 +147,7 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
                                   children: [
                                     Icon(Icons.how_to_reg, size: 64, color: Colors.grey[400]),
                                     const SizedBox(height: 16),
-                                    Text('Select an event to start presence check', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                                    Text(AppLocalizations.of(context)!.selectAnEventToStartPresenceCheck, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
                                   ],
                                 ),
                               )
@@ -220,12 +223,13 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
   }
 
   Widget _buildEventList(BuildContext context, EventsProvider eventsProvider) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.all(16),
-          child: Text('Select Event', style: Theme.of(context).textTheme.titleLarge),
+          child: Text(l10n.selectEvent, style: Theme.of(context).textTheme.titleLarge),
         ),
         const Divider(),
         Expanded(
@@ -257,21 +261,22 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
   }
 
   Widget _buildPermissionBadge(PresenceCheckPermissions permission) {
+    final l10n = AppLocalizations.of(context)!;
     Color color;
     String text;
 
     switch (permission) {
       case PresenceCheckPermissions.ADMIN_ONLY:
         color = Colors.blue;
-        text = 'Admin Only';
+        text = l10n.adminOnly;
         break;
       case PresenceCheckPermissions.TEAMLEADER_ONLY:
         color = Colors.green;
-        text = 'TL Only';
+        text = l10n.tlOnly;
         break;
       case PresenceCheckPermissions.BOTH:
         color = Colors.orange;
-        text = 'Both';
+        text = l10n.both;
         break;
     }
 
@@ -299,8 +304,9 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
         final assignments = assignmentProvider.assignments;
 
         if (assignments.isEmpty) {
+          final l10n = AppLocalizations.of(context)!;
           return Center(
-            child: Text('No volunteers assigned to this event', style: TextStyle(color: Colors.grey[600])),
+            child: Text(l10n.noVolunteersAssignedToThisEvent, style: TextStyle(color: Colors.grey[600])),
           );
         }
 
@@ -312,7 +318,10 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(checkType == AttendanceCheckType.DEPARTURE ? 'Departure Check (On Bus)' : 'Arrival Check (On Location)', style: Theme.of(context).textTheme.titleMedium),
+                  Text(
+                    checkType == AttendanceCheckType.DEPARTURE ? AppLocalizations.of(context)!.departureCheckOnBus : AppLocalizations.of(context)!.arrivalCheckOnLocation,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                   _buildCheckStats(assignments, attendanceProvider, checkType),
                 ],
               ),
@@ -342,11 +351,11 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(volunteer.phone),
-                          if (shift != null) Text('Shift: ${shift.startTime} - ${shift.endTime}', style: const TextStyle(fontSize: 12)),
+                          if (shift != null) Text('${AppLocalizations.of(context)!.shift}: ${shift.startTime} - ${shift.endTime}', style: const TextStyle(fontSize: 12)),
                           if (assignment.status == ShiftAssignmentStatus.EXCUSED)
-                            const Text(
-                              'EXCUSED (Leave Approved)',
-                              style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 12),
+                            Text(
+                              AppLocalizations.of(context)!.excusedLeaveApproved,
+                              style: const TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 12),
                             ),
                         ],
                       ),
@@ -356,7 +365,7 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
                           if (shift != null)
                             IconButton(
                               icon: const Icon(Icons.swap_horiz, color: Colors.blue),
-                              tooltip: 'Reassign Location',
+                              tooltip: AppLocalizations.of(context)!.reassignLocation,
                               onPressed: () {
                                 showDialog(
                                   context: context,
@@ -370,7 +379,7 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  attendanceRecord.present ? 'PRESENT' : 'ABSENT',
+                                  attendanceRecord.present ? AppLocalizations.of(context)!.presentUpper : AppLocalizations.of(context)!.absentUpper,
                                   style: TextStyle(color: attendanceRecord.present ? Colors.green : Colors.red, fontWeight: FontWeight.bold),
                                 ),
                                 Text(DateTime.parse(attendanceRecord.timestamp).toString().split('.')[0].split(' ')[1], style: const TextStyle(fontSize: 10)),
@@ -386,7 +395,7 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
                                       : () => _markAttendance(context, volunteer.phone, assignment.shiftId, checkType, false),
                                   icon: const Icon(Icons.close),
                                   color: Colors.red,
-                                  tooltip: 'Mark Absent',
+                                  tooltip: AppLocalizations.of(context)!.markAbsent,
                                 ),
                                 IconButton(
                                   onPressed: assignment.status == ShiftAssignmentStatus.EXCUSED
@@ -394,7 +403,7 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
                                       : () => _markAttendance(context, volunteer.phone, assignment.shiftId, checkType, true),
                                   icon: const Icon(Icons.check),
                                   color: Colors.green,
-                                  tooltip: 'Mark Present',
+                                  tooltip: AppLocalizations.of(context)!.markPresent,
                                 ),
                               ],
                             ),
@@ -419,6 +428,7 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
   }
 
   Widget _buildCheckStats(List<ShiftAssignment> assignments, AttendanceProvider attendanceProvider, AttendanceCheckType checkType) {
+    final l10n = AppLocalizations.of(context)!;
     int present = 0;
     int absent = 0;
     int notChecked = 0;
@@ -444,10 +454,10 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
     return Wrap(
       spacing: 8,
       children: [
-        _buildStatChip('Present', present, Colors.green),
-        _buildStatChip('Absent', absent, Colors.red),
-        _buildStatChip('Not Checked', notChecked, Colors.grey),
-        if (excused > 0) _buildStatChip('Excused', excused, Colors.orange),
+        _buildStatChip(l10n.present, present, Colors.green),
+        _buildStatChip(l10n.absent, absent, Colors.red),
+        _buildStatChip(l10n.notChecked, notChecked, Colors.grey),
+        if (excused > 0) _buildStatChip(l10n.excused, excused, Colors.orange),
       ],
     );
   }

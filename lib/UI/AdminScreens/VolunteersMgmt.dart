@@ -4,6 +4,7 @@ import 'package:azimuth_vms/Models/Team.dart';
 import 'package:azimuth_vms/Providers/VolunteersProvider.dart';
 import 'package:azimuth_vms/Providers/TeamsProvider.dart';
 import 'package:azimuth_vms/UI/Widgets/ArchiveDeleteWidget.dart';
+import 'package:azimuth_vms/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class VolunteersMgmt extends StatelessWidget {
@@ -81,7 +82,8 @@ class _VolunteersMgmtViewState extends State<VolunteersMgmtView> {
               .name
         : 'No team';
 
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Assigned ${volunteer.name} to $teamName'), backgroundColor: Colors.green));
+    final l10n = AppLocalizations.of(context)!;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.assignedToTeam(volunteer.name, teamName)), backgroundColor: Colors.green));
   }
 
   @override
@@ -96,9 +98,10 @@ class _VolunteersMgmtViewState extends State<VolunteersMgmtView> {
 
         final displayVolunteers = _showArchived ? provider.archivedVolunteers : provider.activeVolunteers;
 
+        final l10n = AppLocalizations.of(context)!;
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Volunteers Management'),
+            title: Text(l10n.volunteersManagement),
             actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: () => provider.loadVolunteers())],
           ),
           body: provider.isLoading
@@ -115,11 +118,11 @@ class _VolunteersMgmtViewState extends State<VolunteersMgmtView> {
                                   Icon(Icons.volunteer_activism, size: 64, color: Colors.grey[400]),
                                   const SizedBox(height: 16),
                                   Text(
-                                    _showArchived ? 'No archived volunteers' : 'No volunteers found',
+                                    _showArchived ? l10n.noArchivedEvents : l10n.noVolunteersFound,
                                     style: TextStyle(fontSize: 18, color: Colors.grey[600], fontWeight: FontWeight.w500),
                                   ),
                                   const SizedBox(height: 8),
-                                  Text('Tap + to add a new volunteer', style: TextStyle(fontSize: 14, color: Colors.grey[500])),
+                                  Text(l10n.tapPlusToAddVolunteer, style: TextStyle(fontSize: 14, color: Colors.grey[500])),
                                 ],
                               ),
                             )
@@ -142,7 +145,7 @@ class _VolunteersMgmtViewState extends State<VolunteersMgmtView> {
             heroTag: 'volunteers_mgmt_fab',
             onPressed: () => _showVolunteerForm(context),
             icon: const Icon(Icons.add),
-            label: const Text('Add Volunteer'),
+            label: Text(l10n.addVolunteer),
           ),
         );
       },
@@ -239,51 +242,54 @@ class VolunteerTile extends StatelessWidget {
                     _showDeleteDialog(context, provider);
                   }
                 },
-                itemBuilder: (context) => [
-                  const PopupMenuItem(
-                    value: 'edit',
-                    child: Row(children: [Icon(Icons.edit, size: 20), SizedBox(width: 8), Text('Edit')]),
-                  ),
-                  const PopupMenuItem(
-                    value: 'assign',
-                    child: Row(children: [Icon(Icons.group_add, size: 20), SizedBox(width: 8), Text('Assign Team')]),
-                  ),
-                  if (!volunteer.archived) ...[
+                itemBuilder: (context) {
+                  final l10n = AppLocalizations.of(context)!;
+                  return [
+                    PopupMenuItem(
+                      value: 'edit',
+                      child: Row(children: [const Icon(Icons.edit, size: 20), const SizedBox(width: 8), Text(l10n.edit)]),
+                    ),
+                    PopupMenuItem(
+                      value: 'assign',
+                      child: Row(children: [const Icon(Icons.group_add, size: 20), const SizedBox(width: 8), Text(l10n.assignTeam)]),
+                    ),
+                    if (!volunteer.archived) ...[
+                      const PopupMenuDivider(),
+                      PopupMenuItem(
+                        value: 'archive',
+                        child: Row(
+                          children: [
+                            const Icon(Icons.archive, size: 20, color: Colors.orange),
+                            const SizedBox(width: 8),
+                            Text(l10n.archive, style: const TextStyle(color: Colors.orange)),
+                          ],
+                        ),
+                      ),
+                    ],
+                    if (volunteer.archived)
+                      PopupMenuItem(
+                        value: 'unarchive',
+                        child: Row(
+                          children: [
+                            const Icon(Icons.unarchive, size: 20, color: Colors.green),
+                            const SizedBox(width: 8),
+                            Text(l10n.restore, style: const TextStyle(color: Colors.green)),
+                          ],
+                        ),
+                      ),
                     const PopupMenuDivider(),
-                    const PopupMenuItem(
-                      value: 'archive',
+                    PopupMenuItem(
+                      value: 'delete',
                       child: Row(
                         children: [
-                          Icon(Icons.archive, size: 20, color: Colors.orange),
-                          SizedBox(width: 8),
-                          Text('Archive', style: TextStyle(color: Colors.orange)),
+                          const Icon(Icons.delete, size: 20, color: Colors.red),
+                          const SizedBox(width: 8),
+                          Text(l10n.delete, style: const TextStyle(color: Colors.red)),
                         ],
                       ),
                     ),
-                  ],
-                  if (volunteer.archived)
-                    const PopupMenuItem(
-                      value: 'unarchive',
-                      child: Row(
-                        children: [
-                          Icon(Icons.unarchive, size: 20, color: Colors.green),
-                          SizedBox(width: 8),
-                          Text('Restore', style: TextStyle(color: Colors.green)),
-                        ],
-                      ),
-                    ),
-                  const PopupMenuDivider(),
-                  const PopupMenuItem(
-                    value: 'delete',
-                    child: Row(
-                      children: [
-                        Icon(Icons.delete, size: 20, color: Colors.red),
-                        SizedBox(width: 8),
-                        Text('Delete', style: TextStyle(color: Colors.red)),
-                      ],
-                    ),
-                  ),
-                ],
+                  ];
+                },
               ),
             ],
           ),
@@ -293,29 +299,30 @@ class VolunteerTile extends StatelessWidget {
   }
 
   void _showArchiveDialog(BuildContext context, VolunteersProvider provider) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.archive, color: Colors.orange),
-            SizedBox(width: 8),
-            Text('Archive Volunteer'),
+            const Icon(Icons.archive, color: Colors.orange),
+            const SizedBox(width: 8),
+            Text(l10n.archiveVolunteer),
           ],
         ),
-        content: Text('Archive ${volunteer.name}?\n\nThis will hide the volunteer but keep their data.'),
+        content: Text(l10n.archiveVolunteerConfirm(volunteer.name)),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(dialogContext), child: Text(l10n.cancel)),
           FilledButton(
             style: FilledButton.styleFrom(backgroundColor: Colors.orange),
             onPressed: () async {
               Navigator.pop(dialogContext);
               await provider.archiveVolunteer(volunteer.phone);
               if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${volunteer.name} archived')));
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${volunteer.name} ${l10n.archived}')));
               }
             },
-            child: const Text('Archive'),
+            child: Text(l10n.archive),
           ),
         ],
       ),
@@ -323,29 +330,30 @@ class VolunteerTile extends StatelessWidget {
   }
 
   void _showUnarchiveDialog(BuildContext context, VolunteersProvider provider) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.unarchive, color: Colors.green),
-            SizedBox(width: 8),
-            Text('Restore Volunteer'),
+            const Icon(Icons.unarchive, color: Colors.green),
+            const SizedBox(width: 8),
+            Text(l10n.restoreVolunteer),
           ],
         ),
-        content: Text('Restore ${volunteer.name}?'),
+        content: Text(l10n.restoreVolunteerConfirm(volunteer.name)),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(dialogContext), child: Text(l10n.cancel)),
           FilledButton(
             style: FilledButton.styleFrom(backgroundColor: Colors.green),
             onPressed: () async {
               Navigator.pop(dialogContext);
               await provider.unarchiveVolunteer(volunteer.phone);
               if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${volunteer.name} restored')));
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${volunteer.name} ${l10n.restored}')));
               }
             },
-            child: const Text('Restore'),
+            child: Text(l10n.restore),
           ),
         ],
       ),
@@ -353,29 +361,30 @@ class VolunteerTile extends StatelessWidget {
   }
 
   void _showDeleteDialog(BuildContext context, VolunteersProvider provider) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.delete, color: Colors.red),
-            SizedBox(width: 8),
-            Text('Delete Volunteer'),
+            const Icon(Icons.delete, color: Colors.red),
+            const SizedBox(width: 8),
+            Text(l10n.deleteVolunteer),
           ],
         ),
-        content: Text('⚠️ WARNING: Delete ${volunteer.name} permanently?\n\nThis action CANNOT be undone!'),
+        content: Text(l10n.deleteVolunteerConfirm(volunteer.name)),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(dialogContext), child: Text(l10n.cancel)),
           FilledButton(
             style: FilledButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () async {
               Navigator.pop(dialogContext);
               await provider.deleteVolunteer(volunteer.phone);
               if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${volunteer.name} deleted')));
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${volunteer.name} ${l10n.deleted}')));
               }
             },
-            child: const Text('Delete'),
+            child: Text(l10n.delete),
           ),
         ],
       ),
@@ -383,6 +392,7 @@ class VolunteerTile extends StatelessWidget {
   }
 
   void _showTeamAssignDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final teamsProvider = context.read<TeamsProvider>();
     String? selectedTeamId = volunteer.teamId;
 
@@ -390,17 +400,17 @@ class VolunteerTile extends StatelessWidget {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: const Text('Assign Team'),
+          title: Text(l10n.assignTeam),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Select a team for ${volunteer.name}:'),
+              Text(l10n.selectTeamFor(volunteer.name)),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
                 value: selectedTeamId,
-                decoration: const InputDecoration(labelText: 'Team', border: OutlineInputBorder()),
+                decoration: InputDecoration(labelText: l10n.team, border: const OutlineInputBorder()),
                 items: [
-                  const DropdownMenuItem(value: null, child: Text('No team')),
+                  DropdownMenuItem(value: null, child: Text(l10n.noTeam)),
                   ...teamsProvider.teams.map((team) => DropdownMenuItem(value: team.id, child: Text(team.name))),
                 ],
                 onChanged: (value) {
@@ -410,13 +420,13 @@ class VolunteerTile extends StatelessWidget {
             ],
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+            TextButton(onPressed: () => Navigator.pop(context), child: Text(l10n.cancel)),
             ElevatedButton(
               onPressed: () {
                 onTeamAssign(selectedTeamId);
                 Navigator.pop(context);
               },
-              child: const Text('Assign'),
+              child: Text(l10n.assign),
             ),
           ],
         ),
@@ -449,6 +459,7 @@ class VolunteerFormDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final formKey = GlobalKey<FormState>();
 
     return Consumer<VolunteerFormProvider>(
@@ -472,7 +483,7 @@ class VolunteerFormDialog extends StatelessWidget {
                     ),
                     const SizedBox(width: 16),
                     Text(
-                      isEdit ? 'Edit Volunteer' : 'Add New Volunteer',
+                      isEdit ? l10n.editVolunteer : l10n.addVolunteer,
                       style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Color(0xFF1A1F36)),
                     ),
                   ],
@@ -484,7 +495,7 @@ class VolunteerFormDialog extends StatelessWidget {
                     children: [
                       TextFormField(
                         initialValue: provider.name,
-                        decoration: const InputDecoration(labelText: 'Full Name *', prefixIcon: Icon(Icons.person)),
+                        decoration: InputDecoration(labelText: '${l10n.name} *', prefixIcon: const Icon(Icons.person)),
                         onChanged: provider.updateName,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
@@ -497,7 +508,7 @@ class VolunteerFormDialog extends StatelessWidget {
                       TextFormField(
                         initialValue: provider.phone,
                         decoration: InputDecoration(
-                          labelText: 'Phone Number *',
+                          labelText: '${l10n.phoneNumber} *',
                           prefixIcon: const Icon(Icons.phone),
                           enabled: !isEdit, // Can't change phone when editing
                         ),
@@ -528,9 +539,9 @@ class VolunteerFormDialog extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+                    TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(l10n.cancel)),
                     const SizedBox(width: 8),
-                    ElevatedButton(onPressed: () => _save(context, formKey), child: Text(isEdit ? 'Update' : 'Add')),
+                    ElevatedButton(onPressed: () => _save(context, formKey), child: Text(isEdit ? l10n.update : l10n.add)),
                   ],
                 ),
               ],

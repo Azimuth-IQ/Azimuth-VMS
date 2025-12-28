@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:azimuth_vms/l10n/app_localizations.dart';
 
 /// A reusable widget that provides archive/unarchive and delete functionality
 /// with confirmation dialogs and proper error handling
@@ -39,34 +40,34 @@ class ArchiveDeleteMenu extends StatelessWidget {
       },
       itemBuilder: (context) => [
         if (!isArchived)
-          const PopupMenuItem(
+          PopupMenuItem(
             value: 'archive',
             child: Row(
               children: [
                 Icon(Icons.archive, size: 20, color: Colors.orange),
                 SizedBox(width: 8),
-                Text('Archive'),
+                Text(AppLocalizations.of(context)!.archive),
               ],
             ),
           ),
         if (isArchived)
-          const PopupMenuItem(
+          PopupMenuItem(
             value: 'unarchive',
             child: Row(
               children: [
                 Icon(Icons.unarchive, size: 20, color: Colors.blue),
                 SizedBox(width: 8),
-                Text('Unarchive'),
+                Text(AppLocalizations.of(context)!.unarchive),
               ],
             ),
           ),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: 'delete',
           child: Row(
             children: [
               Icon(Icons.delete_forever, size: 20, color: Colors.red),
               SizedBox(width: 8),
-              Text('Delete'),
+              Text(AppLocalizations.of(context)!.delete),
             ],
           ),
         ),
@@ -82,14 +83,14 @@ class ArchiveDeleteMenu extends StatelessWidget {
           children: [
             Icon(Icons.archive, color: Colors.orange),
             const SizedBox(width: 12),
-            Text('Archive $itemType?'),
+            Text(AppLocalizations.of(context)!.archiveItem(itemType)),
           ],
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Are you sure you want to archive "$itemName"?'),
+            Text(AppLocalizations.of(context)!.confirmArchiveItem(itemName)),
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(12),
@@ -103,7 +104,7 @@ class ArchiveDeleteMenu extends StatelessWidget {
                   Icon(Icons.info_outline, color: Colors.orange.shade700, size: 20),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: Text('This will hide the $itemType from active lists but keep all data intact.', style: TextStyle(fontSize: 12, color: Colors.orange.shade900)),
+                    child: Text(AppLocalizations.of(context)!.archiveWarning(itemType), style: TextStyle(fontSize: 12, color: Colors.orange.shade900)),
                   ),
                 ],
               ),
@@ -111,14 +112,14 @@ class ArchiveDeleteMenu extends StatelessWidget {
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.cancel)),
           ElevatedButton.icon(
             onPressed: () {
               Navigator.pop(context);
               onArchive();
             },
             icon: const Icon(Icons.archive),
-            label: const Text('Archive'),
+            label: Text(AppLocalizations.of(context)!.archive),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.orange, foregroundColor: Colors.white),
           ),
         ],
@@ -134,19 +135,19 @@ class ArchiveDeleteMenu extends StatelessWidget {
           children: [
             Icon(Icons.unarchive, color: Colors.blue),
             const SizedBox(width: 12),
-            Text('Unarchive $itemType?'),
+            Text(AppLocalizations.of(context)!.unarchiveItem(itemType)),
           ],
         ),
-        content: Text('Are you sure you want to restore "$itemName" to active status?'),
+        content: Text(AppLocalizations.of(context)!.confirmUnarchiveItem(itemName)),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.cancel)),
           ElevatedButton.icon(
             onPressed: () {
               Navigator.pop(context);
               onUnarchive();
             },
             icon: const Icon(Icons.unarchive),
-            label: const Text('Unarchive'),
+            label: Text(AppLocalizations.of(context)!.unarchive),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white),
           ),
         ],
@@ -162,14 +163,14 @@ class ArchiveDeleteMenu extends StatelessWidget {
           children: [
             const Icon(Icons.warning, color: Colors.red),
             const SizedBox(width: 12),
-            Text('Delete $itemType?'),
+            Text(AppLocalizations.of(context)!.deleteItem(itemType)),
           ],
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Are you sure you want to permanently delete "$itemName"?'),
+            Text(AppLocalizations.of(context)!.confirmDeleteItem(itemName)),
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(12),
@@ -184,7 +185,7 @@ class ArchiveDeleteMenu extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'This action cannot be undone! All associated data will be permanently deleted.',
+                      AppLocalizations.of(context)!.deleteWarningGeneric,
                       style: TextStyle(fontSize: 12, color: Colors.red.shade900, fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -194,14 +195,14 @@ class ArchiveDeleteMenu extends StatelessWidget {
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.cancel)),
           ElevatedButton.icon(
             onPressed: () {
               Navigator.pop(context);
               onDelete();
             },
             icon: const Icon(Icons.delete_forever),
-            label: const Text('Delete'),
+            label: Text(AppLocalizations.of(context)!.delete),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
           ),
         ],
@@ -235,7 +236,7 @@ class ShowArchivedToggle extends StatelessWidget {
           children: [
             Icon(showArchived ? Icons.archive : Icons.archive_outlined, size: 20, color: showArchived ? Colors.orange : Colors.grey),
             const SizedBox(width: 8),
-            Text('Show Archived', style: TextStyle(fontSize: 14, color: showArchived ? Colors.black87 : Colors.grey.shade700)),
+            Text(AppLocalizations.of(context)!.showArchived, style: TextStyle(fontSize: 14, color: showArchived ? Colors.black87 : Colors.grey.shade700)),
             if (archivedCount > 0) ...[
               const SizedBox(width: 8),
               Container(

@@ -56,6 +56,7 @@
   "notifications": "Notifications",
   "sendNotif": "Send Notif",
   "sendNotification": "Send Notification",
+  "sending": "Sending...",
   "profile": "Profile",
   "settings": "Settings",
   
@@ -274,6 +275,8 @@
   "members": "members",
   "membersColon": "Members:",
   "teamMembers": "Team Members",
+  "teamMembersColon": "Team Members:",
+  "tapPlusToAddFirstTeamLeader": "Tap + to add a new team leader",
   "noMembers": "No members",
   "noTemporaryTeamCreated": "No temporary team created",
   "selectTeamMember": "Select Team Member",
@@ -583,5 +586,748 @@
   "none": "None",
   "unknown": "Unknown",
   "unknownName": "Unknown Name",
-  "noPhone": "No Phone"
+  "noPhone": "No Phone",
+  
+  "volunteersManagement": "Volunteers Management",
+  "addVolunteer": "Add Volunteer",
+  "editVolunteer": "Edit Volunteer",
+  "deleteVolunteer": "Delete Volunteer",
+  "archiveVolunteer": "Archive Volunteer",
+  "restoreVolunteer": "Restore Volunteer",
+  "tapPlusToAddVolunteer": "Tap + to add a new volunteer",
+  "noVolunteersFound": "No volunteers found",
+  "assignTeam": "Assign Team",
+  "selectTeamFor": "Select a team for {name}:",
+  "@selectTeamFor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "noTeam": "No team",
+  "assignedToTeam": "Assigned {name} to {teamName}",
+  "@assignedToTeam": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "teamName": {
+        "type": "String"
+      }
+    }
+  },
+  "archiveVolunteerConfirm": "Archive {name}?\n\nThis will hide the volunteer but keep their data.",
+  "@archiveVolunteerConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "archive": "Archive",
+  "restore": "Restore",
+  "restoreVolunteerConfirm": "Restore {name}?",
+  "@restoreVolunteerConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteVolunteerConfirm": "Delete {name} permanently?\n\nThis action cannot be undone!",
+  "@deleteVolunteerConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "tapPlusToAddTeam": "Tap + to add a new team",
+  "noMembersAdded": "No members added",
+  "addTeamMember": "Add Team Member",
+  "noVolunteersAvailable": "No volunteers available",
+  "added": "Added",
+  "teamLeaderID": "Team Leader ID: {id}",
+  "@teamLeaderID": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "leaderColon": "Leader: {id}",
+  "@leaderColon": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "tapPlusToAddLocation": "Tap + to add a new location",
+  "noLocationsFound": "No locations found",
+  "latLon": "Lat: {lat}, Lon: {lon}",
+  "@latLon": {
+    "placeholders": {
+      "lat": {
+        "type": "String"
+      },
+      "lon": {
+        "type": "String"
+      }
+    }
+  },
+  "subLocations": "Sub-locations",
+  "subLocationsColon": "Sub-locations:",
+  "noSubLocationsAdded": "No sub-locations added",
+  "pickLocationOnMap": "Pick Location on Map",
+  "pickLocation": "Pick Location",
+  "tapOnMapToSelectLocation": "Tap on map or drag marker to select location",
+  "confirmLocation": "Confirm Location",
+  "pickOnMap": "Pick on Map",
+  
+  "pleaseSelectTeamLeader": "Please select a team leader",
+  "team": "Team",
+  "teamColon": "Team: {name}",
+  "@teamColon": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "membersColonBold": "Members:",
+  "leaderColon2": "Leader:",
+  "temporaryTeam": "Temporary Team",
+  "createTeam": "Create Team",
+  "selectTeamMember": "Select Team Member",
+  "teamAssignment": "Team Assignment",
+  "existing": "Existing",
+  "temporary": "Temporary",
+  "addSubLocation": "Add SubLocation",
+  "subLocation": "SubLocation",
+  "teamLeaderIDColon": "Team Leader ID: {id}",
+  "@teamLeaderIDColon": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "leaderColonWithId": "Leader: {id}",
+  "@leaderColonWithId": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "noVolunteersAvailable": "No volunteers available",
+  "addTeamMember": "Add Team Member",
+  "added": "Added",
+  "noMembersAdded": "No members added",
+  "latLonCoordinates": "Lat: {lat}, Lon: {lon}",
+  "@latLonCoordinates": {
+    "placeholders": {
+      "lat": {
+        "type": "String"
+      },
+      "lon": {
+        "type": "String"
+      }
+    }
+  },
+  "subLocationsColon2": "Sub-locations:",
+  "pickLocation": "Pick Location",
+  "tapOnMapToSelectLocation": "Tap on map or drag marker to select location",
+  "confirmLocation": "Confirm Location",
+  "pickOnMap": "Pick on Map",
+  "noSublocationsAdded": "No sub-locations added",
+  
+  "carouselManagement": "Carousel Management",
+  "noCarouselImagesYet": "No carousel images yet",
+  "tapPlusToAddFirstImage": "Tap + to add your first image",
+  "deleteImage": "Delete Image",
+  "areYouSureDeleteImage": "Are you sure you want to delete \"{title}\"?",
+  "@areYouSureDeleteImage": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "imageDeletedSuccessfully": "Image deleted successfully",
+  "errorCouldNotReadFile": "Error: Could not read file",
+  "imageUploadedSuccessfully": "Image uploaded successfully!",
+  "uploadFailed": "Upload failed: {error}",
+  "@uploadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "titleAndImageRequired": "Title and Image URL are required",
+  "invalidImageURL": "Invalid Image URL",
+  "visibleToUsers": "Visible to Users",
+  
+  "ratingCriteriaManagement": "Rating Criteria Management",
+  "criterionName": "Criterion Name",
+  "criterionPlaceholder": "e.g., Communication Skills",
+  "criterionAdded": "Criterion added. Don't forget to save!",
+  "editCriterion": "Edit Criterion",
+  "criterionUpdated": "Criterion updated. Don't forget to save!",
+  "deleteCriterion": "Delete Criterion",
+  "confirmDeleteCriterion": "Are you sure you want to delete \"{name}\"?",
+  "@confirmDeleteCriterion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "criterionDeleted": "Criterion deleted. Don't forget to save!",
+  "cannotSaveEmptyCriteria": "Cannot save empty criteria list",
+  "ratingCriteriaSaved": "Rating criteria saved successfully",
+  "errorSavingCriteria": "Error saving criteria: {error}",
+  "@errorSavingCriteria": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "eventWorkflow": "Event Workflow",
+  "planning": "Planning",
+  "eventCreatedAndScheduled": "Event created and scheduled",
+  "eventInPlanningPhase": "Event is in planning phase. You can assign shifts and volunteers.",
+  "eventIsCurrentlyRunning": "Event is currently running",
+  "eventIsActive": "Event is active. Volunteers can check in/out.",
+  "eventDateHasPassed": "Event date has passed",
+  "eventHasEnded": "Event has ended. You can review attendance and feedback.",
+  "eventIsArchived": "Event is archived",
+  "eventIsArchivedHidden": "Event is archived and hidden from main lists.",
+  
+  "allFeedback": "All Feedback",
+  "inProgress": "In Progress",
+  "resolved": "Resolved",
+  "closed": "Closed",
+  "submittedDate": "Submitted: {date}",
+  "@submittedDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewedBy": "Reviewed by: {name}",
+  "@reviewedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "updateStatus": "Update Status",
+  "updateFeedbackStatus": "Update Feedback Status",
+  "statusColon": "Status:",
+  "resolutionNotesOptional": "Resolution Notes (optional):",
+  "feedbackUpdatedSuccessfully": "Feedback updated successfully",
+  "deleteFeedback": "Delete Feedback",
+  "deleteFeedbackConfirmation": "Are you sure you want to delete this feedback? This action cannot be undone.",
+  "feedbackDeletedSuccessfully": "Feedback deleted successfully",
+  
+  "reassignLocation": "Reassign Location",
+  "eventColon": "Event: {name}",
+  "@eventColon": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftTimeRange": "Shift: {start} - {end}",
+  "@shiftTimeRange": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "selectNewLocation": "Select new location:",
+  "mainLocationColon": "Main Location: {name}",
+  "@mainLocationColon": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sublocationsColon": "Sublocations:",
+  "reassign": "Reassign",
+  
+  "pleaseSelectARole": "Please select a role",
+  "pleaseSelectATeam": "Please select a team",
+  "pleaseSelectAnEvent": "Please select an event",
+  "noUsersFoundForAudience": "No users found for selected audience",
+  "notificationSentToUsers": "Notification sent to {count} user(s)",
+  "@notificationSentToUsers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorSendingNotifications": "Error sending notifications: {error}",
+  "@errorSendingNotifications": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationType": "Notification Type",
+  "title": "Title",
+  "message": "Message",
+  "sendTo": "Send To",
+  "allUsers": "All Users",
+  "byRole": "By Role",
+  "byTeam": "By Team",
+  "eventParticipants": "Event Participants",
+  "selectRole": "Select Role",
+  "chooseARole": "Choose a role",
+  "selectTeam": "Select Team",
+  "chooseATeam": "Choose a team",
+  "selectEvent": "Select Event",
+  "chooseAnEvent": "Choose an event",
+  "sendNotificationsToGroups": "Send notifications to specific groups of users in the system",
+  
+  "noEventsAvailable": "No events available",
+  "chooseEventToViewFeedback": "Choose an event to view feedback",
+  "selectEventToViewFeedback": "Select an event to view feedback",
+  "noFeedbackReceivedYet": "No feedback received for this event yet",
+  "errorLoadingAverages": "Error loading averages: {error}",
+  "@errorLoadingAverages": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "individualFeedback": "Individual Feedback ({count})",
+  "@individualFeedback": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "overallRating": "Overall Rating",
+  "basedOnResponses": "Based on {count} response{plural}",
+  "@basedOnResponses": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "plural": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "errorLoadingForms": "Error loading forms: {error}",
+  "@errorLoadingForms": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "syncedVolunteersWithForms": "Synced {count} volunteer(s) with their forms",
+  "@syncedVolunteersWithForms": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "volunteerFormsManagement": "Volunteer Forms Management",
+  "newForm": "New Form",
+  "filterByStatus": "Filter by status:",
+  "allStatuses": "All Statuses",
+  "createNewFormToGetStarted": "Create a new form to get started",
+  "documentsColon": "Documents:",
+  "formNumber": "Form #{number}",
+  "@formNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "statusUpdatedTo": "Status updated to {status}",
+  "@statusUpdatedTo": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "statusUpdatedButErrorCreatingAccount": "Status updated but error creating account: {error}",
+  "@statusUpdatedButErrorCreatingAccount": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "enterNotificationTitle": "Enter notification title",
+  "enterNotificationMessage": "Enter notification message",
+  "archive": "Archive",
+  "archived": "Archived",
+  "archiveItem": "Archive {itemType}?",
+  "@archiveItem": {
+    "placeholders": {
+      "itemType": {
+        "type": "String"
+      }
+    }
+  },
+  "unarchive": "Unarchive",
+  "unarchiveItem": "Unarchive {itemType}?",
+  "@unarchiveItem": {
+    "placeholders": {
+      "itemType": {
+        "type": "String"
+      }
+    }
+  },
+  "delete": "Delete",
+  "deleteItem": "Delete {itemType}?",
+  "@deleteItem": {
+    "placeholders": {
+      "itemType": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmArchiveItem": "Are you sure you want to archive \"{itemName}\"?",
+  "@confirmArchiveItem": {
+    "placeholders": {
+      "itemName": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmUnarchiveItem": "Are you sure you want to restore \"{itemName}\" to active status?",
+  "@confirmUnarchiveItem": {
+    "placeholders": {
+      "itemName": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmDeleteItem": "Are you sure you want to permanently delete \"{itemName}\"?",
+  "@confirmDeleteItem": {
+    "placeholders": {
+      "itemName": {
+        "type": "String"
+      }
+    }
+  },
+  "archiveWarning": "This will hide the {itemType} from active lists but keep all data intact.",
+  "@archiveWarning": {
+    "placeholders": {
+      "itemType": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteWarning": "This action cannot be undone. All data associated with this {itemType} will be permanently removed.",
+  "@deleteWarning": {
+    "placeholders": {
+      "itemType": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteWarningGeneric": "This action cannot be undone! All associated data will be permanently deleted.",
+  "showArchived": "Show Archived",
+  
+  "changePassword": "Change Password",
+  "passwordChangedSuccessfully": "Password changed successfully!",
+  "errorOccurred": "Error: {error}",
+  "@errorOccurred": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "markAllRead": "Mark all read",
+  "errorLoadingNotifications": "Error loading notifications",
+  "retry": "Retry",
+  "noNotificationsYet": "No notifications yet",
+  "notificationsWillAppearHere": "You'll see notifications here when you get them",
+  "notificationDeleted": "Notification deleted",
+  
+  "check1Departure": "Check 1: Departure",
+  "check2Arrival": "Check 2: Arrival",
+  "selectAnEventToStartPresenceCheck": "Select an event to start presence check",
+  "selectEvent": "Select Event",
+  "adminOnly": "Admin Only",
+  "tlOnly": "TL Only",
+  "both": "Both",
+  "noVolunteersAssignedToThisEvent": "No volunteers assigned to this event",
+  "departureCheckOnBus": "Departure Check (On Bus)",
+  "arrivalCheckOnLocation": "Arrival Check (On Location)",
+  "shift": "Shift",
+  "excusedLeaveApproved": "EXCUSED (Leave Approved)",
+  "reassignLocation": "Reassign Location",
+  "present": "Present",
+  "presentUpper": "PRESENT",
+  "absent": "Absent",
+  "absentUpper": "ABSENT",
+  "markAbsent": "Mark Absent",
+  "markPresent": "Mark Present",
+  "notChecked": "Not Checked",
+  "excused": "Excused",
+  "errorMarkingAttendance": "Error marking attendance: {error}",
+  "@errorMarkingAttendance": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "shiftAssignment": "Shift Assignment",
+  "selectEventAndShift": "Select Event & Shift",
+  "selectAnEventAndShiftToAssignVolunteers": "Select an event and shift to assign volunteers",
+  "pleaseSelectEventShiftAndLocationFirst": "Please select an event, shift, and location first",
+  "noApprovedVolunteersAvailable": "No approved volunteers available",
+  "assignedVolunteersToSubLocation": "Assigned {count} volunteers to sublocation successfully",
+  "@assignedVolunteersToSubLocation": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assignedVolunteersSuccessfully": "Assigned {count} volunteers successfully",
+  "@assignedVolunteersSuccessfully": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorCreatingAssignments": "Error creating assignments: {error}",
+  "@errorCreatingAssignments": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "selectLocation": "Select Location",
+  "chooseLocationToAssignVolunteers": "Choose location to assign volunteers",
+  "selectALocation": "Select a location",
+  "assignVolunteersToLocation": "Assign Volunteers to Location",
+  "currentAssignments": "Current Assignments",
+  "assigned": "assigned",
+  "noVolunteersAssignedYet": "No volunteers assigned yet",
+  "teamLeadersShouldAssignFirst": "Team leaders should assign first",
+  "mainLocation": "Main Location",
+  "mainSuffix": "(Main)",
+  "unknownSubLocation": "Unknown Sublocation",
+  "by": "By:",
+  "selectVolunteers": "Select Volunteers",
+  "selectedCount": "Selected: {count}",
+  "@selectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  
+  "reassignLocation": "Reassign Location",
+  "event": "Event",
+  "selectNewLocation": "Select new location:",
+  "mainLocationColon": "Main Location: {name}",
+  "@mainLocationColon": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "subLocations": "Sublocations:",
+  "reassign": "Reassign",
+  "errorReassigningLocation": "Error reassigning location: {error}",
+  "@errorReassigningLocation": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "assignMyTeam": "Assign My Team",
+  "unableToIdentifyCurrentUser": "Unable to identify current user",
+  "noEventsAssignedToYourTeams": "No events assigned to your teams",
+  "contactAdminToAssignYourTeamToEvents": "Contact admin to assign your team to events",
+  "eventsWhereYourTeamIsAssigned": "Events where your team is assigned",
+  "selectAShiftToAssignVolunteers": "Select a shift to assign volunteers",
+  "noTeamAssignedToThisLocation": "No team assigned to this location",
+  "noApprovedVolunteersAvailableInYourTeam": "No approved volunteers available in your team",
+  "selectLocationToAssign": "Select Location to Assign",
+  "chooseWhichLocationToAssignYourTeamMembersTo": "Choose which location to assign your team members to:",
+  "assignVolunteers": "Assign Volunteers",
+  
+  "requestLeave": "Request Leave",
+  "userNotAuthenticated": "User not authenticated",
+  "leaveRequestSubmittedSuccessfully": "Leave request submitted successfully",
+  "reasonForLeaveRequest": "Reason for Leave Request",
+  "provideDetailedReasonForLeave": "Please provide a detailed reason for your leave request. This will help your team leader make an informed decision.",
+  "enterYourReasonHere": "Enter your reason here...",
+  "pleaseProvideAReason": "Please provide a reason",
+  "pleaseProvideMoreDetailedReason": "Please provide a more detailed reason (at least 10 characters)",
+  "teamLeaderWillReviewRequest": "Your team leader will review this request. You will be notified of their decision.",
+  "submitting": "Submitting...",
+  "submitRequest": "Submit Request",
+  "dateLabel": "Date",
+  "shiftTimeLabel": "Shift Time",
+  
+  "myEvents": "My Events",
+  "noEventsAssignedToYou": "No events assigned to you",
+  "contactTeamLeaderToBeAssignedToEvents": "Contact your team leader to be assigned to events",
+  "viewOnMap": "View on Map",
+  "submitEventFeedback": "Submit Event Feedback",
+  "contactLabel": "Contact: {phone}",
+  "@contactLabel": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "eventFeedback": "Event Feedback",
+  "yourShift": "Your shift: {shiftId}",
+  "@yourShift": {
+    "placeholders": {
+      "shiftId": {
+        "type": "String"
+      }
+    }
+  },
+  "locationField": "Location: {location}",
+  "@locationField": {
+    "placeholders": {
+      "location": {
+        "type": "String"
+      }
+    }
+  },
+  "notAssigned": "Not assigned",
+  "rateYourExperience": "Rate Your Experience",
+  "rateEventManagementAspects": "Please rate the following aspects of the event management (1 = Poor, 5 = Excellent)",
+  "additionalCommentsOptional": "Additional Comments (Optional)",
+  "shareAnyAdditionalThoughts": "Share any additional thoughts or suggestions...",
+  "thankYouForFeedback": "Thank you for your feedback!",
+  "submitFeedback": "Submit Feedback",
+  "poor": "Poor",
+  "fair": "Fair",
+  "good": "Good",
+  "veryGood": "Very Good",
+  "excellent": "Excellent",
+  
+  "imageSizeExceedsLimit": "Image size should not exceed 500 KB.",
+  "errorPickingImage": "Error picking image: {error}",
+  "@errorPickingImage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "formSubmittedForReview": "Form submitted for review!",
+  "uploadingImages": "Uploading images...",
+  "imageUploaded": "Image uploaded: {imageName}",
+  "@imageUploaded": {
+    "placeholders": {
+      "imageName": {
+        "type": "String"
+      }
+    }
+  },
+  "errorUploadingImage": "Error uploading {imageName}: {error}",
+  "@errorUploadingImage": {
+    "placeholders": {
+      "imageName": {
+        "type": "String"
+      },
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfDownloadedSuccessfully": "PDF downloaded successfully!",
+  "errorDownloading": "Error downloading: {error}",
+  "@errorDownloading": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorPrinting": "Error printing: {error}",
+  "@errorPrinting": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "previous": "Previous",
+  "basicInformation": "Basic Information",
+  "contactInformation": "Contact Information",
+  "professionalInformation": "Professional Information",
+  "documentInformation": "Document Information",
+  "attachments": "Attachments",
+  "existingImage": "Existing image",
+  "errorLabel": "Error",
+  
+  "shiftTime": "Shift Time",
+  "sublocation": "Sublocation",
+  "unknown": "Unknown",
+  "teamLeader": "Team Leader",
+  
+  "organizationPlanning": "Organization & Planning",
+  "howWellWasEventOrganized": "How well was the event organized and planned?",
+  "logisticsResources": "Logistics & Resources",
+  "wereResourcesAdequatelyProvided": "Were resources and logistics adequately provided?",
+  "communication": "Communication",
+  "howEffectiveWasCommunication": "How effective was the communication before and during the event?",
+  "eventManagement": "Event Management",
+  "howWellWasEventManaged": "How well was the event managed overall?",
+  "averageRating": "Average Rating: {rating} / 5",
+  "@averageRating": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "shareYourThoughts": "Share your thoughts, suggestions, or any issues you experienced..."
 }

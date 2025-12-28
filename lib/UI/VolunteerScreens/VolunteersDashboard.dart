@@ -121,11 +121,7 @@ class VolunteersDashboard extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
-                  Text(
-                    l10n.applicationUnderReviewDesc,
-                    style: const TextStyle(fontSize: 16),
-                    textAlign: TextAlign.center,
-                  ),
+                  Text(l10n.applicationUnderReviewDesc, style: const TextStyle(fontSize: 16), textAlign: TextAlign.center),
                 ],
               ),
             ),
@@ -447,16 +443,18 @@ class _ApprovedDashboardView extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           name ?? l10n.volunteer,
-                      style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
-                      overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 

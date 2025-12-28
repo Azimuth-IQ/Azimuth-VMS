@@ -4,6 +4,7 @@ import 'package:azimuth_vms/Helpers/SystemUserHelperFirebase.dart';
 import 'package:azimuth_vms/Models/VolunteerForm.dart';
 import 'package:azimuth_vms/Models/SystemUser.dart';
 import 'package:azimuth_vms/UI/Widgets/ArchiveDeleteWidget.dart';
+import 'package:azimuth_vms/l10n/app_localizations.dart';
 
 class FormMgmt extends StatefulWidget {
   const FormMgmt({super.key});
@@ -41,7 +42,7 @@ class _FormMgmtState extends State<FormMgmt> {
       print('Error loading forms: $e');
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error loading forms: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.errorLoadingForms(e.toString()))));
       }
     }
   }
@@ -102,7 +103,7 @@ class _FormMgmtState extends State<FormMgmt> {
       setState(() => _isLoading = false);
 
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Synced $updatedCount volunteer(s) with their forms'), backgroundColor: Colors.green));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.syncedVolunteersWithForms(updatedCount)), backgroundColor: Colors.green));
     } catch (e) {
       print('Error syncing volunteers: $e');
       setState(() => _isLoading = false);
@@ -116,7 +117,7 @@ class _FormMgmtState extends State<FormMgmt> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
-        title: const Text('Volunteer Forms Management'),
+        title: Text(AppLocalizations.of(context)!.volunteerFormsManagement),
         elevation: 0,
         actions: [IconButton(icon: const Icon(Icons.sync), tooltip: 'Sync Volunteers with Forms', onPressed: _syncVolunteersWithForms)],
       ),
@@ -125,7 +126,7 @@ class _FormMgmtState extends State<FormMgmt> {
           Navigator.pushNamed(context, '/admin-form-fill').then((_) => _loadForms());
         },
         icon: const Icon(Icons.add),
-        label: const Text('New Form'),
+        label: Text(AppLocalizations.of(context)!.newForm),
         backgroundColor: Colors.blue.shade600,
       ),
       body: Column(
@@ -163,7 +164,7 @@ class _FormMgmtState extends State<FormMgmt> {
                   children: [
                     const Icon(Icons.filter_list, color: Colors.grey),
                     const SizedBox(width: 8),
-                    const Text('Filter by status:', style: TextStyle(fontWeight: FontWeight.w500)),
+                    Text(AppLocalizations.of(context)!.filterByStatus, style: const TextStyle(fontWeight: FontWeight.w500)),
                     const SizedBox(width: 12),
                     Expanded(
                       child: DropdownButtonFormField<VolunteerFormStatus?>(
@@ -178,7 +179,7 @@ class _FormMgmtState extends State<FormMgmt> {
                           fillColor: Colors.grey.shade50,
                         ),
                         items: [
-                          const DropdownMenuItem(value: null, child: Text('All Statuses')),
+                          DropdownMenuItem(value: null, child: Text(AppLocalizations.of(context)!.allStatuses)),
                           ...VolunteerFormStatus.values.map((status) {
                             return DropdownMenuItem(value: status, child: Text(_getStatusLabel(status)));
                           }),
@@ -221,7 +222,7 @@ class _FormMgmtState extends State<FormMgmt> {
                           style: TextStyle(fontSize: 18, color: Colors.grey.shade600),
                         ),
                         const SizedBox(height: 8),
-                        Text('Create a new form to get started', style: TextStyle(color: Colors.grey.shade500)),
+                        Text(AppLocalizations.of(context)!.createNewFormToGetStarted, style: TextStyle(color: Colors.grey.shade500)),
                       ],
                     ),
                   )
@@ -357,7 +358,7 @@ class _FormMgmtState extends State<FormMgmt> {
                 children: [
                   const Icon(Icons.assignment_turned_in, size: 16, color: Colors.grey),
                   const SizedBox(width: 8),
-                  const Text('Documents:', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
+                  Text(AppLocalizations.of(context)!.documentsColon, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Wrap(
@@ -381,7 +382,7 @@ class _FormMgmtState extends State<FormMgmt> {
                   if (form.formNumber != null) ...[
                     Icon(Icons.numbers, size: 14, color: Colors.grey.shade600),
                     const SizedBox(width: 4),
-                    Text('Form #${form.formNumber}', style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+                    Text(AppLocalizations.of(context)!.formNumber(form.formNumber ?? ''), style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
                     const SizedBox(width: 16),
                   ],
                   if (form.profession != null) ...[
@@ -497,18 +498,24 @@ class _FormMgmtState extends State<FormMgmt> {
           _userHelper.UpdateSystemUser(existingUser);
           print('SystemUser updated with form for: ${form.mobileNumber}');
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Status updated to ${_getStatusLabel(newStatus)}'), duration: const Duration(seconds: 2)));
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.statusUpdatedTo(_getStatusLabel(newStatus))), duration: const Duration(seconds: 2)));
           }
         }
       } catch (e) {
         print('Error creating SystemUser: $e');
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Status updated but error creating account: $e'), backgroundColor: Colors.orange));
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.statusUpdatedButErrorCreatingAccount(e.toString())), backgroundColor: Colors.orange));
         }
       }
     } else {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Status updated to ${_getStatusLabel(newStatus)}'), duration: const Duration(seconds: 2)));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.statusUpdatedTo(_getStatusLabel(newStatus))), duration: const Duration(seconds: 2)));
       }
     }
   }

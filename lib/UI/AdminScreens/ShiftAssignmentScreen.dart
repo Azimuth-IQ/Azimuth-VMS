@@ -2,6 +2,7 @@ import 'package:azimuth_vms/Models/VolunteerForm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+import '../../l10n/app_localizations.dart';
 import '../../Helpers/NotificationHelperFirebase.dart';
 import '../../Helpers/ShiftAssignmentHelperFirebase.dart';
 import '../../Models/Event.dart';
@@ -47,8 +48,9 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
   bool _isMainLocation = true; // Track if it's main location or sublocation
 
   void _assignVolunteersToLocation(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     if (_selectedEvent == null || _selectedShift == null || _selectedLocationId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select an event, shift, and location first')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.pleaseSelectEventShiftAndLocationFirst)));
       return;
     }
 
@@ -69,7 +71,8 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
     }
 
     if (volunteers.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No approved volunteers available')));
+      final l10n = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.noApprovedVolunteersAvailable)));
       return;
     }
 
@@ -140,8 +143,9 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
       }
 
       if (!context.mounted) return;
-      final locationMsg = sublocationId != null ? ' to sublocation' : '';
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Assigned ${volunteers.length} volunteers$locationMsg successfully')));
+      final l10n = AppLocalizations.of(context)!;
+      final message = sublocationId != null ? l10n.assignedVolunteersToSubLocation(volunteers.length) : l10n.assignedVolunteersSuccessfully(volunteers.length);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
       setState(() {
         _selectedLocationId = null;
         _isMainLocation = true;
@@ -149,15 +153,17 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
     } catch (e) {
       print('Error creating assignments: $e');
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      final l10n = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.errorCreatingAssignments(e.toString()))));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Shift Assignment'),
+        title: Text(l10n.shiftAssignment),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -211,7 +217,7 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Text('Select Event & Shift', style: Theme.of(context).textTheme.titleLarge),
+                  child: Text(AppLocalizations.of(context)!.selectEventAndShift, style: Theme.of(context).textTheme.titleLarge),
                 ),
                 const Divider(),
                 Expanded(child: _buildEventsList(context, provider)),
@@ -232,7 +238,7 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                       children: [
                         Icon(Icons.assignment, size: 64, color: Colors.grey[400]),
                         const SizedBox(height: 16),
-                        Text('Select an event and shift to assign volunteers', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                        Text(AppLocalizations.of(context)!.selectAnEventAndShiftToAssignVolunteers, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
                       ],
                     ),
                   )
@@ -343,9 +349,9 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
             children: [
               Text(_selectedEvent!.name, style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 8),
-              Text('Shift: ${_selectedShift!.startTime} - ${_selectedShift!.endTime}', style: Theme.of(context).textTheme.titleMedium),
+              Text('${AppLocalizations.of(context)!.shift}: ${_selectedShift!.startTime} - ${_selectedShift!.endTime}', style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 4),
-              Text('Date: ${_selectedEvent!.startDate}', style: TextStyle(color: Colors.grey[600])),
+              Text('${AppLocalizations.of(context)!.date}: ${_selectedEvent!.startDate}', style: TextStyle(color: Colors.grey[600])),
             ],
           ),
         ),
@@ -355,7 +361,7 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text('Select Location', style: Theme.of(context).textTheme.titleMedium),
+              Text(AppLocalizations.of(context)!.selectLocation, style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 12),
               Consumer<EventsProvider>(
                 builder: (context, provider, child) {
@@ -378,7 +384,7 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                           children: [
                             Icon(isMain ? Icons.location_on : Icons.subdirectory_arrow_right, size: 18, color: isMain ? Colors.blue : Colors.green),
                             const SizedBox(width: 8),
-                            Text(isMain ? '$name (Main)' : name),
+                            Text(isMain ? '$name ${AppLocalizations.of(context)!.mainSuffix}' : name),
                           ],
                         ),
                       ),
@@ -417,12 +423,12 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
 
                   return DropdownButtonFormField<String>(
                     value: validSelectedLocationId,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      labelText: 'Choose location to assign volunteers',
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      labelText: AppLocalizations.of(context)!.chooseLocationToAssignVolunteers,
                     ),
-                    hint: const Text('Select a location'),
+                    hint: Text(AppLocalizations.of(context)!.selectALocation),
                     items: locationItems,
                     onChanged: (value) {
                       setState(() {
@@ -437,7 +443,7 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
               ElevatedButton.icon(
                 onPressed: _selectedLocationId == null ? null : () => _assignVolunteersToLocation(context),
                 icon: const Icon(Icons.person_add),
-                label: const Text('Assign Volunteers to Location'),
+                label: Text(AppLocalizations.of(context)!.assignVolunteersToLocation),
                 style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16), disabledBackgroundColor: Colors.grey[300]),
               ),
             ],
@@ -457,8 +463,8 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Current Assignments', style: Theme.of(context).textTheme.titleMedium),
-                        if (assignments.isNotEmpty) Chip(label: Text('${assignments.length} assigned'), backgroundColor: Colors.green.shade100),
+                        Text(AppLocalizations.of(context)!.currentAssignments, style: Theme.of(context).textTheme.titleMedium),
+                        if (assignments.isNotEmpty) Chip(label: Text('${assignments.length} ${AppLocalizations.of(context)!.assigned}'), backgroundColor: Colors.green.shade100),
                       ],
                     ),
                     const SizedBox(height: 16),
@@ -471,11 +477,11 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                                   Icon(Icons.info_outline, size: 48, color: Colors.grey[400]),
                                   const SizedBox(height: 8),
                                   Text(
-                                    'No volunteers assigned yet',
+                                    AppLocalizations.of(context)!.noVolunteersAssignedYet,
                                     style: TextStyle(color: Colors.grey[600], fontStyle: FontStyle.italic),
                                   ),
                                   const SizedBox(height: 4),
-                                  Text('Team leaders should assign first', style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+                                  Text(AppLocalizations.of(context)!.teamLeadersShouldAssignFirst, style: TextStyle(fontSize: 12, color: Colors.grey[500])),
                                 ],
                               ),
                             )
@@ -486,10 +492,10 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                                 final volunteer = provider.systemUsers.where((u) => u.phone == assignment.volunteerId).firstOrNull;
 
                                 // Get location name
-                                String locationName = 'Main Location';
+                                String locationName = AppLocalizations.of(context)!.mainLocation;
                                 if (assignment.sublocationId != null) {
                                   final subLoc = provider.locations.expand((loc) => loc.subLocations ?? []).where((sl) => sl.id == assignment.sublocationId).firstOrNull;
-                                  locationName = subLoc?.name ?? 'Unknown Sublocation';
+                                  locationName = subLoc?.name ?? AppLocalizations.of(context)!.unknownSubLocation;
                                 }
 
                                 // Determine who assigned
@@ -512,7 +518,7 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                                             Icon(isTeamLeader ? Icons.badge : Icons.admin_panel_settings, size: 12, color: isTeamLeader ? Colors.blue : Colors.purple),
                                             const SizedBox(width: 4),
                                             Text(
-                                              'By: ${assignedByUser?.name ?? assignment.assignedBy}',
+                                              '${AppLocalizations.of(context)!.by} ${assignedByUser?.name ?? assignment.assignedBy}',
                                               style: TextStyle(fontSize: 11, color: isTeamLeader ? Colors.blue : Colors.purple, fontWeight: FontWeight.w500),
                                             ),
                                           ],
@@ -575,10 +581,10 @@ class __VolunteerSelectionDialogState extends State<_VolunteerSelectionDialog> {
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  Text('Select Volunteers', style: Theme.of(context).textTheme.titleLarge),
+                  Text(AppLocalizations.of(context)!.selectVolunteers, style: Theme.of(context).textTheme.titleLarge),
                   const SizedBox(height: 16),
                   TextField(
-                    decoration: const InputDecoration(labelText: 'Search', prefixIcon: Icon(Icons.search), border: OutlineInputBorder()),
+                    decoration: InputDecoration(labelText: AppLocalizations.of(context)!.search, prefixIcon: const Icon(Icons.search), border: const OutlineInputBorder()),
                     onChanged: (value) {
                       setState(() {
                         _searchQuery = value;
@@ -620,10 +626,10 @@ class __VolunteerSelectionDialogState extends State<_VolunteerSelectionDialog> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Selected: ${_selectedIds.length}'),
+                  Text(AppLocalizations.of(context)!.selectedCount(_selectedIds.length)),
                   Row(
                     children: [
-                      TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+                      TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.cancel)),
                       const SizedBox(width: 8),
                       ElevatedButton(
                         onPressed: _selectedIds.isEmpty
@@ -632,7 +638,7 @@ class __VolunteerSelectionDialogState extends State<_VolunteerSelectionDialog> {
                                 final selected = widget.volunteers.where((v) => _selectedIds.contains(v.phone)).toList();
                                 Navigator.of(context).pop(selected);
                               },
-                        child: const Text('Assign'),
+                        child: Text(AppLocalizations.of(context)!.assign),
                       ),
                     ],
                   ),

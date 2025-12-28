@@ -92,7 +92,12 @@ class _EventsMgmtViewState extends State<EventsMgmtView> {
                     ShowArchivedToggle(showArchived: _showArchived, onChanged: (value) => setState(() => _showArchived = value), archivedCount: provider.archivedEvents.length),
                     Expanded(
                       child: displayEvents.isEmpty
-                          ? Center(child: Text(_showArchived ? AppLocalizations.of(context)!.noArchivedEvents : AppLocalizations.of(context)!.noActiveEventsFound, textAlign: TextAlign.center))
+                          ? Center(
+                              child: Text(
+                                _showArchived ? AppLocalizations.of(context)!.noArchivedEvents : AppLocalizations.of(context)!.noActiveEventsFound,
+                                textAlign: TextAlign.center,
+                              ),
+                            )
                           : ListView.builder(
                               itemCount: displayEvents.length,
                               itemBuilder: (context, index) {
@@ -196,7 +201,8 @@ class EventTile extends StatelessWidget {
                   Text('${l10n.shifts}:', style: const TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
                   ...event.shifts.map(
-                    (shift) => Padding(padding: const EdgeInsets.only(left: 16, top: 4), child: Text('${shift.startTime} - ${shift.endTime} (${l10n.location}: ${shift.locationId})')),
+                    (shift) =>
+                        Padding(padding: const EdgeInsets.only(left: 16, top: 4), child: Text('${shift.startTime} - ${shift.endTime} (${l10n.location}: ${shift.locationId})')),
                   ),
                 ] else
                   Padding(
@@ -717,7 +723,7 @@ class ShiftFormDialog extends StatelessWidget {
                                 ),
                                 if (selectedTempTeam!.memberIds.isNotEmpty) ...[
                                   const SizedBox(height: 8),
-                                  const Text('Members:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
+                                  Text(AppLocalizations.of(context)!.membersColonBold, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
                                   ...selectedTempTeam!.memberIds.map((memberId) {
                                     final memberName = eventsProvider.volunteers.where((u) => u.phone == memberId).firstOrNull?.name ?? memberId;
                                     return Padding(
@@ -810,7 +816,7 @@ class ShiftFormDialog extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Temporary Team', style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(AppLocalizations.of(context)!.temporaryTeam, style: const TextStyle(fontWeight: FontWeight.bold)),
                 if (provider.tempTeam == null)
                   ElevatedButton.icon(
                     onPressed: () async {
@@ -818,7 +824,7 @@ class ShiftFormDialog extends StatelessWidget {
                       if (result != null) provider.updateTempTeam(result);
                     },
                     icon: const Icon(Icons.add),
-                    label: const Text('Create Team'),
+                    label: Text(AppLocalizations.of(context)!.createTeam),
                   )
                 else
                   Row(
@@ -842,12 +848,14 @@ class ShiftFormDialog extends StatelessWidget {
                 children: [
                   const Icon(Icons.person, size: 16),
                   const SizedBox(width: 8),
-                  Text('Leader: ${eventsProvider.teamLeaders.where((u) => u.phone == provider.tempTeam!.teamLeaderId).firstOrNull?.name ?? provider.tempTeam!.teamLeaderId}'),
+                  Text(
+                    '${AppLocalizations.of(context)!.leaderColon2} ${eventsProvider.teamLeaders.where((u) => u.phone == provider.tempTeam!.teamLeaderId).firstOrNull?.name ?? provider.tempTeam!.teamLeaderId}',
+                  ),
                 ],
               ),
               if (provider.tempTeam!.memberIds.isNotEmpty) ...[
                 const SizedBox(height: 8),
-                const Text('Members:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                Text(AppLocalizations.of(context)!.membersColonBold, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
                 ...provider.tempTeam!.memberIds.map((memberId) {
                   String memberName = eventsProvider.volunteers.where((u) => u.phone == memberId).firstOrNull?.name ?? memberId;
                   return Padding(
@@ -892,7 +900,7 @@ class ShiftFormDialog extends StatelessWidget {
       builder: (context) => StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
-            title: const Text('Create Temporary Team'),
+            title: Text(AppLocalizations.of(context)!.createTeam),
             content: SizedBox(
               width: double.maxFinite,
               child: SingleChildScrollView(
@@ -915,7 +923,7 @@ class ShiftFormDialog extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Team Members', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(AppLocalizations.of(context)!.teamMembers, style: const TextStyle(fontWeight: FontWeight.bold)),
                         TextButton.icon(
                           onPressed: () async {
                             final memberId = await _selectMember(context, eventsProvider, selectedMemberIds);
@@ -924,7 +932,7 @@ class ShiftFormDialog extends StatelessWidget {
                             }
                           },
                           icon: const Icon(Icons.add),
-                          label: const Text('Add'),
+                          label: Text(AppLocalizations.of(context)!.add),
                         ),
                       ],
                     ),
@@ -954,12 +962,12 @@ class ShiftFormDialog extends StatelessWidget {
               ),
             ),
             actions: [
-              TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+              TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.cancel)),
               ElevatedButton(
                 onPressed: () {
                   if (selectedLeaderId.isEmpty) {
                     print('Error creating temp team: No leader selected');
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select a team leader')));
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.pleaseSelectTeamLeader)));
                     return;
                   }
 
@@ -967,7 +975,7 @@ class ShiftFormDialog extends StatelessWidget {
 
                   Navigator.of(context).pop(tempTeam);
                 },
-                child: const Text('Save'),
+                child: Text(AppLocalizations.of(context)!.save),
               ),
             ],
           );
@@ -982,7 +990,7 @@ class ShiftFormDialog extends StatelessWidget {
     return await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Select Team Member'),
+        title: Text(AppLocalizations.of(context)!.selectTeamMember),
         content: SizedBox(
           width: double.maxFinite,
           child: ListView.builder(
@@ -998,8 +1006,8 @@ class ShiftFormDialog extends StatelessWidget {
                 title: Text(volunteer.name, style: TextStyle(color: isAlreadyAdded ? Colors.grey : null)),
                 subtitle: Text(volunteer.phone, style: TextStyle(color: isAlreadyAdded ? Colors.grey : null)),
                 trailing: isAlreadyAdded
-                    ? const Chip(
-                        label: Text('Added', style: TextStyle(fontSize: 10)),
+                    ? Chip(
+                        label: Text(AppLocalizations.of(context)!.added, style: TextStyle(fontSize: 10)),
                         padding: EdgeInsets.symmetric(horizontal: 4),
                       )
                     : null,
@@ -1008,7 +1016,7 @@ class ShiftFormDialog extends StatelessWidget {
             },
           ),
         ),
-        actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel'))],
+        actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.cancel))],
       ),
     );
   }
@@ -1133,11 +1141,11 @@ class ShiftFormDialog extends StatelessWidget {
                             const SizedBox(height: 16),
                             Row(
                               children: [
-                                Expanded(child: Text('Team Assignment', style: Theme.of(context).textTheme.titleMedium)),
+                                Expanded(child: Text(AppLocalizations.of(context)!.teamAssignment, style: Theme.of(context).textTheme.titleMedium)),
                                 SegmentedButton<bool>(
-                                  segments: const [
-                                    ButtonSegment<bool>(value: true, label: Text('Existing'), icon: Icon(Icons.groups, size: 16)),
-                                    ButtonSegment<bool>(value: false, label: Text('Temporary'), icon: Icon(Icons.person_add, size: 16)),
+                                  segments: [
+                                    ButtonSegment<bool>(value: true, label: Text(AppLocalizations.of(context)!.existing), icon: const Icon(Icons.groups, size: 16)),
+                                    ButtonSegment<bool>(value: false, label: Text(AppLocalizations.of(context)!.temporary), icon: const Icon(Icons.person_add, size: 16)),
                                   ],
                                   selected: {provider.useExistingTeam},
                                   onSelectionChanged: (Set<bool> selection) {
@@ -1165,7 +1173,7 @@ class ShiftFormDialog extends StatelessWidget {
                                   }
                                   print('✓ ${eventsProvider.teams.length} teams available');
                                   List<DropdownMenuItem<String>> teamItems = [
-                                    const DropdownMenuItem<String>(value: null, child: Text('None')),
+                                    DropdownMenuItem<String>(value: null, child: Text(AppLocalizations.of(context)!.none)),
                                     ...eventsProvider.teams.map((team) {
                                       return DropdownMenuItem<String>(value: team.id, child: Text(team.name));
                                     }),
@@ -1192,13 +1200,13 @@ class ShiftFormDialog extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('SubLocations', style: Theme.of(context).textTheme.titleMedium),
+                                Text(AppLocalizations.of(context)!.subLocations, style: Theme.of(context).textTheme.titleMedium),
                                 TextButton.icon(
                                   onPressed: selectedLocation != null && selectedLocation.subLocations != null && selectedLocation.subLocations!.isNotEmpty
                                       ? () => _showSubLocationForm(context, selectedLocation)
                                       : null,
                                   icon: const Icon(Icons.add),
-                                  label: const Text('Add SubLocation'),
+                                  label: Text(AppLocalizations.of(context)!.addSubLocation),
                                 ),
                               ],
                             ),
@@ -1224,7 +1232,7 @@ class ShiftFormDialog extends StatelessWidget {
                                   child: ListTile(
                                     leading: const Icon(Icons.place),
                                     title: Text(subLocationName),
-                                    subtitle: teamName != null ? Text('Team: $teamName') : null,
+                                    subtitle: teamName != null ? Text(AppLocalizations.of(context)!.teamColon(teamName)) : null,
                                     trailing: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
@@ -1249,9 +1257,9 @@ class ShiftFormDialog extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+                      TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.cancel)),
                       const SizedBox(width: 8),
-                      ElevatedButton(onPressed: () => _save(context, formKey), child: const Text('Save')),
+                      ElevatedButton(onPressed: () => _save(context, formKey), child: Text(AppLocalizations.of(context)!.save)),
                     ],
                   ),
                 ),

@@ -82,17 +82,19 @@ class VolunteerRatingProvider with ChangeNotifier {
 
   // Start listening to volunteers with ratings
   void startListeningToVolunteers() {
+    print('📡 VolunteerRatingProvider: Starting to listen to volunteers...');
     _volunteersLoading = true;
     notifyListeners();
 
     _volunteersSubscription = VolunteerRatingHelperFirebase.StreamVolunteersWithRatings().listen(
       (data) {
+        print('📡 VolunteerRatingProvider: Received data with ${data.length} volunteers');
         _volunteersWithRatings = data;
         _volunteersLoading = false;
         notifyListeners();
       },
       onError: (error) {
-        print('Error streaming volunteers with ratings: $error');
+        print('❌ VolunteerRatingProvider: Error streaming volunteers with ratings: $error');
         _volunteersLoading = false;
         notifyListeners();
       },

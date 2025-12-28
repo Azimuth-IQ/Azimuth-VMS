@@ -6,6 +6,7 @@ import '../../Models/LeaveRequest.dart';
 import '../../Models/ShiftAssignment.dart';
 import '../../Helpers/LeaveRequestHelperFirebase.dart';
 import '../../Helpers/NotificationHelperFirebase.dart';
+import '../../l10n/app_localizations.dart';
 
 class LeaveRequestScreen extends StatefulWidget {
   final Event event;
@@ -36,7 +37,9 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
 
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('User not authenticated')));
+      if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.userNotAuthenticated)));
       return;
     }
 
@@ -75,13 +78,15 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
       }
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Leave request submitted successfully'), backgroundColor: Colors.green));
+        final l10n = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.leaveRequestSubmittedSuccessfully), backgroundColor: Colors.green));
         Navigator.of(context).pop(true);
       }
     } catch (e) {
       print('Error submitting leave request: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+        final l10n = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.errorOccurred(e.toString()))));
       }
     } finally {
       if (mounted) {
@@ -94,8 +99,9 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Request Leave')),
+      appBar: AppBar(title: Text(l10n.requestLeave)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -119,9 +125,9 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
                       ],
                     ),
                     const Divider(height: 24),
-                    _buildInfoRow('Date', widget.event.startDate),
+                    _buildInfoRow(l10n.dateLabel, widget.event.startDate),
                     const SizedBox(height: 8),
-                    _buildInfoRow('Shift Time', '${widget.shift.startTime} - ${widget.shift.endTime}'),
+                    _buildInfoRow(l10n.shiftTimeLabel, '${widget.shift.startTime} - ${widget.shift.endTime}'),
                   ],
                 ),
               ),
@@ -135,23 +141,20 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Reason for Leave Request', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  Text(l10n.reasonForLeaveRequest, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
-                  const Text(
-                    'Please provide a detailed reason for your leave request. This will help your team leader make an informed decision.',
-                    style: TextStyle(color: Colors.grey, fontSize: 12),
-                  ),
+                  Text(l10n.provideDetailedReasonForLeave, style: const TextStyle(color: Colors.grey, fontSize: 12)),
                   const SizedBox(height: 12),
                   TextFormField(
                     controller: _reasonController,
                     maxLines: 5,
-                    decoration: const InputDecoration(hintText: 'Enter your reason here...', border: OutlineInputBorder(), filled: true),
+                    decoration: InputDecoration(hintText: l10n.enterYourReasonHere, border: const OutlineInputBorder(), filled: true),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Please provide a reason';
+                        return l10n.pleaseProvideAReason;
                       }
                       if (value.trim().length < 10) {
-                        return 'Please provide a more detailed reason (at least 10 characters)';
+                        return l10n.pleaseProvideMoreDetailedReason;
                       }
                       return null;
                     },
@@ -171,10 +174,7 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
                         Icon(Icons.info_outline, color: Colors.orange.shade700),
                         const SizedBox(width: 12),
                         Expanded(
-                          child: Text(
-                            'Your team leader will review this request. You will be notified of their decision.',
-                            style: TextStyle(color: Colors.orange.shade900, fontSize: 12),
-                          ),
+                          child: Text(l10n.teamLeaderWillReviewRequest, style: TextStyle(color: Colors.orange.shade900, fontSize: 12)),
                         ),
                       ],
                     ),
@@ -189,7 +189,7 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
                     child: ElevatedButton.icon(
                       onPressed: _isSubmitting ? null : _submitLeaveRequest,
                       icon: _isSubmitting ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)) : const Icon(Icons.send),
-                      label: Text(_isSubmitting ? 'Submitting...' : 'Submit Request'),
+                      label: Text(_isSubmitting ? l10n.submitting : l10n.submitRequest),
                       style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white),
                     ),
                   ),

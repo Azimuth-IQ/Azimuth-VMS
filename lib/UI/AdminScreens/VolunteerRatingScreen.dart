@@ -5,8 +5,33 @@ import 'package:azimuth_vms/Providers/VolunteerRatingProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class VolunteerRatingScreen extends StatelessWidget {
+class VolunteerRatingScreen extends StatefulWidget {
   const VolunteerRatingScreen({super.key});
+
+  @override
+  State<VolunteerRatingScreen> createState() => _VolunteerRatingScreenState();
+}
+
+class _VolunteerRatingScreenState extends State<VolunteerRatingScreen> {
+  VolunteerRatingProvider? _provider;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Save provider reference for use in dispose
+    if (_provider == null) {
+      _provider = context.read<VolunteerRatingProvider>();
+      _provider!.startListeningToVolunteers();
+      _provider!.loadRatingCriteria();
+    }
+  }
+
+  @override
+  void dispose() {
+    // Stop listening when screen is disposed
+    _provider?.stopListeningToVolunteers();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

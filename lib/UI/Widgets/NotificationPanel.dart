@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../../Models/Notification.dart';
 import '../../Providers/NotificationsProvider.dart';
+import 'package:azimuth_vms/l10n/app_localizations.dart';
 
 class NotificationPanel extends StatelessWidget {
   const NotificationPanel({super.key});
@@ -11,7 +12,7 @@ class NotificationPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notifications'),
+        title: Text(AppLocalizations.of(context)!.notifications),
         elevation: 0,
         actions: [
           Consumer<NotificationsProvider>(
@@ -20,7 +21,7 @@ class NotificationPanel extends StatelessWidget {
                 return TextButton.icon(
                   onPressed: () => provider.markAllAsRead(),
                   icon: const Icon(Icons.done_all, color: Colors.white),
-                  label: const Text('Mark all read', style: TextStyle(color: Colors.white)),
+                  label: Text(AppLocalizations.of(context)!.markAllRead, style: const TextStyle(color: Colors.white)),
                 );
               }
               return const SizedBox.shrink();
@@ -42,11 +43,11 @@ class NotificationPanel extends StatelessWidget {
                 children: [
                   Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
                   const SizedBox(height: 16),
-                  Text('Error loading notifications', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                  Text(AppLocalizations.of(context)!.errorLoadingNotifications, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
                   const SizedBox(height: 8),
                   Text(provider.errorMessage!, style: TextStyle(fontSize: 14, color: Colors.grey[500])),
                   const SizedBox(height: 24),
-                  ElevatedButton.icon(onPressed: () => provider.refresh(), icon: const Icon(Icons.refresh), label: const Text('Retry')),
+                  ElevatedButton.icon(onPressed: () => provider.refresh(), icon: const Icon(Icons.refresh), label: Text(AppLocalizations.of(context)!.retry)),
                 ],
               ),
             );
@@ -59,9 +60,9 @@ class NotificationPanel extends StatelessWidget {
                 children: [
                   Icon(Icons.notifications_none, size: 64, color: Colors.grey[400]),
                   const SizedBox(height: 16),
-                  Text('No notifications yet', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                  Text(AppLocalizations.of(context)!.noNotificationsYet, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
                   const SizedBox(height: 8),
-                  Text('You\'ll see notifications here when you get them', style: TextStyle(fontSize: 14, color: Colors.grey[500])),
+                  Text(AppLocalizations.of(context)!.notificationsWillAppearHere, style: TextStyle(fontSize: 14, color: Colors.grey[500])),
                 ],
               ),
             );
@@ -101,7 +102,7 @@ class _NotificationCard extends StatelessWidget {
       direction: DismissDirection.endToStart,
       onDismissed: (_) {
         provider.deleteNotification(notification.id);
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Notification deleted'), duration: Duration(seconds: 2)));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.notificationDeleted), duration: const Duration(seconds: 2)));
       },
       child: Card(
         elevation: notification.isRead ? 0 : 2,
