@@ -1329,5 +1329,36 @@
       }
     }
   },
-  "shareYourThoughts": "Share your thoughts, suggestions, or any issues you experienced..."
+  "shareYourThoughts": "Share your thoughts, suggestions, or any issues you experienced...",
+  
+  "mySchedule": "My Schedule",
+  "errorLoadingSchedule": "Error loading schedule: {error}",
+  "@errorLoadingSchedule": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "selectDayToViewAssignments": "Select a day to view assignments",
+  "noShiftsOn": "No shifts on {date}",
+  "@noShiftsOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "locationId": "Location ID: {id}",
+  "@locationId": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "myProfile": "My Profile",
+  "unknownName": "Unknown Name",
+  "noPhone": "No Phone"
 }

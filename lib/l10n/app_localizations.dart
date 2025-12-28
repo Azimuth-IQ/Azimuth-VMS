@@ -3709,6 +3709,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Share your thoughts, suggestions, or any issues you experienced...'**
   String get shareYourThoughts;
+
+  /// No description provided for @mySchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'My Schedule'**
+  String get mySchedule;
+
+  /// No description provided for @errorLoadingSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading schedule: {error}'**
+  String errorLoadingSchedule(String error);
+
+  /// No description provided for @selectDayToViewAssignments.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a day to view assignments'**
+  String get selectDayToViewAssignments;
+
+  /// No description provided for @noShiftsOn.
+  ///
+  /// In en, this message translates to:
+  /// **'No shifts on {date}'**
+  String noShiftsOn(String date);
+
+  /// No description provided for @locationId.
+  ///
+  /// In en, this message translates to:
+  /// **'Location ID: {id}'**
+  String locationId(String id);
 }
 
 class _AppLocalizationsDelegate

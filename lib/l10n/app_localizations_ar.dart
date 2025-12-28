@@ -1986,4 +1986,25 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get shareYourThoughts =>
       'شارك أفكارك أو اقتراحاتك أو أي مشاكل واجهتها...';
+
+  @override
+  String get mySchedule => 'جدولي';
+
+  @override
+  String errorLoadingSchedule(String error) {
+    return 'خطأ في تحميل الجدول: $error';
+  }
+
+  @override
+  String get selectDayToViewAssignments => 'اختر يوماً لعرض التكليفات';
+
+  @override
+  String noShiftsOn(String date) {
+    return 'لا توجد مناوبات في $date';
+  }
+
+  @override
+  String locationId(String id) {
+    return 'معرف الموقع: $id';
+  }
 }

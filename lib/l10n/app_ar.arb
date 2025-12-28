@@ -749,5 +749,15 @@
   "eventManagement": "إدارة الفعالية",
   "howWellWasEventManaged": "كيف كانت إدارة الفعالية بشكل عام؟",
   "averageRating": "المتوسط التقييمي: {rating} / 5",
-  "shareYourThoughts": "شارك أفكارك أو اقتراحاتك أو أي مشاكل واجهتها..."
+  "shareYourThoughts": "شارك أفكارك أو اقتراحاتك أو أي مشاكل واجهتها...",
+  
+  "mySchedule": "جدولي",
+  "errorLoadingSchedule": "خطأ في تحميل الجدول: {error}",
+  "selectDayToViewAssignments": "اختر يوماً لعرض التكليفات",
+  "noShiftsOn": "لا توجد مناوبات في {date}",
+  "locationId": "معرف الموقع: {id}",
+  
+  "myProfile": "ملفي الشخصي",
+  "unknownName": "اسم غير معروف",
+  "noPhone": "لا يوجد هاتف"
 }

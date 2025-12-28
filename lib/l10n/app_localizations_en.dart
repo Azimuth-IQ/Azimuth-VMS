@@ -2003,4 +2003,25 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get shareYourThoughts =>
       'Share your thoughts, suggestions, or any issues you experienced...';
+
+  @override
+  String get mySchedule => 'My Schedule';
+
+  @override
+  String errorLoadingSchedule(String error) {
+    return 'Error loading schedule: $error';
+  }
+
+  @override
+  String get selectDayToViewAssignments => 'Select a day to view assignments';
+
+  @override
+  String noShiftsOn(String date) {
+    return 'No shifts on $date';
+  }
+
+  @override
+  String locationId(String id) {
+    return 'Location ID: $id';
+  }
 }

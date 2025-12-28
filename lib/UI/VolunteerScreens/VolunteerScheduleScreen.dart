@@ -5,6 +5,7 @@ import '../../Helpers/ShiftAssignmentHelperFirebase.dart';
 import '../../Helpers/EventHelperFirebase.dart';
 import '../../Models/ShiftAssignment.dart';
 import '../../Models/Event.dart';
+import '../../l10n/app_localizations.dart';
 
 class VolunteerScheduleScreen extends StatefulWidget {
   final String volunteerPhone;
@@ -62,7 +63,8 @@ class _VolunteerScheduleScreenState extends State<VolunteerScheduleScreen> {
     } catch (e) {
       print('❌ Error loading assignments: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error loading schedule: $e')));
+        final l10n = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.errorLoadingSchedule(e.toString()))));
       }
       setState(() => _isLoading = false);
     }
@@ -127,11 +129,12 @@ class _VolunteerScheduleScreenState extends State<VolunteerScheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Schedule'),
+        title: Text(l10n.mySchedule),
         elevation: 0,
-        actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _loadAssignments, tooltip: 'Refresh')],
+        actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _loadAssignments, tooltip: l10n.refresh)],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -182,8 +185,9 @@ class _VolunteerScheduleScreenState extends State<VolunteerScheduleScreen> {
   }
 
   Widget _buildAssignmentsList() {
+    final l10n = AppLocalizations.of(context)!;
     if (_selectedDay == null) {
-      return const Center(child: Text('Select a day to view assignments'));
+      return Center(child: Text(l10n.selectDayToViewAssignments));
     }
 
     final assignments = _getAssignmentsForDay(_selectedDay!);
@@ -195,7 +199,7 @@ class _VolunteerScheduleScreenState extends State<VolunteerScheduleScreen> {
           children: [
             Icon(Icons.event_busy, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text('No shifts on ${DateFormat('MMM d, y').format(_selectedDay!)}', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+            Text(l10n.noShiftsOn(DateFormat('MMM d, y').format(_selectedDay!)), style: TextStyle(fontSize: 16, color: Colors.grey[600])),
           ],
         ),
       );
@@ -205,6 +209,7 @@ class _VolunteerScheduleScreenState extends State<VolunteerScheduleScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       itemCount: assignments.length,
       itemBuilder: (context, index) {
+        final l10n = AppLocalizations.of(context)!;
         final assignment = assignments[index];
         final event = _eventCache[assignment.eventId];
         final shift = _getShiftForAssignment(assignment);
@@ -257,7 +262,7 @@ class _VolunteerScheduleScreenState extends State<VolunteerScheduleScreen> {
                         Icon(Icons.location_on, color: Colors.grey[600], size: 16),
                         const SizedBox(width: 8),
                         Expanded(
-                          child: Text('Location ID: ${shift.locationId}', style: TextStyle(fontSize: 14, color: Colors.grey[700])),
+                          child: Text(l10n.locationId(shift.locationId), style: TextStyle(fontSize: 14, color: Colors.grey[700])),
                         ),
                       ],
                     ),

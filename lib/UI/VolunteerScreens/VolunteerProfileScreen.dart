@@ -3,6 +3,7 @@ import 'package:azimuth_vms/Models/VolunteerForm.dart';
 import 'package:azimuth_vms/Providers/VolunteerRatingProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../l10n/app_localizations.dart';
 
 class VolunteerProfileScreen extends StatelessWidget {
   final VolunteerForm form;
@@ -12,8 +13,9 @@ class VolunteerProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('My Profile'), backgroundColor: Theme.of(context).colorScheme.inversePrimary),
+      appBar: AppBar(title: Text(l10n.myProfile), backgroundColor: Theme.of(context).colorScheme.inversePrimary),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,6 +33,7 @@ class VolunteerProfileScreen extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Stack(
       alignment: Alignment.center,
       clipBehavior: Clip.none,
@@ -60,7 +63,7 @@ class VolunteerProfileScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                form.fullName ?? 'Unknown Name',
+                form.fullName ?? l10n.unknownName,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
@@ -69,7 +72,7 @@ class VolunteerProfileScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(color: Colors.grey.shade200, borderRadius: BorderRadius.circular(20)),
                 child: Text(
-                  form.mobileNumber ?? 'No Phone',
+                  form.mobileNumber ?? l10n.noPhone,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[800], fontWeight: FontWeight.w500),
                 ),
               ),
