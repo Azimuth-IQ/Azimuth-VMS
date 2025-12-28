@@ -12,11 +12,11 @@ This guide provides a streamlined approach to implementing a unified 3-theme des
 
 ### The 3 Themes
 
-| Theme | Color Scheme | Style | Platform Focus |
-|-------|--------------|-------|----------------|
-| **Theme 1** | Red/Dark | Authority & Urgency | Desktop + Mobile |
-| **Theme 2** | Green/Light | Growth & Community | Desktop + Mobile |
-| **Theme 3** | Gold/Dark | Warmth & Leadership | Desktop + Mobile |
+| Theme       | Color Scheme | Style               | Platform Focus   |
+| ----------- | ------------ | ------------------- | ---------------- |
+| **Theme 1** | Red/Dark     | Authority & Urgency | Desktop + Mobile |
+| **Theme 2** | Green/Light  | Growth & Community  | Desktop + Mobile |
+| **Theme 3** | Gold/Dark    | Warmth & Leadership | Desktop + Mobile |
 
 **Key Feature:** Admins can select which theme the entire platform uses via Theme Settings screen.
 
@@ -37,6 +37,7 @@ feature/theme-system-implementation
 ### Before Starting
 
 1. **Create checkpoint on main:**
+
    ```bash
    git checkout main
    git add .
@@ -46,6 +47,7 @@ feature/theme-system-implementation
    ```
 
 2. **Create feature branch:**
+
    ```bash
    git checkout -b feature/theme-system-implementation
    git push -u origin feature/theme-system-implementation
@@ -60,6 +62,7 @@ feature/theme-system-implementation
 ### During Implementation
 
 **Commit after each phase:**
+
 ```bash
 git add .
 git commit -m "Phase X: [Description of completed work]"
@@ -83,6 +86,7 @@ git push -f origin feature/theme-system-implementation
 **Goal:** Create theme system foundation
 
 **Files to Create:**
+
 - `lib/UI/Theme/Theme1.dart` - Admin (Red/Dark)
 - `lib/UI/Theme/Theme2.dart` - Volunteer (Green/Light)
 - `lib/UI/Theme/Theme3.dart` - Team Leader (Gold/Dark)
@@ -91,10 +95,12 @@ git push -f origin feature/theme-system-implementation
 - `lib/UI/Theme/Shadows.dart` - Elevation helpers
 
 **Files to Update:**
+
 - `pubspec.yaml` - Add font definitions
 - `lib/main.dart` - Integrate ThemeProvider
 
 **Checklist:**
+
 - [ ] All theme files created with explicit types
 - [ ] Color palettes match REDESIGN.md specifications
 - [ ] All color variables have purpose comments
@@ -113,25 +119,30 @@ git push -f origin feature/theme-system-implementation
 **Components to Create:**
 
 **Buttons** (`lib/UI/Widgets/Buttons/`)
+
 - `PrimaryButton.dart`
 - `SecondaryButton.dart`
 - `ThemedIconButton.dart`
 - `ThemedFAB.dart`
 
 **Forms** (`lib/UI/Widgets/Forms/`)
+
 - `ThemedTextField.dart`
 - `ThemedDropdown.dart`
 - `RatingSelector.dart`
 
 **Status** (`lib/UI/Widgets/Badges/`)
+
 - `StatusBadge.dart`
 - `NotificationBadge.dart`
 
 **Cards** (`lib/UI/Widgets/Cards/`)
+
 - `MetricCard.dart`
 - `EventCard.dart`
 
 **Checklist:**
+
 - [ ] All components use explicit types (no var/dynamic)
 - [ ] Components use `Theme.of(context)` for colors
 - [ ] All components are StatelessWidget (except controllers)
@@ -149,14 +160,17 @@ git push -f origin feature/theme-system-implementation
 **Solution:**
 
 **Desktop Admin (≥1024px width):**
+
 - Sidebar navigation (288px wide)
 - No bottom navigation
 
 **Mobile All Roles (<1024px width):**
+
 - Bottom navigation (max 4-5 items)
 - Overflow items in hamburger menu
 
 **Files to Create:**
+
 - `lib/UI/Widgets/Navigation/AdminSidebar.dart`
 - `lib/UI/Widgets/Navigation/MobileBottomNav.dart`
 - `lib/UI/Widgets/Navigation/ResponsiveLayout.dart`
@@ -164,24 +178,28 @@ git push -f origin feature/theme-system-implementation
 **Navigation Items (Mobile):**
 
 **Admin:**
+
 1. Dashboard (home icon)
 2. Events (calendar icon)
 3. People (group icon) → submenu
 4. More (menu icon) → drawer
 
 **Volunteer:**
+
 1. Dashboard
 2. Events
 3. Profile
 4. More
 
 **Team Leader:**
+
 1. Dashboard
 2. Shifts
 3. Attendance
 4. More
 
 **Checklist:**
+
 - [ ] AdminSidebar created (desktop only)
 - [ ] MobileBottomNav created (max 4-5 items)
 - [ ] ResponsiveLayout wrapper created
@@ -198,20 +216,24 @@ git push -f origin feature/theme-system-implementation
 **Priority Order:**
 
 **4.1 Admin Screens (Theme 1)**
+
 - `AdminDashboard.dart` - Add ResponsiveLayout
 - `EventsMgmt.dart` - Replace hardcoded colors
 - `VolunteersMgmt.dart` - Use themed components
 
 **4.2 Volunteer Screens (Theme 2)**
+
 - `VolunteerDashboard.dart` - Green theme
 - `FormFillPage.dart` - Themed form inputs
 - `SubmitEventFeedbackScreen.dart` - Add RatingSelector
 
 **4.3 Team Leader Screens (Theme 3)**
+
 - `TeamLeaderDashboard.dart` - Gold theme
 - `TeamLeaderShiftManagementScreen.dart` - Themed cards
 
 **Migration Pattern per Screen:**
+
 ```dart
 // BEFORE
 class MyScreen extends StatelessWidget {
@@ -227,12 +249,12 @@ class MyScreen extends StatelessWidget {
 // AFTER
 class MyScreen extends StatelessWidget {
   const MyScreen({Key? key}) : super(key: key);
-  
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final Color backgroundColor = theme.colorScheme.background;
-    
+
     return ResponsiveLayout(
       mobile: Scaffold(
         backgroundColor: backgroundColor, // ✅ Theme-aware
@@ -247,7 +269,7 @@ class MyScreen extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildContent(BuildContext context) {
     // Implementation
   }
@@ -255,6 +277,7 @@ class MyScreen extends StatelessWidget {
 ```
 
 **Checklist:**
+
 - [ ] All screens use ResponsiveLayout
 - [ ] No hardcoded colors (use theme)
 - [ ] All new code uses explicit types
@@ -271,6 +294,7 @@ class MyScreen extends StatelessWidget {
 **Testing Checklist:**
 
 **Visual:**
+
 - [ ] Theme 1 (Red/Dark) displays correctly
 - [ ] Theme 2 (Green/Light) displays correctly
 - [ ] Theme 3 (Gold/Dark) displays correctly
@@ -278,6 +302,7 @@ class MyScreen extends StatelessWidget {
 - [ ] Colors match design specs
 
 **Functional:**
+
 - [ ] Theme switches on login by user role
 - [ ] All buttons work
 - [ ] All forms submit data
@@ -287,6 +312,7 @@ class MyScreen extends StatelessWidget {
 - [ ] Sidebar shows on admin desktop
 
 **Code Quality:**
+
 - [ ] No `var` keyword used
 - [ ] No `dynamic` type used
 - [ ] All functions have return types
@@ -294,17 +320,20 @@ class MyScreen extends StatelessWidget {
 - [ ] Collections use generics (`List<T>`, `Map<K,V>`)
 
 **Performance:**
+
 - [ ] No console errors
 - [ ] Smooth animations
 - [ ] Fast theme switching
 
 **Documentation:**
+
 - [ ] Update README.md with theme system section
 - [ ] Document color palettes
 - [ ] Document component usage
 - [ ] Update deployment instructions
 
 **Final Commit:**
+
 ```bash
 git add .
 git commit -m "Phase 5: Testing complete, documentation updated"
@@ -312,6 +341,7 @@ git push origin feature/theme-system-implementation
 ```
 
 **Merge to Main:**
+
 1. Mark PR as ready for review
 2. Request code review
 3. After approval, merge PR
@@ -387,14 +417,17 @@ static const String bodyFontFamily = 'Noto Sans';
 Download from Google Fonts:
 
 1. **Inter** (Admin Theme)
+
    - https://fonts.google.com/specimen/Inter
    - Weights: 400, 500, 600, 700
 
 2. **Lexend** (Volunteer Theme)
+
    - https://fonts.google.com/specimen/Lexend
    - Weights: 400, 500, 600, 700
 
 3. **Noto Serif** (Team Leader Theme)
+
    - https://fonts.google.com/specimen/Noto+Serif
    - Weights: 400, 700, 900
 
@@ -417,11 +450,11 @@ class Breakpoints {
   static const double mobile = 640;
   static const double tablet = 1024;
   static const double desktop = 1280;
-  
+
   static bool isMobile(BuildContext context) {
     return MediaQuery.of(context).size.width < mobile;
   }
-  
+
   static bool isDesktop(BuildContext context) {
     return MediaQuery.of(context).size.width >= desktop;
   }
@@ -429,6 +462,7 @@ class Breakpoints {
 ```
 
 **Usage:**
+
 - Mobile: < 640px
 - Tablet: 640px - 1023px
 - Desktop: ≥ 1024px
@@ -472,6 +506,7 @@ buildCard(context, event) { }        // NO omitted types
 ### Theme Not Switching
 
 **Check:**
+
 1. Is ThemeProvider in main.dart?
 2. Is Consumer<ThemeProvider> wrapping MaterialApp?
 3. Is `setThemeByRole()` called after login?
@@ -480,6 +515,7 @@ buildCard(context, event) { }        // NO omitted types
 ### Fonts Not Rendering
 
 **Check:**
+
 1. Are TTF files in `assets/fonts/`?
 2. Is `pubspec.yaml` configured correctly?
 3. Run `flutter pub get`
@@ -488,6 +524,7 @@ buildCard(context, event) { }        // NO omitted types
 ### Navigation Not Showing
 
 **Check:**
+
 1. Is ResponsiveLayout used?
 2. Check screen width breakpoints
 3. Verify user role is set
@@ -496,6 +533,7 @@ buildCard(context, event) { }        // NO omitted types
 ### Hardcoded Colors Still Showing
 
 **Find them:**
+
 ```bash
 # Search for hardcoded colors
 grep -r "Color(0x" lib/UI/
@@ -527,18 +565,19 @@ Before merging to main:
 
 ## Estimated Timeline
 
-| Phase | Duration | Critical Path |
-|-------|----------|---------------|
-| Phase 1: Theme Infrastructure | 4-6 hours | ⭐ |
-| Phase 2: Base Components | 6-8 hours | ⭐ |
-| Phase 3: Navigation System | 4-5 hours | ⭐ |
-| Phase 4: Screen Updates | 8-12 hours | |
-| Phase 5: Testing & Docs | 2-3 hours | |
-| **Total** | **24-34 hours** | **3-4 days** |
+| Phase                         | Duration        | Critical Path |
+| ----------------------------- | --------------- | ------------- |
+| Phase 1: Theme Infrastructure | 4-6 hours       | ⭐            |
+| Phase 2: Base Components      | 6-8 hours       | ⭐            |
+| Phase 3: Navigation System    | 4-5 hours       | ⭐            |
+| Phase 4: Screen Updates       | 8-12 hours      |               |
+| Phase 5: Testing & Docs       | 2-3 hours       |               |
+| **Total**                     | **24-34 hours** | **3-4 days**  |
 
 ---
 
 **Reference Documents:**
+
 - Full specifications: `REDESIGN.md`
 - Agent prompt: `CLOUD_AGENT_PROMPT.md`
 - Pre-work checklist: `PRE_DELEGATION_CHECKLIST.md`
