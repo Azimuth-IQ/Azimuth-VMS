@@ -641,9 +641,20 @@ class _VolunteerSelectionDialog extends StatefulWidget {
 
 class __VolunteerSelectionDialogState extends State<_VolunteerSelectionDialog> {
   final Set<String> _selectedIds = {};
+  String _searchQuery = '';
+
+  List<SystemUser> get _filteredVolunteers {
+    if (_searchQuery.isEmpty) {
+      return widget.volunteers;
+    }
+    final query = _searchQuery.toLowerCase();
+    return widget.volunteers.where((v) => v.name.toLowerCase().contains(query) || v.phone.contains(query)).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final filteredVolunteers = _filteredVolunteers;
+    
     return Dialog(
       child: Container(
         width: MediaQuery.of(context).size.width * 0.5,
@@ -655,29 +666,47 @@ class __VolunteerSelectionDialogState extends State<_VolunteerSelectionDialog> {
               child: Text(AppLocalizations.of(context)!.selectVolunteers, style: Theme.of(context).textTheme.titleLarge),
             ),
             const Divider(),
-            Expanded(
-              child: ListView.builder(
-                itemCount: widget.volunteers.length,
-                itemBuilder: (context, index) {
-                  final volunteer = widget.volunteers[index];
-                  final isSelected = _selectedIds.contains(volunteer.phone);
-
-                  return CheckboxListTile(
-                    value: isSelected,
-                    onChanged: (checked) {
-                      setState(() {
-                        if (checked == true) {
-                          _selectedIds.add(volunteer.phone);
-                        } else {
-                          _selectedIds.remove(volunteer.phone);
-                        }
-                      });
-                    },
-                    title: Text(volunteer.name),
-                    subtitle: Text(volunteer.phone),
-                  );
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: AppLocalizations.of(context)!.searchByNameOrPhone,
+                  prefixIcon: const Icon(Icons.search),
+                  border: const OutlineInputBorder(),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    _searchQuery = value;
+                  });
                 },
               ),
+            ),
+            Expanded(
+              child: filteredVolunteers.isEmpty
+                  ? Center(child: Text(AppLocalizations.of(context)!.noResultsFound))
+                  : ListView.builder(
+                      itemCount: filteredVolunteers.length,
+                      itemBuilder: (context, index) {
+                        final volunteer = filteredVolunteers[index];
+                        final isSelected = _selectedIds.contains(volunteer.phone);
+
+                        return CheckboxListTile(
+                          value: isSelected,
+                          onChanged: (checked) {
+                            setState(() {
+                              if (checked == true) {
+                                _selectedIds.add(volunteer.phone);
+                              } else {
+                                _selectedIds.remove(volunteer.phone);
+                              }
+                            });
+                          },
+                          title: Text(volunteer.name),
+                          subtitle: Text(volunteer.phone),
+                        );
+                      },
+                    ),
             ),
             const Divider(),
             Padding(

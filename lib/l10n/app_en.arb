@@ -4,6 +4,8 @@
   "appTitle": "VMS",
   "welcome": "Welcome",
   "search": "Search",
+  "searchByNameOrPhone": "Search by name or phone",
+  "noResultsFound": "No results found",
   "save": "Save",
   "cancel": "Cancel",
   "delete": "Delete",

@@ -4,6 +4,8 @@
   "appTitle": "نظام إدارة المتطوعين",
   "welcome": "مرحباً",
   "search": "بحث",
+  "searchByNameOrPhone": "البحث بالاسم أو رقم الهاتف",
+  "noResultsFound": "لم يتم العثور على نتائج",
   "save": "حفظ",
   "cancel": "إلغاء",
   "delete": "حذف",
