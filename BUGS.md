@@ -4,7 +4,16 @@
 
 ---
 
-## ✅ Completed Bugs (1-3)
+## 📊 Quick Summary
+
+- **Total Bugs Identified:** 19
+- **Completed:** 11 (Bugs 1-3, 9-13, 15, 18-19)
+- **In Progress:** 1 (PDF Generation)
+- **Pending:** 7 (Bugs 4-8, 14, 16-17)
+
+---
+
+## ✅ Completed Bugs
 
 ### Bug 1: Rating Criteria Not Refreshing ✅
 
@@ -24,20 +33,19 @@
 - **Status:** FIXED
 - **Solution:** Changed PDF labels to English
 
-### Bug 13: Leave Request on Volunteer Pages ✅
+### Bug 9: Search Feature in Dialogs ✅
 
-- **Issue:** Leave request is not available on volunteers pages and dashboard
+- **Issue:** Add search feature to dialogs with lists (volunteers, team leaders, locations)
 - **Status:** FIXED
-- **Solution:** Added "My Schedule" navigation option to both desktop (NavigationRail) and mobile (BottomNavigationBar) views. Volunteers can now access their schedule and request leave for specific shifts from the dashboard.
-- **Files Modified:** [VolunteersDashboard.dart](lib/UI/VolunteerScreens/VolunteersDashboard.dart)
-
-### Bug 12: Relocate Volunteer Flow ✅
-
-- **Issue:** Relocate volunteer flow is not working at all, not initiating new presence check
-- **Status:** FIXED
-- **Solution:** Updated LocationReassignmentDialog to create a new ARRIVAL attendance check when volunteer is relocated to a new location. This ensures they must check in at the new location and attendance is properly tracked.
-- **Files Modified:** [LocationReassignmentDialog.dart](lib/UI/AdminScreens/LocationReassignmentDialog.dart)
-- **Localization Added:** `locationReassignedSuccessfully` in English and Arabic
+- **Solution:** Added search TextField to selection dialogs with real-time filtering by name or phone
+- **Files Modified:**
+  - [TeamLeaderShiftManagementScreen.dart](lib/UI/TeamLeadersScreens/TeamLeaderShiftManagementScreen.dart) - Added search to `_VolunteerSelectionDialog`
+  - [EventsMgmt.dart](lib/UI/AdminScreens/EventsMgmt.dart) - Converted `_selectMember` AlertDialog to stateful `_MemberSelectionDialog` with search
+- **Localization Added:** `searchByNameOrPhone`, `noResultsFound` in English and Arabic
+- **Features:**
+  - Search filters list in real-time (case-insensitive)
+  - Shows "no results found" when no matches
+  - Search works by name or phone number
 
 ### Bug 10: Location/Sublocation Display Showing ID Instead of Name ✅
 
@@ -49,6 +57,45 @@
 - **Files Modified:**
   - [VolunteerScheduleScreen.dart](lib/UI/VolunteerScreens/VolunteerScheduleScreen.dart)
   - [EventsMgmt.dart](lib/UI/AdminScreens/EventsMgmt.dart)
+
+### Bug 11: "Assigned By" Display ✅
+
+- **Issue:** "Assigned by" showing cards has phone number instead of admin's/team leader's name
+- **Status:** FIXED
+- **Solution:** Added system user lookup in all assignment display screens to show names instead of phone numbers
+- **Files Modified:**
+  - [VolunteerScheduleScreen.dart](lib/UI/VolunteerScreens/VolunteerScheduleScreen.dart) - Already had `_getAssignerName()` helper
+  - [ShiftAssignmentScreen.dart](lib/UI/AdminScreens/ShiftAssignmentScreen.dart) - Already had `assignedByUser?.name` lookup
+  - [TeamLeaderShiftManagementScreen.dart](lib/UI/TeamLeadersScreens/TeamLeaderShiftManagementScreen.dart) - Added `assignedByUser` lookup
+
+### Bug 12: Relocate Volunteer Flow ✅
+
+- **Issue:** Relocate volunteer flow is not working at all, not initiating new presence check
+- **Status:** FIXED
+- **Solution:** Updated LocationReassignmentDialog to create a new ARRIVAL attendance check when volunteer is relocated to a new location. This ensures they must check in at the new location and attendance is properly tracked.
+- **Files Modified:** [LocationReassignmentDialog.dart](lib/UI/AdminScreens/LocationReassignmentDialog.dart)
+- **Localization Added:** `locationReassignedSuccessfully` in English and Arabic
+
+### Bug 13: Leave Request on Volunteer Pages ✅
+
+- **Issue:** Leave request is not available on volunteers pages and dashboard
+- **Status:** FIXED
+- **Solution:** Added "My Schedule" navigation option to both desktop (NavigationRail) and mobile (BottomNavigationBar) views. Volunteers can now access their schedule and request leave for specific shifts from the dashboard.
+- **Files Modified:** [VolunteersDashboard.dart](lib/UI/VolunteerScreens/VolunteersDashboard.dart)
+
+### Bug 15: Theme Settings Not Clickable on PC ✅
+
+- **Issue:** Theme settings throws NavigationRail assertion error when clicked (selectedIndex out of range)
+- **Status:** FIXED
+- **Solution:** Separated `_selectedIndex` (NavigationRail selection) from `_currentScreenIndex` (actual screen displayed)
+  - NavigationRail has 5 destinations (0-4: Dashboard, Events, Volunteers, Leaders, More)
+  - When navigating to sub-screens (Teams, Locations, SendNotification, ThemeSettings), keep "More" selected (index 4)
+  - Changed `_currentScreenIndex` to display the correct screen while maintaining valid NavigationRail selection
+- **Files Modified:** [AdminDashboard.dart](lib/UI/AdminScreens/AdminDashboard.dart)
+- **Technical Details:**
+  - Error was: `selectedIndex == null || (0 <= selectedIndex && selectedIndex < destinations.length)` assertion failed
+  - Previous code tried to set `_selectedIndex = 8` for theme settings, but only 5 destinations exist
+  - Now uses two separate indices to manage navigation state properly
 
 ### Bug 18: Language Selector on Sign In ✅
 
@@ -69,44 +116,6 @@
   - Converted 6 form rows to responsive layout (personal info, contact info, professional info, document info)
   - Form fields now stack vertically on mobile, display side-by-side on desktop
 
-### Bug 11: "Assigned By" Display ✅
-
-- **Issue:** "Assigned by" showing cards has phone number instead of admin's/team leader's name
-- **Status:** FIXED
-- **Solution:** Added system user lookup in all assignment display screens to show names instead of phone numbers
-- **Files Modified:**
-  - [VolunteerScheduleScreen.dart](lib/UI/VolunteerScreens/VolunteerScheduleScreen.dart) - Already had `_getAssignerName()` helper
-  - [ShiftAssignmentScreen.dart](lib/UI/AdminScreens/ShiftAssignmentScreen.dart) - Already had `assignedByUser?.name` lookup
-  - [TeamLeaderShiftManagementScreen.dart](lib/UI/TeamLeadersScreens/TeamLeaderShiftManagementScreen.dart) - Added `assignedByUser` lookup
-
-### Bug 9: Search Feature in Dialogs ✅
-
-- **Issue:** Add search feature to dialogs with lists (volunteers, team leaders, locations)
-- **Status:** FIXED
-- **Solution:** Added search TextField to selection dialogs with real-time filtering by name or phone
-- **Files Modified:**
-  - [TeamLeaderShiftManagementScreen.dart](lib/UI/TeamLeadersScreens/TeamLeaderShiftManagementScreen.dart) - Added search to `_VolunteerSelectionDialog`
-  - [EventsMgmt.dart](lib/UI/AdminScreens/EventsMgmt.dart) - Converted `_selectMember` AlertDialog to stateful `_MemberSelectionDialog` with search
-- **Localization Added:** `searchByNameOrPhone`, `noResultsFound` in English and Arabic
-- **Features:**
-  - Search filters list in real-time (case-insensitive)
-  - Shows "no results found" when no matches
-  - Search works by name or phone number
-
-### Bug 15: Theme Settings Not Clickable on PC ✅
-
-- **Issue:** Theme settings throws NavigationRail assertion error when clicked (selectedIndex out of range)
-- **Status:** FIXED
-- **Solution:** Separated `_selectedIndex` (NavigationRail selection) from `_currentScreenIndex` (actual screen displayed)
-  - NavigationRail has 5 destinations (0-4: Dashboard, Events, Volunteers, Leaders, More)
-  - When navigating to sub-screens (Teams, Locations, SendNotification, ThemeSettings), keep "More" selected (index 4)
-  - Changed `_currentScreenIndex` to display the correct screen while maintaining valid NavigationRail selection
-- **Files Modified:** [AdminDashboard.dart](lib/UI/AdminScreens/AdminDashboard.dart)
-- **Technical Details:**
-  - Error was: `selectedIndex == null || (0 <= selectedIndex && selectedIndex < destinations.length)` assertion failed
-  - Previous code tried to set `_selectedIndex = 8` for theme settings, but only 5 destinations exist
-  - Now uses two separate indices to manage navigation state properly
-
 ---
 
 ## 🔄 In Progress
@@ -116,11 +125,9 @@
 - **Issue:** Arabic text rendering issues in PDF
 - **Current Status:** Using form1.pdf with simple field filling
 - **Known Limitations:**
-
   - Character 1544 (؈ Arabic Ray) in template causes flatten errors
   - Scattered letters when using custom fonts
   - Flattening disabled to allow PDF generation
-
 - **Temporary Solution:** PDF generates without flattening (fields remain editable)
 - **Long-term Fix Needed:** Create new PDF template in Adobe with:
   - Proper Arabic font (Cairo or Amiri) embedded
@@ -129,7 +136,19 @@
 
 ---
 
-## 🐛 Pending Bugs (4-19)
+## 🐛 Pending Bugs
+
+### High Priority (Bugs 8)
+
+### Bug 8: Firebase Web Auth Key
+
+- **Issue:** Implement Firebase web auth key for push notifications
+- **Details:** Key: `BDEQjN1UbATEWI8TY1tTHakqvCw5EpryE6OGIirk4hqBG7CCLO-0O0eL97nVmEAKa6Ms7EoI9MaezpKndlgeOHs`
+- **Priority:** High
+- **Status:** Not Started
+- **Files:** `web/firebase-messaging-sw.js`, notification helpers
+
+### Medium Priority (Bugs 4-7, 14, 16-17)
 
 ### Bug 4: Bilingual Photo Upload Hint
 
