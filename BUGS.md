@@ -75,11 +75,36 @@
 - **Status:** FIXED
 - **Solution:** Added system user lookup in all assignment display screens to show names instead of phone numbers
 - **Files Modified:**
-
   - [VolunteerScheduleScreen.dart](lib/UI/VolunteerScreens/VolunteerScheduleScreen.dart) - Already had `_getAssignerName()` helper
   - [ShiftAssignmentScreen.dart](lib/UI/AdminScreens/ShiftAssignmentScreen.dart) - Already had `assignedByUser?.name` lookup
   - [TeamLeaderShiftManagementScreen.dart](lib/UI/TeamLeadersScreens/TeamLeaderShiftManagementScreen.dart) - Added `assignedByUser` lookup
 
+### Bug 9: Search Feature in Dialogs ✅
+
+- **Issue:** Add search feature to dialogs with lists (volunteers, team leaders, locations)
+- **Status:** FIXED
+- **Solution:** Added search TextField to selection dialogs with real-time filtering by name or phone
+- **Files Modified:**
+  - [TeamLeaderShiftManagementScreen.dart](lib/UI/TeamLeadersScreens/TeamLeaderShiftManagementScreen.dart) - Added search to `_VolunteerSelectionDialog`
+  - [EventsMgmt.dart](lib/UI/AdminScreens/EventsMgmt.dart) - Converted `_selectMember` AlertDialog to stateful `_MemberSelectionDialog` with search
+- **Localization Added:** `searchByNameOrPhone`, `noResultsFound` in English and Arabic
+- **Features:**
+  - Search filters list in real-time (case-insensitive)
+  - Shows "no results found" when no matches
+  - Search works by name or phone number
+
+---
+
+## 🔄 In Progress
+
+### PDF Generation Arabic Text Issues
+
+- **Issue:** Arabic text rendering issues in PDF
+- **Current Status:** Using form1.pdf with simple field filling
+- **Known Limitations:**
+
+  - Character 1544 (؈ Arabic Ray) in template causes flatten errors
+  - Scattered letters when using custom fonts
   - Flattening disabled to allow PDF generation
 
 - **Temporary Solution:** PDF generates without flattening (fields remain editable)
@@ -130,14 +155,6 @@
 - **Priority:** High
 - **Status:** Not Started
 - **Files:** `web/firebase-messaging-sw.js`, notification helpers
-
-### Bug 9: Search Feature in Dialogs
-
-- **Issue:** Add search feature to dialogs with lists (volunteers, team leaders, locations)
-- **Details:** Keep it simple - search by name and phone
-- **Priority:** High
-- **Status:** Not Started
-- **Affected Screens:** All dialogs with selection lists
 
 ### Bug 14: Carousel Slider Inconsistency
 

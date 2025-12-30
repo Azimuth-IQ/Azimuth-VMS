@@ -18,6 +18,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get search => 'Search';
 
   @override
+  String get searchByNameOrPhone => 'Search by name or phone';
+
+  @override
+  String get noResultsFound => 'No results found';
+
+  @override
   String get save => 'Save';
 
   @override

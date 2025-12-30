@@ -1001,35 +1001,7 @@ class ShiftFormDialog extends StatelessWidget {
   Future<String?> _selectMember(BuildContext context, EventsProvider eventsProvider, List<String> alreadySelected) async {
     return await showDialog<String>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.selectTeamMember),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: eventsProvider.volunteers.length,
-            itemBuilder: (context, index) {
-              final volunteer = eventsProvider.volunteers[index];
-              final isAlreadyAdded = alreadySelected.contains(volunteer.phone);
-
-              return ListTile(
-                enabled: !isAlreadyAdded,
-                leading: Icon(Icons.person_outline, color: isAlreadyAdded ? Colors.grey : null),
-                title: Text(volunteer.name, style: TextStyle(color: isAlreadyAdded ? Colors.grey : null)),
-                subtitle: Text(volunteer.phone, style: TextStyle(color: isAlreadyAdded ? Colors.grey : null)),
-                trailing: isAlreadyAdded
-                    ? Chip(
-                        label: Text(AppLocalizations.of(context)!.added, style: TextStyle(fontSize: 10)),
-                        padding: EdgeInsets.symmetric(horizontal: 4),
-                      )
-                    : null,
-                onTap: isAlreadyAdded ? null : () => Navigator.of(context).pop(volunteer.phone),
-              );
-            },
-          ),
-        ),
-        actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.cancel))],
-      ),
+      builder: (context) => _MemberSelectionDialog(volunteers: eventsProvider.volunteers, alreadySelected: alreadySelected),
     );
   }
 
@@ -1280,6 +1252,87 @@ class ShiftFormDialog extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+// Member Selection Dialog with Search
+class _MemberSelectionDialog extends StatefulWidget {
+  final List<SystemUser> volunteers;
+  final List<String> alreadySelected;
+
+  const _MemberSelectionDialog({required this.volunteers, required this.alreadySelected});
+
+  @override
+  State<_MemberSelectionDialog> createState() => __MemberSelectionDialogState();
+}
+
+class __MemberSelectionDialogState extends State<_MemberSelectionDialog> {
+  String _searchQuery = '';
+
+  List<SystemUser> get _filteredVolunteers {
+    if (_searchQuery.isEmpty) {
+      return widget.volunteers;
+    }
+    final query = _searchQuery.toLowerCase();
+    return widget.volunteers.where((v) => v.name.toLowerCase().contains(query) || v.phone.contains(query)).toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final filteredVolunteers = _filteredVolunteers;
+
+    return AlertDialog(
+      title: Text(AppLocalizations.of(context)!.selectTeamMember),
+      content: SizedBox(
+        width: double.maxFinite,
+        height: 400,
+        child: Column(
+          children: [
+            TextField(
+              decoration: InputDecoration(
+                hintText: AppLocalizations.of(context)!.searchByNameOrPhone,
+                prefixIcon: const Icon(Icons.search),
+                border: const OutlineInputBorder(),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value;
+                });
+              },
+            ),
+            const SizedBox(height: 12),
+            Expanded(
+              child: filteredVolunteers.isEmpty
+                  ? Center(child: Text(AppLocalizations.of(context)!.noResultsFound))
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: filteredVolunteers.length,
+                      itemBuilder: (context, index) {
+                        final volunteer = filteredVolunteers[index];
+                        final isAlreadyAdded = widget.alreadySelected.contains(volunteer.phone);
+
+                        return ListTile(
+                          enabled: !isAlreadyAdded,
+                          leading: Icon(Icons.person_outline, color: isAlreadyAdded ? Colors.grey : null),
+                          title: Text(volunteer.name, style: TextStyle(color: isAlreadyAdded ? Colors.grey : null)),
+                          subtitle: Text(volunteer.phone, style: TextStyle(color: isAlreadyAdded ? Colors.grey : null)),
+                          trailing: isAlreadyAdded
+                              ? Chip(
+                                  label: Text(AppLocalizations.of(context)!.added, style: const TextStyle(fontSize: 10)),
+                                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                                )
+                              : null,
+                          onTap: isAlreadyAdded ? null : () => Navigator.of(context).pop(volunteer.phone),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
+      actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.cancel))],
     );
   }
 }

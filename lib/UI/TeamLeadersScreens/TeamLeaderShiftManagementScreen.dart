@@ -654,7 +654,7 @@ class __VolunteerSelectionDialogState extends State<_VolunteerSelectionDialog> {
   @override
   Widget build(BuildContext context) {
     final filteredVolunteers = _filteredVolunteers;
-    
+
     return Dialog(
       child: Container(
         width: MediaQuery.of(context).size.width * 0.5,

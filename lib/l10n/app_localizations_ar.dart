@@ -18,6 +18,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get search => 'بحث';
 
   @override
+  String get searchByNameOrPhone => 'البحث بالاسم أو رقم الهاتف';
+
+  @override
+  String get noResultsFound => 'لم يتم العثور على نتائج';
+
+  @override
   String get save => 'حفظ';
 
   @override

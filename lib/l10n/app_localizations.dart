@@ -116,6 +116,18 @@ abstract class AppLocalizations {
   /// **'Search'**
   String get search;
 
+  /// No description provided for @searchByNameOrPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name or phone'**
+  String get searchByNameOrPhone;
+
+  /// No description provided for @noResultsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get noResultsFound;
+
   /// No description provided for @save.
   ///
   /// In en, this message translates to:
