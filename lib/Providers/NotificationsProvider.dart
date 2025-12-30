@@ -9,11 +9,24 @@ class NotificationsProvider with ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
   String? _currentUserId;
+  bool _disposed = false;
 
   List<Notification> get notifications => _notifications;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   int get unreadCount => _notifications.where((n) => !n.isRead).length;
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+  void _notifyListeners() {
+    if (!_disposed) {
+      notifyListeners();
+    }
+  }
 
   Future<void> loadNotifications(String userId) async {
     if (userId.isEmpty) {
@@ -24,7 +37,7 @@ class NotificationsProvider with ChangeNotifier {
     _currentUserId = userId;
     _isLoading = true;
     _errorMessage = null;
-    notifyListeners();
+    _notifyListeners();
 
     try {
       print('📬 Loading notifications for user: $userId');
@@ -32,12 +45,12 @@ class NotificationsProvider with ChangeNotifier {
       _notifications.sort((a, b) => b.dateTime.compareTo(a.dateTime)); // Most recent first
       print('✓ Loaded ${_notifications.length} notifications (${unreadCount} unread)');
       _isLoading = false;
-      notifyListeners();
+      _notifyListeners();
     } catch (e) {
       print('Error loading notifications: $e');
       _errorMessage = e.toString();
       _isLoading = false;
-      notifyListeners();
+      _notifyListeners();
     }
   }
 
@@ -51,7 +64,7 @@ class NotificationsProvider with ChangeNotifier {
       final index = _notifications.indexWhere((n) => n.id == notificationId);
       if (index != -1) {
         _notifications[index].isRead = true;
-        notifyListeners();
+        _notifyListeners();
       }
     } catch (e) {
       print('Error marking notification as read: $e');
@@ -66,7 +79,7 @@ class NotificationsProvider with ChangeNotifier {
         _notificationHelper.markAsRead(notification.id, _currentUserId!);
         notification.isRead = true;
       }
-      notifyListeners();
+      _notifyListeners();
     } catch (e) {
       print('Error marking all notifications as read: $e');
     }
@@ -78,7 +91,7 @@ class NotificationsProvider with ChangeNotifier {
     try {
       _notificationHelper.deleteNotification(notificationId, _currentUserId!);
       _notifications.removeWhere((n) => n.id == notificationId);
-      notifyListeners();
+      _notifyListeners();
     } catch (e) {
       print('Error deleting notification: $e');
     }

@@ -412,7 +412,7 @@ class _VolunteerScheduleScreenState extends State<VolunteerScheduleScreen> {
   Future<String> _getAssignerName(String phone) async {
     try {
       final userHelper = SystemUserHelperFirebase();
-      final user = await userHelper.GetUserByPhone(phone);
+      final user = await userHelper.GetSystemUserByPhone(phone);
       if (user != null) {
         return user.name;
       }

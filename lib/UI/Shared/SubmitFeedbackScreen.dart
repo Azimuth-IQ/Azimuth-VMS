@@ -21,12 +21,7 @@ class SubmitFeedbackScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
-      appBar: AppBar(
-        title: Text(l10n.submitFeedback),
-        backgroundColor: theme.colorScheme.surface,
-        elevation: 0,
-        foregroundColor: theme.colorScheme.onSurface,
-      ),
+      appBar: AppBar(title: Text(l10n.submitFeedback), backgroundColor: theme.colorScheme.surface, elevation: 0, foregroundColor: theme.colorScheme.onSurface),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -42,10 +37,7 @@ class SubmitFeedbackScreen extends StatelessWidget {
                     Icon(Icons.info_outline, color: theme.colorScheme.onPrimaryContainer),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: Text(
-                        l10n.shareFeedbackPrompt,
-                        style: TextStyle(color: theme.colorScheme.onPrimaryContainer, fontSize: 14),
-                      ),
+                      child: Text(l10n.shareFeedbackPrompt, style: TextStyle(color: theme.colorScheme.onPrimaryContainer, fontSize: 14)),
                     ),
                   ],
                 ),
