@@ -13,6 +13,7 @@ import 'package:azimuth_vms/UI/Widgets/UpcomingShiftCard.dart';
 import 'package:azimuth_vms/UI/Widgets/VolunteerStatsChart.dart';
 import 'package:azimuth_vms/UI/Widgets/FadeInSlide.dart';
 import 'package:azimuth_vms/UI/Widgets/LanguageSwitcher.dart';
+import 'package:azimuth_vms/UI/Theme/Breakpoints.dart';
 import 'package:azimuth_vms/l10n/app_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -199,7 +200,10 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                       const SizedBox(height: 24),
                       if (nextEvent != null && nextShift != null) ...[
                         FadeInSlide(
-                          child: Text(l10n.upcomingShift, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                          child: Text(
+                            l10n.upcomingShift,
+                            style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 20, fontWeight: FontWeight.bold),
+                          ),
                         ),
                         const SizedBox(height: 16),
                         FadeInSlide(
@@ -210,14 +214,20 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                       ],
                       FadeInSlide(
                         delay: 0.1,
-                        child: Text(l10n.activity, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        child: Text(
+                          l10n.activity,
+                          style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 20, fontWeight: FontWeight.bold),
+                        ),
                       ),
                       const SizedBox(height: 16),
                       FadeInSlide(delay: 0.15, child: VolunteerStatsChart(userPhone: _currentUserPhone ?? '')),
                       const SizedBox(height: 24),
                       FadeInSlide(
                         delay: 0.2,
-                        child: Text(l10n.management, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        child: Text(
+                          l10n.management,
+                          style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 20, fontWeight: FontWeight.bold),
+                        ),
                       ),
                       const SizedBox(height: 16),
                       FadeInSlide(
@@ -270,7 +280,10 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                       // Events Section
                       FadeInSlide(
                         delay: 0.3,
-                        child: Text(l10n.myEvents, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        child: Text(
+                          l10n.myEvents,
+                          style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 20, fontWeight: FontWeight.bold),
+                        ),
                       ),
                       const SizedBox(height: 16),
 
@@ -596,7 +609,7 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                         const SizedBox(height: 4),
                         Text(
                           name ?? l10n.teamLeader,
-                          style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
+                          style: TextStyle(color: Colors.white, fontSize: Breakpoints.isMobile(context) ? 17 : 26, fontWeight: FontWeight.bold),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ],
@@ -685,7 +698,10 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(event.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                            Text(
+                              event.name,
+                              style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 12 : 18, fontWeight: FontWeight.bold),
+                            ),
                             const SizedBox(height: 4),
                             Text('${event.startDate} - ${event.endDate}', style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6))),
                           ],

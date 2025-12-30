@@ -8,6 +8,7 @@ import 'package:azimuth_vms/Providers/VolunteerRatingProvider.dart';
 import 'package:azimuth_vms/UI/Widgets/ImageCarouselSlider.dart';
 import 'package:azimuth_vms/UI/Widgets/LanguageSwitcher.dart';
 import 'package:azimuth_vms/UI/Widgets/NotificationPanel.dart';
+import 'package:azimuth_vms/UI/Theme/Breakpoints.dart';
 import 'package:azimuth_vms/UI/VolunteerScreens/VolunteerScheduleScreen.dart';
 import 'package:azimuth_vms/UI/VolunteerScreens/VolunteerProfileScreen.dart';
 import 'package:azimuth_vms/UI/Widgets/VolunteerStatsChart.dart';
@@ -260,7 +261,10 @@ class _ApprovedDashboardView extends StatelessWidget {
                 // 2. Upcoming Shifts
                 FadeInSlide(
                   delay: 0.1,
-                  child: Text(l10n.upcomingShift, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  child: Text(
+                    l10n.upcomingShift,
+                    style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 20, fontWeight: FontWeight.bold),
+                  ),
                 ),
                 const SizedBox(height: 16),
                 FadeInSlide(
@@ -283,7 +287,10 @@ class _ApprovedDashboardView extends StatelessWidget {
                 // 3. My Assignments
                 FadeInSlide(
                   delay: 0.2,
-                  child: Text(l10n.myAssignments, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  child: Text(
+                    l10n.myAssignments,
+                    style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 20, fontWeight: FontWeight.bold),
+                  ),
                 ),
                 const SizedBox(height: 16),
                 FadeInSlide(
@@ -309,7 +316,10 @@ class _ApprovedDashboardView extends StatelessWidget {
                 // 4. Activities
                 FadeInSlide(
                   delay: 0.3,
-                  child: Text(l10n.activity, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  child: Text(
+                    l10n.activity,
+                    style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 20, fontWeight: FontWeight.bold),
+                  ),
                 ),
                 const SizedBox(height: 16),
                 FadeInSlide(delay: 0.35, child: VolunteerStatsChart(userPhone: userPhone)),
@@ -617,7 +627,10 @@ class _ApprovedDashboardView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    Text(
+                      title,
+                      style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 12 : 18, fontWeight: FontWeight.bold),
+                    ),
                     const SizedBox(height: 4),
                     Text(description, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
                   ],

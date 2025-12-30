@@ -205,6 +205,9 @@ class RatingCriteriaManagementScreen extends StatelessWidget {
     try {
       await provider.saveRatingCriteria(provider.ratingCriteria);
 
+      // Reload criteria from Firebase to refresh the UI
+      await provider.loadRatingCriteria();
+
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Rating criteria saved successfully'), backgroundColor: Colors.green));
       }

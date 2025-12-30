@@ -724,6 +724,8 @@
   "imageUploaded": "تم تحميل الصورة: {imageName}",
   "errorUploadingImage": "خطأ في تحميل {imageName}: {error}",
   "pdfDownloadedSuccessfully": "تم تنزيل ملف PDF بنجاح!",
+  "downloadPdf": "تحميل PDF",
+  "readyToPrint": "جاهز للطباعة!",
   "errorDownloading": "خطأ في التنزيل: {error}",
   "errorPrinting": "خطأ في الطباعة: {error}",
   "previous": "السابق",

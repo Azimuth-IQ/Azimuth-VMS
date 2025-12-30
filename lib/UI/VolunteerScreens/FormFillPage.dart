@@ -1,5 +1,6 @@
 import 'package:azimuth_vms/Helpers/VolunteerFormHelperFirebase.dart';
 import 'package:azimuth_vms/Models/VolunteerForm.dart';
+import 'package:azimuth_vms/UI/Theme/Breakpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
@@ -301,37 +302,40 @@ class _FormFillPageState extends State<FormFillPage> {
       // Flatten the form to make it non-editable
       form.flattenAllFields();
 
+      // Use standard font for document labels
+      final PdfFont labelFont = PdfStandardFont(PdfFontFamily.helvetica, 12, style: PdfFontStyle.bold);
+      final PdfFont titleFont = PdfStandardFont(PdfFontFamily.helvetica, 16, style: PdfFontStyle.bold);
+
       if (_nationalIdFront != null || _nationalIdBack != null || _residencyCardFront != null || _residencyCardBack != null) {
         final PdfPage docsPage = _document!.pages.add();
         final PdfGraphics docsGraphics = docsPage.graphics;
-        final PdfFont boldFont = PdfStandardFont(PdfFontFamily.helvetica, 12, style: PdfFontStyle.bold);
         const double leftMargin = 50;
         double docYPos = 50;
 
-        docsGraphics.drawString('المستندات المرفقة', PdfStandardFont(PdfFontFamily.helvetica, 16, style: PdfFontStyle.bold), bounds: Rect.fromLTWH(leftMargin, 20, 500, 30));
+        docsGraphics.drawString('Attached Documents', titleFont, bounds: Rect.fromLTWH(leftMargin, 20, 500, 30));
 
         if (_nationalIdFront != null) {
-          docsGraphics.drawString('الهوية الوطنية - الوجه الأمامي', boldFont, bounds: Rect.fromLTWH(leftMargin, docYPos, 300, 20));
+          docsGraphics.drawString('National ID - Front', labelFont, bounds: Rect.fromLTWH(leftMargin, docYPos, 300, 20));
           final PdfBitmap img = PdfBitmap(_nationalIdFront!);
           docsGraphics.drawImage(img, Rect.fromLTWH(leftMargin, docYPos + 25, 250, 150));
           docYPos += 185;
         }
         if (_nationalIdBack != null) {
-          docsGraphics.drawString('الهوية الوطنية - الوجه الخلفي', boldFont, bounds: Rect.fromLTWH(leftMargin, docYPos, 300, 20));
+          docsGraphics.drawString('National ID - Back', labelFont, bounds: Rect.fromLTWH(leftMargin, docYPos, 300, 20));
           final PdfBitmap img = PdfBitmap(_nationalIdBack!);
           docsGraphics.drawImage(img, Rect.fromLTWH(leftMargin, docYPos + 25, 250, 150));
           docYPos += 185;
         }
 
         if (_residencyCardFront != null) {
-          docsGraphics.drawString('بطاقة السكن - الوجه الأمامي', boldFont, bounds: Rect.fromLTWH(leftMargin, docYPos, 300, 20));
+          docsGraphics.drawString('Residency Card - Front', labelFont, bounds: Rect.fromLTWH(leftMargin, docYPos, 300, 20));
           final PdfBitmap img = PdfBitmap(_residencyCardFront!);
           docsGraphics.drawImage(img, Rect.fromLTWH(leftMargin, docYPos + 25, 250, 150));
           docYPos += 185;
         }
 
         if (_residencyCardBack != null && docYPos < 600) {
-          docsGraphics.drawString('بطاقة السكن - الوجه الخلفي', boldFont, bounds: Rect.fromLTWH(leftMargin, docYPos, 300, 20));
+          docsGraphics.drawString('Residency Card - Back', labelFont, bounds: Rect.fromLTWH(leftMargin, docYPos, 300, 20));
           final PdfBitmap img = PdfBitmap(_residencyCardBack!);
           docsGraphics.drawImage(img, Rect.fromLTWH(leftMargin, docYPos + 25, 250, 150));
         }
@@ -832,7 +836,7 @@ class _FormFillPageState extends State<FormFillPage> {
       padding: const EdgeInsets.only(bottom: 16),
       child: Text(
         title,
-        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue),
+        style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 20, fontWeight: FontWeight.bold, color: Colors.blue),
       ),
     );
   }

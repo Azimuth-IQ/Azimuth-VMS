@@ -1970,6 +1970,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get formSubmittedForReview => 'Form submitted for review!';
 
   @override
+  String get downloadPdf => 'Download PDF';
+
+  @override
+  String get readyToPrint => 'Ready to print!';
+
+  @override
   String get errorLabel => 'Error';
 
   @override

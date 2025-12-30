@@ -16,6 +16,7 @@ import 'package:azimuth_vms/UI/Widgets/ChangePasswordScreen.dart';
 import 'package:azimuth_vms/UI/Widgets/ImageCarouselSlider.dart';
 import 'package:azimuth_vms/UI/Widgets/NotificationPanel.dart';
 import 'package:azimuth_vms/UI/Widgets/LanguageSwitcher.dart';
+import 'package:azimuth_vms/UI/Theme/Breakpoints.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -166,7 +167,10 @@ class _DashboardHome extends StatelessWidget {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(l10n.dashboard, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Text(
+              l10n.dashboard,
+              style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 20, fontWeight: FontWeight.bold),
+            ),
             Text(l10n.welcomeBack(userPhone), style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey)),
           ],
         ),

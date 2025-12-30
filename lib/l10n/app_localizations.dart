@@ -3650,6 +3650,18 @@ abstract class AppLocalizations {
   /// **'Form submitted for review!'**
   String get formSubmittedForReview;
 
+  /// No description provided for @downloadPdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Download PDF'**
+  String get downloadPdf;
+
+  /// No description provided for @readyToPrint.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to print!'**
+  String get readyToPrint;
+
   /// No description provided for @errorLabel.
   ///
   /// In en, this message translates to:

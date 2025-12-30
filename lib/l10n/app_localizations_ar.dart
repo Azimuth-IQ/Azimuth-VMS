@@ -1955,6 +1955,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get formSubmittedForReview => 'تم تقديم النموذج للمراجعة!';
 
   @override
+  String get downloadPdf => 'تحميل PDF';
+
+  @override
+  String get readyToPrint => 'جاهز للطباعة!';
+
+  @override
   String get errorLabel => 'خطأ';
 
   @override

@@ -1283,6 +1283,8 @@
     }
   },
   "pdfDownloadedSuccessfully": "PDF downloaded successfully!",
+  "downloadPdf": "Download PDF",
+  "readyToPrint": "Ready to print!",
   "errorDownloading": "Error downloading: {error}",
   "@errorDownloading": {
     "placeholders": {

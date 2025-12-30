@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:azimuth_vms/Helpers/VolunteerFormHelperFirebase.dart';
 import 'package:azimuth_vms/Helpers/SystemUserHelperFirebase.dart';
+import 'package:azimuth_vms/Helpers/PdfGeneratorHelper.dart';
 import 'package:azimuth_vms/Models/VolunteerForm.dart';
 import 'package:azimuth_vms/Models/SystemUser.dart';
 import 'package:azimuth_vms/UI/Widgets/ArchiveDeleteWidget.dart';
+import 'package:azimuth_vms/UI/Theme/Breakpoints.dart';
 import 'package:azimuth_vms/l10n/app_localizations.dart';
 
 class FormMgmt extends StatefulWidget {
@@ -279,7 +281,10 @@ class _FormMgmtState extends State<FormMgmt> {
                         Row(
                           children: [
                             Expanded(
-                              child: Text(form.fullName ?? 'Unknown', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                              child: Text(
+                                form.fullName ?? 'Unknown',
+                                style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 10 : 16, fontWeight: FontWeight.w600),
+                              ),
                             ),
                             if (form.archived) const SizedBox(width: 8),
                             if (form.archived) const ArchivedBadge(),
@@ -371,6 +376,57 @@ class _FormMgmtState extends State<FormMgmt> {
                         _buildDocumentChip('Residence Front', _hasDocument(form.residenceFrontPath)),
                         _buildDocumentChip('Residence Back', _hasDocument(form.residenceBackPath)),
                       ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              // PDF Actions
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () async {
+                        try {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.generatingPdf), duration: const Duration(seconds: 1)));
+                          await PdfGeneratorHelper.generateAndDownloadPdf(form);
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.pdfDownloaded)));
+                          }
+                        } catch (e) {
+                          print('Error generating PDF: $e');
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${AppLocalizations.of(context)!.error}: $e')));
+                          }
+                        }
+                      },
+                      icon: const Icon(Icons.download, size: 16),
+                      label: Text(AppLocalizations.of(context)!.downloadPdf),
+                      style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), visualDensity: VisualDensity.compact),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () async {
+                        try {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.generatingPdf), duration: const Duration(seconds: 1)));
+                          await PdfGeneratorHelper.generateAndDownloadPdf(form);
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.readyToPrint)));
+                          }
+                        } catch (e) {
+                          print('Error generating PDF: $e');
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${AppLocalizations.of(context)!.error}: $e')));
+                          }
+                        }
+                      },
+                      icon: const Icon(Icons.print, size: 16),
+                      label: Text(AppLocalizations.of(context)!.print),
+                      style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), visualDensity: VisualDensity.compact),
                     ),
                   ),
                 ],
