@@ -1,4 +1,5 @@
 import 'package:azimuth_vms/Helpers/SystemUserHelperFirebase.dart';
+import 'package:azimuth_vms/Helpers/NotificationPermissionHelper.dart';
 import 'package:azimuth_vms/Models/Seed.dart';
 import 'package:azimuth_vms/Models/SystemUser.dart';
 import 'package:azimuth_vms/Providers/LanguageProvider.dart';
@@ -6,6 +7,7 @@ import 'package:azimuth_vms/l10n/app_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
@@ -54,6 +56,15 @@ class SignInScreen extends StatelessWidget {
       print("Fetched user: ${systemUser?.name}");
       print("User role: ${systemUser?.role}");
       if (systemUser != null) {
+        // Request notification permission for web (will show browser permission dialog)
+        if (kIsWeb) {
+          final hasPermission = await NotificationPermissionHelper.requestPermission();
+          if (hasPermission) {
+            // Get and store FCM token
+            await NotificationPermissionHelper.getToken();
+          }
+        }
+        
         if (systemUser.role == SystemUserRole.ADMIN) {
           Navigator.pushReplacementNamed(context, '/admin-dashboard');
         } else if (systemUser.role == SystemUserRole.TEAMLEADER) {

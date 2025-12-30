@@ -43,6 +43,7 @@ import 'package:azimuth_vms/UI/VolunteerScreens/VolunteerEventDetailsScreen.dart
 import 'package:azimuth_vms/UI/VolunteerScreens/LeaveRequestScreen.dart';
 import 'package:azimuth_vms/firebase_options.dart';
 import 'package:azimuth_vms/Helpers/SystemUserHelperFirebase.dart';
+import 'package:azimuth_vms/Helpers/NotificationPermissionHelper.dart';
 import 'package:azimuth_vms/Models/SystemUser.dart';
 import 'package:azimuth_vms/Models/Event.dart';
 import 'package:azimuth_vms/Models/ShiftAssignment.dart';
@@ -56,6 +57,15 @@ import 'package:azimuth_vms/l10n/app_localizations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Required for async operations in main
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  
+  // Setup notification message handlers
+  NotificationPermissionHelper.setupForegroundMessageHandler();
+  NotificationPermissionHelper.setupBackgroundMessageHandler();
+  NotificationPermissionHelper.setupMessageOpenedHandler((message) {
+    print('Notification tapped: ${message.notification?.title}');
+    // Handle navigation based on notification data here
+  });
+  
   runApp(const MyApp());
 }
 
