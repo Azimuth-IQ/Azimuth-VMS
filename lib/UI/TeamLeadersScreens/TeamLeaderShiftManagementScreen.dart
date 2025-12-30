@@ -504,6 +504,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
                               itemBuilder: (context, index) {
                                 final ShiftAssignment assignment = assignments[index];
                                 final SystemUser? volunteer = provider.systemUsers.where((u) => u.phone == assignment.volunteerId).firstOrNull;
+                                final SystemUser? assignedByUser = provider.systemUsers.where((u) => u.phone == assignment.assignedBy).firstOrNull;
 
                                 String locationName = 'Main Location';
                                 if (assignment.sublocationId != null) {
@@ -517,7 +518,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
                                     title: Text(volunteer?.name ?? 'Unknown'),
                                     subtitle: Text('$locationName - ${assignment.status.name}'),
                                     trailing: Text(
-                                      'By: ${assignment.assignedBy}',
+                                      'By: ${assignedByUser?.name ?? assignment.assignedBy}',
                                       style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
                                     ),
                                   ),

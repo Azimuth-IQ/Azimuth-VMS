@@ -69,18 +69,19 @@
   - Converted 6 form rows to responsive layout (personal info, contact info, professional info, document info)
   - Form fields now stack vertically on mobile, display side-by-side on desktop
 
----
+### Bug 11: "Assigned By" Display ✅
 
-## 🔄 In Progress
+- **Issue:** "Assigned by" showing cards has phone number instead of admin's/team leader's name
+- **Status:** FIXED
+- **Solution:** Added system user lookup in all assignment display screens to show names instead of phone numbers
+- **Files Modified:**
 
-### PDF Generation Arabic Text Issues
+  - [VolunteerScheduleScreen.dart](lib/UI/VolunteerScreens/VolunteerScheduleScreen.dart) - Already had `_getAssignerName()` helper
+  - [ShiftAssignmentScreen.dart](lib/UI/AdminScreens/ShiftAssignmentScreen.dart) - Already had `assignedByUser?.name` lookup
+  - [TeamLeaderShiftManagementScreen.dart](lib/UI/TeamLeadersScreens/TeamLeaderShiftManagementScreen.dart) - Added `assignedByUser` lookup
 
-- **Issue:** Arabic text rendering issues in PDF
-- **Current Status:** Using form1.pdf with simple field filling
-- **Known Limitations:**
-  - Character 1544 (؈ Arabic Ray) in template causes flatten errors
-  - Scattered letters when using custom fonts
   - Flattening disabled to allow PDF generation
+
 - **Temporary Solution:** PDF generates without flattening (fields remain editable)
 - **Long-term Fix Needed:** Create new PDF template in Adobe with:
   - Proper Arabic font (Cairo or Amiri) embedded
@@ -137,13 +138,6 @@
 - **Priority:** High
 - **Status:** Not Started
 - **Affected Screens:** All dialogs with selection lists
-
-### Bug 11: "Assigned By" Display
-
-- **Issue:** "Assigned by" showing cards has phone number instead of admin's/team leader's name
-- **Priority:** High
-- **Status:** Not Started
-- **Affected Screens:** Shift assignment, event details
 
 ### Bug 14: Carousel Slider Inconsistency
 
