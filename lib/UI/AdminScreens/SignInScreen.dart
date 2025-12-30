@@ -1,9 +1,11 @@
 import 'package:azimuth_vms/Helpers/SystemUserHelperFirebase.dart';
 import 'package:azimuth_vms/Models/Seed.dart';
 import 'package:azimuth_vms/Models/SystemUser.dart';
+import 'package:azimuth_vms/Providers/LanguageProvider.dart';
 import 'package:azimuth_vms/l10n/app_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
@@ -76,6 +78,58 @@ class SignInScreen extends StatelessWidget {
     checkAuthStatus(context);
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          // Language Selector
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Consumer<LanguageProvider>(
+              builder: (context, languageProvider, child) {
+                return PopupMenuButton<Locale>(
+                  icon: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.language, color: theme.colorScheme.onSurface),
+                      const SizedBox(width: 4),
+                      Text(
+                        languageProvider.isEnglish ? 'EN' : 'AR',
+                        style: TextStyle(color: theme.colorScheme.onSurface, fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                  onSelected: (locale) async {
+                    await languageProvider.setLocale(locale);
+                  },
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: const Locale('en'),
+                      child: Row(
+                        children: [
+                          Icon(Icons.check, color: languageProvider.isEnglish ? theme.colorScheme.primary : Colors.transparent),
+                          const SizedBox(width: 8),
+                          const Text('English'),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: const Locale('ar'),
+                      child: Row(
+                        children: [
+                          Icon(Icons.check, color: !languageProvider.isEnglish ? theme.colorScheme.primary : Colors.transparent),
+                          const SizedBox(width: 8),
+                          const Text('العربية'),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
+      ),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),

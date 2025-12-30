@@ -50,6 +50,25 @@
   - [VolunteerScheduleScreen.dart](lib/UI/VolunteerScreens/VolunteerScheduleScreen.dart)
   - [EventsMgmt.dart](lib/UI/AdminScreens/EventsMgmt.dart)
 
+### Bug 18: Language Selector on Sign In ✅
+
+- **Issue:** Implement language selector on the sign in page
+- **Status:** FIXED
+- **Solution:** Added PopupMenuButton in top-right corner with EN/AR language options. Uses LanguageProvider to switch locale dynamically. Selected language is highlighted.
+- **Files Modified:** [SignInScreen.dart](lib/UI/SignInScreen.dart)
+- **Localization Added:** Language names in both English and Arabic
+
+### Bug 19: Form Fields Width on Mobile ✅
+
+- **Issue:** All form fields should be full width on mobile - labels and hints don't fully appear due to limited width
+- **Status:** FIXED
+- **Solution:** Created responsive `_buildResponsiveRow` helper that returns Column (full width) on mobile (< 640px) and Row with Expanded children on desktop. Replaced all form field Row widgets with responsive version.
+- **Files Modified:** [FormFillPage.dart](lib/UI/VolunteerScreens/FormFillPage.dart)
+- **Changes:**
+  - Added `_buildResponsiveRow` helper method
+  - Converted 6 form rows to responsive layout (personal info, contact info, professional info, document info)
+  - Form fields now stack vertically on mobile, display side-by-side on desktop
+
 ---
 
 ## 🔄 In Progress
@@ -155,21 +174,6 @@
 - **Priority:** Medium
 - **Status:** Not Started
 - **Files:** `lib/main.dart`, language provider
-
-### Bug 18: Language Selector on Sign In
-
-- **Issue:** Implement language selector on the sign in page
-- **Priority:** High
-- **Status:** Not Started
-- **Affected Screen:** Sign in page
-
-### Bug 19: Form Fields Width on Mobile
-
-- **Issue:** All form fields should be full width on mobile
-- **Details:** Labels and hints don't fully appear due to limited width
-- **Priority:** High
-- **Status:** Not Started
-- **Affected Screens:** All forms on mobile
 
 ---
 

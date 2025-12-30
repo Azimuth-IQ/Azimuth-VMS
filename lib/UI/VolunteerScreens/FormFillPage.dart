@@ -629,28 +629,10 @@ class _FormFillPageState extends State<FormFillPage> {
   Widget _buildBasicInfoStep() {
     return Column(
       children: [
-        Row(
-          children: [
-            Expanded(child: _buildTextField('formNumber', 'Form Number / رقم الاستمارة')),
-            const SizedBox(width: 16),
-            Expanded(child: _buildTextField('groupNameAndCode', 'Group Name & Code / اسم المجموعة والرمز')),
-          ],
-        ),
+        _buildResponsiveRow([_buildTextField('formNumber', 'Form Number / رقم الاستمارة'), _buildTextField('groupNameAndCode', 'Group Name & Code / اسم المجموعة والرمز')]),
         _buildTextField('fullName', 'Full Name / الاسم الرباعي واللقب', required: true),
-        Row(
-          children: [
-            Expanded(child: _buildTextField('education', 'Education / التحصيل الدراسي')),
-            const SizedBox(width: 16),
-            Expanded(child: _buildTextField('birthDate', 'Birth Date / المواليد')),
-          ],
-        ),
-        Row(
-          children: [
-            Expanded(child: _buildTextField('maritalStatus', 'Marital Status / الحالة الاجتماعية')),
-            const SizedBox(width: 16),
-            Expanded(child: _buildTextField('numberOfChildren', 'Number of Children / عدد الابناء')),
-          ],
-        ),
+        _buildResponsiveRow([_buildTextField('education', 'Education / التحصيل الدراسي'), _buildTextField('birthDate', 'Birth Date / المواليد')]),
+        _buildResponsiveRow([_buildTextField('maritalStatus', 'Marital Status / الحالة الاجتماعية'), _buildTextField('numberOfChildren', 'Number of Children / عدد الابناء')]),
         _buildTextField('motherName', 'Mother Name / اسم الام الثلاثي واللقب'),
       ],
     );
@@ -663,13 +645,10 @@ class _FormFillPageState extends State<FormFillPage> {
         _buildTextField('currentAddress', 'Current Address / العنوان الحالي'),
         _buildTextField('nearestLandmark', 'Nearest Landmark / اقرب نقطة دالة'),
         _buildTextField('mukhtarName', 'Mukhtar Name / اسم المختار ومسؤول المجلس البلدي'),
-        Row(
-          children: [
-            Expanded(child: _buildTextField('civilStatusDirectorate', 'Civil Status Directorate / دائرة الاحوال')),
-            const SizedBox(width: 16),
-            Expanded(child: _buildTextField('previousAddress', 'Previous Address / العنوان السابق')),
-          ],
-        ),
+        _buildResponsiveRow([
+          _buildTextField('civilStatusDirectorate', 'Civil Status Directorate / دائرة الاحوال'),
+          _buildTextField('previousAddress', 'Previous Address / العنوان السابق'),
+        ]),
       ],
     );
   }
@@ -678,13 +657,7 @@ class _FormFillPageState extends State<FormFillPage> {
     return Column(
       children: [
         _buildTextField('volunteerParticipationCount', 'Volunteer Participation Count / عدد المشاركات في الخدمة التطوعية'),
-        Row(
-          children: [
-            Expanded(child: _buildTextField('profession', 'Profession / المهنة')),
-            const SizedBox(width: 16),
-            Expanded(child: _buildTextField('jobTitle', 'Job Title / العنوان الوظيفي')),
-          ],
-        ),
+        _buildResponsiveRow([_buildTextField('profession', 'Profession / المهنة'), _buildTextField('jobTitle', 'Job Title / العنوان الوظيفي')]),
         _buildTextField('departmentName', 'Department Name / اسم الدائرة'),
         _buildTextField('politicalAffiliation', 'Political Affiliation / الانتماء السياسي'),
         _buildTextField('talentAndExperience', 'Talent & Experience / الموهبة والخبرة', maxLines: 2),
@@ -696,34 +669,10 @@ class _FormFillPageState extends State<FormFillPage> {
   Widget _buildDocumentInfoStep() {
     return Column(
       children: [
-        Row(
-          children: [
-            Expanded(child: _buildTextField('idCardNumber', 'ID Card Number / رقم الهوية او البطاقة الوطنية')),
-            const SizedBox(width: 16),
-            Expanded(child: _buildTextField('recordNumber', 'Record / السجل')),
-          ],
-        ),
-        Row(
-          children: [
-            Expanded(child: _buildTextField('pageNumber', 'Page / الصحيفة')),
-            const SizedBox(width: 16),
-            Expanded(child: _buildTextField('rationCardNumber', 'Ration Card Number / رقم البطاقة التموينية')),
-          ],
-        ),
-        Row(
-          children: [
-            Expanded(child: _buildTextField('agentName', 'Agent Name / اسم الوكيل')),
-            const SizedBox(width: 16),
-            Expanded(child: _buildTextField('supplyCenterNumber', 'Supply Center Number / رقم مركز التموين')),
-          ],
-        ),
-        Row(
-          children: [
-            Expanded(child: _buildTextField('residenceCardNumber', 'Residence Card Number / رقم بطاقة السكن')),
-            const SizedBox(width: 16),
-            Expanded(child: _buildTextField('issuer', 'Issuer / جهة اصدارها')),
-          ],
-        ),
+        _buildResponsiveRow([_buildTextField('idCardNumber', 'ID Card Number / رقم الهوية او البطاقة الوطنية'), _buildTextField('recordNumber', 'Record / السجل')]),
+        _buildResponsiveRow([_buildTextField('pageNumber', 'Page / الصحيفة'), _buildTextField('rationCardNumber', 'Ration Card Number / رقم البطاقة التموينية')]),
+        _buildResponsiveRow([_buildTextField('agentName', 'Agent Name / اسم الوكيل'), _buildTextField('supplyCenterNumber', 'Supply Center Number / رقم مركز التموين')]),
+        _buildResponsiveRow([_buildTextField('residenceCardNumber', 'Residence Card Number / رقم بطاقة السكن'), _buildTextField('issuer', 'Issuer / جهة اصدارها')]),
         _buildTextField('no', 'NO'),
       ],
     );
@@ -839,6 +788,19 @@ class _FormFillPageState extends State<FormFillPage> {
         style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 20, fontWeight: FontWeight.bold, color: Colors.blue),
       ),
     );
+  }
+
+  // Helper method to build responsive rows that stack on mobile
+  Widget _buildResponsiveRow(List<Widget> children) {
+    return Breakpoints.isMobile(context)
+        ? Column(children: children)
+        : Row(
+            children: children
+                .map((child) => Expanded(child: child))
+                .expand((widget) => [widget, if (widget != children.last) const SizedBox(width: 16)])
+                .where((widget) => widget is! bool)
+                .toList(),
+          );
   }
 
   Widget _buildTextField(String key, String label, {bool required = false, int maxLines = 1}) {
