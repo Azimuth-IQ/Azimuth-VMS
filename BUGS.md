@@ -24,6 +24,13 @@
 - **Status:** FIXED
 - **Solution:** Changed PDF labels to English
 
+### Bug 13: Leave Request on Volunteer Pages ✅
+
+- **Issue:** Leave request is not available on volunteers pages and dashboard
+- **Status:** FIXED
+- **Solution:** Added "My Schedule" navigation option to both desktop (NavigationRail) and mobile (BottomNavigationBar) views. Volunteers can now access their schedule and request leave for specific shifts from the dashboard.
+- **Files Modified:** [VolunteersDashboard.dart](lib/UI/VolunteerScreens/VolunteersDashboard.dart)
+
 ---
 
 ## 🔄 In Progress
@@ -113,13 +120,6 @@
 - **Priority:** Critical
 - **Status:** Not Started
 - **Affected Screen:** Location reassignment dialog
-
-### Bug 13: Leave Request on Volunteer Pages
-
-- **Issue:** Leave request is not available on volunteers pages and dashboard
-- **Priority:** Critical
-- **Status:** Not Started
-- **Affected Screens:** Volunteer dashboard, volunteer navigation
 
 ### Bug 14: Carousel Slider Inconsistency
 

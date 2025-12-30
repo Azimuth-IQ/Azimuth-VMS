@@ -340,7 +340,15 @@ class _ApprovedDashboardView extends StatelessWidget {
                     switch (index) {
                       case 0: // Dashboard - already here
                         break;
-                      case 1: // Profile
+                      case 1: // Schedule
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => VolunteerScheduleScreen(volunteerPhone: userPhone),
+                          ),
+                        );
+                        break;
+                      case 2: // Profile
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -348,10 +356,10 @@ class _ApprovedDashboardView extends StatelessWidget {
                           ),
                         );
                         break;
-                      case 2: // Feedback
+                      case 3: // Feedback
                         Navigator.pushNamed(context, '/submit-feedback');
                         break;
-                      case 3: // Language
+                      case 4: // Language
                         _showLanguageDialog(context);
                         break;
                     }
@@ -398,6 +406,7 @@ class _ApprovedDashboardView extends StatelessWidget {
                   ),
                   destinations: [
                     NavigationRailDestination(icon: Icon(Icons.dashboard_outlined), selectedIcon: Icon(Icons.dashboard), label: Text(l10n.home)),
+                    NavigationRailDestination(icon: Icon(Icons.calendar_today_outlined), selectedIcon: Icon(Icons.calendar_today), label: Text(l10n.mySchedule)),
                     NavigationRailDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: Text(l10n.profile)),
                     NavigationRailDestination(icon: Icon(Icons.feedback_outlined), selectedIcon: Icon(Icons.feedback), label: Text(l10n.submitFeedback)),
                     NavigationRailDestination(icon: Icon(Icons.language), selectedIcon: Icon(Icons.language), label: Text(l10n.language)),
@@ -506,23 +515,32 @@ class _ApprovedDashboardView extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => VolunteerProfileScreen(form: form, userPhone: userPhone),
+                builder: (context) => VolunteerScheduleScreen(volunteerPhone: userPhone),
               ),
             );
             break;
           case 2:
-            Navigator.pushNamed(context, '/submit-feedback');
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => VolunteerProfileScreen(form: form, userPhone: userPhone),
+              ),
+            );
             break;
           case 3:
-            _showLanguageDialog(context);
+            Navigator.pushNamed(context, '/submit-feedback');
             break;
           case 4:
+            _showLanguageDialog(context);
+            break;
+          case 5:
             _showLogoutDialog(context);
             break;
         }
       },
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: ''),
+        BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: ''),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
         BottomNavigationBarItem(icon: Icon(Icons.feedback), label: ''),
         BottomNavigationBarItem(icon: Icon(Icons.language), label: ''),
