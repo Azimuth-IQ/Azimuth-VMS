@@ -46,7 +46,7 @@
 - **Solution:** Added location name lookup in multiple screens:
   - VolunteerScheduleScreen: Added LocationHelper and location cache, displays "Location - Sublocation" format
   - EventsMgmt: Uses EventsProvider locations to show names instead of IDs in shift lists
-- **Files Modified:** 
+- **Files Modified:**
   - [VolunteerScheduleScreen.dart](lib/UI/VolunteerScreens/VolunteerScheduleScreen.dart)
   - [EventsMgmt.dart](lib/UI/AdminScreens/EventsMgmt.dart)
 

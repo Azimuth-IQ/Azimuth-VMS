@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../Helpers/EventHelperFirebase.dart';
 import '../../Helpers/LocationHelperFirebase.dart';
+import '../../Helpers/SystemUserHelperFirebase.dart';
 import '../../Models/ShiftAssignment.dart';
 import '../../Models/Event.dart';
 import '../../Models/Location.dart';
@@ -51,14 +52,14 @@ class _VolunteerScheduleScreenState extends State<VolunteerScheduleScreen> {
       // Load event details and locations for each assignment
       for (var assignment in provider.assignments) {
         print('📅 Processing assignment: ${assignment.eventId} for shift ${assignment.shiftId}');
-        
+
         // Load event
         if (!_eventCache.containsKey(assignment.eventId)) {
           final event = await _eventHelper.GetEventById(assignment.eventId);
           if (event != null) {
             _eventCache[assignment.eventId] = event;
             print('📅 Loaded event: ${event.name} on ${event.startDate}');
-            
+
             // Load location for this event's shift
             final shift = event.shifts.firstWhere((s) => s.id == assignment.shiftId, orElse: () => event.shifts.first);
             if (shift.locationId.isNotEmpty && !_locationCache.containsKey(shift.locationId)) {
@@ -279,10 +280,7 @@ class _VolunteerScheduleScreenState extends State<VolunteerScheduleScreen> {
                         Icon(Icons.location_on, color: Colors.grey[600], size: 16),
                         const SizedBox(width: 8),
                         Expanded(
-                          child: Text(
-                            _getLocationDisplayName(shift, assignment),
-                            style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-                          ),
+                          child: Text(_getLocationDisplayName(shift, assignment), style: TextStyle(fontSize: 14, color: Colors.grey[700])),
                         ),
                       ],
                     ),
@@ -343,17 +341,23 @@ class _VolunteerScheduleScreenState extends State<VolunteerScheduleScreen> {
               if (shift != null) ...[_buildDetailRow(Icons.access_time, 'Shift Time', '${shift.startTime} - ${shift.endTime}'), const SizedBox(height: 16)],
 
               // Location
-              if (shift != null) ...[_buildDetailRow(Icons.location_on, 'Location', shift.locationId), const SizedBox(height: 16)],
+              if (shift != null) ...[_buildDetailRow(Icons.location_on, 'Location', _getLocationDisplayName(shift, assignment)), const SizedBox(height: 16)],
 
-              // Sublocation
-              if (assignment.sublocationId != null) ...[_buildDetailRow(Icons.place, 'Sublocation', assignment.sublocationId!), const SizedBox(height: 16)],
+              // Sublocation (already included in location display)
+              // Removed redundant sublocation display
 
               // Assignment Date
               _buildDetailRow(Icons.calendar_today, 'Assigned On', DateFormat('MMM d, y - HH:mm').format(DateTime.parse(assignment.timestamp))),
               const SizedBox(height: 16),
 
               // Assigned By
-              _buildDetailRow(Icons.person, 'Assigned By', assignment.assignedBy),
+              FutureBuilder<String>(
+                future: _getAssignerName(assignment.assignedBy),
+                builder: (context, snapshot) {
+                  final assignerName = snapshot.data ?? assignment.assignedBy;
+                  return _buildDetailRow(Icons.person, 'Assigned By', assignerName);
+                },
+              ),
             ],
           ),
         ),
@@ -386,11 +390,11 @@ class _VolunteerScheduleScreenState extends State<VolunteerScheduleScreen> {
 
   String _getLocationDisplayName(EventShift shift, ShiftAssignment assignment) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     // Get main location
     final mainLocation = _locationCache[shift.locationId];
     String locationName = mainLocation?.name ?? shift.locationId;
-    
+
     // If assigned to sublocation, add sublocation name
     if (assignment.sublocationId != null && assignment.sublocationId!.isNotEmpty && mainLocation != null) {
       final sublocation = mainLocation.subLocations?.firstWhere(
@@ -401,7 +405,20 @@ class _VolunteerScheduleScreenState extends State<VolunteerScheduleScreen> {
         locationName = '${mainLocation.name} - ${sublocation.name}';
       }
     }
-    
+
     return locationName;
+  }
+
+  Future<String> _getAssignerName(String phone) async {
+    try {
+      final userHelper = SystemUserHelperFirebase();
+      final user = await userHelper.GetUserByPhone(phone);
+      if (user != null) {
+        return user.name;
+      }
+    } catch (e) {
+      print('Error getting assigner name: $e');
+    }
+    return phone; // Fallback to phone if name not found
   }
 }

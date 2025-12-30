@@ -14,13 +14,19 @@ class SubmitFeedbackScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     final user = FirebaseAuth.instance.currentUser;
     final userPhone = user?.email?.split('@').first ?? '';
     final feedbackProvider = Provider.of<SystemFeedbackProvider>(context);
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
-      appBar: AppBar(title: Text(l10n.submitFeedback), backgroundColor: Colors.grey[50], elevation: 0, foregroundColor: Colors.black87),
+      backgroundColor: theme.colorScheme.surface,
+      appBar: AppBar(
+        title: Text(l10n.submitFeedback),
+        backgroundColor: theme.colorScheme.surface,
+        elevation: 0,
+        foregroundColor: theme.colorScheme.onSurface,
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -28,15 +34,18 @@ class SubmitFeedbackScreen extends StatelessWidget {
           children: [
             // Information Card
             Card(
-              color: Colors.blue.shade50,
+              color: theme.colorScheme.primaryContainer,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
                   children: [
-                    Icon(Icons.info_outline, color: Colors.blue.shade700),
+                    Icon(Icons.info_outline, color: theme.colorScheme.onPrimaryContainer),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: Text(l10n.shareFeedbackPrompt, style: TextStyle(color: Colors.blue.shade900, fontSize: 14)),
+                      child: Text(
+                        l10n.shareFeedbackPrompt,
+                        style: TextStyle(color: theme.colorScheme.onPrimaryContainer, fontSize: 14),
+                      ),
                     ),
                   ],
                 ),
