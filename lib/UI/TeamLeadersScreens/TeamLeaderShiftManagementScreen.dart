@@ -223,13 +223,14 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(l10n.assignMyTeam),
-        backgroundColor: Colors.grey[50],
+        backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 0,
-        foregroundColor: Colors.black87,
+        foregroundColor: theme.colorScheme.onSurface,
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -259,11 +260,17 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.event_busy, size: 64, color: Colors.grey[400]),
+                  Icon(Icons.event_busy, size: 64, color: theme.colorScheme.onSurface.withOpacity(0.3)),
                   const SizedBox(height: 16),
-                  Text(AppLocalizations.of(context)!.noEventsAssignedToYourTeams, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                  Text(
+                    AppLocalizations.of(context)!.noEventsAssignedToYourTeams,
+                    style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6)),
+                  ),
                   const SizedBox(height: 8),
-                  Text(AppLocalizations.of(context)!.contactAdminToAssignYourTeamToEvents, style: TextStyle(fontSize: 14, color: Colors.grey[500])),
+                  Text(
+                    AppLocalizations.of(context)!.contactAdminToAssignYourTeamToEvents,
+                    style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.5)),
+                  ),
                 ],
               ),
             );
@@ -303,7 +310,10 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
                     children: [
                       Text('My Events', style: Theme.of(context).textTheme.titleLarge),
                       const SizedBox(height: 4),
-                      Text('Events where your team is assigned', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                      Text(
+                        'Events where your team is assigned',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
+                      ),
                     ],
                   ),
                 ),
@@ -324,9 +334,12 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.location_on, size: 64, color: Colors.grey[400]),
+                        Icon(Icons.location_on, size: 64, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3)),
                         const SizedBox(height: 16),
-                        Text(AppLocalizations.of(context)!.selectAShiftToAssignVolunteers, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                        Text(
+                          AppLocalizations.of(context)!.selectAShiftToAssignVolunteers,
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
+                        ),
                       ],
                     ),
                   )
@@ -350,7 +363,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
         child: Column(
           children: [
             Container(
-              color: Colors.grey[100],
+              color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
               child: Row(
                 children: [
@@ -440,7 +453,10 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
             children: [
               Text(AppLocalizations.of(context)!.selectLocationToAssign, style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 8),
-              Text(AppLocalizations.of(context)!.chooseWhichLocationToAssignYourTeamMembersTo, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+              Text(
+                AppLocalizations.of(context)!.chooseWhichLocationToAssignYourTeamMembersTo,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
+              ),
               const SizedBox(height: 12),
               _buildLocationDropdown(provider),
               const SizedBox(height: 16),
@@ -448,7 +464,10 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
                 onPressed: _selectedLocationId == null ? null : () => _assignVolunteersToLocation(context),
                 icon: const Icon(Icons.person_add),
                 label: Text(AppLocalizations.of(context)!.assignVolunteers),
-                style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16), disabledBackgroundColor: Colors.grey[300]),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  disabledBackgroundColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
+                ),
               ),
             ],
           ),
@@ -475,7 +494,9 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
                           ? Center(
                               child: Text(
                                 'No volunteers assigned yet',
-                                style: TextStyle(color: Colors.grey[600], fontStyle: FontStyle.italic),
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6), fontStyle: FontStyle.italic),
                               ),
                             )
                           : ListView.builder(
@@ -495,7 +516,10 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
                                     leading: Icon(Icons.person, color: assignment.status == ShiftAssignmentStatus.EXCUSED ? Colors.orange : Colors.green),
                                     title: Text(volunteer?.name ?? 'Unknown'),
                                     subtitle: Text('$locationName - ${assignment.status.name}'),
-                                    trailing: Text('By: ${assignment.assignedBy}', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                                    trailing: Text(
+                                      'By: ${assignment.assignedBy}',
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
+                                    ),
                                   ),
                                 );
                               },

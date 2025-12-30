@@ -12,6 +12,7 @@ import 'package:azimuth_vms/UI/Widgets/NotificationPanel.dart';
 import 'package:azimuth_vms/UI/Widgets/UpcomingShiftCard.dart';
 import 'package:azimuth_vms/UI/Widgets/VolunteerStatsChart.dart';
 import 'package:azimuth_vms/UI/Widgets/FadeInSlide.dart';
+import 'package:azimuth_vms/UI/Widgets/LanguageSwitcher.dart';
 import 'package:azimuth_vms/l10n/app_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -143,6 +144,7 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     // Find next upcoming event
     Event? nextEvent;
     EventShift? nextShift;
@@ -279,9 +281,9 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                             child: Column(
                               children: [
                                 const SizedBox(height: 40),
-                                const Icon(Icons.event_busy, size: 64, color: Colors.grey),
+                                Icon(Icons.event_busy, size: 64, color: theme.colorScheme.onSurface.withOpacity(0.3)),
                                 const SizedBox(height: 16),
-                                Text(l10n.noEventsAssignedYet, style: const TextStyle(fontSize: 16, color: Colors.grey)),
+                                Text(l10n.noEventsAssignedYet, style: TextStyle(fontSize: 16, color: theme.colorScheme.onSurface.withOpacity(0.6))),
                               ],
                             ),
                           ),
@@ -296,7 +298,7 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
 
         if (isDesktop) {
           return Scaffold(
-            backgroundColor: Colors.grey[50],
+            backgroundColor: theme.scaffoldBackgroundColor,
             body: Row(
               children: [
                 NavigationRail(
@@ -390,9 +392,9 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                       AppBar(
                         automaticallyImplyLeading: false,
                         title: Text(l10n.teamLeaderDashboard),
-                        backgroundColor: Colors.grey[50],
+                        backgroundColor: theme.scaffoldBackgroundColor,
                         elevation: 0,
-                        foregroundColor: Colors.black87,
+                        foregroundColor: theme.colorScheme.onSurface,
                         actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _loadData)],
                       ),
                       Expanded(child: body),
@@ -404,14 +406,15 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
           );
         } else {
           return Scaffold(
-            backgroundColor: Colors.grey[50],
+            backgroundColor: theme.scaffoldBackgroundColor,
             appBar: AppBar(
               automaticallyImplyLeading: false,
               title: Text(l10n.teamLeaderDashboard),
-              backgroundColor: Colors.grey[50],
+              backgroundColor: theme.scaffoldBackgroundColor,
               elevation: 0,
-              foregroundColor: Colors.black87,
+              foregroundColor: theme.colorScheme.onSurface,
               actions: [
+                const LanguageSwitcher(showLabel: false, isIconButton: true),
                 IconButton(icon: const Icon(Icons.refresh), onPressed: _loadData),
                 Consumer<NotificationsProvider>(
                   builder: (context, notifProvider, child) {
@@ -460,11 +463,12 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
   }
 
   Widget _buildBottomNavigation(BuildContext context) {
+    final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
-      selectedItemColor: Colors.blue,
-      unselectedItemColor: Colors.grey,
+      selectedItemColor: theme.colorScheme.primary,
+      unselectedItemColor: theme.colorScheme.onSurface.withOpacity(0.4),
       currentIndex: 0,
       showSelectedLabels: false,
       showUnselectedLabels: false,
@@ -481,12 +485,8 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
           case 3: // Leave Requests
             Navigator.pushNamed(context, '/leave-request-management');
             break;
-          case 4: // Profile
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordScreen(userPhone: _currentUserPhone ?? '')));
-            break;
-          case 5: // Logout
-            FirebaseAuth.instance.signOut();
-            Navigator.pushReplacementNamed(context, '/sign-in');
+          case 4: // More menu
+            _showMoreMenu(context);
             break;
         }
       },
@@ -495,9 +495,61 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
         BottomNavigationBarItem(icon: Icon(Icons.assignment), label: ''),
         BottomNavigationBarItem(icon: Icon(Icons.how_to_reg), label: ''),
         BottomNavigationBarItem(icon: Icon(Icons.report_problem), label: ''),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
-        BottomNavigationBarItem(icon: Icon(Icons.logout), label: ''),
+        BottomNavigationBarItem(icon: Icon(Icons.more_horiz), label: ''),
       ],
+    );
+  }
+
+  void _showMoreMenu(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: theme.scaffoldBackgroundColor,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (context) => Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('More', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 24),
+            ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(color: Colors.blue.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+                child: const Icon(Icons.person, color: Colors.blue),
+              ),
+              title: Text(l10n.changePassword),
+              subtitle: const Text('Update your password'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordScreen(userPhone: _currentUserPhone ?? '')));
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(color: Colors.red.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+                child: const Icon(Icons.logout, color: Colors.red),
+              ),
+              title: Text(l10n.signOut),
+              subtitle: const Text('Sign out of your account'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                Navigator.pop(context);
+                FirebaseAuth.instance.signOut();
+                Navigator.pushReplacementNamed(context, '/sign-in');
+              },
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
     );
   }
 
@@ -585,7 +637,7 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
               const SizedBox(height: 4),
               Text(
                 subtitle,
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -635,17 +687,17 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                           children: [
                             Text(event.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                             const SizedBox(height: 4),
-                            Text('${event.startDate} - ${event.endDate}', style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                            Text('${event.startDate} - ${event.endDate}', style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6))),
                           ],
                         ),
                       ),
-                      const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+                      Icon(Icons.arrow_forward_ios, size: 16, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4)),
                     ],
                   ),
                   const SizedBox(height: 12),
                   Text(
                     event.description,
-                    style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                    style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),

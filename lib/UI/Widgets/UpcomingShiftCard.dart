@@ -96,6 +96,10 @@ class _UpcomingShiftCardState extends State<UpcomingShiftCard> {
       return const SizedBox.shrink();
     }
 
+    // Get coordinates - use location if available, otherwise use default Baghdad coordinates
+    final double lat = _location != null ? (double.tryParse(_location!.latitude) ?? 33.3152) : 33.3152;
+    final double lng = _location != null ? (double.tryParse(_location!.longitude) ?? 44.3661) : 44.3661;
+
     return Card(
       clipBehavior: Clip.antiAlias,
       elevation: 4,
@@ -106,28 +110,15 @@ class _UpcomingShiftCardState extends State<UpcomingShiftCard> {
           // Map Header
           SizedBox(
             height: 150,
-            child: _location != null
-                ? GoogleMap(
-                    initialCameraPosition: CameraPosition(
-                      target: LatLng(double.tryParse(_location!.latitude) ?? 33.3152, double.tryParse(_location!.longitude) ?? 44.3661),
-                      zoom: 15,
-                    ),
-                    zoomControlsEnabled: false,
-                    scrollGesturesEnabled: false,
-                    zoomGesturesEnabled: false,
-                    rotateGesturesEnabled: false,
-                    tiltGesturesEnabled: false,
-                    markers: {
-                      Marker(
-                        markerId: MarkerId(_location!.id),
-                        position: LatLng(double.tryParse(_location!.latitude) ?? 33.3152, double.tryParse(_location!.longitude) ?? 44.3661),
-                      ),
-                    },
-                  )
-                : Container(
-                    color: Colors.grey.shade200,
-                    child: const Center(child: Icon(Icons.map_outlined, size: 48, color: Colors.grey)),
-                  ),
+            child: GoogleMap(
+              initialCameraPosition: CameraPosition(target: LatLng(lat, lng), zoom: 15),
+              zoomControlsEnabled: false,
+              scrollGesturesEnabled: false,
+              zoomGesturesEnabled: false,
+              rotateGesturesEnabled: false,
+              tiltGesturesEnabled: false,
+              markers: {Marker(markerId: MarkerId(_location?.id ?? 'default'), position: LatLng(lat, lng))},
+            ),
           ),
 
           // Details
@@ -141,19 +132,19 @@ class _UpcomingShiftCardState extends State<UpcomingShiftCard> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: Colors.blue.shade50,
+                        color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.blue.shade200),
+                        border: Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(0.3)),
                       ),
                       child: Text(
                         AppLocalizations.of(context)!.nextShift,
-                        style: const TextStyle(color: Colors.blue, fontSize: 10, fontWeight: FontWeight.bold),
+                        style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 10, fontWeight: FontWeight.bold),
                       ),
                     ),
                     const Spacer(),
                     Text(
                       _event!.startDate,
-                      style: TextStyle(color: Colors.grey.shade600, fontWeight: FontWeight.w500),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6), fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
@@ -162,16 +153,16 @@ class _UpcomingShiftCardState extends State<UpcomingShiftCard> {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    Icon(Icons.access_time_rounded, size: 16, color: Colors.grey.shade600),
+                    Icon(Icons.access_time_rounded, size: 16, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
                     const SizedBox(width: 4),
-                    Text('${_shift!.startTime} - ${_shift!.endTime}', style: TextStyle(color: Colors.grey.shade600)),
+                    Text('${_shift!.startTime} - ${_shift!.endTime}', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6))),
                     const SizedBox(width: 16),
-                    Icon(Icons.location_on_rounded, size: 16, color: Colors.grey.shade600),
+                    Icon(Icons.location_on_rounded, size: 16, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
                         _location?.name ?? AppLocalizations.of(context)!.unknownLocation,
-                        style: TextStyle(color: Colors.grey.shade600),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),

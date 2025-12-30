@@ -72,9 +72,10 @@ class SignInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     checkAuthStatus(context);
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -88,24 +89,24 @@ class SignInScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: theme.colorScheme.surface,
                     borderRadius: BorderRadius.circular(20),
-                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, 4))],
+                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 20, offset: const Offset(0, 4))],
                   ),
                   child: Column(
                     children: [
                       Container(
                         padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(color: Colors.blue.withOpacity(0.1), shape: BoxShape.circle),
-                        child: const Icon(Icons.volunteer_activism, size: 48, color: Colors.blue),
+                        decoration: BoxDecoration(color: theme.colorScheme.primary.withOpacity(0.1), shape: BoxShape.circle),
+                        child: Icon(Icons.volunteer_activism, size: 48, color: theme.colorScheme.primary),
                       ),
                       const SizedBox(height: 16),
                       Text(
                         l10n.appTitle,
-                        style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFF1A1F36)),
+                        style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
                       ),
                       const SizedBox(height: 8),
-                      Text(l10n.volunteerManagementSystem, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                      Text(l10n.volunteerManagementSystem, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
                     ],
                   ),
                 ),
@@ -115,26 +116,32 @@ class SignInScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(32),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: theme.colorScheme.surface,
                     borderRadius: BorderRadius.circular(20),
-                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, 4))],
+                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 20, offset: const Offset(0, 4))],
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
                         l10n.signIn,
-                        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Color(0xFF1A1F36)),
+                        style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface),
                       ),
                       const SizedBox(height: 24),
                       TextField(
                         controller: phoneController,
-                        decoration: InputDecoration(labelText: l10n.phoneNumber, prefixIcon: const Icon(Icons.phone)),
+                        decoration: InputDecoration(
+                          labelText: l10n.phoneNumber,
+                          prefixIcon: Icon(Icons.phone, color: theme.colorScheme.primary),
+                        ),
                       ),
                       const SizedBox(height: 16),
                       TextField(
                         controller: passwordController,
-                        decoration: InputDecoration(labelText: l10n.password, prefixIcon: const Icon(Icons.lock)),
+                        decoration: InputDecoration(
+                          labelText: l10n.password,
+                          prefixIcon: Icon(Icons.lock, color: theme.colorScheme.primary),
+                        ),
                         obscureText: true,
                       ),
                       const SizedBox(height: 24),
@@ -142,7 +149,11 @@ class SignInScreen extends StatelessWidget {
                         onPressed: () {
                           signIn(context, phoneController.text, passwordController.text);
                         },
-                        style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          backgroundColor: theme.colorScheme.primary,
+                          foregroundColor: theme.colorScheme.onPrimary,
+                        ),
                         child: Text(l10n.signIn, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                       ),
                     ],

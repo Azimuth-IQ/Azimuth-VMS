@@ -75,14 +75,50 @@ class Theme2 {
       colorScheme: const ColorScheme.light(
         primary: mainColor,
         secondary: accentColor,
-        background: backgroundLight,
         surface: card,
         onPrimary: Colors.white,
         onSecondary: Colors.white,
-        onBackground: textPrimary,
         onSurface: textPrimary,
+        error: statusError,
       ),
       dividerColor: borderLight,
+      cardTheme: CardThemeData(color: card, elevation: 2),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: Colors.white,
+        labelStyle: TextStyle(color: textSecondary),
+        hintStyle: TextStyle(color: textSecondary.withOpacity(0.6)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: borderLight),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: borderLight),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: mainColor, width: 2),
+        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: mainColor,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      ),
+      sliderTheme: SliderThemeData(
+        activeTrackColor: mainColor,
+        inactiveTrackColor: borderLight,
+        thumbColor: mainColor,
+        overlayColor: mainColor.withOpacity(0.2),
+        valueIndicatorColor: mainColor,
+        valueIndicatorTextStyle: TextStyle(color: Colors.white),
+      ),
     );
   }
 }

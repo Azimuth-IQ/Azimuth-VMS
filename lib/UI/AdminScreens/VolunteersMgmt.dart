@@ -175,8 +175,8 @@ class VolunteerTile extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(color: Colors.blue.withOpacity(0.1), shape: BoxShape.circle),
-                child: const Icon(Icons.person, color: Colors.blue, size: 24),
+                decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withOpacity(0.1), shape: BoxShape.circle),
+                child: Icon(Icons.person, color: Theme.of(context).colorScheme.primary, size: 24),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -186,10 +186,7 @@ class VolunteerTile extends StatelessWidget {
                     Row(
                       children: [
                         Expanded(
-                          child: Text(
-                            volunteer.name,
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF1A1F36)),
-                          ),
+                          child: Text(volunteer.name, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
                         ),
                         if (volunteer.archived) const SizedBox(width: 8),
                         if (volunteer.archived) const ArchivedBadge(),
@@ -198,9 +195,9 @@ class VolunteerTile extends StatelessWidget {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        Icon(Icons.phone, size: 14, color: Colors.grey[600]),
+                        Icon(Icons.phone, size: 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
                         const SizedBox(width: 4),
-                        Text(volunteer.phone, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                        Text(volunteer.phone, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6))),
                       ],
                     ),
                     const SizedBox(height: 4),

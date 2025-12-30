@@ -13,6 +13,7 @@ class LanguageSwitcher extends StatelessWidget {
   Widget build(BuildContext context) {
     final languageProvider = context.watch<LanguageProvider>();
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     if (isIconButton) {
       return IconButton(icon: const Icon(Icons.language), tooltip: l10n.switchLanguage, onPressed: () => _showLanguageDialog(context));
@@ -37,7 +38,7 @@ class LanguageSwitcher extends StatelessWidget {
           value: const Locale('en'),
           child: Row(
             children: [
-              if (languageProvider.isEnglish) const Icon(Icons.check, size: 20, color: Colors.blue),
+              if (languageProvider.isEnglish) Icon(Icons.check, size: 20, color: theme.colorScheme.primary),
               if (languageProvider.isEnglish) const SizedBox(width: 8),
               const Text('English'),
             ],
@@ -47,7 +48,7 @@ class LanguageSwitcher extends StatelessWidget {
           value: const Locale('ar'),
           child: Row(
             children: [
-              if (languageProvider.isArabic) const Icon(Icons.check, size: 20, color: Colors.blue),
+              if (languageProvider.isArabic) Icon(Icons.check, size: 20, color: theme.colorScheme.primary),
               if (languageProvider.isArabic) const SizedBox(width: 8),
               const Text('العربية'),
             ],

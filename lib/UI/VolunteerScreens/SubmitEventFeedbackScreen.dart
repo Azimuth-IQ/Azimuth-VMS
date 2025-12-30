@@ -38,12 +38,13 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     final user = FirebaseAuth.instance.currentUser;
     final userPhone = user?.email?.split('@').first ?? '';
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
-      appBar: AppBar(title: Text(l10n.eventFeedback), backgroundColor: Colors.grey[50], elevation: 0, foregroundColor: Colors.black87),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: AppBar(title: Text(l10n.eventFeedback), backgroundColor: theme.scaffoldBackgroundColor, elevation: 0, foregroundColor: theme.colorScheme.onSurface),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -51,7 +52,7 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
           children: [
             // Event Info Card
             Card(
-              color: Colors.blue.shade50,
+              color: theme.colorScheme.surface,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -59,20 +60,23 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.event, color: Colors.blue.shade700),
+                        Icon(Icons.event, color: theme.colorScheme.primary),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
                             widget.event.name,
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue.shade900),
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 8),
-                    Text(l10n.yourShift(widget.assignment.shiftId), style: TextStyle(color: Colors.blue.shade800, fontSize: 14)),
+                    Text(l10n.yourShift(widget.assignment.shiftId), style: TextStyle(color: theme.colorScheme.primary.withOpacity(0.8), fontSize: 14)),
                     const SizedBox(height: 4),
-                    Text(l10n.locationField(widget.assignment.sublocationId ?? l10n.notAssigned), style: TextStyle(color: Colors.blue.shade800, fontSize: 14)),
+                    Text(
+                      l10n.locationField(widget.assignment.sublocationId ?? l10n.notAssigned),
+                      style: TextStyle(color: theme.colorScheme.primary.withOpacity(0.8), fontSize: 14),
+                    ),
                   ],
                 ),
               ),
@@ -82,7 +86,7 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
             // Instructions
             Text(l10n.rateYourExperience, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
-            Text(l10n.rateEventManagementAspects, style: TextStyle(color: Colors.grey.shade700, fontSize: 14)),
+            Text(l10n.rateEventManagementAspects, style: TextStyle(color: theme.colorScheme.onSurface.withOpacity(0.7), fontSize: 14)),
             const SizedBox(height: 24),
 
             // Rating Form
@@ -135,9 +139,9 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.green.shade50,
+                      color: theme.colorScheme.primary.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.green.shade200),
+                      border: Border.all(color: theme.colorScheme.primary.withOpacity(0.3)),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -146,7 +150,7 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
                         const SizedBox(width: 12),
                         Text(
                           l10n.averageRating(_averageRating.toStringAsFixed(1)),
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green.shade900),
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
                         ),
                       ],
                     ),
@@ -198,7 +202,7 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
                       },
                       icon: const Icon(Icons.send),
                       label: Text(l10n.submitFeedback),
-                      style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16), backgroundColor: Colors.blue, foregroundColor: Colors.white),
+                      style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
                     ),
                   ),
                 ],
@@ -212,12 +216,13 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
 
   Widget _buildRatingSlider(String title, String description, int currentValue, Function(int) onChanged, IconData icon) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: theme.colorScheme.outline.withOpacity(0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -225,7 +230,7 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
           // Title Row
           Row(
             children: [
-              Icon(icon, color: Colors.blue.shade700, size: 20),
+              Icon(icon, color: theme.colorScheme.primary, size: 20),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
@@ -250,7 +255,7 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
           ),
           const SizedBox(height: 8),
           // Description
-          Text(description, style: TextStyle(color: Colors.grey.shade700, fontSize: 13)),
+          Text(description, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.7))),
           const SizedBox(height: 16),
           // Rating Slider
           Row(
@@ -266,11 +271,11 @@ class _SubmitEventFeedbackScreenState extends State<SubmitEventFeedbackScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(l10n.poor, style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
-              Text(l10n.fair, style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
-              Text(l10n.good, style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
-              Text(l10n.veryGood, style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
-              Text(l10n.excellent, style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+              Text(l10n.poor, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
+              Text(l10n.fair, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
+              Text(l10n.good, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
+              Text(l10n.veryGood, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
+              Text(l10n.excellent, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
             ],
           ),
         ],

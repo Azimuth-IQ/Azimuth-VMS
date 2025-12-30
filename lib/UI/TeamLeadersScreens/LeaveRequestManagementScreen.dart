@@ -153,13 +153,14 @@ class _LeaveRequestManagementViewState extends State<LeaveRequestManagementView>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Leave Requests'),
-        backgroundColor: Colors.grey[50],
+        backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 0,
-        foregroundColor: Colors.black87,
+        foregroundColor: theme.colorScheme.onSurface,
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -188,9 +189,9 @@ class _LeaveRequestManagementViewState extends State<LeaveRequestManagementView>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.event_busy, size: 64, color: Colors.grey[400]),
+                  Icon(Icons.event_busy, size: 64, color: theme.colorScheme.onSurface.withOpacity(0.3)),
                   const SizedBox(height: 16),
-                  Text('No events assigned to your teams', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                  Text('No events assigned to your teams', style: TextStyle(fontSize: 16, color: theme.colorScheme.onSurface.withOpacity(0.6))),
                 ],
               ),
             );
@@ -247,9 +248,9 @@ class _LeaveRequestManagementViewState extends State<LeaveRequestManagementView>
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.assignment_late, size: 64, color: Colors.grey[400]),
+                              Icon(Icons.assignment_late, size: 64, color: theme.colorScheme.onSurface.withOpacity(0.3)),
                               const SizedBox(height: 16),
-                              Text('Select an event to view leave requests', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                              Text('Select an event to view leave requests', style: TextStyle(fontSize: 16, color: theme.colorScheme.onSurface.withOpacity(0.6))),
                             ],
                           ),
                         )
@@ -286,7 +287,7 @@ class _LeaveRequestManagementViewState extends State<LeaveRequestManagementView>
                                 Expanded(
                                   child: pendingRequests.isEmpty
                                       ? Center(
-                                          child: Text('No pending leave requests', style: TextStyle(color: Colors.grey[600])),
+                                          child: Text('No pending leave requests', style: TextStyle(color: theme.colorScheme.onSurface.withOpacity(0.6))),
                                         )
                                       : ListView.builder(
                                           itemCount: pendingRequests.length,

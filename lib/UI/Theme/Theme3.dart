@@ -72,12 +72,11 @@ class Theme3 {
       colorScheme: const ColorScheme.dark(
         primary: mainColor,
         secondary: accentColor,
-        background: backgroundDark,
         surface: backgroundCard,
         onPrimary: backgroundDark,
         onSecondary: backgroundDark,
-        onBackground: textPrimaryDark,
         onSurface: textPrimaryDark,
+        error: statusError,
       ),
       dividerColor: borderDark,
       textTheme: const TextTheme(
@@ -93,6 +92,43 @@ class Theme3 {
         bodyLarge: TextStyle(fontFamily: bodyFontFamily),
         bodyMedium: TextStyle(fontFamily: bodyFontFamily),
         bodySmall: TextStyle(fontFamily: bodyFontFamily),
+      ),
+      cardTheme: CardThemeData(color: backgroundCard, elevation: 2),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: backgroundHeader,
+        labelStyle: TextStyle(color: textSecondary),
+        hintStyle: TextStyle(color: textSecondary.withOpacity(0.6)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: borderDark),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: borderDark),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: mainColor, width: 2),
+        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: mainColor,
+          foregroundColor: backgroundDark,
+          elevation: 0,
+          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      ),
+      sliderTheme: SliderThemeData(
+        activeTrackColor: mainColor,
+        inactiveTrackColor: borderDark,
+        thumbColor: mainColor,
+        overlayColor: mainColor.withOpacity(0.2),
+        valueIndicatorColor: mainColor,
+        valueIndicatorTextStyle: TextStyle(color: backgroundDark),
       ),
     );
   }

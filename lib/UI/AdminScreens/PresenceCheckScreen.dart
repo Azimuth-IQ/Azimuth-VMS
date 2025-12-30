@@ -94,17 +94,18 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(l10n.presenceCheck),
-        backgroundColor: Colors.grey[50],
+        backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 0,
-        foregroundColor: Colors.black87,
+        foregroundColor: theme.colorScheme.onSurface,
         bottom: TabBar(
           controller: _tabController,
-          labelColor: Colors.black87,
-          unselectedLabelColor: Colors.black54,
+          labelColor: theme.colorScheme.primary,
+          unselectedLabelColor: theme.colorScheme.onSurface.withOpacity(0.6),
           tabs: [
             Tab(icon: const Icon(Icons.directions_bus), text: l10n.check1Departure),
             Tab(icon: const Icon(Icons.location_on), text: l10n.check2Arrival),
@@ -151,9 +152,12 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.how_to_reg, size: 64, color: Colors.grey[400]),
+                                    Icon(Icons.how_to_reg, size: 64, color: theme.colorScheme.onSurface.withOpacity(0.3)),
                                     const SizedBox(height: 16),
-                                    Text(AppLocalizations.of(context)!.selectAnEventToStartPresenceCheck, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                                    Text(
+                                      AppLocalizations.of(context)!.selectAnEventToStartPresenceCheck,
+                                      style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6)),
+                                    ),
                                   ],
                                 ),
                               )
@@ -181,7 +185,7 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
                     child: Column(
                       children: [
                         Container(
-                          color: Colors.grey[100],
+                          color: theme.colorScheme.surface.withOpacity(0.5),
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                           child: Row(
                             children: [
@@ -311,8 +315,9 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
 
         if (assignments.isEmpty) {
           final l10n = AppLocalizations.of(context)!;
+          final theme = Theme.of(context);
           return Center(
-            child: Text(l10n.noVolunteersAssignedToThisEvent, style: TextStyle(color: Colors.grey[600])),
+            child: Text(l10n.noVolunteersAssignedToThisEvent, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
           );
         }
 
@@ -351,7 +356,7 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
                   return Card(
                     margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                     child: ListTile(
-                      leading: _buildStatusIcon(attendanceRecord),
+                      leading: _buildStatusIcon(attendanceRecord, context),
                       title: Text(volunteer.name),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -361,7 +366,7 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
                           if (assignment.status == ShiftAssignmentStatus.EXCUSED)
                             Text(
                               AppLocalizations.of(context)!.excusedLeaveApproved,
-                              style: const TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 12),
+                              style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 12),
                             ),
                         ],
                       ),
@@ -370,7 +375,7 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
                         children: [
                           if (shift != null)
                             IconButton(
-                              icon: const Icon(Icons.swap_horiz, color: Colors.blue),
+                              icon: Icon(Icons.swap_horiz, color: Theme.of(context).colorScheme.primary),
                               tooltip: AppLocalizations.of(context)!.reassignLocation,
                               onPressed: () {
                                 showDialog(
@@ -426,9 +431,9 @@ class _PresenceCheckViewState extends State<PresenceCheckView> with SingleTicker
     );
   }
 
-  Widget _buildStatusIcon(AttendanceRecord? record) {
+  Widget _buildStatusIcon(AttendanceRecord? record, BuildContext context) {
     if (record == null) {
-      return const Icon(Icons.radio_button_unchecked, color: Colors.grey);
+      return Icon(Icons.radio_button_unchecked, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4));
     }
     return Icon(record.present ? Icons.check_circle : Icons.cancel, color: record.present ? Colors.green : Colors.red);
   }

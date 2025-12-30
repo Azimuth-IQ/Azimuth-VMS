@@ -139,8 +139,8 @@ class TeamLeaderTile extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(color: Colors.indigo.withOpacity(0.1), shape: BoxShape.circle),
-                child: const Icon(Icons.person_pin_circle, color: Colors.indigo, size: 24),
+                decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withOpacity(0.1), shape: BoxShape.circle),
+                child: Icon(Icons.person_pin_circle, color: Theme.of(context).colorScheme.primary, size: 24),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -150,10 +150,7 @@ class TeamLeaderTile extends StatelessWidget {
                     Row(
                       children: [
                         Expanded(
-                          child: Text(
-                            teamLeader.name,
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF1A1F36)),
-                          ),
+                          child: Text(teamLeader.name, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
                         ),
                         if (teamLeader.archived) const SizedBox(width: 8),
                         if (teamLeader.archived) const ArchivedBadge(),
@@ -162,9 +159,9 @@ class TeamLeaderTile extends StatelessWidget {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        Icon(Icons.phone, size: 14, color: Colors.grey[600]),
+                        Icon(Icons.phone, size: 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
                         const SizedBox(width: 4),
-                        Text(teamLeader.phone, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                        Text(teamLeader.phone, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6))),
                       ],
                     ),
                   ],

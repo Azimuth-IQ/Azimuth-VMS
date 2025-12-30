@@ -99,18 +99,54 @@ class Theme1 {
       primaryColor: primary,
       scaffoldBackgroundColor: backgroundDark,
       fontFamily: fontFamily,
-      textTheme: textTheme,
+      textTheme: textTheme.apply(bodyColor: textPrimaryDark, displayColor: textPrimaryDark),
       colorScheme: const ColorScheme.dark(
         primary: primary,
         secondary: primaryHover,
-        background: backgroundDark,
         surface: surfaceDark,
         onPrimary: Colors.white,
         onSecondary: Colors.white,
-        onBackground: textPrimaryDark,
         onSurface: textPrimaryDark,
+        error: statusError,
       ),
       dividerColor: borderColor,
+      cardTheme: CardThemeData(color: surfaceDark, elevation: 2),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: borderColor,
+        labelStyle: TextStyle(color: textSecondaryDark),
+        hintStyle: TextStyle(color: textMutedDark),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: borderColor),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: borderColor),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: primary, width: 2),
+        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: primary,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      ),
+      sliderTheme: SliderThemeData(
+        activeTrackColor: primary,
+        inactiveTrackColor: borderColor,
+        thumbColor: primary,
+        overlayColor: primary.withOpacity(0.2),
+        valueIndicatorColor: primary,
+        valueIndicatorTextStyle: TextStyle(color: Colors.white),
+      ),
     );
   }
 }

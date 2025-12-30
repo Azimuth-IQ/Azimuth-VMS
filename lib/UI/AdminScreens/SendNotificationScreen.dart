@@ -152,7 +152,16 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.notificationSentToUsers(targetPhones.length))));
-        Navigator.pop(context);
+        // Clear the form after successful send
+        _titleController.clear();
+        _messageController.clear();
+        setState(() {
+          _selectedType = NotificationType.Info;
+          _selectedAudience = 'all_users';
+          _selectedRole = null;
+          _selectedTeamId = null;
+          _selectedEventId = null;
+        });
       }
     } catch (e) {
       print('Error sending notifications: $e');

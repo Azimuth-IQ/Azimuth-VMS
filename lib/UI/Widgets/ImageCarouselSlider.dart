@@ -63,6 +63,7 @@ class _ImageCarouselSliderState extends State<ImageCarouselSlider> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     if (widget.images.isEmpty) {
       return SizedBox(
         height: widget.height,
@@ -71,9 +72,9 @@ class _ImageCarouselSliderState extends State<ImageCarouselSlider> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.image_not_supported, size: 48, color: Colors.grey[400]),
+                Icon(Icons.image_not_supported, size: 48, color: theme.colorScheme.onSurface.withOpacity(0.3)),
                 const SizedBox(height: 8),
-                Text('No images available', style: TextStyle(color: Colors.grey[600])),
+                Text('No images available', style: TextStyle(color: theme.colorScheme.onSurface.withOpacity(0.6))),
               ],
             ),
           ),
@@ -107,13 +108,13 @@ class _ImageCarouselSliderState extends State<ImageCarouselSlider> {
                         image.imageUrl,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) => Container(
-                          color: Colors.grey[300],
+                          color: theme.colorScheme.surface,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.broken_image, size: 64, color: Colors.grey[600]),
+                              Icon(Icons.broken_image, size: 64, color: theme.colorScheme.onSurface.withOpacity(0.3)),
                               const SizedBox(height: 8),
-                              Text('Image not available', style: TextStyle(color: Colors.grey[600])),
+                              Text('Image not available', style: TextStyle(color: theme.colorScheme.onSurface.withOpacity(0.6))),
                             ],
                           ),
                         ),

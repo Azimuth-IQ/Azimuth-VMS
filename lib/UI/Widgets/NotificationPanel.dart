@@ -41,11 +41,11 @@ class NotificationPanel extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
+                  Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3)),
                   const SizedBox(height: 16),
-                  Text(AppLocalizations.of(context)!.errorLoadingNotifications, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                  Text(AppLocalizations.of(context)!.errorLoadingNotifications, style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6))),
                   const SizedBox(height: 8),
-                  Text(provider.errorMessage!, style: TextStyle(fontSize: 14, color: Colors.grey[500])),
+                  Text(provider.errorMessage!, style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5))),
                   const SizedBox(height: 24),
                   ElevatedButton.icon(onPressed: () => provider.refresh(), icon: const Icon(Icons.refresh), label: Text(AppLocalizations.of(context)!.retry)),
                 ],
@@ -58,11 +58,11 @@ class NotificationPanel extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.notifications_none, size: 64, color: Colors.grey[400]),
+                  Icon(Icons.notifications_none, size: 64, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3)),
                   const SizedBox(height: 16),
-                  Text(AppLocalizations.of(context)!.noNotificationsYet, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                  Text(AppLocalizations.of(context)!.noNotificationsYet, style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6))),
                   const SizedBox(height: 8),
-                  Text(AppLocalizations.of(context)!.notificationsWillAppearHere, style: TextStyle(fontSize: 14, color: Colors.grey[500])),
+                  Text(AppLocalizations.of(context)!.notificationsWillAppearHere, style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5))),
                 ],
               ),
             );
@@ -106,7 +106,7 @@ class _NotificationCard extends StatelessWidget {
       },
       child: Card(
         elevation: notification.isRead ? 0 : 2,
-        color: notification.isRead ? Colors.grey[50] : Colors.white,
+        color: notification.isRead ? Theme.of(context).colorScheme.surface.withOpacity(0.5) : Theme.of(context).colorScheme.surface,
         margin: const EdgeInsets.only(bottom: 8),
         child: InkWell(
           onTap: () {
@@ -145,13 +145,13 @@ class _NotificationCard extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 4),
-                      Text(notification.message, style: TextStyle(fontSize: 14, color: Colors.grey[700])),
+                      Text(notification.message, style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7))),
                       const SizedBox(height: 8),
                       Row(
                         children: [
-                          Icon(Icons.access_time, size: 12, color: Colors.grey[500]),
+                          Icon(Icons.access_time, size: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
                           const SizedBox(width: 4),
-                          Text(_formatDateTime(notification.dateTime), style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+                          Text(_formatDateTime(notification.dateTime), style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5))),
                         ],
                       ),
                     ],

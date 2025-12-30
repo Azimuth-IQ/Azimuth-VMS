@@ -6,6 +6,7 @@ import 'package:azimuth_vms/Providers/NotificationsProvider.dart';
 import 'package:azimuth_vms/Providers/ShiftAssignmentProvider.dart';
 import 'package:azimuth_vms/Providers/VolunteerRatingProvider.dart';
 import 'package:azimuth_vms/UI/Widgets/ImageCarouselSlider.dart';
+import 'package:azimuth_vms/UI/Widgets/LanguageSwitcher.dart';
 import 'package:azimuth_vms/UI/Widgets/NotificationPanel.dart';
 import 'package:azimuth_vms/UI/VolunteerScreens/VolunteerScheduleScreen.dart';
 import 'package:azimuth_vms/UI/VolunteerScreens/VolunteerProfileScreen.dart';
@@ -182,16 +183,17 @@ class VolunteersDashboard extends StatelessWidget {
   }
 
   Widget _buildErrorScreen(BuildContext context, String message) {
+    final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: false, title: Text(l10n.volunteerDashboard), backgroundColor: Colors.grey),
+      appBar: AppBar(automaticallyImplyLeading: false, title: Text(l10n.volunteerDashboard), backgroundColor: theme.colorScheme.surface),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.error_outline, size: 80, color: Colors.grey),
+              Icon(Icons.error_outline, size: 80, color: theme.colorScheme.onSurface.withOpacity(0.3)),
               const SizedBox(height: 24),
               Text(
                 l10n.error,
@@ -229,6 +231,7 @@ class _ApprovedDashboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
     return LayoutBuilder(
@@ -318,7 +321,7 @@ class _ApprovedDashboardView extends StatelessWidget {
 
         if (isDesktop) {
           return Scaffold(
-            backgroundColor: Colors.grey[50],
+            backgroundColor: theme.scaffoldBackgroundColor,
             body: Row(
               children: [
                 NavigationRail(
@@ -406,9 +409,9 @@ class _ApprovedDashboardView extends StatelessWidget {
                       AppBar(
                         automaticallyImplyLeading: false,
                         title: Text(l10n.volunteerDashboard),
-                        backgroundColor: Colors.grey[50],
+                        backgroundColor: theme.scaffoldBackgroundColor,
                         elevation: 0,
-                        foregroundColor: Colors.black87,
+                        foregroundColor: theme.colorScheme.onSurface,
                       ),
                       Expanded(child: body),
                     ],
@@ -419,14 +422,15 @@ class _ApprovedDashboardView extends StatelessWidget {
           );
         } else {
           return Scaffold(
-            backgroundColor: Colors.grey[50],
+            backgroundColor: theme.scaffoldBackgroundColor,
             appBar: AppBar(
               automaticallyImplyLeading: false,
-              title: Text(l10n.volunteerDashboard),
-              backgroundColor: Colors.grey[50],
+              title: Text(l10n.dashboard),
+              backgroundColor: theme.scaffoldBackgroundColor,
               elevation: 0,
-              foregroundColor: Colors.black87,
+              foregroundColor: theme.colorScheme.onSurface,
               actions: [
+                const LanguageSwitcher(showLabel: false, isIconButton: true),
                 // Notification Bell
                 Consumer<NotificationsProvider>(
                   builder: (context, notifProvider, child) {
@@ -475,10 +479,11 @@ class _ApprovedDashboardView extends StatelessWidget {
   }
 
   Widget _buildBottomNavigation(BuildContext context, VolunteerForm form) {
+    final theme = Theme.of(context);
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
-      selectedItemColor: Colors.green,
-      unselectedItemColor: Colors.grey,
+      selectedItemColor: theme.colorScheme.primary,
+      unselectedItemColor: theme.colorScheme.onSurface.withOpacity(0.6),
       currentIndex: 0,
       showSelectedLabels: false,
       showUnselectedLabels: false,
@@ -519,6 +524,7 @@ class _ApprovedDashboardView extends StatelessWidget {
   void _showLanguageDialog(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final languageProvider = context.read<LanguageProvider>();
+    final theme = Theme.of(context);
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -529,7 +535,7 @@ class _ApprovedDashboardView extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.language),
               title: const Text('English'),
-              trailing: languageProvider.isEnglish ? const Icon(Icons.check, color: Colors.green) : null,
+              trailing: languageProvider.isEnglish ? Icon(Icons.check, color: theme.colorScheme.primary) : null,
               onTap: () async {
                 await languageProvider.setLocale(const Locale('en'));
                 if (context.mounted) Navigator.pop(context);
@@ -538,7 +544,7 @@ class _ApprovedDashboardView extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.language),
               title: const Text('العربية'),
-              trailing: languageProvider.isArabic ? const Icon(Icons.check, color: Colors.green) : null,
+              trailing: languageProvider.isArabic ? Icon(Icons.check, color: theme.colorScheme.primary) : null,
               onTap: () async {
                 await languageProvider.setLocale(const Locale('ar'));
                 if (context.mounted) Navigator.pop(context);

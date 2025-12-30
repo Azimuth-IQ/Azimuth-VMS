@@ -117,7 +117,7 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
                   children: [
                     Row(
                       children: [
-                        const Icon(Icons.event, color: Colors.blue),
+                        Icon(Icons.event, color: Theme.of(context).colorScheme.primary),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(widget.event.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
@@ -143,7 +143,7 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
                 children: [
                   Text(l10n.reasonForLeaveRequest, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
-                  Text(l10n.provideDetailedReasonForLeave, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                  Text(l10n.provideDetailedReasonForLeave, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6), fontSize: 12)),
                   const SizedBox(height: 12),
                   TextFormField(
                     controller: _reasonController,

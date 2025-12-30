@@ -59,6 +59,19 @@ class _AdminDashboardState extends State<AdminDashboard> {
       const EventsMgmt(),
       const VolunteersMgmt(),
       const TeamLeadersMgmt(),
+      _MoreMenu(
+        onNavigate: (route) {
+          if (route == '/teams') {
+            setState(() => _selectedIndex = 5);
+          } else if (route == '/locations') {
+            setState(() => _selectedIndex = 6);
+          } else if (route == '/send-notification') {
+            setState(() => _selectedIndex = 7);
+          } else if (route == '/theme-settings') {
+            setState(() => _selectedIndex = 8);
+          }
+        },
+      ),
       const TeamsMgmt(),
       const LocationsMgmt(),
       const SendNotificationScreen(),
@@ -90,10 +103,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     NavigationRailDestination(icon: const Icon(Icons.event_outlined), selectedIcon: const Icon(Icons.event), label: Text(l10n.events)),
                     NavigationRailDestination(icon: const Icon(Icons.people_outline), selectedIcon: const Icon(Icons.people), label: Text(l10n.volunteers)),
                     NavigationRailDestination(icon: const Icon(Icons.supervisor_account_outlined), selectedIcon: const Icon(Icons.supervisor_account), label: Text(l10n.leaders)),
-                    NavigationRailDestination(icon: const Icon(Icons.groups_outlined), selectedIcon: const Icon(Icons.groups), label: Text(l10n.teams)),
-                    NavigationRailDestination(icon: const Icon(Icons.location_on_outlined), selectedIcon: const Icon(Icons.location_on), label: Text(l10n.locations)),
-                    NavigationRailDestination(icon: const Icon(Icons.campaign_outlined), selectedIcon: const Icon(Icons.campaign), label: Text(l10n.sendNotif)),
-                    NavigationRailDestination(icon: const Icon(Icons.palette_outlined), selectedIcon: const Icon(Icons.palette), label: const Text('Themes')),
+                    NavigationRailDestination(icon: const Icon(Icons.more_horiz), selectedIcon: const Icon(Icons.menu), label: const Text('More')),
                   ],
                   trailing: Expanded(
                     child: Column(
@@ -130,10 +140,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 NavigationDestination(icon: const Icon(Icons.event_outlined), selectedIcon: const Icon(Icons.event), label: l10n.events),
                 NavigationDestination(icon: const Icon(Icons.people_outline), selectedIcon: const Icon(Icons.people), label: l10n.volunteers),
                 NavigationDestination(icon: const Icon(Icons.supervisor_account_outlined), selectedIcon: const Icon(Icons.supervisor_account), label: l10n.leaders),
-                NavigationDestination(icon: const Icon(Icons.groups_outlined), selectedIcon: const Icon(Icons.groups), label: l10n.teams),
-                NavigationDestination(icon: const Icon(Icons.location_on_outlined), selectedIcon: const Icon(Icons.location_on), label: l10n.locations),
-                NavigationDestination(icon: const Icon(Icons.campaign_outlined), selectedIcon: const Icon(Icons.campaign), label: l10n.sendNotif),
-                NavigationDestination(icon: const Icon(Icons.palette_outlined), selectedIcon: const Icon(Icons.palette), label: 'Themes'),
+                NavigationDestination(icon: const Icon(Icons.more_horiz), selectedIcon: const Icon(Icons.menu), label: 'More'),
               ],
             ),
           );
@@ -155,6 +162,7 @@ class _DashboardHome extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -290,17 +298,18 @@ class _DashboardHome extends StatelessWidget {
         final topTeams = teams.take(5).toList();
         final maxMembers = topTeams.isNotEmpty ? topTeams.first.memberIds.length : 1;
 
+        final theme = Theme.of(context);
         return Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: theme.colorScheme.surface,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.grey.shade200),
+            border: Border.all(color: theme.dividerColor),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(l10n.volunteersPerTeam, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              Text(l10n.volunteersPerTeam, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
               const SizedBox(height: 24),
               SizedBox(
                 height: 200,
@@ -327,7 +336,7 @@ class _DashboardHome extends StatelessWidget {
                           const SizedBox(height: 8),
                           Text(
                             team.name.length > 8 ? '${team.name.substring(0, 6)}..' : team.name,
-                            style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                            style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6)),
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -430,19 +439,20 @@ class _DashboardHome extends StatelessWidget {
       builder: (context, provider, _) {
         if (provider.isLoading) return const Center(child: CircularProgressIndicator());
         if (provider.activeEvents.isEmpty) {
+          final theme = Theme.of(context);
           return Container(
             padding: const EdgeInsets.all(32),
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: theme.colorScheme.surface,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.grey.shade200),
+              border: Border.all(color: theme.dividerColor),
             ),
             child: Column(
               children: [
-                Icon(Icons.event_busy, size: 48, color: Colors.grey.shade300),
+                Icon(Icons.event_busy, size: 48, color: theme.colorScheme.onSurface.withOpacity(0.3)),
                 const SizedBox(height: 16),
-                Text(l10n.noActiveEvents, style: TextStyle(color: Colors.grey.shade500)),
+                Text(l10n.noActiveEvents, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.5))),
               ],
             ),
           );
@@ -526,11 +536,13 @@ class _ScenarioCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     return Card(
       elevation: 0,
+      color: theme.colorScheme.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: Colors.grey.shade200),
+        side: BorderSide(color: theme.dividerColor),
       ),
       child: InkWell(
         onTap: onTap,
@@ -546,9 +558,9 @@ class _ScenarioCard extends StatelessWidget {
                 child: Icon(icon, color: color, size: 32),
               ),
               const SizedBox(height: 16),
-              Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(title, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
-              Text(description, style: TextStyle(color: Colors.grey.shade600)),
+              Text(description, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
               const SizedBox(height: 16),
               Row(
                 children: [
@@ -578,13 +590,14 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade100),
-        boxShadow: [BoxShadow(color: Colors.grey.shade100, blurRadius: 10, offset: const Offset(0, 4))],
+        border: Border.all(color: theme.dividerColor),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -597,13 +610,13 @@ class _StatCard extends StatelessWidget {
                 decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
                 child: Icon(icon, color: color, size: 24),
               ),
-              Text(value, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              Text(value, style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
             ],
           ),
           const SizedBox(height: 12),
           Text(
             title,
-            style: TextStyle(color: Colors.grey.shade600, fontSize: 14, fontWeight: FontWeight.w500),
+            style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6), fontWeight: FontWeight.w500),
           ),
         ],
       ),
@@ -621,15 +634,16 @@ class _QuickAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.grey.shade200),
+          border: Border.all(color: theme.dividerColor),
         ),
         child: Row(
           children: [
@@ -640,9 +654,95 @@ class _QuickAction extends StatelessWidget {
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: Text(title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+              child: Text(title, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _MoreMenu extends StatelessWidget {
+  final Function(String) onNavigate;
+
+  const _MoreMenu({required this.onNavigate});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('More'), automaticallyImplyLeading: false),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          _MoreMenuItem(icon: Icons.groups, title: l10n.teams, subtitle: 'Manage teams and members', color: Colors.purple, onTap: () => onNavigate('/teams')),
+          const SizedBox(height: 12),
+          _MoreMenuItem(icon: Icons.location_on, title: l10n.locations, subtitle: 'Manage locations and sublocations', color: Colors.orange, onTap: () => onNavigate('/locations')),
+          const SizedBox(height: 12),
+          _MoreMenuItem(
+            icon: Icons.campaign,
+            title: l10n.sendNotification,
+            subtitle: l10n.sendNotificationsToGroups,
+            color: Colors.cyan,
+            onTap: () => onNavigate('/send-notification'),
+          ),
+          const SizedBox(height: 12),
+          _MoreMenuItem(icon: Icons.palette, title: 'Theme Settings', subtitle: 'Change app theme and appearance', color: Colors.pink, onTap: () => onNavigate('/theme-settings')),
+        ],
+      ),
+    );
+  }
+}
+
+class _MoreMenuItem extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _MoreMenuItem({required this.icon, required this.title, required this.subtitle, required this.color, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Card(
+      elevation: 0,
+      color: theme.colorScheme.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: theme.dividerColor),
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+                child: Icon(icon, color: color, size: 28),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 4),
+                    Text(subtitle, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
+                  ],
+                ),
+              ),
+              Icon(Icons.chevron_right, color: theme.colorScheme.onSurface.withOpacity(0.4)),
+            ],
+          ),
         ),
       ),
     );

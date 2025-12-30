@@ -76,15 +76,16 @@ class _VolunteerEventDetailsViewState extends State<VolunteerEventDetailsView> {
           }
 
           final myAssignments = assignmentProvider.assignments;
+          final theme = Theme.of(context);
 
           if (myAssignments.isEmpty) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.event_busy, size: 64, color: Colors.grey[400]),
+                  Icon(Icons.event_busy, size: 64, color: theme.colorScheme.onSurface.withOpacity(0.3)),
                   const SizedBox(height: 16),
-                  Text(l10n.noEventsAssignedToYou, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                  Text(l10n.noEventsAssignedToYou, style: TextStyle(fontSize: 16, color: theme.colorScheme.onSurface.withOpacity(0.6))),
                 ],
               ),
             );
@@ -207,12 +208,13 @@ class _EventCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Shift info
-                _buildInfoRow(Icons.schedule, l10n.shiftTime, '${shift.startTime} - ${shift.endTime}'),
+                _buildInfoRow(context, Icons.schedule, l10n.shiftTime, '${shift.startTime} - ${shift.endTime}'),
                 const SizedBox(height: 12),
 
                 // Location info
                 if (location != null) ...[
                   _buildInfoRow(
+                    context,
                     Icons.location_on,
                     assignment.sublocationId != null ? l10n.sublocation : l10n.location,
                     assignment.sublocationId != null ? location!.subLocations?.where((s) => s.id == assignment.sublocationId).firstOrNull?.name ?? l10n.unknown : location!.name,
@@ -222,7 +224,7 @@ class _EventCard extends StatelessWidget {
 
                 // Team leader info
                 if (teamLeader != null) ...[
-                  _buildInfoRow(Icons.person, l10n.teamLeader, teamLeader!.name),
+                  _buildInfoRow(context, Icons.person, l10n.teamLeader, teamLeader!.name),
                   const SizedBox(height: 4),
                   Padding(
                     padding: const EdgeInsets.only(left: 40),
@@ -272,17 +274,18 @@ class _EventCard extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String label, String value) {
+  Widget _buildInfoRow(BuildContext context, IconData icon, String label, String value) {
+    final theme = Theme.of(context);
     return Row(
       children: [
-        Icon(icon, size: 20, color: Colors.blue),
+        Icon(icon, size: 20, color: theme.colorScheme.primary),
         const SizedBox(width: 12),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+            Text(label, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
             const SizedBox(height: 2),
-            Text(value, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+            Text(value, style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500)),
           ],
         ),
       ],

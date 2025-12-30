@@ -95,14 +95,15 @@ class _VolunteerStatsChartState extends State<VolunteerStatsChart> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     if (_isLoading) {
       return Container(
         height: 300,
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+          boxShadow: [BoxShadow(color: theme.dividerColor.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
         ),
         child: const Center(child: CircularProgressIndicator()),
       );
@@ -112,16 +113,16 @@ class _VolunteerStatsChartState extends State<VolunteerStatsChart> {
       height: 300,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+        boxShadow: [BoxShadow(color: theme.dividerColor.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(AppLocalizations.of(context)!.activityOverview, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
-          Text(AppLocalizations.of(context)!.shiftsCompletedLast6Months, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+          Text(AppLocalizations.of(context)!.shiftsCompletedLast6Months, style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurface.withOpacity(0.6))),
           const SizedBox(height: 24),
           Expanded(
             child: BarChart(
@@ -151,7 +152,7 @@ class _VolunteerStatsChartState extends State<VolunteerStatsChart> {
                           space: 4,
                           child: Text(
                             _monthLabels[value.toInt()],
-                            style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 12),
+                            style: TextStyle(color: theme.colorScheme.onSurface.withOpacity(0.6), fontWeight: FontWeight.bold, fontSize: 12),
                           ),
                         );
                       },
@@ -164,7 +165,7 @@ class _VolunteerStatsChartState extends State<VolunteerStatsChart> {
                       reservedSize: 30,
                       getTitlesWidget: (value, meta) {
                         if (value == 0) return const SizedBox.shrink();
-                        return Text(value.toInt().toString(), style: const TextStyle(color: Colors.grey, fontSize: 12));
+                        return Text(value.toInt().toString(), style: TextStyle(color: theme.colorScheme.onSurface.withOpacity(0.6), fontSize: 12));
                       },
                       interval: _maxY > 10 ? 5 : 1,
                     ),
@@ -177,7 +178,7 @@ class _VolunteerStatsChartState extends State<VolunteerStatsChart> {
                   drawVerticalLine: false,
                   horizontalInterval: _maxY > 10 ? 5 : 1,
                   getDrawingHorizontalLine: (value) {
-                    return FlLine(color: Colors.grey.withOpacity(0.1), strokeWidth: 1);
+                    return FlLine(color: theme.dividerColor.withOpacity(0.1), strokeWidth: 1);
                   },
                 ),
                 borderData: FlBorderData(show: false),
@@ -191,15 +192,16 @@ class _VolunteerStatsChartState extends State<VolunteerStatsChart> {
   }
 
   BarChartGroupData _makeGroupData(int x, double y) {
+    final theme = Theme.of(context);
     return BarChartGroupData(
       x: x,
       barRods: [
         BarChartRodData(
           toY: y,
-          color: Colors.blue,
+          color: theme.colorScheme.primary,
           width: 16,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
-          backDrawRodData: BackgroundBarChartRodData(show: true, toY: _maxY, color: Colors.grey.withOpacity(0.1)),
+          backDrawRodData: BackgroundBarChartRodData(show: true, toY: _maxY, color: theme.dividerColor.withOpacity(0.1)),
         ),
       ],
     );
