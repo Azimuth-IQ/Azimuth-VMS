@@ -201,8 +201,18 @@ class EventTile extends StatelessWidget {
                   Text('${l10n.shifts}:', style: const TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
                   ...event.shifts.map(
-                    (shift) =>
-                        Padding(padding: const EdgeInsets.only(left: 16, top: 4), child: Text('${shift.startTime} - ${shift.endTime} (${l10n.location}: ${shift.locationId})')),
+                    (shift) {
+                      // Get location name instead of ID
+                      final location = provider.locations.firstWhere(
+                        (l) => l.id == shift.locationId,
+                        orElse: () => Location(id: '', name: shift.locationId, description: '', latitude: '', longitude: ''),
+                      );
+                      final locationName = location.id.isNotEmpty ? location.name : shift.locationId;
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 16, top: 4),
+                        child: Text('${shift.startTime} - ${shift.endTime} (${l10n.location}: $locationName)'),
+                      );
+                    },
                   ),
                 ] else
                   Padding(
@@ -463,11 +473,17 @@ class EventFormDialog extends StatelessWidget {
                               ...provider.shifts.asMap().entries.map((entry) {
                                 int index = entry.key;
                                 EventShift shift = entry.value;
+                                // Get location name instead of ID
+                                final location = provider.locations.firstWhere(
+                                  (l) => l.id == shift.locationId,
+                                  orElse: () => Location(id: '', name: shift.locationId, description: '', latitude: '', longitude: ''),
+                                );
+                                final locationName = location.id.isNotEmpty ? location.name : shift.locationId;
                                 return Card(
                                   child: ListTile(
                                     leading: const Icon(Icons.schedule),
                                     title: Text('${shift.startTime} - ${shift.endTime}'),
-                                    subtitle: Text('${l10n.locationColon} ${shift.locationId}'),
+                                    subtitle: Text('${l10n.locationColon} $locationName'),
                                     trailing: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [

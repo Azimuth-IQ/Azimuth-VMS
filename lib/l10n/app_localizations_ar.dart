@@ -1478,7 +1478,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get locationReassignedSuccessfully =>
-      'Location reassigned successfully. Volunteer must check in at new location.';
+      'تم إعادة تعيين الموقع بنجاح. يجب على المتطوع تسجيل الحضور في الموقع الجديد.';
 
   @override
   String eventColon(String name) {

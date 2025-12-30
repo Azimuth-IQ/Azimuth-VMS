@@ -3,8 +3,10 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../Helpers/EventHelperFirebase.dart';
+import '../../Helpers/LocationHelperFirebase.dart';
 import '../../Models/ShiftAssignment.dart';
 import '../../Models/Event.dart';
+import '../../Models/Location.dart';
 import '../../Providers/ShiftAssignmentProvider.dart';
 import '../../l10n/app_localizations.dart';
 
@@ -19,12 +21,14 @@ class VolunteerScheduleScreen extends StatefulWidget {
 
 class _VolunteerScheduleScreenState extends State<VolunteerScheduleScreen> {
   final EventHelperFirebase _eventHelper = EventHelperFirebase();
+  final LocationHelperFirebase _locationHelper = LocationHelperFirebase();
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
   Map<String, Event> _eventCache = {};
+  Map<String, Location> _locationCache = {};
   bool _isLoading = true;
 
   @override
@@ -44,14 +48,26 @@ class _VolunteerScheduleScreenState extends State<VolunteerScheduleScreen> {
         print('⚠️ No assignments found in provider!');
       }
 
-      // Load event details for each assignment
+      // Load event details and locations for each assignment
       for (var assignment in provider.assignments) {
         print('📅 Processing assignment: ${assignment.eventId} for shift ${assignment.shiftId}');
+        
+        // Load event
         if (!_eventCache.containsKey(assignment.eventId)) {
           final event = await _eventHelper.GetEventById(assignment.eventId);
           if (event != null) {
             _eventCache[assignment.eventId] = event;
             print('📅 Loaded event: ${event.name} on ${event.startDate}');
+            
+            // Load location for this event's shift
+            final shift = event.shifts.firstWhere((s) => s.id == assignment.shiftId, orElse: () => event.shifts.first);
+            if (shift.locationId.isNotEmpty && !_locationCache.containsKey(shift.locationId)) {
+              final location = await _locationHelper.GetLocationById(shift.locationId);
+              if (location != null) {
+                _locationCache[shift.locationId] = location;
+                print('📍 Loaded location: ${location.name}');
+              }
+            }
           } else {
             print('⚠️ Event not found for ID: ${assignment.eventId}');
           }
@@ -59,6 +75,7 @@ class _VolunteerScheduleScreenState extends State<VolunteerScheduleScreen> {
       }
 
       print('✓ Event cache contains ${_eventCache.length} events');
+      print('✓ Location cache contains ${_locationCache.length} locations');
       setState(() => _isLoading = false);
     } catch (e) {
       print('❌ Error loading events: $e');
@@ -262,7 +279,10 @@ class _VolunteerScheduleScreenState extends State<VolunteerScheduleScreen> {
                         Icon(Icons.location_on, color: Colors.grey[600], size: 16),
                         const SizedBox(width: 8),
                         Expanded(
-                          child: Text(l10n.locationId(shift.locationId), style: TextStyle(fontSize: 14, color: Colors.grey[700])),
+                          child: Text(
+                            _getLocationDisplayName(shift, assignment),
+                            style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                          ),
                         ),
                       ],
                     ),
@@ -362,5 +382,26 @@ class _VolunteerScheduleScreenState extends State<VolunteerScheduleScreen> {
         ),
       ],
     );
+  }
+
+  String _getLocationDisplayName(EventShift shift, ShiftAssignment assignment) {
+    final l10n = AppLocalizations.of(context)!;
+    
+    // Get main location
+    final mainLocation = _locationCache[shift.locationId];
+    String locationName = mainLocation?.name ?? shift.locationId;
+    
+    // If assigned to sublocation, add sublocation name
+    if (assignment.sublocationId != null && assignment.sublocationId!.isNotEmpty && mainLocation != null) {
+      final sublocation = mainLocation.subLocations?.firstWhere(
+        (sl) => sl.id == assignment.sublocationId,
+        orElse: () => Location(id: '', name: assignment.sublocationId!, description: '', latitude: '', longitude: ''),
+      );
+      if (sublocation != null && sublocation.id.isNotEmpty) {
+        locationName = '${mainLocation.name} - ${sublocation.name}';
+      }
+    }
+    
+    return locationName;
   }
 }

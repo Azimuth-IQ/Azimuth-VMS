@@ -39,6 +39,17 @@
 - **Files Modified:** [LocationReassignmentDialog.dart](lib/UI/AdminScreens/LocationReassignmentDialog.dart)
 - **Localization Added:** `locationReassignedSuccessfully` in English and Arabic
 
+### Bug 10: Location/Sublocation Display Showing ID Instead of Name ✅
+
+- **Issue:** Most location and sublocation cards showing location ID instead of name
+- **Status:** FIXED
+- **Solution:** Added location name lookup in multiple screens:
+  - VolunteerScheduleScreen: Added LocationHelper and location cache, displays "Location - Sublocation" format
+  - EventsMgmt: Uses EventsProvider locations to show names instead of IDs in shift lists
+- **Files Modified:** 
+  - [VolunteerScheduleScreen.dart](lib/UI/VolunteerScreens/VolunteerScheduleScreen.dart)
+  - [EventsMgmt.dart](lib/UI/AdminScreens/EventsMgmt.dart)
+
 ---
 
 ## 🔄 In Progress
@@ -107,13 +118,6 @@
 - **Priority:** High
 - **Status:** Not Started
 - **Affected Screens:** All dialogs with selection lists
-
-### Bug 10: Location/Sublocation Display
-
-- **Issue:** Most location and sublocation cards showing location ID instead of name
-- **Priority:** High
-- **Status:** Not Started
-- **Affected Screens:** All screens displaying location/sublocation cards
 
 ### Bug 11: "Assigned By" Display
 
