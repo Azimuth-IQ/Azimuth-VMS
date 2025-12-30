@@ -1486,6 +1486,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reassignLocation => 'Reassign Location';
 
   @override
+  String get locationReassignedSuccessfully =>
+      'Location reassigned successfully. Volunteer must check in at new location.';
+
+  @override
   String eventColon(String name) {
     return 'Event: $name';
   }

@@ -842,6 +842,7 @@
   "feedbackDeletedSuccessfully": "Feedback deleted successfully",
   
   "reassignLocation": "Reassign Location",
+  "locationReassignedSuccessfully": "Location reassigned successfully. Volunteer must check in at new location.",
   "eventColon": "Event: {name}",
   "@eventColon": {
     "placeholders": {

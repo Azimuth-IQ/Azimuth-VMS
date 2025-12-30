@@ -31,6 +31,14 @@
 - **Solution:** Added "My Schedule" navigation option to both desktop (NavigationRail) and mobile (BottomNavigationBar) views. Volunteers can now access their schedule and request leave for specific shifts from the dashboard.
 - **Files Modified:** [VolunteersDashboard.dart](lib/UI/VolunteerScreens/VolunteersDashboard.dart)
 
+### Bug 12: Relocate Volunteer Flow ✅
+
+- **Issue:** Relocate volunteer flow is not working at all, not initiating new presence check
+- **Status:** FIXED
+- **Solution:** Updated LocationReassignmentDialog to create a new ARRIVAL attendance check when volunteer is relocated to a new location. This ensures they must check in at the new location and attendance is properly tracked.
+- **Files Modified:** [LocationReassignmentDialog.dart](lib/UI/AdminScreens/LocationReassignmentDialog.dart)
+- **Localization Added:** `locationReassignedSuccessfully` in English and Arabic
+
 ---
 
 ## 🔄 In Progress
@@ -113,13 +121,6 @@
 - **Priority:** High
 - **Status:** Not Started
 - **Affected Screens:** Shift assignment, event details
-
-### Bug 12: Relocate Volunteer Flow
-
-- **Issue:** Relocate volunteer flow is not working at all, not initiating new presence check
-- **Priority:** Critical
-- **Status:** Not Started
-- **Affected Screen:** Location reassignment dialog
 
 ### Bug 14: Carousel Slider Inconsistency
 

@@ -341,12 +341,7 @@ class _ApprovedDashboardView extends StatelessWidget {
                       case 0: // Dashboard - already here
                         break;
                       case 1: // Schedule
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => VolunteerScheduleScreen(volunteerPhone: userPhone),
-                          ),
-                        );
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => VolunteerScheduleScreen(volunteerPhone: userPhone)));
                         break;
                       case 2: // Profile
                         Navigator.push(
@@ -512,12 +507,7 @@ class _ApprovedDashboardView extends StatelessWidget {
             // Already on dashboard
             break;
           case 1:
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => VolunteerScheduleScreen(volunteerPhone: userPhone),
-              ),
-            );
+            Navigator.push(context, MaterialPageRoute(builder: (context) => VolunteerScheduleScreen(volunteerPhone: userPhone)));
             break;
           case 2:
             Navigator.push(

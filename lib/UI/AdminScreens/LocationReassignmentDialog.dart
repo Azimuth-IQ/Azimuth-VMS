@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:uuid/uuid.dart';
 import '../../l10n/app_localizations.dart';
 import '../../Helpers/NotificationHelperFirebase.dart';
 import '../../Helpers/ShiftAssignmentHelperFirebase.dart';
+import '../../Helpers/AttendanceHelperFirebase.dart';
 import '../../Models/Event.dart';
 import '../../Models/Location.dart';
 import '../../Models/ShiftAssignment.dart';
+import '../../Models/AttendanceRecord.dart';
 import '../../Providers/EventsProvider.dart';
 
 class LocationReassignmentDialog extends StatefulWidget {
@@ -42,7 +46,9 @@ class _LocationReassignmentDialogState extends State<LocationReassignmentDialog>
     try {
       final helper = ShiftAssignmentHelperFirebase();
       final notifHelper = NotificationHelperFirebase();
+      final attendanceHelper = AttendanceHelperFirebase();
       final eventsProvider = context.read<EventsProvider>();
+      final currentUser = FirebaseAuth.instance.currentUser;
 
       // Update assignment
       final updatedAssignment = widget.assignment.copyWith(sublocationId: _selectedSublocationId);
@@ -61,10 +67,26 @@ class _LocationReassignmentDialogState extends State<LocationReassignmentDialog>
         }
       }
 
-      // Send notification to volunteer
+      // Create a new ARRIVAL attendance check for the relocated volunteer
+      // This ensures they check in at the new location
+      final newArrivalCheck = AttendanceRecord(
+        id: const Uuid().v4(),
+        userId: widget.assignment.volunteerId,
+        eventId: widget.event.id,
+        shiftId: widget.shift.id,
+        checkType: AttendanceCheckType.ARRIVAL,
+        timestamp: DateTime.now().toIso8601String(),
+        checkedBy: currentUser?.email?.split('@').first ?? 'system',
+        present: false, // They need to check in at the new location
+      );
+      attendanceHelper.CreateAttendanceRecord(newArrivalCheck);
+
+      // Send notification to volunteer about relocation
       notifHelper.sendLocationReassignmentNotification(widget.assignment.volunteerId, newLocationName, widget.event.name);
 
       if (!context.mounted) return;
+      final l10n = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.locationReassignedSuccessfully), backgroundColor: Colors.green));
       Navigator.of(context).pop(true);
     } catch (e) {
       print('Error reassigning location: $e');

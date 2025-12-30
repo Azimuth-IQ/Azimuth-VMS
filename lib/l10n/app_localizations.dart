@@ -2840,6 +2840,12 @@ abstract class AppLocalizations {
   /// **'Reassign Location'**
   String get reassignLocation;
 
+  /// No description provided for @locationReassignedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Location reassigned successfully. Volunteer must check in at new location.'**
+  String get locationReassignedSuccessfully;
+
   /// No description provided for @eventColon.
   ///
   /// In en, this message translates to:

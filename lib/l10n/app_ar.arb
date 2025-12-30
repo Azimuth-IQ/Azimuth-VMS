@@ -537,6 +537,7 @@
   "feedbackDeletedSuccessfully": "تم حذف التعليقات بنجاح",
   
   "reassignLocation": "إعادة تعيين الموقع",
+  "locationReassignedSuccessfully": "تم إعادة تعيين الموقع بنجاح. يجب على المتطوع تسجيل الحضور في الموقع الجديد.",
   "eventColon": "الفعالية: {name}",
   "shiftTimeRange": "النوبة: {start} - {end}",
   "selectNewLocation": "اختر موقعاً جديداً:",
