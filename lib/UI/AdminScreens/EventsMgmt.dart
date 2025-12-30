@@ -1,3 +1,4 @@
+import 'package:azimuth_vms/Models/SystemUser.dart';
 import 'package:flutter/material.dart';
 import 'package:azimuth_vms/Models/Event.dart';
 import 'package:azimuth_vms/Models/Location.dart';

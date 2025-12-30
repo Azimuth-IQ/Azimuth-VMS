@@ -48,9 +48,7 @@ class NotificationPermissionHelper {
     }
 
     try {
-      String? token = await _messaging.getToken(
-        vapidKey: 'YOUR_VAPID_KEY_HERE', // TODO: Replace with actual VAPID key from Firebase console
-      );
+      String? token = await _messaging.getToken(vapidKey: 'BDEQjN1UbATEWI8TY1tTHakqvCw5EpryE6OGIirk4hqBG7CCLO-0O0eL97nVmEAKa6Ms7EoI9MaezpKndlgeOHs');
       print('FCM Token: $token');
       return token;
     } catch (e) {

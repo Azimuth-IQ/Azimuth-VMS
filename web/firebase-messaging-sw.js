@@ -5,15 +5,16 @@ importScripts("https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js")
 importScripts("https://www.gstatic.com/firebasejs/9.6.1/firebase-messaging-compat.js");
 
 // Initialize Firebase in the service worker
-// TODO: Replace with your actual Firebase configuration from firebase_options.dart
+// Configuration from firebase_options.dart
 firebase.initializeApp({
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  databaseURL: "YOUR_DATABASE_URL",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID",
+  apiKey: "AIzaSyC38DQ8KDYrnfChkVejZ8SDhBRaDlRKAyY",
+  authDomain: "volunteer-management-sys-1fedf.firebaseapp.com",
+  databaseURL: "https://volunteer-management-sys-1fedf-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "volunteer-management-sys-1fedf",
+  storageBucket: "volunteer-management-sys-1fedf.firebasestorage.app",
+  messagingSenderId: "224418209100",
+  appId: "1:224418209100:web:cdb2150c84e7f4f8fd03e9",
+  measurementId: "G-XM1CDER018",
 });
 
 const messaging = firebase.messaging();
