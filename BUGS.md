@@ -93,6 +93,20 @@
   - Shows "no results found" when no matches
   - Search works by name or phone number
 
+### Bug 15: Theme Settings Not Clickable on PC ✅
+
+- **Issue:** Theme settings throws NavigationRail assertion error when clicked (selectedIndex out of range)
+- **Status:** FIXED
+- **Solution:** Separated `_selectedIndex` (NavigationRail selection) from `_currentScreenIndex` (actual screen displayed)
+  - NavigationRail has 5 destinations (0-4: Dashboard, Events, Volunteers, Leaders, More)
+  - When navigating to sub-screens (Teams, Locations, SendNotification, ThemeSettings), keep "More" selected (index 4)
+  - Changed `_currentScreenIndex` to display the correct screen while maintaining valid NavigationRail selection
+- **Files Modified:** [AdminDashboard.dart](lib/UI/AdminScreens/AdminDashboard.dart)
+- **Technical Details:**
+  - Error was: `selectedIndex == null || (0 <= selectedIndex && selectedIndex < destinations.length)` assertion failed
+  - Previous code tried to set `_selectedIndex = 8` for theme settings, but only 5 destinations exist
+  - Now uses two separate indices to manage navigation state properly
+
 ---
 
 ## 🔄 In Progress
@@ -163,13 +177,6 @@
 - **Priority:** Medium
 - **Status:** Not Started
 - **Affected Screens:** All dashboards (admin, volunteer, team leader)
-
-### Bug 15: Theme Settings Not Clickable on PC
-
-- **Issue:** Theme settings is not clickable on PC, but clicks on mobile
-- **Priority:** Medium
-- **Status:** Not Started
-- **Affected Screen:** Settings page
 
 ### Bug 16: Theme Settings Not Translatable
 

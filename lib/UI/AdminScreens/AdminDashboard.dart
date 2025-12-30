@@ -31,6 +31,7 @@ class AdminDashboard extends StatefulWidget {
 
 class _AdminDashboardState extends State<AdminDashboard> {
   int _selectedIndex = 0;
+  int _currentScreenIndex = 0; // Actual screen being displayed
   String _userPhone = '';
 
   @override
@@ -56,20 +57,39 @@ class _AdminDashboardState extends State<AdminDashboard> {
     final l10n = AppLocalizations.of(context)!;
 
     final screens = [
-      _DashboardHome(userPhone: _userPhone, onNavigate: (index) => setState(() => _selectedIndex = index)),
+      _DashboardHome(
+        userPhone: _userPhone,
+        onNavigate: (index) => setState(() {
+          _selectedIndex = index;
+          _currentScreenIndex = index;
+        }),
+      ),
       const EventsMgmt(),
       const VolunteersMgmt(),
       const TeamLeadersMgmt(),
       _MoreMenu(
         onNavigate: (route) {
+          // Keep "More" tab selected (index 4) but change the screen
           if (route == '/teams') {
-            setState(() => _selectedIndex = 5);
+            setState(() {
+              _selectedIndex = 4; // Keep More selected
+              _currentScreenIndex = 5;
+            });
           } else if (route == '/locations') {
-            setState(() => _selectedIndex = 6);
+            setState(() {
+              _selectedIndex = 4;
+              _currentScreenIndex = 6;
+            });
           } else if (route == '/send-notification') {
-            setState(() => _selectedIndex = 7);
+            setState(() {
+              _selectedIndex = 4;
+              _currentScreenIndex = 7;
+            });
           } else if (route == '/theme-settings') {
-            setState(() => _selectedIndex = 8);
+            setState(() {
+              _selectedIndex = 4;
+              _currentScreenIndex = 8;
+            });
           }
         },
       ),
@@ -89,7 +109,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
               children: [
                 NavigationRail(
                   selectedIndex: _selectedIndex,
-                  onDestinationSelected: (index) => setState(() => _selectedIndex = index),
+                  onDestinationSelected: (index) => setState(() {
+                    _selectedIndex = index;
+                    _currentScreenIndex = index;
+                  }),
                   labelType: NavigationRailLabelType.none,
                   leading: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 24),
@@ -124,17 +147,20 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 ),
                 const VerticalDivider(thickness: 1, width: 1),
                 Expanded(
-                  child: IndexedStack(index: _selectedIndex, children: screens),
+                  child: IndexedStack(index: _currentScreenIndex, children: screens),
                 ),
               ],
             ),
           );
         } else {
           return Scaffold(
-            body: IndexedStack(index: _selectedIndex, children: screens),
+            body: IndexedStack(index: _currentScreenIndex, children: screens),
             bottomNavigationBar: NavigationBar(
               selectedIndex: _selectedIndex,
-              onDestinationSelected: (index) => setState(() => _selectedIndex = index),
+              onDestinationSelected: (index) => setState(() {
+                _selectedIndex = index;
+                _currentScreenIndex = index;
+              }),
               labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
               destinations: [
                 NavigationDestination(icon: const Icon(Icons.dashboard_outlined), selectedIcon: const Icon(Icons.dashboard), label: l10n.home),
