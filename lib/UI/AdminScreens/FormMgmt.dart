@@ -119,7 +119,7 @@ class _FormMgmtState extends State<FormMgmt> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -252,35 +252,59 @@ class _FormMgmtState extends State<FormMgmt> {
 
   Widget _buildFormCard(VolunteerForm form) {
     final theme = Theme.of(context);
-    
+
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      elevation: 2,
+      margin: const EdgeInsets.only(bottom: 16),
+      elevation: 0,
       color: theme.cardColor,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: theme.dividerColor.withOpacity(0.5), width: 1),
+      ),
       child: InkWell(
         onTap: () {
           // Navigate to workflow screen
           Navigator.pushNamed(context, '/volunteer-workflow', arguments: form).then((_) => _loadForms());
         },
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
                   // Avatar
-                  CircleAvatar(
-                    radius: 24,
-                    backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
-                    child: Text(
-                      form.fullName?.substring(0, 1).toUpperCase() ?? '?',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
+                  Container(
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [theme.colorScheme.primary, theme.colorScheme.primary.withOpacity(0.7)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: theme.colorScheme.primary.withOpacity(0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                        form.fullName?.substring(0, 1).toUpperCase() ?? '?',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.onPrimary,
+                        ),
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 16),
                   // Name and Phone
                   Expanded(
                     child: Column(
@@ -291,38 +315,63 @@ class _FormMgmtState extends State<FormMgmt> {
                             Expanded(
                               child: Text(
                                 form.fullName ?? 'Unknown',
-                                style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 8 : 16, fontWeight: FontWeight.w600),
+                                style: TextStyle(
+                                  fontSize: Breakpoints.isMobile(context) ? 14 : 18,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: -0.5,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                             if (form.archived) const SizedBox(width: 8),
                             if (form.archived) const ArchivedBadge(),
                           ],
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: 6),
                         Row(
                           children: [
-                            Icon(Icons.phone, size: 14, color: theme.disabledColor),
-                            const SizedBox(width: 4),
-                            Text(form.mobileNumber ?? 'N/A', style: TextStyle(fontSize: 14, color: theme.disabledColor)),
+                            Icon(Icons.phone_rounded, size: 16, color: theme.colorScheme.primary.withOpacity(0.7)),
+                            const SizedBox(width: 6),
+                            Text(
+                              form.mobileNumber ?? 'N/A',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ],
                         ),
                       ],
                     ),
                   ),
-                  // Status Dropdown
+                  // Status Badge
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: _getStatusColor(form.status).withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: _getStatusColor(form.status).withOpacity(0.3)),
+                      gradient: LinearGradient(
+                        colors: [
+                          _getStatusColor(form.status).withOpacity(0.15),
+                          _getStatusColor(form.status).withOpacity(0.05),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: _getStatusColor(form.status).withOpacity(0.4),
+                        width: 1.5,
+                      ),
                     ),
                     child: DropdownButton<VolunteerFormStatus>(
                       value: form.status,
                       underline: const SizedBox(),
                       isDense: true,
-                      icon: Icon(Icons.arrow_drop_down, color: _getStatusColor(form.status)),
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: _getStatusColor(form.status)),
+                      icon: Icon(Icons.arrow_drop_down_rounded, color: _getStatusColor(form.status), size: 20),
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: _getStatusColor(form.status),
+                      ),
                       items: VolunteerFormStatus.values.map((status) {
                         return DropdownMenuItem(value: status, child: Text(_getStatusLabel(status)));
                       }).toList(),
@@ -388,65 +437,110 @@ class _FormMgmtState extends State<FormMgmt> {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
-              // PDF Actions
-              Row(
+              const SizedBox(height: 16),
+              // Action Buttons
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
                 children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () async {
-                        try {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.generatingPdf), duration: const Duration(seconds: 1)));
-                          await PdfGeneratorHelper.generateAndDownloadPdf(form);
-                          if (mounted) {
-                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.pdfDownloaded)));
-                          }
-                        } catch (e) {
-                          print('Error generating PDF: $e');
-                          if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${AppLocalizations.of(context)!.error}: $e')));
-                          }
-                        }
-                      },
-                      icon: const Icon(Icons.download, size: 16),
-                      label: Text(AppLocalizations.of(context)!.downloadPdf),
-                      style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), visualDensity: VisualDensity.compact),
+                  // Edit Button
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/admin-form-fill', arguments: form).then((_) => _loadForms());
+                    },
+                    icon: const Icon(Icons.edit_rounded, size: 18),
+                    label: const Text('Edit Form'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: theme.colorScheme.primary,
+                      foregroundColor: theme.colorScheme.onPrimary,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () async {
-                        try {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.generatingPdf), duration: const Duration(seconds: 1)));
-                          await PdfGeneratorHelper.generateAndDownloadPdf(form);
-                          if (mounted) {
-                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.readyToPrint)));
-                          }
-                        } catch (e) {
-                          print('Error generating PDF: $e');
-                          if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${AppLocalizations.of(context)!.error}: $e')));
-                          }
+                  // Download PDF Button
+                  FilledButton.tonalIcon(
+                    onPressed: () async {
+                      try {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(AppLocalizations.of(context)!.generatingPdf),
+                            duration: const Duration(seconds: 1),
+                          ),
+                        );
+                        await PdfGeneratorHelper.generateAndDownloadPdf(form);
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(AppLocalizations.of(context)!.pdfDownloaded)),
+                          );
                         }
-                      },
-                      icon: const Icon(Icons.print, size: 16),
-                      label: Text(AppLocalizations.of(context)!.print),
-                      style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), visualDensity: VisualDensity.compact),
+                      } catch (e) {
+                        print('Error generating PDF: $e');
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('${AppLocalizations.of(context)!.error}: $e')),
+                          );
+                        }
+                      }
+                    },
+                    icon: const Icon(Icons.download_rounded, size: 18),
+                    label: Text(AppLocalizations.of(context)!.downloadPdf),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                  // Print Button
+                  FilledButton.tonalIcon(
+                    onPressed: () async {
+                      try {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(AppLocalizations.of(context)!.generatingPdf),
+                            duration: const Duration(seconds: 1),
+                          ),
+                        );
+                        await PdfGeneratorHelper.generateAndDownloadPdf(form);
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(AppLocalizations.of(context)!.readyToPrint)),
+                          );
+                        }
+                      } catch (e) {
+                        print('Error generating PDF: $e');
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('${AppLocalizations.of(context)!.error}: $e')),
+                          );
+                        }
+                      }
+                    },
+                    icon: const Icon(Icons.print_rounded, size: 18),
+                    label: Text(AppLocalizations.of(context)!.print),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
               // Additional Info
               Row(
                 children: [
                   if (form.formNumber != null) ...[
-                    Icon(Icons.numbers, size: 14, color: Colors.grey.shade600),
-                    const SizedBox(width: 4),
-                    Text(AppLocalizations.of(context)!.formNumber(form.formNumber ?? ''), style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+                    Icon(Icons.numbers_rounded, size: 16, color: theme.iconTheme.color?.withOpacity(0.6)),
+                    const SizedBox(width: 6),
+                    Text(
+                      AppLocalizations.of(context)!.formNumber(form.formNumber ?? ''),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                     const SizedBox(width: 16),
                   ],
                   if (form.profession != null) ...[

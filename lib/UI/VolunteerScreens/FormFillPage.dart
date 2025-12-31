@@ -544,7 +544,7 @@ class _FormFillPageState extends State<FormFillPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -581,7 +581,7 @@ class _FormFillPageState extends State<FormFillPage> {
 
   Widget _buildStepperForm() {
     final theme = Theme.of(context);
-    
+
     return Form(
       key: _formKey,
       child: Stepper(
@@ -606,19 +606,14 @@ class _FormFillPageState extends State<FormFillPage> {
               children: [
                 ElevatedButton(
                   onPressed: details.onStepContinue,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: theme.colorScheme.primary,
-                    foregroundColor: theme.colorScheme.onPrimary,
-                  ),
+                  style: ElevatedButton.styleFrom(backgroundColor: theme.colorScheme.primary, foregroundColor: theme.colorScheme.onPrimary),
                   child: Text(_currentStep == 4 ? 'إنشاء PDF' : 'التالي'),
                 ),
                 const SizedBox(width: 12),
                 if (_currentStep > 0)
                   TextButton(
                     onPressed: details.onStepCancel,
-                    style: TextButton.styleFrom(
-                      foregroundColor: theme.colorScheme.primary,
-                    ),
+                    style: TextButton.styleFrom(foregroundColor: theme.colorScheme.primary),
                     child: const Text('السابق'),
                   ),
               ],
