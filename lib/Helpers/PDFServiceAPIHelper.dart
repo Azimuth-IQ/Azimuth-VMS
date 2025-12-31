@@ -14,26 +14,37 @@ class PDFServiceAPIHelper {
   /// Authenticate with the PDF generation service
   static Future<bool> _authenticate() async {
     try {
+      print('🔐 [PDF AUTH] Starting authentication...');
+      print('🔐 [PDF AUTH] URL: $_baseUrl/login');
+      print('🔐 [PDF AUTH] Phone: $_loginPhone');
+
       final response = await http.post(
         Uri.parse('$_baseUrl/login'),
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: {'phone': _loginPhone, 'password': _loginPassword},
       );
 
+      print('🔐 [PDF AUTH] Response Status: ${response.statusCode}');
+      print('🔐 [PDF AUTH] Response Headers: ${response.headers}');
+      print('🔐 [PDF AUTH] Response Body: ${response.body.substring(0, response.body.length > 200 ? 200 : response.body.length)}...');
+
       if (response.statusCode == 200 || response.statusCode == 303) {
         // Extract session cookie
         final setCookie = response.headers['set-cookie'];
         if (setCookie != null) {
           _sessionCookie = setCookie.split(';')[0]; // Get only the session cookie
-          print('PDF Service authenticated successfully');
+          print('✅ [PDF AUTH] Authentication successful! Cookie: ${_sessionCookie?.substring(0, 30)}...');
           return true;
+        } else {
+          print('❌ [PDF AUTH] No set-cookie header in response');
         }
       }
 
-      print('PDF Service authentication failed: ${response.statusCode}');
+      print('❌ [PDF AUTH] Authentication failed: ${response.statusCode}');
       return false;
-    } catch (e) {
-      print('Error authenticating with PDF service: $e');
+    } catch (e, stackTrace) {
+      print('❌ [PDF AUTH] Error authenticating: $e');
+      print('❌ [PDF AUTH] Stack trace: $stackTrace');
       return false;
     }
   }
@@ -77,13 +88,21 @@ class PDFServiceAPIHelper {
   /// Create a new volunteer in the PDF service and get the ID
   static Future<int?> _createVolunteerInAPI(VolunteerForm form) async {
     try {
+      print('👤 [CREATE VOLUNTEER] Starting volunteer creation...');
+      print('👤 [CREATE VOLUNTEER] Name: ${form.fullName}, Mobile: ${form.mobileNumber}');
+
       // Ensure authenticated
       if (_sessionCookie == null) {
+        print('👤 [CREATE VOLUNTEER] No session cookie, authenticating...');
         final authenticated = await _authenticate();
-        if (!authenticated) return null;
+        if (!authenticated) {
+          print('❌ [CREATE VOLUNTEER] Authentication failed');
+          return null;
+        }
       }
 
       final formData = _mapFormToAPIFormat(form);
+      print('👤 [CREATE VOLUNTEER] Form data fields: ${formData.keys.length}');
 
       // Create multipart request
       var request = http.MultipartRequest('POST', Uri.parse('$_baseUrl/new'));
@@ -94,25 +113,32 @@ class PDFServiceAPIHelper {
         request.fields[key] = value;
       });
 
-      // TODO: Add photo if available from Firebase Storage
-      // Download photo from Firebase Storage and attach it
-
+      print('👤 [CREATE VOLUNTEER] Sending POST request to $_baseUrl/new');
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
+
+      print('👤 [CREATE VOLUNTEER] Response Status: ${response.statusCode}');
+      print('👤 [CREATE VOLUNTEER] Response Headers: ${response.headers}');
 
       if (response.statusCode == 303 || response.statusCode == 200) {
         // Extract volunteer ID from redirect location
         final location = response.headers['location'];
+        print('👤 [CREATE VOLUNTEER] Redirect location: $location');
+
         if (location != null && location.contains('/edit/')) {
           final idStr = location.split('/edit/').last;
-          return int.tryParse(idStr);
+          final id = int.tryParse(idStr);
+          print('✅ [CREATE VOLUNTEER] Created successfully with ID: $id');
+          return id;
         }
       }
 
-      print('Failed to create volunteer in API: ${response.statusCode}');
+      print('❌ [CREATE VOLUNTEER] Failed: ${response.statusCode}');
+      print('❌ [CREATE VOLUNTEER] Response body: ${response.body}');
       return null;
-    } catch (e) {
-      print('Error creating volunteer in API: $e');
+    } catch (e, stackTrace) {
+      print('❌ [CREATE VOLUNTEER] Error: $e');
+      print('❌ [CREATE VOLUNTEER] Stack trace: $stackTrace');
       return null;
     }
   }
@@ -120,23 +146,34 @@ class PDFServiceAPIHelper {
   /// Generate PDF from the API service
   static Future<Uint8List?> _downloadPDFFromAPI(int volunteerId) async {
     try {
+      print('📄 [DOWNLOAD PDF] Starting PDF download for volunteer ID: $volunteerId');
+
       // Ensure authenticated
       if (_sessionCookie == null) {
+        print('📄 [DOWNLOAD PDF] No session cookie, authenticating...');
         final authenticated = await _authenticate();
-        if (!authenticated) return null;
+        if (!authenticated) {
+          print('❌ [DOWNLOAD PDF] Authentication failed');
+          return null;
+        }
       }
 
+      print('📄 [DOWNLOAD PDF] Requesting: $_baseUrl/pdf/$volunteerId');
       final response = await http.get(Uri.parse('$_baseUrl/pdf/$volunteerId'), headers: {'Cookie': _sessionCookie!});
 
+      print('📄 [DOWNLOAD PDF] Response Status: ${response.statusCode}');
+      print('📄 [DOWNLOAD PDF] Response Size: ${response.bodyBytes.length} bytes');
+
       if (response.statusCode == 200) {
-        print('PDF downloaded successfully from API');
+        print('✅ [DOWNLOAD PDF] PDF downloaded successfully (${(response.bodyBytes.length / 1024).toStringAsFixed(2)} KB)');
         return response.bodyBytes;
       }
 
-      print('Failed to download PDF from API: ${response.statusCode}');
+      print('❌ [DOWNLOAD PDF] Failed: ${response.statusCode}');
       return null;
-    } catch (e) {
-      print('Error downloading PDF from API: $e');
+    } catch (e, stackTrace) {
+      print('❌ [DOWNLOAD PDF] Error: $e');
+      print('❌ [DOWNLOAD PDF] Stack trace: $stackTrace');
       return null;
     }
   }
@@ -144,20 +181,27 @@ class PDFServiceAPIHelper {
   /// Upload PDF to Firebase Storage
   static Future<String?> _uploadPDFToStorage(Uint8List pdfBytes, String fileName) async {
     try {
+      print('☁️ [FIREBASE UPLOAD] Starting upload to Firebase Storage');
+      print('☁️ [FIREBASE UPLOAD] File name: $fileName');
+      print('☁️ [FIREBASE UPLOAD] File size: ${(pdfBytes.length / 1024).toStringAsFixed(2)} KB');
+
       final storageRef = FirebaseStorage.instance.ref();
       final pdfRef = storageRef.child('pdfs/$fileName');
 
       // Upload with metadata
       final metadata = SettableMetadata(contentType: 'application/pdf', customMetadata: {'generatedAt': DateTime.now().toIso8601String()});
 
+      print('☁️ [FIREBASE UPLOAD] Uploading to path: pdfs/$fileName');
       await pdfRef.putData(pdfBytes, metadata);
 
       // Get download URL
       final downloadUrl = await pdfRef.getDownloadURL();
-      print('PDF uploaded to Firebase Storage: $downloadUrl');
+      print('✅ [FIREBASE UPLOAD] Upload successful!');
+      print('✅ [FIREBASE UPLOAD] Download URL: $downloadUrl');
       return downloadUrl;
-    } catch (e) {
-      print('Error uploading PDF to Firebase Storage: $e');
+    } catch (e, stackTrace) {
+      print('❌ [FIREBASE UPLOAD] Error: $e');
+      print('❌ [FIREBASE UPLOAD] Stack trace: $stackTrace');
       return null;
     }
   }
@@ -166,21 +210,26 @@ class PDFServiceAPIHelper {
   /// Returns the Firebase Storage download URL
   static Future<String?> generateAndSavePDF(VolunteerForm form, {bool regenerate = false}) async {
     try {
-      print('Starting PDF generation for mobile: ${form.mobileNumber}');
+      print('═══════════════════════════════════════');
+      print('🚀 [PDF GENERATION] Starting PDF generation process');
+      print('🚀 [PDF GENERATION] Mobile: ${form.mobileNumber}');
+      print('🚀 [PDF GENERATION] Name: ${form.fullName}');
+      print('🚀 [PDF GENERATION] Regenerate: $regenerate');
+      print('═══════════════════════════════════════');
 
       // Create volunteer in the PDF service
       final volunteerId = await _createVolunteerInAPI(form);
       if (volunteerId == null) {
-        print('Failed to create volunteer in PDF service');
+        print('❌ [PDF GENERATION] Failed to create volunteer in PDF service');
         return null;
       }
 
-      print('Volunteer created in PDF service with ID: $volunteerId');
+      print('✅ [PDF GENERATION] Volunteer created with ID: $volunteerId');
 
       // Generate PDF from the API
       final pdfBytes = await _downloadPDFFromAPI(volunteerId);
       if (pdfBytes == null) {
-        print('Failed to download PDF from API');
+        print('❌ [PDF GENERATION] Failed to download PDF from API');
         return null;
       }
 
@@ -194,12 +243,21 @@ class PDFServiceAPIHelper {
       final downloadUrl = await _uploadPDFToStorage(pdfBytes, fileName);
 
       if (downloadUrl != null) {
-        print('PDF generation complete. URL: $downloadUrl');
+        print('═══════════════════════════════════════');
+        print('✅ [PDF GENERATION] COMPLETE!');
+        print('✅ [PDF GENERATION] URL: $downloadUrl');
+        print('═══════════════════════════════════════');
+      } else {
+        print('❌ [PDF GENERATION] Failed to upload to Firebase Storage');
       }
 
       return downloadUrl;
-    } catch (e) {
-      print('Error in generateAndSavePDF: $e');
+    } catch (e, stackTrace) {
+      print('═══════════════════════════════════════');
+      print('❌ [PDF GENERATION] FATAL ERROR');
+      print('❌ [PDF GENERATION] Error: $e');
+      print('❌ [PDF GENERATION] Stack trace: $stackTrace');
+      print('═══════════════════════════════════════');
       return null;
     }
   }
