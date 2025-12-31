@@ -280,19 +280,12 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
                                           gradient: LinearGradient(
                                             begin: Alignment.bottomCenter,
                                             end: Alignment.topCenter,
-                                            colors: [
-                                              Colors.black.withOpacity(0.8),
-                                              Colors.black.withOpacity(0.0),
-                                            ],
+                                            colors: [Colors.black.withOpacity(0.8), Colors.black.withOpacity(0.0)],
                                           ),
                                         ),
                                         child: Text(
                                           'Preview: ${(_originalImage.width * _scale).round()} × ${(_originalImage.height * _scale).round()} px',
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                          style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
                                           textAlign: TextAlign.center,
                                         ),
                                       ),
