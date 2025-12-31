@@ -458,7 +458,7 @@ enum NotificationType {
 **All Priority 1-3 notifications have been implemented!**
 
 - ✅ Form Approved/Rejected Notifications
-- ✅ Team Leader Event Assignment  
+- ✅ Team Leader Event Assignment
 - ✅ Event Created/Updated/Cancelled Notifications
 - ✅ Team Management Notifications (Add/Remove/Leader Change)
 
