@@ -791,9 +791,15 @@ class _MoreMenuItem extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 18, fontWeight: FontWeight.w600)),
+                    Text(
+                      title,
+                      style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 18, fontWeight: FontWeight.w600),
+                    ),
                     const SizedBox(height: 4),
-                    Text(subtitle, style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 10 : 12, color: theme.colorScheme.onSurface.withOpacity(0.6))),
+                    Text(
+                      subtitle,
+                      style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 10 : 12, color: theme.colorScheme.onSurface.withOpacity(0.6)),
+                    ),
                   ],
                 ),
               ),

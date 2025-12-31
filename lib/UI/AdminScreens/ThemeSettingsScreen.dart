@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:azimuth_vms/l10n/app_localizations.dart';
+import '../Theme/Breakpoints.dart';
 import '../Theme/ThemeProvider.dart';
 import '../Theme/Theme1.dart';
 import '../Theme/Theme2.dart';
@@ -22,9 +23,9 @@ class ThemeSettingsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(l10n.selectPlatformTheme, style: theme.textTheme.headlineLarge),
+            Text(l10n.selectPlatformTheme, style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 18 : 32, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            Text(l10n.chooseThemeDescription, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.7))),
+            Text(l10n.chooseThemeDescription, style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 12 : 16, color: theme.colorScheme.onSurface.withOpacity(0.7))),
             const SizedBox(height: 32),
 
             // Theme 1 Card
@@ -70,9 +71,9 @@ class ThemeSettingsScreen extends StatelessWidget {
             const SizedBox(height: 48),
 
             // Custom Colors Section (Future Feature)
-            Text(l10n.customColors, style: theme.textTheme.headlineLarge),
+            Text(l10n.customColors, style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 18 : 32, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            Text(l10n.customizeThemeColors, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.7))),
+            Text(l10n.customizeThemeColors, style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 12 : 16, color: theme.colorScheme.onSurface.withOpacity(0.7))),
             const SizedBox(height: 16),
 
             // Placeholder for color customization
@@ -90,7 +91,7 @@ class ThemeSettingsScreen extends StatelessWidget {
                   Text(
                     l10n.colorCustomizationFuture,
                     textAlign: TextAlign.center,
-                    style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.5)),
+                    style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 12 : 16, color: theme.colorScheme.onSurface.withOpacity(0.5)),
                   ),
                 ],
               ),
@@ -165,7 +166,7 @@ class ThemeSettingsScreen extends StatelessWidget {
                 children: <Widget>[
                   Row(
                     children: <Widget>[
-                      Text(title, style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                      Text(title, style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 16 : 22, fontWeight: FontWeight.bold)),
                       if (isSelected) ...[
                         const SizedBox(width: 8),
                         Container(
@@ -180,7 +181,7 @@ class ThemeSettingsScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Text(description, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
+                  Text(description, style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 11 : 12, color: theme.colorScheme.onSurface.withOpacity(0.6))),
                   const SizedBox(height: 8),
                   Row(children: <Widget>[_buildColorDot(l10n.mainColor, mainColor), const SizedBox(width: 12), _buildColorDot(l10n.accentColor, accentColor)]),
                 ],

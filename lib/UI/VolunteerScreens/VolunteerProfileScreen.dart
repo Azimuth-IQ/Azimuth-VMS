@@ -173,7 +173,7 @@ class VolunteerProfileScreen extends StatelessWidget {
                       children: [
                         Icon(Icons.star, color: Colors.amber.shade600, size: isMobile ? 20 : 24),
                         const SizedBox(width: 8),
-                        Text(l10n.performanceScore, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                        Text(l10n.performanceScore, style: TextStyle(fontSize: isMobile ? 14 : 18, fontWeight: FontWeight.bold)),
                       ],
                     ),
                     SizedBox(height: isMobile ? 16 : 24),
@@ -191,7 +191,7 @@ class VolunteerProfileScreen extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8),
-                          child: Text('/ 5.0', style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
+                          child: Text('/ 5.0', style: TextStyle(fontSize: isMobile ? 14 : 18, color: theme.colorScheme.onSurface.withOpacity(0.6))),
                         ),
                       ],
                     ),
@@ -233,7 +233,7 @@ class VolunteerProfileScreen extends StatelessWidget {
               children: [
                 Icon(Icons.info_outline, color: theme.colorScheme.primary, size: isMobile ? 20 : 24),
                 const SizedBox(width: 8),
-                Text(l10n.personalInformation, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                Text(l10n.personalInformation, style: TextStyle(fontSize: isMobile ? 14 : 18, fontWeight: FontWeight.bold)),
               ],
             ),
           ),

@@ -4,6 +4,7 @@ import 'package:azimuth_vms/Models/Seed.dart';
 import 'package:azimuth_vms/Models/SystemUser.dart';
 import 'package:azimuth_vms/Providers/LanguageProvider.dart';
 import 'package:azimuth_vms/l10n/app_localizations.dart';
+import 'package:azimuth_vms/UI/Theme/Breakpoints.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -184,10 +185,10 @@ class SignInScreen extends StatelessWidget {
                       const SizedBox(height: 16),
                       Text(
                         l10n.appTitle,
-                        style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
+                        style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 20 : 28, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
                       ),
                       const SizedBox(height: 8),
-                      Text(l10n.volunteerManagementSystem, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
+                      Text(l10n.volunteerManagementSystem, style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 12 : 16, color: theme.colorScheme.onSurface.withOpacity(0.6))),
                     ],
                   ),
                 ),
@@ -206,7 +207,7 @@ class SignInScreen extends StatelessWidget {
                     children: [
                       Text(
                         l10n.signIn,
-                        style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface),
+                        style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 18 : 24, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface),
                       ),
                       const SizedBox(height: 24),
                       TextField(
