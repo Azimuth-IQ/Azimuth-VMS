@@ -44,6 +44,39 @@
   - [app_ar.arb](lib/l10n/app_ar.arb) - Added `personalPhotoHint` in Arabic
   - [FormFillPage.dart](lib/UI/VolunteerScreens/FormFillPage.dart) - Updated `_buildImageUploadCard` to accept optional hint parameter and display it for personal photo
 
+### Bug 7: Review Automatic Notifications ✅
+
+- **Issue:** Document what automatic notifications are implemented and implement missing notifications
+- **Details:** Check what more notifications to send automatically
+- **Priority:** Low
+- **Status:** COMPLETED
+- **Type:** Review/Documentation + Implementation
+- **Documentation:** See [AUTOMATIC_NOTIFICATIONS.md](AUTOMATIC_NOTIFICATIONS.md)
+- **Implementation Summary:**
+  - **13 automatic notifications now implemented (up from 6):**
+    1. Volunteer shift assignment
+    2. Leave request submitted (to team leader)
+    3. Leave request approved
+    4. Leave request rejected
+    5. Location reassignment
+    6. Team leader event assignment
+    7. **Form approval notification (NEW)**
+    8. **Form rejection notification (NEW)**
+    9. **New event created notification to team leaders (NEW)**
+    10. **Event updated notification to assigned volunteers (NEW)**
+    11. **Event cancelled notification to assigned volunteers (NEW)**
+    12. **Added to team notification (NEW)**
+    13. **Removed from team notification (NEW)**
+    14. **Team leader changed notification (NEW)**
+  - **Files Modified:**
+    - [NotificationHelperFirebase.dart](lib/Helpers/NotificationHelperFirebase.dart) - Added 8 new notification methods
+    - [FormMgmt.dart](lib/UI/AdminScreens/FormMgmt.dart) - Form approval/rejection notifications
+    - [EventsProvider.dart](lib/Providers/EventsProvider.dart) - Event lifecycle notifications
+    - [TeamsProvider.dart](lib/Providers/TeamsProvider.dart) - Team membership notifications
+    - [ShiftAssignmentHelperFirebase.dart](lib/Helpers/ShiftAssignmentHelperFirebase.dart) - Added GetAllShiftAssignments method
+  - **Coverage:** 76% of planned notifications (13/17 implemented)
+  - **Future Enhancements:** Event reminders (24h before), missed check-in alerts, rating notifications
+
 ### Bug 8: Firebase Web Auth Key ✅
 
 - **Issue:** Implement Firebase web auth key for push notifications
@@ -179,39 +212,6 @@
 - **Priority:** Medium
 - **Status:** Not Started
 - **Affected Screen:** Volunteer form image upload
-
-### Bug 7: Review Automatic Notifications ✅
-
-- **Issue:** Document what automatic notifications are implemented and implement missing notifications
-- **Details:** Check what more notifications to send automatically
-- **Priority:** Low
-- **Status:** COMPLETED
-- **Type:** Review/Documentation + Implementation
-- **Documentation:** See [AUTOMATIC_NOTIFICATIONS.md](AUTOMATIC_NOTIFICATIONS.md)
-- **Implementation Summary:**
-  - **13 automatic notifications now implemented (up from 6):**
-    1. Volunteer shift assignment
-    2. Leave request submitted (to team leader)
-    3. Leave request approved
-    4. Leave request rejected
-    5. Location reassignment
-    6. Team leader event assignment
-    7. **Form approval notification (NEW)**
-    8. **Form rejection notification (NEW)**
-    9. **New event created notification to team leaders (NEW)**
-    10. **Event updated notification to assigned volunteers (NEW)**
-    11. **Event cancelled notification to assigned volunteers (NEW)**
-    12. **Added to team notification (NEW)**
-    13. **Removed from team notification (NEW)**
-    14. **Team leader changed notification (NEW)**
-  - **Files Modified:**
-    - [NotificationHelperFirebase.dart](lib/Helpers/NotificationHelperFirebase.dart) - Added 8 new notification methods
-    - [FormMgmt.dart](lib/UI/AdminScreens/FormMgmt.dart) - Form approval/rejection notifications
-    - [EventsProvider.dart](lib/Providers/EventsProvider.dart) - Event lifecycle notifications
-    - [TeamsProvider.dart](lib/Providers/TeamsProvider.dart) - Team membership notifications
-    - [ShiftAssignmentHelperFirebase.dart](lib/Helpers/ShiftAssignmentHelperFirebase.dart) - Added GetAllShiftAssignments method
-  - **Coverage:** 76% of planned notifications (13/17 implemented)
-  - **Future Enhancements:** Event reminders (24h before), missed check-in alerts, rating notifications
 
 ### Bug 14: Carousel Slider Inconsistency
 
