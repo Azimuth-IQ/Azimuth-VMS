@@ -52,6 +52,23 @@ class ShiftAssignmentHelperFirebase {
     return assignments;
   }
 
+  // Get all shift assignments across all events
+  Future<List<ShiftAssignment>> GetAllShiftAssignments() async {
+    List<ShiftAssignment> assignments = [];
+    DataSnapshot eventsSnapshot = await rootRef.get();
+    if (eventsSnapshot.exists) {
+      for (DataSnapshot eventSnapshot in eventsSnapshot.children) {
+        DataSnapshot assignmentsSnapshot = eventSnapshot.child("assignments");
+        if (assignmentsSnapshot.exists) {
+          for (DataSnapshot d1 in assignmentsSnapshot.children) {
+            assignments.add(ShiftAssignment.fromDataSnapshot(d1));
+          }
+        }
+      }
+    }
+    return assignments;
+  }
+
   // Update an existing shift assignment
   void UpdateShiftAssignment(ShiftAssignment assignment) {
     rootRef.child(assignment.eventId).child("assignments").child(assignment.id).update(assignment.toJson());

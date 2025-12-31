@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:azimuth_vms/Helpers/VolunteerFormHelperFirebase.dart';
 import 'package:azimuth_vms/Helpers/SystemUserHelperFirebase.dart';
 import 'package:azimuth_vms/Helpers/PdfGeneratorHelper.dart';
+import 'package:azimuth_vms/Helpers/NotificationHelperFirebase.dart';
 import 'package:azimuth_vms/Models/VolunteerForm.dart';
 import 'package:azimuth_vms/Models/SystemUser.dart';
 import 'package:azimuth_vms/UI/Widgets/ArchiveDeleteWidget.dart';
@@ -18,6 +19,7 @@ class FormMgmt extends StatefulWidget {
 class _FormMgmtState extends State<FormMgmt> {
   final VolunteerFormHelperFirebase _formHelper = VolunteerFormHelperFirebase();
   final SystemUserHelperFirebase _userHelper = SystemUserHelperFirebase();
+  final NotificationHelperFirebase _notificationHelper = NotificationHelperFirebase();
   List<VolunteerForm> _allForms = [];
   List<VolunteerForm> _filteredForms = [];
   bool _isLoading = false;
@@ -542,6 +544,8 @@ class _FormMgmtState extends State<FormMgmt> {
 
           _userHelper.CreateSystemUser(systemUser);
           print('SystemUser created for approved volunteer: ${form.mobileNumber}');
+          // Send approval notification
+          _notificationHelper.sendFormApprovedNotification(form.mobileNumber!, form.fullName ?? 'Volunteer');
 
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -553,6 +557,10 @@ class _FormMgmtState extends State<FormMgmt> {
           existingUser.volunteerForm = form;
           _userHelper.UpdateSystemUser(existingUser);
           print('SystemUser updated with form for: ${form.mobileNumber}');
+
+          // Send approval notification
+          _notificationHelper.sendFormApprovedNotification(form.mobileNumber!, form.fullName ?? 'Volunteer');
+
           if (mounted) {
             ScaffoldMessenger.of(
               context,
@@ -566,6 +574,15 @@ class _FormMgmtState extends State<FormMgmt> {
             context,
           ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.statusUpdatedButErrorCreatingAccount(e.toString())), backgroundColor: Colors.orange));
         }
+      }
+    } else if (newStatus == VolunteerFormStatus.Rejected1 || newStatus == VolunteerFormStatus.Rejected2) {
+      // Send rejection notification
+      _notificationHelper.sendFormRejectedNotification(form.mobileNumber!, form.fullName ?? 'Volunteer');
+
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.statusUpdatedTo(_getStatusLabel(newStatus))), duration: const Duration(seconds: 2)));
       }
     } else {
       if (mounted) {

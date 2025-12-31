@@ -235,4 +235,120 @@ class NotificationHelperFirebase {
       createNotification(notification, volunteerId);
     }
   }
+
+  // Send notification when volunteer form is approved
+  void sendFormApprovedNotification(String volunteerId, String volunteerName) async {
+    Notification notification = Notification(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      title: 'Registration Approved',
+      message: 'Congratulations $volunteerName! Your volunteer registration has been approved. You can now log in with your phone number.',
+      dateTime: DateTime.now(),
+      isRead: false,
+      type: NotificationType.Info,
+    );
+    createNotification(notification, volunteerId);
+  }
+
+  // Send notification when volunteer form is rejected
+  void sendFormRejectedNotification(String volunteerId, String volunteerName) async {
+    Notification notification = Notification(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      title: 'Registration Status Update',
+      message: 'Dear $volunteerName, your volunteer registration requires additional review. Please contact the administrator.',
+      dateTime: DateTime.now(),
+      isRead: false,
+      type: NotificationType.Warning,
+    );
+    createNotification(notification, volunteerId);
+  }
+
+  // Send notification when new event is created
+  void sendNewEventNotification(List<String> userIds, String eventName, String eventDate) async {
+    Notification notification = Notification(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      title: 'New Event Created',
+      message: 'A new event "$eventName" has been scheduled for $eventDate',
+      dateTime: DateTime.now(),
+      isRead: false,
+      type: NotificationType.Info,
+    );
+
+    for (String userId in userIds) {
+      createNotification(notification, userId);
+    }
+  }
+
+  // Send notification when event is updated
+  void sendEventUpdatedNotification(List<String> userIds, String eventName) async {
+    Notification notification = Notification(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      title: 'Event Updated',
+      message: 'Event "$eventName" has been updated. Please review the new details.',
+      dateTime: DateTime.now(),
+      isRead: false,
+      type: NotificationType.Alert,
+    );
+
+    for (String userId in userIds) {
+      createNotification(notification, userId);
+    }
+  }
+
+  // Send notification when event is cancelled
+  void sendEventCancelledNotification(List<String> userIds, String eventName, String eventDate) async {
+    Notification notification = Notification(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      title: 'Event Cancelled',
+      message: 'Event "$eventName" scheduled for $eventDate has been cancelled.',
+      dateTime: DateTime.now(),
+      isRead: false,
+      type: NotificationType.Warning,
+    );
+
+    for (String userId in userIds) {
+      createNotification(notification, userId);
+    }
+  }
+
+  // Send notification when volunteer is added to team
+  void sendAddedToTeamNotification(String volunteerId, String teamName) async {
+    Notification notification = Notification(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      title: 'Team Assignment',
+      message: 'You have been added to team "$teamName"',
+      dateTime: DateTime.now(),
+      isRead: false,
+      type: NotificationType.Info,
+    );
+    createNotification(notification, volunteerId);
+  }
+
+  // Send notification when volunteer is removed from team
+  void sendRemovedFromTeamNotification(String volunteerId, String teamName) async {
+    Notification notification = Notification(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      title: 'Team Update',
+      message: 'You have been removed from team "$teamName"',
+      dateTime: DateTime.now(),
+      isRead: false,
+      type: NotificationType.Info,
+    );
+    createNotification(notification, volunteerId);
+  }
+
+  // Send notification when team leader changes
+  void sendTeamLeaderChangedNotification(List<String> memberIds, String newLeaderName, String teamName) async {
+    Notification notification = Notification(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      title: 'New Team Leader',
+      message: '$newLeaderName is now your team leader for "$teamName"',
+      dateTime: DateTime.now(),
+      isRead: false,
+      type: NotificationType.Info,
+    );
+
+    for (String memberId in memberIds) {
+      createNotification(notification, memberId);
+    }
+  }
 }

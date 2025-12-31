@@ -3,9 +3,11 @@ import 'package:azimuth_vms/Models/Team.dart';
 import 'package:azimuth_vms/Models/SystemUser.dart';
 import 'package:azimuth_vms/Helpers/TeamHelperFirebase.dart';
 import 'package:azimuth_vms/Helpers/SystemUserHelperFirebase.dart';
+import 'package:azimuth_vms/Helpers/NotificationHelperFirebase.dart';
 
 class TeamsProvider with ChangeNotifier {
   final TeamHelperFirebase _teamHelper = TeamHelperFirebase();
+  final NotificationHelperFirebase _notificationHelper = NotificationHelperFirebase();
 
   List<Team> _teams = [];
   bool _isLoading = false;
@@ -35,14 +37,56 @@ class TeamsProvider with ChangeNotifier {
     }
   }
 
-  void createTeam(Team team) {
+  Future<void> createTeam(Team team) async {
     _teamHelper.CreateTeam(team);
-    loadTeams();
+
+    // Send notification to all members about being added to team
+    try {
+      for (String memberId in team.memberIds) {
+        _notificationHelper.sendAddedToTeamNotification(memberId, team.name);
+      }
+    } catch (e) {
+      print('Error sending team member notifications: $e');
+    }
+
+    await loadTeams();
   }
 
-  void updateTeam(Team team) {
+  Future<void> updateTeam(Team team) async {
+    // Get old team data to compare changes
+    Team? oldTeam = _teams.where((t) => t.id == team.id).firstOrNull;
+
     _teamHelper.UpdateTeam(team);
-    loadTeams();
+
+    if (oldTeam != null) {
+      try {
+        // Check for team leader change
+        if (oldTeam.teamLeaderId != team.teamLeaderId) {
+          final SystemUserHelperFirebase userHelper = SystemUserHelperFirebase();
+          final newLeader = await userHelper.GetSystemUserByPhone(team.teamLeaderId);
+
+          if (newLeader != null) {
+            _notificationHelper.sendTeamLeaderChangedNotification(team.memberIds, newLeader.name, team.name);
+          }
+        }
+
+        // Check for added members
+        final addedMembers = team.memberIds.where((id) => !oldTeam.memberIds.contains(id)).toList();
+        for (String memberId in addedMembers) {
+          _notificationHelper.sendAddedToTeamNotification(memberId, team.name);
+        }
+
+        // Check for removed members
+        final removedMembers = oldTeam.memberIds.where((id) => !team.memberIds.contains(id)).toList();
+        for (String memberId in removedMembers) {
+          _notificationHelper.sendRemovedFromTeamNotification(memberId, team.name);
+        }
+      } catch (e) {
+        print('Error sending team update notifications: $e');
+      }
+    }
+
+    await loadTeams();
   }
 
   Future<void> archiveTeam(String teamId) async {

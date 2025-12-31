@@ -7,6 +7,8 @@ import 'package:azimuth_vms/Helpers/EventHelperFirebase.dart';
 import 'package:azimuth_vms/Helpers/LocationHelperFirebase.dart';
 import 'package:azimuth_vms/Helpers/TeamHelperFirebase.dart';
 import 'package:azimuth_vms/Helpers/SystemUserHelperFirebase.dart';
+import 'package:azimuth_vms/Helpers/NotificationHelperFirebase.dart';
+import 'package:azimuth_vms/Helpers/ShiftAssignmentHelperFirebase.dart';
 import 'package:uuid/uuid.dart';
 
 class EventsProvider with ChangeNotifier {
@@ -14,6 +16,8 @@ class EventsProvider with ChangeNotifier {
   final LocationHelperFirebase _locationHelper = LocationHelperFirebase();
   final TeamHelperFirebase _teamHelper = TeamHelperFirebase();
   final SystemUserHelperFirebase _userHelper = SystemUserHelperFirebase();
+  final NotificationHelperFirebase _notificationHelper = NotificationHelperFirebase();
+  final ShiftAssignmentHelperFirebase _assignmentHelper = ShiftAssignmentHelperFirebase();
 
   List<Event> _events = [];
   List<Location> _locations = [];
@@ -79,13 +83,71 @@ class EventsProvider with ChangeNotifier {
     }
   }
 
-  void createEvent(Event event) {
+  void createEvent(Event event) async {
     _eventHelper.CreateEvent(event);
+
+    // Send notification to all team leaders about new event
+    try {
+      final teamLeaders = _systemUsers.where((u) => u.role == SystemUserRole.TEAMLEADER).toList();
+      if (teamLeaders.isNotEmpty) {
+        final teamLeaderIds = teamLeaders.map((tl) => tl.phone).toList();
+        _notificationHelper.sendNewEventNotification(teamLeaderIds, event.name, event.startDate);
+      }
+
+      // Send notification to team leaders assigned to shifts
+      for (var shift in event.shifts) {
+        if (shift.teamId != null) {
+          try {
+            final team = await _teamHelper.GetTeamById(shift.teamId!);
+            if (team != null) {
+              _notificationHelper.sendShiftAssignmentNotificationToTeamLeader(team.teamLeaderId, event.name, event.id);
+            }
+          } catch (e) {
+            print('Error sending team leader assignment notification: $e');
+          }
+        } else if (shift.tempTeam != null) {
+          _notificationHelper.sendShiftAssignmentNotificationToTeamLeader(shift.tempTeam!.teamLeaderId, event.name, event.id);
+        }
+      }
+    } catch (e) {
+      print('Error sending new event notification: $e');
+    }
+
     loadEvents();
   }
 
-  void updateEvent(Event event) {
+  void updateEvent(Event event) async {
     _eventHelper.UpdateEvent(event);
+
+    // Send notification to all assigned volunteers about event update
+    try {
+      final assignments = await _assignmentHelper.GetAllShiftAssignments();
+      final eventAssignments = assignments.where((a) => a.eventId == event.id).toList();
+
+      if (eventAssignments.isNotEmpty) {
+        final volunteerIds = eventAssignments.map((a) => a.volunteerId).toSet().toList();
+        _notificationHelper.sendEventUpdatedNotification(volunteerIds, event.name);
+      }
+
+      // Send notification to team leaders assigned to shifts
+      for (var shift in event.shifts) {
+        if (shift.teamId != null) {
+          try {
+            final team = await _teamHelper.GetTeamById(shift.teamId!);
+            if (team != null) {
+              _notificationHelper.sendShiftAssignmentNotificationToTeamLeader(team.teamLeaderId, event.name, event.id);
+            }
+          } catch (e) {
+            print('Error sending team leader assignment notification: $e');
+          }
+        } else if (shift.tempTeam != null) {
+          _notificationHelper.sendShiftAssignmentNotificationToTeamLeader(shift.tempTeam!.teamLeaderId, event.name, event.id);
+        }
+      }
+    } catch (e) {
+      print('Error sending event updated notification: $e');
+    }
+
     loadEvents();
   }
 
@@ -113,6 +175,19 @@ class EventsProvider with ChangeNotifier {
   // Delete
   Future<void> deleteEvent(String eventId) async {
     try {
+      // Get event details before deleting
+      final event = _events.firstWhere((e) => e.id == eventId);
+
+      // Get all assigned volunteers
+      final assignments = await _assignmentHelper.GetAllShiftAssignments();
+      final eventAssignments = assignments.where((a) => a.eventId == eventId).toList();
+
+      // Send cancellation notification
+      if (eventAssignments.isNotEmpty) {
+        final volunteerIds = eventAssignments.map((a) => a.volunteerId).toSet().toList();
+        _notificationHelper.sendEventCancelledNotification(volunteerIds, event.name, event.startDate);
+      }
+
       await _eventHelper.DeleteEvent(eventId);
       await loadEvents();
     } catch (e) {
