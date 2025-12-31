@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class VolunteerEventFeedbackProvider with ChangeNotifier {
   List<VolunteerEventFeedback> _allFeedback = [];
-  Map<String, List<VolunteerEventFeedback>> _feedbackByEvent = {};
+  final Map<String, List<VolunteerEventFeedback>> _feedbackByEvent = {};
   StreamSubscription? _feedbackSubscription;
   bool _loading = false;
 

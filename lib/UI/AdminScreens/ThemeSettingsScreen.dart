@@ -6,7 +6,7 @@ import '../Theme/Theme2.dart';
 import '../Theme/Theme3.dart';
 
 class ThemeSettingsScreen extends StatelessWidget {
-  const ThemeSettingsScreen({Key? key}) : super(key: key);
+  const ThemeSettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class ThemeSettingsScreen extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               'Choose a theme for the entire platform. All users will see the selected theme.',
-              style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onBackground.withOpacity(0.7)),
+              style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.7)),
             ),
             const SizedBox(height: 32),
 
@@ -73,7 +73,7 @@ class ThemeSettingsScreen extends StatelessWidget {
             // Custom Colors Section (Future Feature)
             Text('Custom Colors', style: theme.textTheme.headlineLarge),
             const SizedBox(height: 8),
-            Text('Customize theme colors (Coming Soon)', style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onBackground.withOpacity(0.7))),
+            Text('Customize theme colors (Coming Soon)', style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.7))),
             const SizedBox(height: 16),
 
             // Placeholder for color customization
@@ -91,7 +91,7 @@ class ThemeSettingsScreen extends StatelessWidget {
                   Text(
                     'Color customization will be available in a future update',
                     textAlign: TextAlign.center,
-                    style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onBackground.withOpacity(0.5)),
+                    style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.5)),
                   ),
                 ],
               ),
@@ -180,7 +180,7 @@ class ThemeSettingsScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Text(description, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onBackground.withOpacity(0.6))),
+                  Text(description, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
                   const SizedBox(height: 8),
                   Row(children: <Widget>[_buildColorDot('Main', mainColor), const SizedBox(width: 12), _buildColorDot('Accent', accentColor)]),
                 ],

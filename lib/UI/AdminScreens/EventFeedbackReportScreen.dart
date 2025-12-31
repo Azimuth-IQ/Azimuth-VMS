@@ -40,7 +40,7 @@ class _EventFeedbackReportScreenState extends State<EventFeedbackReportScreen> {
                 }
 
                 return DropdownButtonFormField<Event>(
-                  value: _selectedEvent,
+                  initialValue: _selectedEvent,
                   decoration: const InputDecoration(labelText: 'Select Event', border: OutlineInputBorder(), filled: true, fillColor: Colors.white),
                   hint: const Text('Choose an event to view feedback'),
                   items: eventsProvider.events.map((event) {

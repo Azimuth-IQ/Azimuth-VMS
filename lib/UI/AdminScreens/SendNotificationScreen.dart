@@ -210,7 +210,7 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
                     Text(AppLocalizations.of(context)!.notificationType, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     DropdownButtonFormField<NotificationType>(
-                      value: _selectedType,
+                      initialValue: _selectedType,
                       decoration: const InputDecoration(border: OutlineInputBorder(), prefixIcon: Icon(Icons.category)),
                       items: NotificationType.values.map((type) {
                         IconData icon;
@@ -290,7 +290,7 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
                     Text(AppLocalizations.of(context)!.sendTo, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     DropdownButtonFormField<String>(
-                      value: _selectedAudience,
+                      initialValue: _selectedAudience,
                       decoration: const InputDecoration(border: OutlineInputBorder(), prefixIcon: Icon(Icons.people)),
                       items: [
                         DropdownMenuItem(value: 'all_users', child: Text(AppLocalizations.of(context)!.allUsers)),
@@ -314,7 +314,7 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
                       Text(AppLocalizations.of(context)!.selectRole, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                       const SizedBox(height: 8),
                       DropdownButtonFormField<String>(
-                        value: _selectedRole,
+                        initialValue: _selectedRole,
                         decoration: const InputDecoration(border: OutlineInputBorder(), prefixIcon: Icon(Icons.badge)),
                         hint: Text(AppLocalizations.of(context)!.chooseARole),
                         items: SystemUserRole.values.map((role) {
@@ -332,7 +332,7 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
                       Text(AppLocalizations.of(context)!.selectTeam, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                       const SizedBox(height: 8),
                       DropdownButtonFormField<String>(
-                        value: _selectedTeamId,
+                        initialValue: _selectedTeamId,
                         decoration: const InputDecoration(border: OutlineInputBorder(), prefixIcon: Icon(Icons.group)),
                         hint: Text(AppLocalizations.of(context)!.chooseATeam),
                         items: _teams.map((team) {
@@ -350,7 +350,7 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
                       Text(AppLocalizations.of(context)!.selectEvent, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                       const SizedBox(height: 8),
                       DropdownButtonFormField<String>(
-                        value: _selectedEventId,
+                        initialValue: _selectedEventId,
                         decoration: const InputDecoration(border: OutlineInputBorder(), prefixIcon: Icon(Icons.event)),
                         hint: Text(AppLocalizations.of(context)!.chooseAnEvent),
                         items: _events.map((event) {

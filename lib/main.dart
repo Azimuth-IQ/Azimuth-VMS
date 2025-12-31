@@ -268,7 +268,7 @@ class _AuthGuardState extends State<AuthGuard> {
         return const Admin.FormFillPage();
       case '/volunteer-workflow':
         if (arguments is VolunteerForm) {
-          return VolunteerWorkflowScreen(form: arguments as VolunteerForm);
+          return VolunteerWorkflowScreen(form: arguments);
         }
         return _buildUnauthorizedScreen('Invalid arguments');
       case '/shift-assignment':

@@ -398,7 +398,7 @@ class EventFormDialog extends StatelessWidget {
                             ),
                             const SizedBox(height: 16),
                             DropdownButtonFormField<PresenceCheckPermissions>(
-                              value: provider.presenceCheckPermissions,
+                              initialValue: provider.presenceCheckPermissions,
                               decoration: InputDecoration(
                                 labelText: l10n.presenceCheckPermissionsRequired,
                                 border: OutlineInputBorder(),
@@ -1101,7 +1101,7 @@ class ShiftFormDialog extends StatelessWidget {
                                 String? validLocationId = locationItems.any((item) => item.value == provider.locationId) ? provider.locationId : null;
 
                                 return DropdownButtonFormField<String>(
-                                  value: validLocationId,
+                                  initialValue: validLocationId,
                                   decoration: const InputDecoration(
                                     labelText: 'Location *',
                                     border: OutlineInputBorder(),
@@ -1167,7 +1167,7 @@ class ShiftFormDialog extends StatelessWidget {
                                   String? validTeamId = teamItems.any((item) => item.value == provider.teamId) ? provider.teamId : null;
 
                                   return DropdownButtonFormField<String>(
-                                    value: validTeamId,
+                                    initialValue: validTeamId,
                                     decoration: const InputDecoration(
                                       labelText: 'Team (Optional)',
                                       border: OutlineInputBorder(),

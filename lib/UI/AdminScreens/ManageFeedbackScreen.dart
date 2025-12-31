@@ -259,7 +259,7 @@ class _ManageFeedbackScreenState extends State<ManageFeedbackScreen> {
               const Text('Status:'),
               const SizedBox(height: 8),
               DropdownButtonFormField<FeedbackStatus>(
-                value: selectedStatus,
+                initialValue: selectedStatus,
                 decoration: const InputDecoration(border: OutlineInputBorder(), contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
                 items: FeedbackStatus.values.map((status) {
                   return DropdownMenuItem(value: status, child: Text(status.name));

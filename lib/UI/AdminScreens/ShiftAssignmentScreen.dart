@@ -422,7 +422,7 @@ class _ShiftAssignmentViewState extends State<ShiftAssignmentView> {
                   }
 
                   return DropdownButtonFormField<String>(
-                    value: validSelectedLocationId,
+                    initialValue: validSelectedLocationId,
                     decoration: InputDecoration(
                       border: const OutlineInputBorder(),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),

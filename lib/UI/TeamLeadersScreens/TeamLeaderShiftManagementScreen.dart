@@ -616,7 +616,7 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
     }
 
     return DropdownButtonFormField<String>(
-      value: validSelectedLocationId,
+      initialValue: validSelectedLocationId,
       decoration: const InputDecoration(border: OutlineInputBorder(), contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), labelText: 'Choose location'),
       hint: const Text('Select a location'),
       items: locationItems,

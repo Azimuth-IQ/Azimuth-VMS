@@ -113,7 +113,7 @@ class ThemeProvider with ChangeNotifier {
       colorScheme: baseTheme.colorScheme.copyWith(
         primary: _customMainColor ?? baseTheme.colorScheme.primary,
         secondary: _customAccentColor ?? baseTheme.colorScheme.secondary,
-        background: _customBackgroundColor ?? baseTheme.colorScheme.background,
+        surface: _customBackgroundColor ?? baseTheme.colorScheme.surface,
       ),
     );
   }

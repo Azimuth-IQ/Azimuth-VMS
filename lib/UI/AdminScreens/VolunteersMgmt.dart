@@ -404,7 +404,7 @@ class VolunteerTile extends StatelessWidget {
               Text(l10n.selectTeamFor(volunteer.name)),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: selectedTeamId,
+                initialValue: selectedTeamId,
                 decoration: InputDecoration(labelText: l10n.team, border: const OutlineInputBorder()),
                 items: [
                   DropdownMenuItem(value: null, child: Text(l10n.noTeam)),

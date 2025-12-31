@@ -80,7 +80,7 @@ class RatingCriteriaManagementScreen extends StatelessWidget {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(onPressed: () => _showAddCriterionDialog(context), child: const Icon(Icons.add), tooltip: 'Add Criterion'),
+      floatingActionButton: FloatingActionButton(onPressed: () => _showAddCriterionDialog(context), tooltip: 'Add Criterion', child: const Icon(Icons.add)),
     );
   }
 

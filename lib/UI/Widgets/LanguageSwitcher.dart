@@ -7,7 +7,7 @@ class LanguageSwitcher extends StatelessWidget {
   final bool showLabel;
   final bool isIconButton;
 
-  const LanguageSwitcher({Key? key, this.showLabel = true, this.isIconButton = false}) : super(key: key);
+  const LanguageSwitcher({super.key, this.showLabel = true, this.isIconButton = false});
 
   @override
   Widget build(BuildContext context) {

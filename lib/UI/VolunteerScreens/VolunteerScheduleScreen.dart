@@ -28,8 +28,8 @@ class _VolunteerScheduleScreenState extends State<VolunteerScheduleScreen> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
-  Map<String, Event> _eventCache = {};
-  Map<String, Location> _locationCache = {};
+  final Map<String, Event> _eventCache = {};
+  final Map<String, Location> _locationCache = {};
   bool _isLoading = true;
 
   @override

@@ -43,7 +43,7 @@ class NotificationsProvider with ChangeNotifier {
       print('📬 Loading notifications for user: $userId');
       _notifications = await _notificationHelper.getNotifications(userId);
       _notifications.sort((a, b) => b.dateTime.compareTo(a.dateTime)); // Most recent first
-      print('✓ Loaded ${_notifications.length} notifications (${unreadCount} unread)');
+      print('✓ Loaded ${_notifications.length} notifications ($unreadCount unread)');
       _isLoading = false;
       _notifyListeners();
     } catch (e) {
