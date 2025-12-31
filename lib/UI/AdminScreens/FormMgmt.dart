@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:azimuth_vms/Helpers/VolunteerFormHelperFirebase.dart';
 import 'package:azimuth_vms/Helpers/SystemUserHelperFirebase.dart';
-import 'package:azimuth_vms/Helpers/PdfGeneratorHelper.dart';
 import 'package:azimuth_vms/Helpers/NotificationHelperFirebase.dart';
 import 'package:azimuth_vms/Models/VolunteerForm.dart';
 import 'package:azimuth_vms/Models/SystemUser.dart';
 import 'package:azimuth_vms/UI/Widgets/ArchiveDeleteWidget.dart';
+import 'package:azimuth_vms/UI/Widgets/PDFGenerationButton.dart';
 import 'package:azimuth_vms/UI/Theme/Breakpoints.dart';
 import 'package:azimuth_vms/l10n/app_localizations.dart';
 
@@ -428,55 +428,16 @@ class _FormMgmtState extends State<FormMgmt> {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                   ),
-                  // Download PDF Button
-                  FilledButton.tonalIcon(
-                    onPressed: () async {
-                      try {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.generatingPdf), duration: const Duration(seconds: 1)));
-                        await PdfGeneratorHelper.generateAndDownloadPdf(form);
-                        if (mounted) {
-                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.pdfDownloaded)));
-                        }
-                      } catch (e) {
-                        print('Error generating PDF: $e');
-                        if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${AppLocalizations.of(context)!.error}: $e')));
-                        }
-                      }
-                    },
-                    icon: const Icon(Icons.download_rounded, size: 18),
-                    label: Text(AppLocalizations.of(context)!.downloadPdf),
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    ),
-                  ),
-                  // Print Button
-                  FilledButton.tonalIcon(
-                    onPressed: () async {
-                      try {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.generatingPdf), duration: const Duration(seconds: 1)));
-                        await PdfGeneratorHelper.generateAndDownloadPdf(form);
-                        if (mounted) {
-                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.readyToPrint)));
-                        }
-                      } catch (e) {
-                        print('Error generating PDF: $e');
-                        if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${AppLocalizations.of(context)!.error}: $e')));
-                        }
-                      }
-                    },
-                    icon: const Icon(Icons.print_rounded, size: 18),
-                    label: Text(AppLocalizations.of(context)!.print),
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    ),
-                  ),
                 ],
+              ),
+              const SizedBox(height: 12),
+              // PDF Generation Section
+              PDFGenerationButton(
+                form: form,
+                onPDFGenerated: () {
+                  // Refresh the list to show updated PDF status
+                  _loadForms();
+                },
               ),
               const SizedBox(height: 16),
               // Additional Info
