@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request, Depends, Form, UploadFile, File, HTTPExcep
 from fastapi.responses import HTMLResponse, FileResponse, RedirectResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
 from starlette.middleware.sessions import SessionMiddleware
@@ -56,6 +57,15 @@ def create_root_user():
 create_root_user()
 
 app = FastAPI()
+
+# Add CORS middleware to allow requests from Flutter web app
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins for now, restrict in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Add session middleware (secret key for signing cookies)
 app.add_middleware(SessionMiddleware, secret_key="volunteer-pdf-generator-secret-key-2024")
