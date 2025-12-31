@@ -165,7 +165,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get teams => 'الفرق';
 
   @override
+  String get teamsSubtitle => 'إدارة الفرق والأعضاء';
+
+  @override
   String get locations => 'المواقع';
+
+  @override
+  String get locationsSubtitle => 'إدارة المواقع والمواقع الفرعية';
 
   @override
   String get notifications => 'الإشعارات';

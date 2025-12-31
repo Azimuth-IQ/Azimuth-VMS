@@ -735,9 +735,9 @@ class _MoreMenu extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _MoreMenuItem(icon: Icons.groups, title: l10n.teams, subtitle: 'Manage teams and members', color: Colors.purple, onTap: () => onNavigate('/teams')),
+          _MoreMenuItem(icon: Icons.groups, title: l10n.teams, subtitle: l10n.teamsSubtitle, color: Colors.purple, onTap: () => onNavigate('/teams')),
           const SizedBox(height: 12),
-          _MoreMenuItem(icon: Icons.location_on, title: l10n.locations, subtitle: 'Manage locations and sublocations', color: Colors.orange, onTap: () => onNavigate('/locations')),
+          _MoreMenuItem(icon: Icons.location_on, title: l10n.locations, subtitle: l10n.locationsSubtitle, color: Colors.orange, onTap: () => onNavigate('/locations')),
           const SizedBox(height: 12),
           _MoreMenuItem(
             icon: Icons.campaign,

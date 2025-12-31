@@ -410,11 +410,23 @@ abstract class AppLocalizations {
   /// **'Teams'**
   String get teams;
 
+  /// No description provided for @teamsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage teams and members'**
+  String get teamsSubtitle;
+
   /// No description provided for @locations.
   ///
   /// In en, this message translates to:
   /// **'Locations'**
   String get locations;
+
+  /// No description provided for @locationsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage locations and sublocations'**
+  String get locationsSubtitle;
 
   /// No description provided for @notifications.
   ///

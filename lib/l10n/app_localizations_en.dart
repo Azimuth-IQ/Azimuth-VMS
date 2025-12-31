@@ -165,7 +165,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get teams => 'Teams';
 
   @override
+  String get teamsSubtitle => 'Manage teams and members';
+
+  @override
   String get locations => 'Locations';
+
+  @override
+  String get locationsSubtitle => 'Manage locations and sublocations';
 
   @override
   String get notifications => 'Notifications';
