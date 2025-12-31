@@ -204,7 +204,7 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                         FadeInSlide(
                           child: Text(
                             l10n.upcomingShift,
-                            style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 20, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 11 : 20, fontWeight: FontWeight.bold),
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -218,7 +218,7 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                         delay: 0.1,
                         child: Text(
                           l10n.activity,
-                          style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 20, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 11 : 20, fontWeight: FontWeight.bold),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -228,7 +228,7 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                         delay: 0.2,
                         child: Text(
                           l10n.management,
-                          style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 20, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 11 : 20, fontWeight: FontWeight.bold),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -284,7 +284,7 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                         delay: 0.3,
                         child: Text(
                           l10n.myEvents,
-                          style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 20, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 11 : 20, fontWeight: FontWeight.bold),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -611,7 +611,7 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                         const SizedBox(height: 4),
                         Text(
                           name ?? l10n.teamLeader,
-                          style: TextStyle(color: Colors.white, fontSize: Breakpoints.isMobile(context) ? 17 : 26, fontWeight: FontWeight.bold),
+                          style: TextStyle(color: Colors.white, fontSize: Breakpoints.isMobile(context) ? 14 : 26, fontWeight: FontWeight.bold),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ],
@@ -702,7 +702,7 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
                           children: [
                             Text(
                               event.name,
-                              style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 12 : 18, fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 10 : 18, fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 4),
                             Text('${event.startDate} - ${event.endDate}', style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6))),

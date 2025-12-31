@@ -108,14 +108,14 @@ class VolunteerProfileScreen extends StatelessWidget {
                 backgroundColor: Colors.white,
                 child: Text(
                   form.fullName?.substring(0, 1).toUpperCase() ?? '?',
-                  style: TextStyle(fontSize: isMobile ? 32 : 40, fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
+                  style: TextStyle(fontSize: isMobile ? 28 : 40, fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
                 ),
               ),
             ),
             SizedBox(height: isMobile ? 12 : 16),
             Text(
               form.fullName ?? l10n.unknownName,
-              style: TextStyle(color: Colors.white, fontSize: isMobile ? 20 : 24, fontWeight: FontWeight.bold),
+              style: TextStyle(color: Colors.white, fontSize: isMobile ? 18 : 24, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: isMobile ? 6 : 8),
@@ -129,7 +129,7 @@ class VolunteerProfileScreen extends StatelessWidget {
                   const SizedBox(width: 8),
                   Text(
                     form.mobileNumber ?? l10n.noPhone,
-                    style: TextStyle(color: Colors.white, fontSize: isMobile ? 14 : 16, fontWeight: FontWeight.w500),
+                    style: TextStyle(color: Colors.white, fontSize: isMobile ? 12 : 16, fontWeight: FontWeight.w500),
                   ),
                 ],
               ),
@@ -184,7 +184,7 @@ class VolunteerProfileScreen extends StatelessWidget {
                         Text(
                           average.toStringAsFixed(1),
                           style: TextStyle(
-                            fontSize: isMobile ? 44 : 56,
+                            fontSize: isMobile ? 38 : 56,
                             fontWeight: FontWeight.bold,
                             color: average >= 4.0 ? Colors.green : (average >= 3.0 ? Colors.amber.shade700 : Colors.red),
                           ),

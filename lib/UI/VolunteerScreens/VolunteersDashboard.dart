@@ -263,7 +263,7 @@ class _ApprovedDashboardView extends StatelessWidget {
                   delay: 0.1,
                   child: Text(
                     l10n.upcomingShift,
-                    style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 11 : 20, fontWeight: FontWeight.bold),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -289,7 +289,7 @@ class _ApprovedDashboardView extends StatelessWidget {
                   delay: 0.2,
                   child: Text(
                     l10n.myAssignments,
-                    style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 11 : 20, fontWeight: FontWeight.bold),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -318,7 +318,7 @@ class _ApprovedDashboardView extends StatelessWidget {
                   delay: 0.3,
                   child: Text(
                     l10n.activity,
-                    style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 11 : 20, fontWeight: FontWeight.bold),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -637,7 +637,7 @@ class _ApprovedDashboardView extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 12 : 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 10 : 18, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 4),
                     Text(description, style: TextStyle(fontSize: 14, color: Colors.grey[600])),

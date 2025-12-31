@@ -794,7 +794,7 @@ class _FormFillPageState extends State<FormFillPage> {
       padding: const EdgeInsets.only(bottom: 16),
       child: Text(
         title,
-        style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 20, fontWeight: FontWeight.bold, color: Colors.blue),
+        style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 11 : 20, fontWeight: FontWeight.bold, color: Colors.blue),
       ),
     );
   }

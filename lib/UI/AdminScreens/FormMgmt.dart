@@ -285,7 +285,7 @@ class _FormMgmtState extends State<FormMgmt> {
                             Expanded(
                               child: Text(
                                 form.fullName ?? 'Unknown',
-                                style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 10 : 16, fontWeight: FontWeight.w600),
+                                style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 8 : 16, fontWeight: FontWeight.w600),
                               ),
                             ),
                             if (form.archived) const SizedBox(width: 8),

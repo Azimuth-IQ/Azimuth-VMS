@@ -195,7 +195,7 @@ class _DashboardHome extends StatelessWidget {
           children: [
             Text(
               l10n.dashboard,
-              style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 11 : 20, fontWeight: FontWeight.bold),
             ),
             Text(l10n.welcomeBack(userPhone), style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey)),
           ],
