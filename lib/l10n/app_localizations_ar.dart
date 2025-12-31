@@ -186,6 +186,55 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settings => 'الإعدادات';
 
   @override
+  String get themeSettings => 'إعدادات المظهر';
+
+  @override
+  String get selectPlatformTheme => 'اختر مظهر المنصة';
+
+  @override
+  String get chooseThemeDescription =>
+      'اختر مظهراً للمنصة بأكملها. سيرى جميع المستخدمين المظهر المحدد.';
+
+  @override
+  String get theme1Title => 'المظهر 1: أحمر/داكن';
+
+  @override
+  String get theme1Description => 'السلطة والإلحاح - مظهر احترافي داكن';
+
+  @override
+  String get theme2Title => 'المظهر 2: أخضر/فاتح';
+
+  @override
+  String get theme2Description => 'النمو والمجتمع - مظهر طازج فاتح';
+
+  @override
+  String get theme3Title => 'المظهر 3: ذهبي/داكن';
+
+  @override
+  String get theme3Description => 'الدفء والقيادة - مظهر أنيق داكن';
+
+  @override
+  String themeApplied(String themeName) {
+    return 'تم تطبيق $themeName على المنصة بالكامل';
+  }
+
+  @override
+  String get mainColor => 'الأساسي';
+
+  @override
+  String get accentColor => 'الثانوي';
+
+  @override
+  String get customColors => 'ألوان مخصصة';
+
+  @override
+  String get customizeThemeColors => 'تخصيص ألوان المظهر (قريباً)';
+
+  @override
+  String get colorCustomizationFuture =>
+      'سيتوفر تخصيص الألوان في تحديث مستقبلي';
+
+  @override
   String welcomeBack(String userPhone) {
     return 'مرحباً بك، $userPhone';
   }

@@ -129,7 +129,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get completed => 'Completed';
 
   @override
-  String get active => 'Active';
+  String get active => 'ACTIVE';
 
   @override
   String get inactive => 'Inactive';
@@ -184,6 +184,56 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settings => 'Settings';
+
+  @override
+  String get themeSettings => 'Theme Settings';
+
+  @override
+  String get selectPlatformTheme => 'Select Platform Theme';
+
+  @override
+  String get chooseThemeDescription =>
+      'Choose a theme for the entire platform. All users will see the selected theme.';
+
+  @override
+  String get theme1Title => 'Theme 1: Red/Dark';
+
+  @override
+  String get theme1Description =>
+      'Authority and urgency - Professional dark theme';
+
+  @override
+  String get theme2Title => 'Theme 2: Green/Light';
+
+  @override
+  String get theme2Description => 'Growth and community - Fresh light theme';
+
+  @override
+  String get theme3Title => 'Theme 3: Gold/Dark';
+
+  @override
+  String get theme3Description => 'Warmth and leadership - Elegant dark theme';
+
+  @override
+  String themeApplied(String themeName) {
+    return '$themeName applied to entire platform';
+  }
+
+  @override
+  String get mainColor => 'Main';
+
+  @override
+  String get accentColor => 'Accent';
+
+  @override
+  String get customColors => 'Custom Colors';
+
+  @override
+  String get customizeThemeColors => 'Customize theme colors (Coming Soon)';
+
+  @override
+  String get colorCustomizationFuture =>
+      'Color customization will be available in a future update';
 
   @override
   String welcomeBack(String userPhone) {

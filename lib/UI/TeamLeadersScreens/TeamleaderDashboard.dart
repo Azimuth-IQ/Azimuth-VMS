@@ -54,6 +54,7 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
         if (mounted && !_hasLoadedNotifications) {
           _hasLoadedNotifications = true;
           context.read<NotificationsProvider>().loadNotifications(_currentUserPhone!);
+          context.read<CarouselProvider>().loadImages();
         }
       });
     }
@@ -79,6 +80,7 @@ class _TeamleaderDashboardState extends State<TeamleaderDashboard> {
           if (mounted && !_hasLoadedNotifications) {
             _hasLoadedNotifications = true;
             context.read<NotificationsProvider>().loadNotifications(_currentUserPhone!);
+            context.read<CarouselProvider>().loadImages();
           }
         });
       }

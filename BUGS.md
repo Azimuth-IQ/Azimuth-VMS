@@ -7,9 +7,9 @@
 ## 📊 Quick Summary
 
 - **Total Bugs Identified:** 19
-- **Completed:** 14 (Bugs 1-4, 7-13, 15, 18-19)
+- **Completed:** 16 (Bugs 1-4, 7-16, 18-19)
 - **In Progress:** 1 (PDF Generation)
-- **Pending:** 4 (Bugs 5-6, 14, 16-17)
+- **Pending:** 2 (Bugs 5-6, 17)
 
 ---
 
@@ -141,6 +141,19 @@
 - **Solution:** Added "My Schedule" navigation option to both desktop (NavigationRail) and mobile (BottomNavigationBar) views. Volunteers can now access their schedule and request leave for specific shifts from the dashboard.
 - **Files Modified:** [VolunteersDashboard.dart](lib/UI/VolunteerScreens/VolunteersDashboard.dart)
 
+### Bug 14: Carousel Slider Inconsistency ✅
+
+- **Issue:** Inconsistency in showing carousel slider (admin, volunteer, team leader)
+- **Details:** Sometimes appears, sometimes doesn't with no logs
+- **Status:** FIXED
+- **Solution:** Added `loadImages()` call to TeamLeaderDashboard to load carousel images consistently across all dashboards
+- **Files Modified:** [TeamleaderDashboard.dart](lib/UI/TeamLeadersScreens/TeamleaderDashboard.dart)
+- **Technical Details:**
+  - VolunteerDashboard: Uses `startListening()` for real-time stream updates
+  - AdminDashboard: Uses `loadImages()` in RefreshIndicator
+  - TeamLeaderDashboard: Now uses `loadImages()` in didChangeDependencies (was missing - caused carousel not to show)
+  - All dashboards now consistently load carousel images
+
 ### Bug 15: Theme Settings Not Clickable on PC ✅
 
 - **Issue:** Theme settings throws NavigationRail assertion error when clicked (selectedIndex out of range)
@@ -154,6 +167,26 @@
   - Error was: `selectedIndex == null || (0 <= selectedIndex && selectedIndex < destinations.length)` assertion failed
   - Previous code tried to set `_selectedIndex = 8` for theme settings, but only 5 destinations exist
   - Now uses two separate indices to manage navigation state properly
+
+### Bug 16: Theme Settings Not Translatable ✅
+
+- **Issue:** Theme settings is not translatable in Arabic mode
+- **Status:** FIXED
+- **Solution:** Added full localization support to ThemeSettingsScreen with all strings in English and Arabic
+- **Files Modified:**
+  - [app_en.arb](lib/l10n/app_en.arb) - Added 13 theme-related strings
+  - [app_ar.arb](lib/l10n/app_ar.arb) - Added 13 theme-related Arabic translations
+  - [ThemeSettingsScreen.dart](lib/UI/AdminScreens/ThemeSettingsScreen.dart) - Updated to use AppLocalizations
+- **Localization Strings Added:**
+  - `themeSettings`, `selectPlatformTheme`, `chooseThemeDescription`
+  - `theme1Title`, `theme1Description`, `theme2Title`, `theme2Description`, `theme3Title`, `theme3Description`
+  - `themeApplied`, `active`, `mainColor`, `accentColor`
+  - `customColors`, `customizeThemeColors`, `colorCustomizationFuture`
+- **Features:**
+  - All UI text switches between English and Arabic based on app language
+  - Theme names, descriptions, and labels fully translated
+  - SnackBar messages localized
+  - Color labels (Main/Accent) translated
 
 ### Bug 18: Language Selector on Sign In ✅
 
@@ -196,7 +229,7 @@
 
 ## 🐛 Pending Bugs
 
-### Medium Priority (Bugs 5-6, 14, 16-17)
+### Medium Priority (Bugs 5-6, 17)
 
 ### Bug 5: Slider/Carousel Feature
 
@@ -212,22 +245,6 @@
 - **Priority:** Medium
 - **Status:** Not Started
 - **Affected Screen:** Volunteer form image upload
-
-### Bug 14: Carousel Slider Inconsistency
-
-- **Issue:** Inconsistency in showing carousel slider (admin, volunteer, team leader)
-- **Details:** Sometimes appears, sometimes doesn't with no logs
-- **Priority:** Medium
-- **Status:** Not Started
-- **Affected Screens:** All dashboards (admin, volunteer, team leader)
-
-### Bug 16: Theme Settings Not Translatable
-
-- **Issue:** Theme settings is not translatable in Arabic mode
-- **Priority:** Medium
-- **Status:** Not Started
-- **Affected Screen:** Settings page
-- **Files:** `lib/l10n/intl_*.arb`
 
 ### Bug 17: Default Language to Arabic
 

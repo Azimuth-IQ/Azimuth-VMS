@@ -60,8 +60,29 @@
   "sendNotification": "إرسال إشعار",
   "sending": "جاري الإرسال...",
   "profile": "الملف الشخصي",
-  "settings": "الإعدادات",
-  
+  "settings": "الإعدادات",  "themeSettings": "إعدادات المظهر",
+  "selectPlatformTheme": "اختر مظهر المنصة",
+  "chooseThemeDescription": "اختر مظهراً للمنصة بأكملها. سيرى جميع المستخدمين المظهر المحدد.",
+  "theme1Title": "المظهر 1: أحمر/داكن",
+  "theme1Description": "السلطة والإلحاح - مظهر احترافي داكن",
+  "theme2Title": "المظهر 2: أخضر/فاتح",
+  "theme2Description": "النمو والمجتمع - مظهر طازج فاتح",
+  "theme3Title": "المظهر 3: ذهبي/داكن",
+  "theme3Description": "الدفء والقيادة - مظهر أنيق داكن",
+  "themeApplied": "تم تطبيق {themeName} على المنصة بالكامل",
+  "@themeApplied": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "active": "نشط",
+  "mainColor": "الأساسي",
+  "accentColor": "الثانوي",
+  "customColors": "ألوان مخصصة",
+  "customizeThemeColors": "تخصيص ألوان المظهر (قريباً)",
+  "colorCustomizationFuture": "سيتوفر تخصيص الألوان في تحديث مستقبلي",  
   "welcomeBack": "مرحباً بك، {userPhone}",
   "analytics": "التحليلات",
   "quickActions": "إجراءات سريعة",

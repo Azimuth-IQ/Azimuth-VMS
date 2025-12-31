@@ -61,6 +61,29 @@
   "sending": "Sending...",
   "profile": "Profile",
   "settings": "Settings",
+  "themeSettings": "Theme Settings",
+  "selectPlatformTheme": "Select Platform Theme",
+  "chooseThemeDescription": "Choose a theme for the entire platform. All users will see the selected theme.",
+  "theme1Title": "Theme 1: Red/Dark",
+  "theme1Description": "Authority and urgency - Professional dark theme",
+  "theme2Title": "Theme 2: Green/Light",
+  "theme2Description": "Growth and community - Fresh light theme",
+  "theme3Title": "Theme 3: Gold/Dark",
+  "theme3Description": "Warmth and leadership - Elegant dark theme",
+  "themeApplied": "{themeName} applied to entire platform",
+  "@themeApplied": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "active": "ACTIVE",
+  "mainColor": "Main",
+  "accentColor": "Accent",
+  "customColors": "Custom Colors",
+  "customizeThemeColors": "Customize theme colors (Coming Soon)",
+  "colorCustomizationFuture": "Color customization will be available in a future update",
   
   "welcomeBack": "Welcome back, {userPhone}",
   "@welcomeBack": {

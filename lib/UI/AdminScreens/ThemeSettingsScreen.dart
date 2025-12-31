@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:azimuth_vms/l10n/app_localizations.dart';
 import '../Theme/ThemeProvider.dart';
 import '../Theme/Theme1.dart';
 import '../Theme/Theme2.dart';
@@ -12,20 +13,18 @@ class ThemeSettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeProvider themeProvider = context.watch<ThemeProvider>();
     final ThemeData theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Theme Settings'), backgroundColor: theme.colorScheme.surface),
+      appBar: AppBar(title: Text(l10n.themeSettings), backgroundColor: theme.colorScheme.surface),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text('Select Platform Theme', style: theme.textTheme.headlineLarge),
+            Text(l10n.selectPlatformTheme, style: theme.textTheme.headlineLarge),
             const SizedBox(height: 8),
-            Text(
-              'Choose a theme for the entire platform. All users will see the selected theme.',
-              style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.7)),
-            ),
+            Text(l10n.chooseThemeDescription, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.7))),
             const SizedBox(height: 32),
 
             // Theme 1 Card
@@ -33,8 +32,8 @@ class ThemeSettingsScreen extends StatelessWidget {
               context: context,
               themeProvider: themeProvider,
               selection: ThemeSelection.theme1,
-              title: 'Theme 1: Red/Dark',
-              description: 'Authority and urgency - Professional dark theme',
+              title: l10n.theme1Title,
+              description: l10n.theme1Description,
               mainColor: Theme1.mainColor,
               accentColor: Theme1.accentColor,
               backgroundColor: Theme1.backgroundDark,
@@ -47,8 +46,8 @@ class ThemeSettingsScreen extends StatelessWidget {
               context: context,
               themeProvider: themeProvider,
               selection: ThemeSelection.theme2,
-              title: 'Theme 2: Green/Light',
-              description: 'Growth and community - Fresh light theme',
+              title: l10n.theme2Title,
+              description: l10n.theme2Description,
               mainColor: Theme2.mainColor,
               accentColor: Theme2.accentColor,
               backgroundColor: Theme2.backgroundLight,
@@ -61,8 +60,8 @@ class ThemeSettingsScreen extends StatelessWidget {
               context: context,
               themeProvider: themeProvider,
               selection: ThemeSelection.theme3,
-              title: 'Theme 3: Gold/Dark',
-              description: 'Warmth and leadership - Elegant dark theme',
+              title: l10n.theme3Title,
+              description: l10n.theme3Description,
               mainColor: Theme3.mainColor,
               accentColor: Theme3.accentColor,
               backgroundColor: Theme3.backgroundDark,
@@ -71,9 +70,9 @@ class ThemeSettingsScreen extends StatelessWidget {
             const SizedBox(height: 48),
 
             // Custom Colors Section (Future Feature)
-            Text('Custom Colors', style: theme.textTheme.headlineLarge),
+            Text(l10n.customColors, style: theme.textTheme.headlineLarge),
             const SizedBox(height: 8),
-            Text('Customize theme colors (Coming Soon)', style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.7))),
+            Text(l10n.customizeThemeColors, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.7))),
             const SizedBox(height: 16),
 
             // Placeholder for color customization
@@ -89,7 +88,7 @@ class ThemeSettingsScreen extends StatelessWidget {
                   Icon(Icons.palette_outlined, size: 48, color: theme.colorScheme.onSurface.withOpacity(0.3)),
                   const SizedBox(height: 16),
                   Text(
-                    'Color customization will be available in a future update',
+                    l10n.colorCustomizationFuture,
                     textAlign: TextAlign.center,
                     style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.5)),
                   ),
@@ -113,12 +112,13 @@ class ThemeSettingsScreen extends StatelessWidget {
     required Color backgroundColor,
   }) {
     final ThemeData theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final bool isSelected = themeProvider.currentThemeSelection == selection;
 
     return GestureDetector(
       onTap: () {
         themeProvider.setTheme(selection);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$title applied to entire platform'), duration: const Duration(seconds: 2)));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.themeApplied(title)), duration: const Duration(seconds: 2)));
       },
       child: Container(
         padding: const EdgeInsets.all(20),
@@ -172,7 +172,7 @@ class ThemeSettingsScreen extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(color: mainColor.withOpacity(0.1), borderRadius: BorderRadius.circular(4)),
                           child: Text(
-                            'ACTIVE',
+                            l10n.active,
                             style: TextStyle(color: mainColor, fontSize: 10, fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -182,7 +182,7 @@ class ThemeSettingsScreen extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(description, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
                   const SizedBox(height: 8),
-                  Row(children: <Widget>[_buildColorDot('Main', mainColor), const SizedBox(width: 12), _buildColorDot('Accent', accentColor)]),
+                  Row(children: <Widget>[_buildColorDot(l10n.mainColor, mainColor), const SizedBox(width: 12), _buildColorDot(l10n.accentColor, accentColor)]),
                 ],
               ),
             ),

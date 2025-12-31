@@ -341,7 +341,7 @@ abstract class AppLocalizations {
   /// No description provided for @active.
   ///
   /// In en, this message translates to:
-  /// **'Active'**
+  /// **'ACTIVE'**
   String get active;
 
   /// No description provided for @inactive.
@@ -451,6 +451,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get settings;
+
+  /// No description provided for @themeSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme Settings'**
+  String get themeSettings;
+
+  /// No description provided for @selectPlatformTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Platform Theme'**
+  String get selectPlatformTheme;
+
+  /// No description provided for @chooseThemeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a theme for the entire platform. All users will see the selected theme.'**
+  String get chooseThemeDescription;
+
+  /// No description provided for @theme1Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme 1: Red/Dark'**
+  String get theme1Title;
+
+  /// No description provided for @theme1Description.
+  ///
+  /// In en, this message translates to:
+  /// **'Authority and urgency - Professional dark theme'**
+  String get theme1Description;
+
+  /// No description provided for @theme2Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme 2: Green/Light'**
+  String get theme2Title;
+
+  /// No description provided for @theme2Description.
+  ///
+  /// In en, this message translates to:
+  /// **'Growth and community - Fresh light theme'**
+  String get theme2Description;
+
+  /// No description provided for @theme3Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme 3: Gold/Dark'**
+  String get theme3Title;
+
+  /// No description provided for @theme3Description.
+  ///
+  /// In en, this message translates to:
+  /// **'Warmth and leadership - Elegant dark theme'**
+  String get theme3Description;
+
+  /// No description provided for @themeApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'{themeName} applied to entire platform'**
+  String themeApplied(String themeName);
+
+  /// No description provided for @mainColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Main'**
+  String get mainColor;
+
+  /// No description provided for @accentColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Accent'**
+  String get accentColor;
+
+  /// No description provided for @customColors.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Colors'**
+  String get customColors;
+
+  /// No description provided for @customizeThemeColors.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize theme colors (Coming Soon)'**
+  String get customizeThemeColors;
+
+  /// No description provided for @colorCustomizationFuture.
+  ///
+  /// In en, this message translates to:
+  /// **'Color customization will be available in a future update'**
+  String get colorCustomizationFuture;
 
   /// No description provided for @welcomeBack.
   ///
