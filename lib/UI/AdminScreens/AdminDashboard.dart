@@ -747,7 +747,7 @@ class _MoreMenu extends StatelessWidget {
             onTap: () => onNavigate('/send-notification'),
           ),
           const SizedBox(height: 12),
-          _MoreMenuItem(icon: Icons.palette, title: 'Theme Settings', subtitle: 'Change app theme and appearance', color: Colors.pink, onTap: () => onNavigate('/theme-settings')),
+          _MoreMenuItem(icon: Icons.palette, title: l10n.themeSettings, subtitle: l10n.themeSettingsSubtitle, color: Colors.pink, onTap: () => onNavigate('/theme-settings')),
         ],
       ),
     );

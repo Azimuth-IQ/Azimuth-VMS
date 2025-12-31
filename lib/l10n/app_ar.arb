@@ -61,6 +61,7 @@
   "sending": "جاري الإرسال...",
   "profile": "الملف الشخصي",
   "settings": "الإعدادات",  "themeSettings": "إعدادات المظهر",
+  "themeSettingsSubtitle": "تغيير مظهر التطبيق والمظهر",
   "selectPlatformTheme": "اختر مظهر المنصة",
   "chooseThemeDescription": "اختر مظهراً للمنصة بأكملها. سيرى جميع المستخدمين المظهر المحدد.",
   "theme1Title": "المظهر 1: أحمر/داكن",

@@ -62,6 +62,7 @@
   "profile": "Profile",
   "settings": "Settings",
   "themeSettings": "Theme Settings",
+  "themeSettingsSubtitle": "Change app theme and appearance",
   "selectPlatformTheme": "Select Platform Theme",
   "chooseThemeDescription": "Choose a theme for the entire platform. All users will see the selected theme.",
   "theme1Title": "Theme 1: Red/Dark",

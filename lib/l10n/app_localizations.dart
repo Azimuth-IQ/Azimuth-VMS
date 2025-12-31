@@ -458,6 +458,12 @@ abstract class AppLocalizations {
   /// **'Theme Settings'**
   String get themeSettings;
 
+  /// No description provided for @themeSettingsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change app theme and appearance'**
+  String get themeSettingsSubtitle;
+
   /// No description provided for @selectPlatformTheme.
   ///
   /// In en, this message translates to:

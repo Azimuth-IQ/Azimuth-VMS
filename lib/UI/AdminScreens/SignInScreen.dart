@@ -188,7 +188,10 @@ class SignInScreen extends StatelessWidget {
                         style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 20 : 28, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
                       ),
                       const SizedBox(height: 8),
-                      Text(l10n.volunteerManagementSystem, style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 12 : 16, color: theme.colorScheme.onSurface.withOpacity(0.6))),
+                      Text(
+                        l10n.volunteerManagementSystem,
+                        style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 12 : 16, color: theme.colorScheme.onSurface.withOpacity(0.6)),
+                      ),
                     ],
                   ),
                 ),

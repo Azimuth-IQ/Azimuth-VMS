@@ -189,6 +189,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get themeSettings => 'إعدادات المظهر';
 
   @override
+  String get themeSettingsSubtitle => 'تغيير مظهر التطبيق والمظهر';
+
+  @override
   String get selectPlatformTheme => 'اختر مظهر المنصة';
 
   @override

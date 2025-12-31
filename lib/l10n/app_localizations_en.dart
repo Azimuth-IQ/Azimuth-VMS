@@ -189,6 +189,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get themeSettings => 'Theme Settings';
 
   @override
+  String get themeSettingsSubtitle => 'Change app theme and appearance';
+
+  @override
   String get selectPlatformTheme => 'Select Platform Theme';
 
   @override

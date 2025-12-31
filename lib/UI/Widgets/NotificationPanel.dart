@@ -44,9 +44,15 @@ class NotificationPanel extends StatelessWidget {
                 children: [
                   Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3)),
                   const SizedBox(height: 16),
-                  Text(AppLocalizations.of(context)!.errorLoadingNotifications, style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 16, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6))),
+                  Text(
+                    AppLocalizations.of(context)!.errorLoadingNotifications,
+                    style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 16, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
+                  ),
                   const SizedBox(height: 8),
-                  Text(provider.errorMessage!, style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 11 : 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5))),
+                  Text(
+                    provider.errorMessage!,
+                    style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 11 : 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
+                  ),
                   const SizedBox(height: 24),
                   ElevatedButton.icon(onPressed: () => provider.refresh(), icon: const Icon(Icons.refresh), label: Text(AppLocalizations.of(context)!.retry)),
                 ],
@@ -61,9 +67,15 @@ class NotificationPanel extends StatelessWidget {
                 children: [
                   Icon(Icons.notifications_none, size: 64, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3)),
                   const SizedBox(height: 16),
-                  Text(AppLocalizations.of(context)!.noNotificationsYet, style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 16, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6))),
+                  Text(
+                    AppLocalizations.of(context)!.noNotificationsYet,
+                    style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 16, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
+                  ),
                   const SizedBox(height: 8),
-                  Text(AppLocalizations.of(context)!.notificationsWillAppearHere, style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 11 : 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5))),
+                  Text(
+                    AppLocalizations.of(context)!.notificationsWillAppearHere,
+                    style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 11 : 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
+                  ),
                 ],
               ),
             );
@@ -135,7 +147,10 @@ class _NotificationCard extends StatelessWidget {
                       Row(
                         children: [
                           Expanded(
-                            child: Text(notification.title, style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 16, fontWeight: notification.isRead ? FontWeight.normal : FontWeight.bold)),
+                            child: Text(
+                              notification.title,
+                              style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 16, fontWeight: notification.isRead ? FontWeight.normal : FontWeight.bold),
+                            ),
                           ),
                           if (!notification.isRead)
                             Container(
@@ -146,13 +161,19 @@ class _NotificationCard extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 4),
-                      Text(notification.message, style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 11 : 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7))),
+                      Text(
+                        notification.message,
+                        style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 11 : 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
+                      ),
                       const SizedBox(height: 8),
                       Row(
                         children: [
                           Icon(Icons.access_time, size: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
                           const SizedBox(width: 4),
-                          Text(_formatDateTime(notification.dateTime), style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 10 : 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5))),
+                          Text(
+                            _formatDateTime(notification.dateTime),
+                            style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 10 : 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
+                          ),
                         ],
                       ),
                     ],
