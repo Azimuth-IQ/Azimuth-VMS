@@ -268,6 +268,13 @@ Text(l10n.welcomeBack(userPhone))
   - Documents (ID numbers, ration card, residence card)
   - Attachments (photo with formal clothing hint, ID images, residence card images)
 - ✅ **Image Upload Integration**: Web-based image picker with Firebase Storage
+- ✅ **Image Optimization**: Automatic optimization for images >500KB via [ImageOptimizationDialog.dart](lib/UI/Widgets/ImageOptimizationDialog.dart)
+  - Interactive quality slider (10-100%)
+  - Adjustable image size (20-100% of original dimensions)
+  - Real-time preview of optimized image
+  - Side-by-side file size comparison (original vs optimized)
+  - Visual feedback when image is under 500KB limit
+  - Prevents submission until image meets size requirements
 - ✅ **Bilingual Photo Hint**: Localized hint for formal clothing on white background
 - ✅ **Status Workflow**: Sent → Pending → Approved1/Rejected1 → Approved2/Rejected2 → Completed
 - ✅ **PDF Generation**: Download/print volunteer forms
