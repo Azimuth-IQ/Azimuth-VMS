@@ -293,19 +293,31 @@ class _DashboardHome extends StatelessWidget {
               ),
               _buildStatsRow(context),
               const SizedBox(height: 32),
-              Text(l10n.analytics, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+              Text(
+                l10n.analytics,
+                style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 14 : 22, fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 16),
               _buildAnalyticsSection(context),
               const SizedBox(height: 32),
-              Text(l10n.quickActions, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+              Text(
+                l10n.quickActions,
+                style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 14 : 22, fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 16),
               _buildQuickActionsGrid(context),
               const SizedBox(height: 32),
-              Text(l10n.workflowScenarios, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+              Text(
+                l10n.workflowScenarios,
+                style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 14 : 22, fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 16),
               _buildWorkflowScenarios(context),
               const SizedBox(height: 32),
-              Text(l10n.activeEvents, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+              Text(
+                l10n.activeEvents,
+                style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 14 : 22, fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 16),
               _buildActiveEventsList(context),
             ],
@@ -339,7 +351,10 @@ class _DashboardHome extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(l10n.volunteersPerTeam, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+              Text(
+                l10n.volunteersPerTeam,
+                style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 18, fontWeight: FontWeight.w600),
+              ),
               const SizedBox(height: 24),
               SizedBox(
                 height: 200,
@@ -588,9 +603,15 @@ class _ScenarioCard extends StatelessWidget {
                 child: Icon(icon, color: color, size: 32),
               ),
               const SizedBox(height: 16),
-              Text(title, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+              Text(
+                title,
+                style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 18, fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 8),
-              Text(description, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
+              Text(
+                description,
+                style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 11 : 14, color: theme.colorScheme.onSurface.withOpacity(0.6)),
+              ),
               const SizedBox(height: 16),
               Row(
                 children: [
@@ -640,13 +661,16 @@ class _StatCard extends StatelessWidget {
                 decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
                 child: Icon(icon, color: color, size: 24),
               ),
-              Text(value, style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
+              Text(
+                value,
+                style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 20 : 28, fontWeight: FontWeight.bold),
+              ),
             ],
           ),
           const SizedBox(height: 12),
           Text(
             title,
-            style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6), fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 11 : 14, color: theme.colorScheme.onSurface.withOpacity(0.6), fontWeight: FontWeight.w500),
           ),
         ],
       ),
@@ -684,7 +708,10 @@ class _QuickAction extends StatelessWidget {
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: Text(title, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+              child: Text(
+                title,
+                style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 12 : 14, fontWeight: FontWeight.w600),
+              ),
             ),
           ],
         ),
@@ -764,9 +791,9 @@ class _MoreMenuItem extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+                    Text(title, style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 13 : 18, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 4),
-                    Text(subtitle, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
+                    Text(subtitle, style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 10 : 12, color: theme.colorScheme.onSurface.withOpacity(0.6))),
                   ],
                 ),
               ),
