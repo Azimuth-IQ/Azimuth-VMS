@@ -300,21 +300,31 @@
 
 ## 🔧 Technical Debt
 
-### 1. Google Fonts Package
+### 1. Google Fonts Package ✅
 
 - **Issue:** Added `google_fonts: ^6.2.1` for PDF generation but not actively used
-- **Action:** Keep for potential future use or remove if not needed
+- **Status:** RESOLVED
+- **Action Taken:** Removed from pubspec.yaml (December 31, 2025)
+- **Reason:** Package was never imported or used in codebase; PDF generation works without it
 
-### 2. PDF Templates Organization
+### 2. PDF Templates Organization ✅
 
-- **Current State:** Multiple PDF templates (form1, form2, form3, form4) in assets/pdfs/
-- **Action:** Consolidate to one working template once Arabic issue resolved
+- **Previous State:** Multiple PDF templates (form1, form2, form3, form4) in assets/pdfs/
+- **Status:** RESOLVED
+- **Action Taken:** Removed unused templates form2.pdf, form3.pdf, form4.pdf (December 31, 2025)
+- **Current State:** Only form1.pdf remains (actively used in FormFillPage.dart)
+- **Future Action:** Create new Arabic-compatible template once Arabic text issue resolved
 
-### 3. Theme System Implementation
+### 3. Theme System Implementation ⏸️
 
-- **Status:** Partially implemented (see PRE_DELEGATION_CHECKLIST.md and CLOUD_AGENT_PROMPT.md)
-- **Files:** REDESIGN.md, THEME_IMPLEMENTATION_GUIDE.md
-- **Action:** Complete theme system per design specifications
+- **Status:** ON HOLD - Theme system is functional
+- **Current State:**
+  - Three themes fully implemented and working (Red/Dark, Green/Light, Gold/Dark)
+  - Theme settings screen fully localized (Bug #16 fixed)
+  - Theme switching works across all user roles
+- **Files:** REDESIGN.md, THEME_IMPLEMENTATION_GUIDE.md (reference documentation)
+- **Decision:** Keep current implementation - meets all functional requirements
+- **Future Enhancement:** Custom color picker (marked as "Coming Soon" in UI)
 
 ---
 

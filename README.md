@@ -244,6 +244,10 @@ Text(l10n.welcomeBack(userPhone))
 
 ## Current Project State
 
+**Last Updated**: December 31, 2025
+
+**Bug Tracking**: See [BUGS.md](BUGS.md) for detailed bug status (16/19 bugs fixed, 84% completion rate)
+
 ### ✅ FULLY IMPLEMENTED Features
 
 #### 1. Admin Setup & Management
@@ -251,6 +255,8 @@ Text(l10n.welcomeBack(userPhone))
 - ✅ **System Users Management**: Create/edit admins and team leaders via [TeamLeadersMgmt.dart](lib/UI/AdminScreens/TeamLeadersMgmt.dart)
 - ✅ **Locations Management**: Create locations with Google Maps integration, add sublocations via [LocationsMgmt.dart](lib/UI/AdminScreens/LocationsMgmt.dart)
 - ✅ **Teams Management**: Create teams, assign team leaders, add members via [TeamsMgmt.dart](lib/UI/AdminScreens/TeamsMgmt.dart)
+- ✅ **Theme Settings**: Three fully functional themes (Red/Dark, Green/Light, Gold/Dark) with complete localization
+- ✅ **Carousel Management**: Image carousel for announcements across all dashboards
 
 #### 2. Volunteer Registration Workflow (Flow #1)
 
@@ -260,11 +266,13 @@ Text(l10n.welcomeBack(userPhone))
   - Contact Info (address, landmark, mukhtar name)
   - Professional Info (profession, job title, political affiliation, talents)
   - Documents (ID numbers, ration card, residence card)
-  - Attachments (photo, ID images, residence card images)
+  - Attachments (photo with formal clothing hint, ID images, residence card images)
 - ✅ **Image Upload Integration**: Web-based image picker with Firebase Storage
+- ✅ **Bilingual Photo Hint**: Localized hint for formal clothing on white background
 - ✅ **Status Workflow**: Sent → Pending → Approved1/Rejected1 → Approved2/Rejected2 → Completed
 - ✅ **PDF Generation**: Download/print volunteer forms
 - ✅ **Form Management Dashboard**: Search, filter, quick status updates via [FormMgmt.dart](lib/UI/AdminScreens/FormMgmt.dart)
+- ✅ **Approval/Rejection Notifications**: Automatic notifications when forms are approved or rejected
 
 #### 3. Event Creation Workflow (Flow #2)
 
@@ -284,9 +292,14 @@ Text(l10n.welcomeBack(userPhone))
 
 - ✅ **Admin Assignment Screen**: Assign specific volunteers to shifts via [ShiftAssignmentScreen.dart](lib/UI/AdminScreens/ShiftAssignmentScreen.dart)
 - ✅ **Team Leader Assignment**: Team leaders assign their team members via [TeamLeaderShiftManagementScreen.dart](lib/UI/TeamLeadersScreens/TeamLeaderShiftManagementScreen.dart)
+- ✅ **Search Functionality**: Real-time search in assignment dialogs by name or phone
 - ✅ **Notification System**: Automatic browser notifications for:
   - Team leaders when assigned to manage event
   - Volunteers when assigned to shifts
+  - New event created (to team leaders)
+  - Event updated (to assigned volunteers)
+  - Event cancelled (to assigned volunteers)
+  - Team membership changes (add/remove/leader change)
 - ✅ **Sublocation Assignment**: Optional assignment to specific sublocations
 - ✅ **Real-Time Updates**: All assignments update in real-time via Firebase listeners
 
@@ -318,20 +331,45 @@ Text(l10n.welcomeBack(userPhone))
 #### 8. Real-Time Features
 
 - ✅ **Live Updates**: Firebase Realtime Database listeners for all collections
-- ✅ **Browser Push Notifications**: FCM-based notifications with service worker
+- ✅ **Browser Push Notifications**: FCM-based notifications with service worker (13 automatic notification types)
 - ✅ **Notification Permission Handling**: Automatic permission request on sign-in
 - ✅ **Background Notifications**: Service worker handles notifications when tab is inactive
+- ✅ **Notification Coverage**: 76% of planned notifications implemented (see [AUTOMATIC_NOTIFICATIONS.md](AUTOMATIC_NOTIFICATIONS.md))
 
 #### 9. Volunteer Dashboard
 
 - ✅ **My Events View**: See all assigned events via [VolunteerEventDetailsScreen.dart](lib/UI/VolunteerScreens/VolunteerEventDetailsScreen.dart)
+- ✅ **My Schedule Access**: Navigate to schedule from both desktop and mobile views
 - ✅ **Event Details Display**:
   - Event name and date
   - Shift time (start - end)
-  - Location/sublocation information
-  - Team leader name and phone
+  - Location/sublocation information (by name, not ID)
+  - Team leader name and phone (not phone number)
+  - Assigned by admin/team leader name
 - ✅ **Google Maps Integration**: View location on map
 - ✅ **Leave Request Button**: Quick access to leave request form
+- ✅ **Image Carousel**: Announcements and updates displayed on dashboard
+
+#### 10. Localization & UI
+
+- ✅ **Complete Bilingual Support**: All UI elements in English and Arabic
+- ✅ **RTL Layout**: Proper right-to-left layout for Arabic
+- ✅ **Language Switcher**: Real-time language switching on all screens
+- ✅ **Mobile Responsive**: Optimized font sizes and layouts for mobile devices
+- ✅ **Theme Settings Localization**: All theme-related text fully translated
+- ✅ **Search Dialogs**: Localized search functionality across all selection dialogs
+
+#### 11. Recent Fixes & Improvements (December 2025)
+
+- ✅ **Bug #4**: Added bilingual photo upload hint (formal clothing on white background)
+- ✅ **Bug #7**: Implemented 13 automatic notifications (76% coverage) - see [AUTOMATIC_NOTIFICATIONS.md](AUTOMATIC_NOTIFICATIONS.md)
+- ✅ **Bug #14**: Fixed carousel slider inconsistency across all dashboards
+- ✅ **Bug #16**: Complete theme settings localization (English/Arabic)
+- ✅ **Technical Debt**: Removed unused google_fonts package and extra PDF templates
+- ✅ **Display Fixes**: Location/sublocation names shown instead of IDs
+- ✅ **Display Fixes**: Assigner names shown instead of phone numbers
+- ✅ **Mobile Optimization**: Font sizes adjusted for mobile devices
+- ✅ **Navigation Fix**: Theme settings clickable on desktop view
 
 ---
 
