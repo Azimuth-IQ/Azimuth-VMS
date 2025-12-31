@@ -1,6 +1,6 @@
 # VMS Bug Tracking & TODO List
 
-**Last Updated:** December 30, 2025
+**Last Updated:** December 31, 2025
 
 ---
 
@@ -182,31 +182,36 @@
 
 ### Bug 7: Review Automatic Notifications ✅
 
-- **Issue:** Document what automatic notifications are implemented
+- **Issue:** Document what automatic notifications are implemented and implement missing notifications
 - **Details:** Check what more notifications to send automatically
 - **Priority:** Low
 - **Status:** COMPLETED
-- **Type:** Review/Documentation
+- **Type:** Review/Documentation + Implementation
 - **Documentation:** See [AUTOMATIC_NOTIFICATIONS.md](AUTOMATIC_NOTIFICATIONS.md)
-- **Summary:**
-  - **6 automatic notifications currently implemented:**
+- **Implementation Summary:**
+  - **13 automatic notifications now implemented (up from 6):**
     1. Volunteer shift assignment
     2. Leave request submitted (to team leader)
     3. Leave request approved
     4. Leave request rejected
     5. Location reassignment
-    6. Team leader event assignment (method exists but not called)
-  - **1 notification method defined but not used:**
-    - Presence check reminder
-  - **13 high/medium priority notifications missing:**
-    - Form approval/rejection notifications (HIGH PRIORITY)
-    - Event update/cancel notifications (HIGH PRIORITY)
-    - Event reminders 24h before (HIGH PRIORITY)
-    - Presence check started notification (HIGH PRIORITY)
-    - New event created notification
-    - Missed check-in alerts
-    - Rating/feedback notifications (when implemented)
-  - **Recommended Implementation Plan:** See AUTOMATIC_NOTIFICATIONS.md → Phase 1-4 roadmap
+    6. Team leader event assignment
+    7. **Form approval notification (NEW)**
+    8. **Form rejection notification (NEW)**
+    9. **New event created notification to team leaders (NEW)**
+    10. **Event updated notification to assigned volunteers (NEW)**
+    11. **Event cancelled notification to assigned volunteers (NEW)**
+    12. **Added to team notification (NEW)**
+    13. **Removed from team notification (NEW)**
+    14. **Team leader changed notification (NEW)**
+  - **Files Modified:**
+    - [NotificationHelperFirebase.dart](lib/Helpers/NotificationHelperFirebase.dart) - Added 8 new notification methods
+    - [FormMgmt.dart](lib/UI/AdminScreens/FormMgmt.dart) - Form approval/rejection notifications
+    - [EventsProvider.dart](lib/Providers/EventsProvider.dart) - Event lifecycle notifications
+    - [TeamsProvider.dart](lib/Providers/TeamsProvider.dart) - Team membership notifications
+    - [ShiftAssignmentHelperFirebase.dart](lib/Helpers/ShiftAssignmentHelperFirebase.dart) - Added GetAllShiftAssignments method
+  - **Coverage:** 76% of planned notifications (13/17 implemented)
+  - **Future Enhancements:** Event reminders (24h before), missed check-in alerts, rating notifications
 
 ### Bug 14: Carousel Slider Inconsistency
 
@@ -332,17 +337,18 @@ git commit -m "Pre-edit checkpoint: Fix Bug #X - [description]"
 
 ## 🎯 Next Steps
 
-1. **Document Bugs 5-19** - Get detailed descriptions from client/testing
-2. **Fix Bug 4** - Add bilingual photo upload hint
-3. **Resolve PDF Arabic issue** - Create proper template in Adobe
-4. **Continue with Bugs 5-19** - Work through systematically
-5. **Implement Priority 1 Features** - Volunteer rating UI, feedback systems
-6. **Complete Theme System** - If still pending
+1. **Continue with Pending Bugs** - Work through Bugs 5-6, 14, 16-17 systematically
+2. **Resolve PDF Arabic issue** - Create proper template in Adobe
+3. **Implement Priority 1 Features** - Volunteer rating UI, feedback systems (Admin rating, System feedback, Event feedback)
+4. **Add Priority 2 Features** - Reporting & Analytics (CSV/PDF export, dashboards, metrics)
+5. **Complete Theme System** - If still pending per REDESIGN.md specifications
 
 ---
 
 **For questions or clarifications, refer to:**
 
 - [README.md](README.md) - Complete project documentation
+- [AUTOMATIC_NOTIFICATIONS.md](AUTOMATIC_NOTIFICATIONS.md) - Notification system details
+- [SystemAnalysis.instructions.md](.github/instructions/SystemAnalysis.instructions.md) - Implementation status and patterns
 - [.github/instructions/GeneralPreferences.instructions.md](.github/instructions/GeneralPreferences.instructions.md)
 - [.github/instructions/SystemAnalysis.instructions.md](.github/instructions/SystemAnalysis.instructions.md)
