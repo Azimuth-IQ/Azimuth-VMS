@@ -16,14 +16,15 @@ class ImageOptimizationDialog extends StatefulWidget {
 
 class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
   late img.Image _originalImage;
-  late img.Image _processedImage;
-  late Uint8List _processedImageData;
+  img.Image? _processedImage;
+  Uint8List? _processedImageData;
 
   double _quality = 85;
   double _scale = 1.0;
   int _originalSize = 0;
-  int _processedSize = 0;
-  bool _isProcessing = false;
+  int _estimatedSize = 0;
+  bool _isInitializing = false;
+  bool _isOptimizing = false;
   String? _errorMessage;
   Timer? _debounceTimer;
 
@@ -35,7 +36,7 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
   }
 
   Future<void> _initializeImage() async {
-    setState(() => _isProcessing = true);
+    setState(() => _isInitializing = true);
 
     try {
       // Decode image asynchronously to prevent UI blocking
@@ -43,7 +44,7 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
       if (decodedImage == null) {
         setState(() {
           _errorMessage = 'Failed to decode image';
-          _isProcessing = false;
+          _isInitializing = false;
         });
         return;
       }
@@ -55,12 +56,15 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
         _scale = 0.5;
       }
 
-      await _processImage();
+      // Calculate estimated size instead of processing
+      _calculateEstimatedSize();
+
+      setState(() => _isInitializing = false);
     } catch (e) {
       print('Error initializing image: $e');
       setState(() {
         _errorMessage = 'Error: $e';
-        _isProcessing = false;
+        _isInitializing = false;
       });
     }
   }
@@ -84,14 +88,29 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
     // Cancel any existing timer
     _debounceTimer?.cancel();
 
-    // Start a new timer - process image after user stops sliding for 300ms
-    _debounceTimer = Timer(const Duration(milliseconds: 300), () {
-      _processImage();
+    // Recalculate estimated size after a short delay (100ms for smooth UI)
+    _debounceTimer = Timer(const Duration(milliseconds: 100), () {
+      _calculateEstimatedSize();
     });
   }
 
-  Future<void> _processImage() async {
-    setState(() => _isProcessing = true);
+  void _calculateEstimatedSize() {
+    setState(() {
+      // Estimate based on scale and quality
+      // This is an approximation: scaled pixels * quality factor * bytes per pixel
+      final scaledPixels = (_originalImage.width * _scale) * (_originalImage.height * _scale);
+      final qualityFactor = _quality / 100;
+
+      // JPEG compression: roughly 0.5-3 bytes per pixel depending on quality
+      // Higher quality = more bytes per pixel
+      final bytesPerPixel = 0.5 + (qualityFactor * 2.5);
+
+      _estimatedSize = (scaledPixels * bytesPerPixel).round();
+    });
+  }
+
+  Future<void> _optimizeImage() async {
+    setState(() => _isOptimizing = true);
 
     try {
       // Process in microtask to prevent blocking UI
@@ -106,17 +125,18 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
         _processedImage = img.copyResize(_originalImage, width: scaledWidth, height: scaledHeight, interpolation: interpolation);
 
         // Encode with quality setting
-        _processedImageData = Uint8List.fromList(img.encodeJpg(_processedImage, quality: _quality.round()));
-
-        _processedSize = _processedImageData.lengthInBytes;
+        _processedImageData = Uint8List.fromList(img.encodeJpg(_processedImage!, quality: _quality.round()));
       });
 
-      setState(() => _isProcessing = false);
+      // Image optimized successfully, close dialog and return data
+      if (mounted && _processedImageData != null) {
+        Navigator.of(context).pop(_processedImageData);
+      }
     } catch (e) {
-      print('Error processing image: $e');
+      print('Error optimizing image: $e');
       setState(() {
-        _errorMessage = 'Processing error: $e';
-        _isProcessing = false;
+        _errorMessage = 'Optimization error: $e';
+        _isOptimizing = false;
       });
     }
   }
@@ -131,7 +151,36 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-    final isUnder500KB = _processedSize <= 500 * 1024;
+    final isUnder500KB = _estimatedSize <= 500 * 1024;
+
+    // Show optimizing overlay
+    if (_isOptimizing) {
+      return Dialog(
+        backgroundColor: theme.dialogBackgroundColor,
+        child: Container(
+          padding: const EdgeInsets.all(48),
+          constraints: const BoxConstraints(maxWidth: 300),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(color: theme.colorScheme.primary),
+              const SizedBox(height: 24),
+              Text(
+                l10n.optimizeImage,
+                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                l10n.processing,
+                style: theme.textTheme.bodyMedium?.copyWith(color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7)),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
     // Show error if image failed to process
     if (_errorMessage != null) {
@@ -204,7 +253,7 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: _isProcessing
+                          child: _isInitializing
                               ? Center(
                                   child: Padding(
                                     padding: const EdgeInsets.all(50),
@@ -213,12 +262,43 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
                                       children: [
                                         CircularProgressIndicator(color: theme.colorScheme.primary),
                                         const SizedBox(height: 16),
-                                        Text(l10n.processing, style: TextStyle(color: theme.textTheme.bodyMedium?.color)),
+                                        Text(l10n.loading, style: TextStyle(color: theme.textTheme.bodyMedium?.color)),
                                       ],
                                     ),
                                   ),
                                 )
-                              : Image.memory(_processedImageData, fit: BoxFit.contain),
+                              : Stack(
+                                  children: [
+                                    Image.memory(widget.originalImageData, fit: BoxFit.contain),
+                                    Positioned(
+                                      bottom: 0,
+                                      left: 0,
+                                      right: 0,
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            begin: Alignment.bottomCenter,
+                                            end: Alignment.topCenter,
+                                            colors: [
+                                              Colors.black.withOpacity(0.8),
+                                              Colors.black.withOpacity(0.0),
+                                            ],
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Preview: ${(_originalImage.width * _scale).round()} × ${(_originalImage.height * _scale).round()} px',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                         ),
                       ),
                     ),
@@ -264,7 +344,7 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
-                                    _formatSize(_processedSize),
+                                    _formatSize(_estimatedSize),
                                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: isUnder500KB ? Colors.green.shade700 : Colors.orange.shade700),
                                   ),
                                 ],
@@ -323,7 +403,7 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
                               divisions: 90,
                               label: '${_quality.round()}%',
                               activeColor: theme.colorScheme.primary,
-                              onChanged: _isProcessing
+                              onChanged: _isInitializing
                                   ? null
                                   : (value) {
                                       setState(() => _quality = value);
@@ -368,7 +448,7 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
                               divisions: 80,
                               label: '${(_scale * 100).round()}%',
                               activeColor: theme.colorScheme.primary,
-                              onChanged: _isProcessing
+                              onChanged: _isInitializing
                                   ? null
                                   : (value) {
                                       setState(() => _scale = value);
@@ -428,7 +508,7 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
                   ),
                   const SizedBox(width: 12),
                   FilledButton.icon(
-                    onPressed: isUnder500KB ? () => Navigator.of(context).pop(_processedImageData) : null,
+                    onPressed: isUnder500KB ? () => _optimizeImage() : null,
                     icon: const Icon(Icons.check_circle_rounded, size: 20),
                     label: Text(l10n.useOptimizedImage),
                     style: FilledButton.styleFrom(
