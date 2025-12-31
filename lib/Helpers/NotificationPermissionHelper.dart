@@ -1,8 +1,10 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class NotificationPermissionHelper {
   static final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+  static final DatabaseReference _dbRef = FirebaseDatabase.instance.ref();
 
   // Request permission for browser notifications (web only)
   static Future<bool> requestPermission() async {
@@ -55,6 +57,40 @@ class NotificationPermissionHelper {
       print('Error getting FCM token: $e');
       return null;
     }
+  }
+
+  // Save FCM token to Firebase for a specific user
+  static Future<void> saveTokenToDatabase(String userPhone, String token) async {
+    try {
+      await _dbRef.child('ihs/systemusers/$userPhone/fcmToken').set(token);
+      await _dbRef.child('ihs/systemusers/$userPhone/fcmTokenUpdatedAt').set(DateTime.now().toIso8601String());
+      print('✅ FCM token saved to database for user: $userPhone');
+    } catch (e) {
+      print('❌ Error saving FCM token to database: $e');
+    }
+  }
+
+  // Get FCM token for a specific user from database
+  static Future<String?> getTokenFromDatabase(String userPhone) async {
+    try {
+      final snapshot = await _dbRef.child('ihs/systemusers/$userPhone/fcmToken').get();
+      if (snapshot.exists) {
+        return snapshot.value as String?;
+      }
+      return null;
+    } catch (e) {
+      print('Error getting FCM token from database: $e');
+      return null;
+    }
+  }
+
+  // Get FCM token and save it to database for current user
+  static Future<String?> getAndSaveToken(String userPhone) async {
+    final token = await getToken();
+    if (token != null) {
+      await saveTokenToDatabase(userPhone, token);
+    }
+    return token;
   }
 
   // Listen to foreground messages

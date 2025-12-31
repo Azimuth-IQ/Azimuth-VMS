@@ -57,7 +57,7 @@ import 'package:azimuth_vms/l10n/app_localizations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Required for async operations in main
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  
+
   // Setup notification message handlers
   NotificationPermissionHelper.setupForegroundMessageHandler();
   NotificationPermissionHelper.setupBackgroundMessageHandler();
@@ -65,7 +65,7 @@ void main() async {
     print('Notification tapped: ${message.notification?.title}');
     // Handle navigation based on notification data here
   });
-  
+
   runApp(const MyApp());
 }
 

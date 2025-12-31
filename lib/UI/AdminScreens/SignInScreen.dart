@@ -23,6 +23,19 @@ class SignInScreen extends StatelessWidget {
     User? user = auth.currentUser;
     if (user != null) {
       print("User is already signed in: ${user.email!.split('@').first}");
+
+      // Request notification permission and save FCM token for already signed-in users
+      if (kIsWeb) {
+        final hasPermission = await NotificationPermissionHelper.requestPermission();
+        if (hasPermission) {
+          final phone = user.email!.split('@').first;
+          final token = await NotificationPermissionHelper.getAndSaveToken(phone);
+          if (token != null) {
+            print('✅ FCM token obtained and saved for user: $phone');
+          }
+        }
+      }
+
       // Check User Role from Database
       SystemUserHelperFirebase systemUserHelperFirebase = SystemUserHelperFirebase();
       SystemUser? systemUser = await systemUserHelperFirebase.GetSystemUserByPhone(user.email!.split('@').first);
@@ -61,10 +74,13 @@ class SignInScreen extends StatelessWidget {
           final hasPermission = await NotificationPermissionHelper.requestPermission();
           if (hasPermission) {
             // Get and store FCM token
-            await NotificationPermissionHelper.getToken();
+            final token = await NotificationPermissionHelper.getAndSaveToken(phone);
+            if (token != null) {
+              print('✅ FCM token obtained and saved for user: $phone');
+            }
           }
         }
-        
+
         if (systemUser.role == SystemUserRole.ADMIN) {
           Navigator.pushReplacementNamed(context, '/admin-dashboard');
         } else if (systemUser.role == SystemUserRole.TEAMLEADER) {
