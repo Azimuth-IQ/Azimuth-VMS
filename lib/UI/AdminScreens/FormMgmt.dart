@@ -118,8 +118,10 @@ class _FormMgmtState extends State<FormMgmt> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.volunteerFormsManagement),
         elevation: 0,
@@ -131,13 +133,14 @@ class _FormMgmtState extends State<FormMgmt> {
         },
         icon: const Icon(Icons.add),
         label: Text(AppLocalizations.of(context)!.newForm),
-        backgroundColor: Colors.blue.shade600,
+        backgroundColor: theme.colorScheme.primary,
+        foregroundColor: theme.colorScheme.onPrimary,
       ),
       body: Column(
         children: [
           // Search and Filter Bar
           Container(
-            color: Colors.white,
+            color: theme.colorScheme.surface,
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
@@ -152,21 +155,21 @@ class _FormMgmtState extends State<FormMgmt> {
                     prefixIcon: const Icon(Icons.search),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey.shade300),
+                      borderSide: BorderSide(color: theme.dividerColor),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey.shade300),
+                      borderSide: BorderSide(color: theme.dividerColor),
                     ),
                     filled: true,
-                    fillColor: Colors.grey.shade50,
+                    fillColor: theme.cardColor,
                   ),
                 ),
                 const SizedBox(height: 12),
                 // Status Filter
                 Row(
                   children: [
-                    const Icon(Icons.filter_list, color: Colors.grey),
+                    Icon(Icons.filter_list, color: theme.iconTheme.color),
                     const SizedBox(width: 8),
                     Text(AppLocalizations.of(context)!.filterByStatus, style: const TextStyle(fontWeight: FontWeight.w500)),
                     const SizedBox(width: 12),
@@ -177,10 +180,10 @@ class _FormMgmtState extends State<FormMgmt> {
                           contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: Colors.grey.shade300),
+                            borderSide: BorderSide(color: theme.dividerColor),
                           ),
                           filled: true,
-                          fillColor: Colors.grey.shade50,
+                          fillColor: theme.cardColor,
                         ),
                         items: [
                           DropdownMenuItem(value: null, child: Text(AppLocalizations.of(context)!.allStatuses)),
@@ -219,14 +222,14 @@ class _FormMgmtState extends State<FormMgmt> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.description_outlined, size: 64, color: Colors.grey.shade400),
+                        Icon(Icons.description_outlined, size: 64, color: theme.disabledColor),
                         const SizedBox(height: 16),
                         Text(
                           _showArchived ? 'No archived forms' : (_searchQuery.isEmpty && _selectedStatus == null ? 'No forms yet' : 'No forms found'),
-                          style: TextStyle(fontSize: 18, color: Colors.grey.shade600),
+                          style: TextStyle(fontSize: 18, color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6)),
                         ),
                         const SizedBox(height: 8),
-                        Text(AppLocalizations.of(context)!.createNewFormToGetStarted, style: TextStyle(color: Colors.grey.shade500)),
+                        Text(AppLocalizations.of(context)!.createNewFormToGetStarted, style: TextStyle(color: theme.disabledColor)),
                       ],
                     ),
                   )
@@ -248,9 +251,12 @@ class _FormMgmtState extends State<FormMgmt> {
   }
 
   Widget _buildFormCard(VolunteerForm form) {
+    final theme = Theme.of(context);
+    
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 2,
+      color: theme.cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: () {
@@ -268,10 +274,10 @@ class _FormMgmtState extends State<FormMgmt> {
                   // Avatar
                   CircleAvatar(
                     radius: 24,
-                    backgroundColor: Colors.blue.shade100,
+                    backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
                     child: Text(
                       form.fullName?.substring(0, 1).toUpperCase() ?? '?',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue.shade700),
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -295,9 +301,9 @@ class _FormMgmtState extends State<FormMgmt> {
                         const SizedBox(height: 4),
                         Row(
                           children: [
-                            Icon(Icons.phone, size: 14, color: Colors.grey.shade600),
+                            Icon(Icons.phone, size: 14, color: theme.disabledColor),
                             const SizedBox(width: 4),
-                            Text(form.mobileNumber ?? 'N/A', style: TextStyle(fontSize: 14, color: Colors.grey.shade600)),
+                            Text(form.mobileNumber ?? 'N/A', style: TextStyle(fontSize: 14, color: theme.disabledColor)),
                           ],
                         ),
                       ],
@@ -358,12 +364,12 @@ class _FormMgmtState extends State<FormMgmt> {
                 ],
               ),
               const SizedBox(height: 12),
-              const Divider(height: 1),
+              Divider(height: 1, color: theme.dividerColor),
               const SizedBox(height: 12),
               // Document Checklist
               Row(
                 children: [
-                  const Icon(Icons.assignment_turned_in, size: 16, color: Colors.grey),
+                  Icon(Icons.assignment_turned_in, size: 16, color: theme.iconTheme.color),
                   const SizedBox(width: 8),
                   Text(AppLocalizations.of(context)!.documentsColon, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
                   const SizedBox(width: 12),
