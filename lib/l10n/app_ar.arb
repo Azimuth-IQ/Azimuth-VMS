@@ -324,6 +324,7 @@
   "formCreatedSuccessfully": "تم إنشاء النموذج بنجاح! يمكن للمتطوع الآن تسجيل الدخول.",
   "formUpdatedSuccessfully": "تم تحديث النموذج بنجاح!",
   "imageSizeExceeds500KB": "يجب ألا يتجاوز حجم الصورة 500 كيلوبايت.",
+  "personalPhotoHint": "يرجى ارتداء ملابس رسمية على خلفية بيضاء",
   "errorPickingImage": "خطأ في اختيار الصورة: {error}",
   "uploadingImages": "جاري رفع الصور...",
   "imageUploaded": "تم رفع الصورة: {name}",

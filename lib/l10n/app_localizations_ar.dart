@@ -943,6 +943,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get imageSizeExceeds500KB => 'يجب ألا يتجاوز حجم الصورة 500 كيلوبايت.';
 
   @override
+  String get personalPhotoHint => 'يرجى ارتداء ملابس رسمية على خلفية بيضاء';
+
+  @override
   String errorPickingImage(String error) {
     return 'خطأ في اختيار الصورة: $error';
   }

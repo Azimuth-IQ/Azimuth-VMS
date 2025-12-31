@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:azimuth_vms/l10n/app_localizations.dart';
 import 'dart:html' as html;
 
 class FormFillPage extends StatefulWidget {
@@ -679,9 +680,16 @@ class _FormFillPageState extends State<FormFillPage> {
   }
 
   Widget _buildAttachmentsStep() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
-        _buildImageUploadCard('User Photo / الصورة الشخصية', _userPhoto, () => _pickImage((image) => setState(() => _userPhoto = image)), Icons.person),
+        _buildImageUploadCard(
+          'User Photo / الصورة الشخصية',
+          _userPhoto,
+          () => _pickImage((image) => setState(() => _userPhoto = image)),
+          Icons.person,
+          hint: l10n.personalPhotoHint,
+        ),
         const SizedBox(height: 20),
         _buildImageUploadCard(
           'National ID - Front / الهوية الوطنية - الوجه الأمامي',
@@ -716,13 +724,14 @@ class _FormFillPageState extends State<FormFillPage> {
 
   // ignore: unused_element
   Widget _buildForm() {
+    final l10n = AppLocalizations.of(context)!;
     return Form(
       key: _formKey,
       child: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           _buildSectionTitle('الصور والمستندات'),
-          _buildImageUploadCard('الصورة الشخصية', _userPhoto, () => _pickImage((image) => setState(() => _userPhoto = image)), Icons.person),
+          _buildImageUploadCard('الصورة الشخصية', _userPhoto, () => _pickImage((image) => setState(() => _userPhoto = image)), Icons.person, hint: l10n.personalPhotoHint),
           const SizedBox(height: 20),
           _buildImageUploadCard('الهوية الوطنية - الوجه الأمامي', _nationalIdFront, () => _pickImage((image) => setState(() => _nationalIdFront = image)), Icons.credit_card),
           const SizedBox(height: 20),
@@ -822,7 +831,7 @@ class _FormFillPageState extends State<FormFillPage> {
     );
   }
 
-  Widget _buildImageUploadCard(String label, Uint8List? imageData, VoidCallback onTap, IconData icon) {
+  Widget _buildImageUploadCard(String label, Uint8List? imageData, VoidCallback onTap, IconData icon, {String? hint}) {
     // Check if we're in edit mode and have an image path for this field
     bool hasExistingImage = false;
     String? existingImageUrl;
@@ -864,6 +873,13 @@ class _FormFillPageState extends State<FormFillPage> {
                     ),
                   ],
                 ),
+                if (hint != null) ...[
+                  const SizedBox(height: 6),
+                  Text(
+                    hint,
+                    style: TextStyle(fontSize: 12, color: Colors.grey.shade700, fontStyle: FontStyle.italic),
+                  ),
+                ],
                 const SizedBox(height: 12),
                 Row(
                   children: [

@@ -414,6 +414,7 @@
   "formCreatedSuccessfully": "Form created successfully! Volunteer can now login.",
   "formUpdatedSuccessfully": "Form updated successfully!",
   "imageSizeExceeds500KB": "Image size should not exceed 500 KB.",
+  "personalPhotoHint": "Please wear formal clothing on a white background",
   "errorPickingImage": "Error picking image: {error}",
   "@errorPickingImage": {
     "placeholders": {

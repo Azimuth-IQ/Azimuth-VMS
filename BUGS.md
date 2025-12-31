@@ -7,9 +7,9 @@
 ## 📊 Quick Summary
 
 - **Total Bugs Identified:** 19
-- **Completed:** 13 (Bugs 1-3, 7-13, 15, 18-19)
+- **Completed:** 14 (Bugs 1-4, 7-13, 15, 18-19)
 - **In Progress:** 1 (PDF Generation)
-- **Pending:** 5 (Bugs 4-6, 14, 16-17)
+- **Pending:** 4 (Bugs 5-6, 14, 16-17)
 
 ---
 
@@ -32,6 +32,17 @@
 - **Issue:** PDF form labels in Arabic not displaying correctly
 - **Status:** FIXED
 - **Solution:** Changed PDF labels to English
+
+### Bug 4: Bilingual Photo Upload Hint ✅
+
+- **Issue:** Add bilingual hint (Arabic/English) for upload personal image field
+- **Details:** Specify that volunteer needs to wear formal clothing on white background
+- **Status:** FIXED
+- **Solution:** Added localized hint text displayed below the personal photo upload field
+- **Files Modified:**
+  - [app_en.arb](lib/l10n/app_en.arb) - Added `personalPhotoHint` in English
+  - [app_ar.arb](lib/l10n/app_ar.arb) - Added `personalPhotoHint` in Arabic
+  - [FormFillPage.dart](lib/UI/VolunteerScreens/FormFillPage.dart) - Updated `_buildImageUploadCard` to accept optional hint parameter and display it for personal photo
 
 ### Bug 8: Firebase Web Auth Key ✅
 
@@ -152,15 +163,7 @@
 
 ## 🐛 Pending Bugs
 
-### Medium Priority (Bugs 4-6, 14, 16-17)
-
-### Bug 4: Bilingual Photo Upload Hint
-
-- **Issue:** Add bilingual hint (Arabic/English) for upload personal image field
-- **Details:** Specify that volunteer needs to wear formal clothing on white background
-- **Priority:** Medium
-- **Status:** Not Started
-- **Affected Screen:** Volunteer form fill page
+### Medium Priority (Bugs 5-6, 14, 16-17)
 
 ### Bug 5: Slider/Carousel Feature
 

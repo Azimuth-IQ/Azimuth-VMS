@@ -1886,6 +1886,12 @@ abstract class AppLocalizations {
   /// **'Image size should not exceed 500 KB.'**
   String get imageSizeExceeds500KB;
 
+  /// No description provided for @personalPhotoHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Please wear formal clothing on a white background'**
+  String get personalPhotoHint;
+
   /// No description provided for @errorPickingImage.
   ///
   /// In en, this message translates to:
