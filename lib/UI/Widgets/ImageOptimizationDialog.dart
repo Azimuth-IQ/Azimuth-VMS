@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
+import '../../l10n/app_localizations.dart';
 
 class ImageOptimizationDialog extends StatefulWidget {
   final Uint8List originalImageData;
@@ -22,6 +23,7 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
   int _originalSize = 0;
   int _processedSize = 0;
   bool _isProcessing = false;
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -30,38 +32,74 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
     _initializeImage();
   }
 
-  void _initializeImage() {
+  Future<void> _initializeImage() async {
     setState(() => _isProcessing = true);
 
     try {
-      _originalImage = img.decodeImage(widget.originalImageData)!;
-      _processedImage = _originalImage.clone();
-      _processImage();
+      // Decode image asynchronously to prevent UI blocking
+      final decodedImage = await _decodeImageAsync(widget.originalImageData);
+      if (decodedImage == null) {
+        setState(() {
+          _errorMessage = 'Failed to decode image';
+          _isProcessing = false;
+        });
+        return;
+      }
+
+      _originalImage = decodedImage;
+
+      // For very large images (>2MB), start with reduced scale
+      if (_originalSize > 2 * 1024 * 1024) {
+        _scale = 0.5;
+      }
+
+      await _processImage();
     } catch (e) {
       print('Error initializing image: $e');
-    } finally {
-      setState(() => _isProcessing = false);
+      setState(() {
+        _errorMessage = 'Error: $e';
+        _isProcessing = false;
+      });
     }
   }
 
-  void _processImage() {
+  Future<img.Image?> _decodeImageAsync(Uint8List data) async {
+    try {
+      return await Future.microtask(() => img.decodeImage(data));
+    } catch (e) {
+      print('Error decoding image: $e');
+      return null;
+    }
+  }
+
+  Future<void> _processImage() async {
     setState(() => _isProcessing = true);
 
     try {
-      // Apply scaling
-      final scaledWidth = (_originalImage.width * _scale).round();
-      final scaledHeight = (_originalImage.height * _scale).round();
+      // Process in microtask to prevent blocking UI
+      await Future.microtask(() {
+        // Apply scaling
+        final scaledWidth = (_originalImage.width * _scale).round();
+        final scaledHeight = (_originalImage.height * _scale).round();
 
-      _processedImage = img.copyResize(_originalImage, width: scaledWidth, height: scaledHeight, interpolation: img.Interpolation.cubic);
+        // Use faster interpolation for large images
+        final interpolation = (_originalSize > 2 * 1024 * 1024) ? img.Interpolation.linear : img.Interpolation.cubic;
 
-      // Encode with quality setting
-      _processedImageData = Uint8List.fromList(img.encodeJpg(_processedImage, quality: _quality.round()));
+        _processedImage = img.copyResize(_originalImage, width: scaledWidth, height: scaledHeight, interpolation: interpolation);
 
-      _processedSize = _processedImageData.lengthInBytes;
+        // Encode with quality setting
+        _processedImageData = Uint8List.fromList(img.encodeJpg(_processedImage, quality: _quality.round()));
+
+        _processedSize = _processedImageData.lengthInBytes;
+      });
+
+      setState(() => _isProcessing = false);
     } catch (e) {
       print('Error processing image: $e');
-    } finally {
-      setState(() => _isProcessing = false);
+      setState(() {
+        _errorMessage = 'Processing error: $e';
+        _isProcessing = false;
+      });
     }
   }
 
@@ -74,9 +112,33 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final isUnder500KB = _processedSize <= 500 * 1024;
 
+    // Show error if image failed to process
+    if (_errorMessage != null) {
+      return Dialog(
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          constraints: const BoxConstraints(maxWidth: 400),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.error_outline, size: 64, color: theme.colorScheme.error),
+              const SizedBox(height: 16),
+              Text(l10n.error, style: theme.textTheme.titleLarge?.copyWith(color: theme.colorScheme.error)),
+              const SizedBox(height: 8),
+              Text(_errorMessage!, textAlign: TextAlign.center, style: theme.textTheme.bodyMedium),
+              const SizedBox(height: 24),
+              FilledButton(onPressed: () => Navigator.of(context).pop(), child: Text(l10n.close)),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Dialog(
+      backgroundColor: theme.dialogBackgroundColor,
       child: Container(
         constraints: const BoxConstraints(maxWidth: 600, maxHeight: 700),
         child: Column(
@@ -85,7 +147,7 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: theme.colorScheme.primary,
+                gradient: LinearGradient(colors: [theme.colorScheme.primary, theme.colorScheme.primary.withOpacity(0.8)], begin: Alignment.topLeft, end: Alignment.bottomRight),
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
               ),
               child: Row(
@@ -94,7 +156,7 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'Optimize Image',
+                      l10n.optimizeImage,
                       style: TextStyle(color: theme.colorScheme.onPrimary, fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -118,14 +180,25 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
                       child: Container(
                         constraints: const BoxConstraints(maxHeight: 250),
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: theme.dividerColor, width: 2),
+                          borderRadius: BorderRadius.circular(12),
+                          color: theme.cardColor,
                         ),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(10),
                           child: _isProcessing
-                              ? const Center(
-                                  child: Padding(padding: EdgeInsets.all(50), child: CircularProgressIndicator()),
+                              ? Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(50),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        CircularProgressIndicator(color: theme.colorScheme.primary),
+                                        const SizedBox(height: 16),
+                                        Text(l10n.processing, style: TextStyle(color: theme.textTheme.bodyMedium?.color)),
+                                      ],
+                                    ),
+                                  ),
                                 )
                               : Image.memory(_processedImageData, fit: BoxFit.contain),
                         ),
@@ -136,10 +209,14 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
 
                     // Size Info
                     Container(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: isUnder500KB ? Colors.green.shade50 : Colors.orange.shade50,
-                        borderRadius: BorderRadius.circular(8),
+                        gradient: LinearGradient(
+                          colors: isUnder500KB
+                              ? [Colors.green.withOpacity(0.1), Colors.green.withOpacity(0.05)]
+                              : [Colors.orange.withOpacity(0.1), Colors.orange.withOpacity(0.05)],
+                        ),
+                        borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: isUnder500KB ? Colors.green : Colors.orange, width: 2),
                       ),
                       child: Column(
@@ -149,28 +226,55 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
                             children: [
                               Column(
                                 children: [
-                                  Text('Original', style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
-                                  const SizedBox(height: 4),
-                                  Text(_formatSize(_originalSize), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                  Text(
+                                    l10n.original,
+                                    style: TextStyle(fontSize: 13, color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7), fontWeight: FontWeight.w600),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    _formatSize(_originalSize),
+                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: theme.textTheme.bodyLarge?.color),
+                                  ),
                                 ],
                               ),
-                              const Icon(Icons.arrow_forward, size: 20),
+                              Icon(Icons.arrow_forward_rounded, size: 24, color: theme.iconTheme.color),
                               Column(
                                 children: [
-                                  Text('Optimized', style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
-                                  const SizedBox(height: 4),
+                                  Text(
+                                    l10n.optimized,
+                                    style: TextStyle(fontSize: 13, color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7), fontWeight: FontWeight.w600),
+                                  ),
+                                  const SizedBox(height: 8),
                                   Text(
                                     _formatSize(_processedSize),
-                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: isUnder500KB ? Colors.green : Colors.orange),
+                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: isUnder500KB ? Colors.green.shade700 : Colors.orange.shade700),
                                   ),
                                 ],
                               ),
                             ],
                           ),
-                          const SizedBox(height: 12),
-                          Text(
-                            isUnder500KB ? '✓ Image is within 500KB limit' : '⚠ Image exceeds 500KB - adjust settings',
-                            style: TextStyle(fontSize: 12, color: isUnder500KB ? Colors.green.shade700 : Colors.orange.shade700, fontWeight: FontWeight.w500),
+                          const SizedBox(height: 16),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            decoration: BoxDecoration(color: (isUnder500KB ? Colors.green : Colors.orange).withOpacity(0.15), borderRadius: BorderRadius.circular(8)),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  isUnder500KB ? Icons.check_circle_rounded : Icons.warning_rounded,
+                                  size: 18,
+                                  color: isUnder500KB ? Colors.green.shade700 : Colors.orange.shade700,
+                                ),
+                                const SizedBox(width: 8),
+                                Flexible(
+                                  child: Text(
+                                    isUnder500KB ? l10n.imageWithinLimit : l10n.imageExceedsLimit,
+                                    style: TextStyle(fontSize: 13, color: isUnder500KB ? Colors.green.shade700 : Colors.orange.shade700, fontWeight: FontWeight.w600),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -179,57 +283,106 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
                     const SizedBox(height: 24),
 
                     // Quality Slider
-                    Text('Image Quality', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Slider(
-                            value: _quality,
-                            min: 10,
-                            max: 100,
-                            divisions: 90,
-                            label: '${_quality.round()}%',
-                            onChanged: (value) {
-                              setState(() => _quality = value);
-                              _processImage();
-                            },
+                    Text(
+                      l10n.imageQuality,
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: theme.textTheme.titleMedium?.color),
+                    ),
+                    const SizedBox(height: 12),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surface,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: theme.dividerColor),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Slider(
+                              value: _quality,
+                              min: 10,
+                              max: 100,
+                              divisions: 90,
+                              label: '${_quality.round()}%',
+                              activeColor: theme.colorScheme.primary,
+                              onChanged: (value) {
+                                setState(() => _quality = value);
+                                _processImage();
+                              },
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 50, child: Text('${_quality.round()}%', textAlign: TextAlign.right)),
-                      ],
+                          SizedBox(
+                            width: 50,
+                            child: Text(
+                              '${_quality.round()}%',
+                              textAlign: TextAlign.right,
+                              style: TextStyle(fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
 
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 20),
 
                     // Scale Slider
-                    Text('Image Size', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Slider(
-                            value: _scale,
-                            min: 0.2,
-                            max: 1.0,
-                            divisions: 80,
-                            label: '${(_scale * 100).round()}%',
-                            onChanged: (value) {
-                              setState(() => _scale = value);
-                              _processImage();
-                            },
+                    Text(
+                      l10n.imageSize,
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: theme.textTheme.titleMedium?.color),
+                    ),
+                    const SizedBox(height: 12),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surface,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: theme.dividerColor),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Slider(
+                              value: _scale,
+                              min: 0.2,
+                              max: 1.0,
+                              divisions: 80,
+                              label: '${(_scale * 100).round()}%',
+                              activeColor: theme.colorScheme.primary,
+                              onChanged: (value) {
+                                setState(() => _scale = value);
+                                _processImage();
+                              },
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 50, child: Text('${(_scale * 100).round()}%', textAlign: TextAlign.right)),
-                      ],
+                          SizedBox(
+                            width: 50,
+                            child: Text(
+                              '${(_scale * 100).round()}%',
+                              textAlign: TextAlign.right,
+                              style: TextStyle(fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
 
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 12),
 
                     // Dimensions Info
-                    Text(
-                      '${(_originalImage.width * _scale).round()} × ${(_originalImage.height * _scale).round()} px',
-                      style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(color: theme.colorScheme.primaryContainer.withOpacity(0.3), borderRadius: BorderRadius.circular(8)),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.photo_size_select_large_rounded, size: 16, color: theme.colorScheme.primary),
+                          const SizedBox(width: 8),
+                          Text(
+                            '${(_originalImage.width * _scale).round()} × ${(_originalImage.height * _scale).round()} px',
+                            style: TextStyle(fontSize: 13, color: theme.textTheme.bodyMedium?.color, fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -238,17 +391,30 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
 
             // Actions
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.grey.shade50,
-                border: Border(top: BorderSide(color: Colors.grey.shade300)),
+                color: theme.colorScheme.surface,
+                border: Border(top: BorderSide(color: theme.dividerColor, width: 1.5)),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12)),
+                    child: Text(l10n.cancel),
+                  ),
                   const SizedBox(width: 12),
-                  ElevatedButton(onPressed: isUnder500KB ? () => Navigator.of(context).pop(_processedImageData) : null, child: const Text('Use Optimized Image')),
+                  FilledButton.icon(
+                    onPressed: isUnder500KB ? () => Navigator.of(context).pop(_processedImageData) : null,
+                    icon: const Icon(Icons.check_circle_rounded, size: 20),
+                    label: Text(l10n.useOptimizedImage),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      backgroundColor: theme.colorScheme.primary,
+                      foregroundColor: theme.colorScheme.onPrimary,
+                    ),
+                  ),
                 ],
               ),
             ),

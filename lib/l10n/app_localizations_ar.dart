@@ -144,6 +144,34 @@ class AppLocalizationsAr extends AppLocalizations {
   String get refresh => 'تحديث';
 
   @override
+  String get processing => 'جاري المعالجة...';
+
+  @override
+  String get original => 'الأصلي';
+
+  @override
+  String get optimized => 'المحسّن';
+
+  @override
+  String get optimizeImage => 'تحسين الصورة';
+
+  @override
+  String get imageQuality => 'جودة الصورة';
+
+  @override
+  String get imageSize => 'حجم الصورة';
+
+  @override
+  String get imageWithinLimit => '✓ الصورة ضمن حد 500 كيلوبايت';
+
+  @override
+  String get imageExceedsLimit =>
+      '⚠ الصورة تتجاوز 500 كيلوبايت - اضبط الإعدادات';
+
+  @override
+  String get useOptimizedImage => 'استخدام الصورة المحسّنة';
+
+  @override
   String get dashboard => 'لوحة التحكم';
 
   @override

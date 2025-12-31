@@ -144,6 +144,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get refresh => 'Refresh';
 
   @override
+  String get processing => 'Processing...';
+
+  @override
+  String get original => 'Original';
+
+  @override
+  String get optimized => 'Optimized';
+
+  @override
+  String get optimizeImage => 'Optimize Image';
+
+  @override
+  String get imageQuality => 'Image Quality';
+
+  @override
+  String get imageSize => 'Image Size';
+
+  @override
+  String get imageWithinLimit => '✓ Image is within 500KB limit';
+
+  @override
+  String get imageExceedsLimit => '⚠ Image exceeds 500KB - adjust settings';
+
+  @override
+  String get useOptimizedImage => 'Use Optimized Image';
+
+  @override
   String get dashboard => 'Dashboard';
 
   @override

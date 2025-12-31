@@ -368,6 +368,60 @@ abstract class AppLocalizations {
   /// **'Refresh'**
   String get refresh;
 
+  /// No description provided for @processing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing...'**
+  String get processing;
+
+  /// No description provided for @original.
+  ///
+  /// In en, this message translates to:
+  /// **'Original'**
+  String get original;
+
+  /// No description provided for @optimized.
+  ///
+  /// In en, this message translates to:
+  /// **'Optimized'**
+  String get optimized;
+
+  /// No description provided for @optimizeImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Optimize Image'**
+  String get optimizeImage;
+
+  /// No description provided for @imageQuality.
+  ///
+  /// In en, this message translates to:
+  /// **'Image Quality'**
+  String get imageQuality;
+
+  /// No description provided for @imageSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Image Size'**
+  String get imageSize;
+
+  /// No description provided for @imageWithinLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'✓ Image is within 500KB limit'**
+  String get imageWithinLimit;
+
+  /// No description provided for @imageExceedsLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'⚠ Image exceeds 500KB - adjust settings'**
+  String get imageExceedsLimit;
+
+  /// No description provided for @useOptimizedImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Optimized Image'**
+  String get useOptimizedImage;
+
   /// No description provided for @dashboard.
   ///
   /// In en, this message translates to:
