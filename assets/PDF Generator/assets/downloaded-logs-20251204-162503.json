@@ -1,0 +1,519 @@
+[
+  {
+    "protoPayload": {
+      "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+      "authenticationInfo": {
+        "principalEmail": "azimuthdevco@gmail.com"
+      },
+      "requestMetadata": {
+        "callerIp": "212.95.147.105",
+        "callerSuppliedUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36,gzip(gfe),gzip(gfe)",
+        "requestAttributes": {
+          "time": "2025-12-04T13:21:47.485008Z",
+          "reason": "8uSywAYQGg5Db2xpc2V1bSBGbG93cw",
+          "auth": {}
+        },
+        "destinationAttributes": {}
+      },
+      "serviceName": "run.googleapis.com",
+      "methodName": "google.cloud.run.v1.Services.CreateService",
+      "authorizationInfo": [
+        {
+          "resource": "namespaces/azimuth-menu/services/volunteer-register",
+          "permission": "run.services.create",
+          "granted": true,
+          "resourceAttributes": {},
+          "permissionType": "ADMIN_WRITE"
+        },
+        {
+          "resource": "volunteer-register",
+          "permission": "run.services.setIamPolicy",
+          "granted": true,
+          "resourceAttributes": {},
+          "permissionType": "ADMIN_WRITE"
+        },
+        {
+          "resource": "namespaces/azimuth-menu/services/volunteer-register",
+          "permission": "run.services.create",
+          "granted": true,
+          "resourceAttributes": {
+            "service": "run.googleapis.com/",
+            "name": "namespaces/azimuth-menu/services/volunteer-register",
+            "type": "run.googleapis.com/Service"
+          },
+          "permissionType": "ADMIN_WRITE"
+        }
+      ],
+      "resourceName": "namespaces/azimuth-menu/services/volunteer-register",
+      "request": {
+        "region": "europe-west1",
+        "parent": "projects/azimuth-menu/locations/europe-west1",
+        "@type": "type.googleapis.com/google.cloud.run.v1.CreateServiceRequest",
+        "service": {
+          "metadata": {
+            "namespace": "azimuth-menu",
+            "annotations": {
+              "run.googleapis.com/launch-stage": "ALPHA",
+              "run.googleapis.com/minScale": "0",
+              "run.googleapis.com/client-name": "cloud-console",
+              "run.googleapis.com/invoker-iam-disabled": "true"
+            },
+            "name": "volunteer-register"
+          },
+          "spec": {
+            "template": {
+              "spec": {
+                "serviceAccountName": "393889560496-compute@developer.gserviceaccount.com",
+                "containers": [
+                  {
+                    "name": "volunteer-register-1",
+                    "resources": {
+                      "limits": {
+                        "memory": "512Mi",
+                        "cpu": "1000m"
+                      }
+                    },
+                    "image": "gcr.io/azimuth-menu/volunteer-register@sha256:e79a48d467ca6245bd8fafa7ee0b93fb43d86b978b15642dcd15b90013086005"
+                  }
+                ],
+                "timeoutSeconds": 300,
+                "containerConcurrency": 80,
+                "volumes": [
+                  {
+                    "csi": {
+                      "volumeAttributes": {
+                        "bucketName": "volunteer-register-data"
+                      },
+                      "driver": "gcsfuse.run.googleapis.com"
+                    },
+                    "name": "data-volume"
+                  }
+                ]
+              },
+              "metadata": {
+                "annotations": {
+                  "run.googleapis.com/client-name": "cloud-console",
+                  "run.googleapis.com/startup-cpu-boost": "true"
+                }
+              }
+            }
+          },
+          "kind": "Service",
+          "apiVersion": "serving.knative.dev/v1"
+        }
+      },
+      "resourceLocation": {
+        "currentLocations": [
+          "europe-west1"
+        ]
+      }
+    },
+    "insertId": "1u24w7je2z5my",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "configuration_name": "",
+        "location": "europe-west1",
+        "revision_name": "",
+        "service_name": "volunteer-register",
+        "project_id": "azimuth-menu"
+      }
+    },
+    "timestamp": "2025-12-04T13:21:46.828397Z",
+    "severity": "NOTICE",
+    "logName": "projects/azimuth-menu/logs/cloudaudit.googleapis.com%2Factivity",
+    "receiveTimestamp": "2025-12-04T13:21:47.540492679Z"
+  },
+  {
+    "textPayload": "Traceback (most recent call last):\n  File \"/usr/local/bin/uvicorn\", line 8, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/usr/local/lib/python3.11/site-packages/click/core.py\", line 1485, in __call__\n    return self.main(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/site-packages/click/core.py\", line 1406, in main\n    rv = self.invoke(ctx)\n         ^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/site-packages/click/core.py\", line 1269, in invoke\n    return ctx.invoke(self.callback, **ctx.params)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/site-packages/click/core.py\", line 824, in invoke\n    return callback(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/site-packages/uvicorn/main.py\", line 423, in main\n    run(\n  File \"/usr/local/lib/python3.11/site-packages/uvicorn/main.py\", line 593, in run\n    server.run()\n  File \"/usr/local/lib/python3.11/site-packages/uvicorn/server.py\", line 67, in run\n    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/site-packages/uvicorn/_compat.py\", line 30, in asyncio_run\n    return runner.run(main)\n           ^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/asyncio/runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/asyncio/base_events.py\", line 654, in run_until_complete\n    return future.result()\n           ^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/site-packages/uvicorn/server.py\", line 71, in serve\n    await self._serve(sockets)\n  File \"/usr/local/lib/python3.11/site-packages/uvicorn/server.py\", line 78, in _serve\n    config.load()\n  File \"/usr/local/lib/python3.11/site-packages/uvicorn/config.py\", line 439, in load\n    self.loaded_app = import_from_string(self.app)\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/site-packages/uvicorn/importer.py\", line 22, in import_from_string\n    raise exc from None\n  File \"/usr/local/lib/python3.11/site-packages/uvicorn/importer.py\", line 19, in import_from_string\n    module = importlib.import_module(module_str)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/importlib/__init__.py\", line 126, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen importlib._bootstrap>\", line 1204, in _gcd_import\n  File \"<frozen importlib._bootstrap>\", line 1176, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1147, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 690, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 940, in exec_module\n  File \"<frozen importlib._bootstrap>\", line 241, in _call_with_frames_removed\n  File \"/app/app/main.py\", line 18, in <module>\n    from . import models, database, pdf_service\n  File \"/app/app/pdf_service.py\", line 3, in <module>\n    import arabic_reshaper\nModuleNotFoundError: No module named 'arabic_reshaper'",
+    "insertId": "69318b19000d2eef6b63f270",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "azimuth-menu",
+        "configuration_name": "volunteer-register",
+        "location": "europe-west1",
+        "service_name": "volunteer-register",
+        "revision_name": "volunteer-register-00001-hls"
+      }
+    },
+    "timestamp": "2025-12-04T13:22:33.863983Z",
+    "severity": "ERROR",
+    "labels": {
+      "instanceId": "00147782960dc593e0b3c5fa3eed5d0e64089ad89b2c4bd2ca362d9ca0a5cf7be032b264e492d749e3c2db8e704951d438c50d10bf2c14078ebedb442a05e92ad4c876796578a6746e6058f5a5f65b"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Fstderr",
+    "receiveTimestamp": "2025-12-04T13:22:33.867205986Z",
+    "errorGroups": [
+      {
+        "id": "CJHE5Zu-oLedygE"
+      }
+    ]
+  },
+  {
+    "textPayload": "Container called exit(1).",
+    "insertId": "69318b1a00063b39da16eaa0",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "configuration_name": "volunteer-register",
+        "project_id": "azimuth-menu",
+        "location": "europe-west1",
+        "service_name": "volunteer-register",
+        "revision_name": "volunteer-register-00001-hls"
+      }
+    },
+    "timestamp": "2025-12-04T13:22:34.408167Z",
+    "severity": "WARNING",
+    "labels": {
+      "container_name": "volunteer-register-1",
+      "instanceId": "00147782960dc593e0b3c5fa3eed5d0e64089ad89b2c4bd2ca362d9ca0a5cf7be032b264e492d749e3c2db8e704951d438c50d10bf2c14078ebedb442a05e92ad4c876796578a6746e6058f5a5f65b"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Fvarlog%2Fsystem",
+    "receiveTimestamp": "2025-12-04T13:22:34.553445455Z"
+  },
+  {
+    "textPayload": "Default STARTUP TCP probe failed 1 time consecutively for container \"volunteer-register-1\" on port 8080. The instance was not started.\nConnection failed with status CANCELLED.",
+    "insertId": "69318b1c000d08dd760cef14",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "azimuth-menu",
+        "revision_name": "volunteer-register-00001-hls",
+        "configuration_name": "volunteer-register",
+        "service_name": "volunteer-register",
+        "location": "europe-west1"
+      }
+    },
+    "timestamp": "2025-12-04T13:22:36.854237Z",
+    "severity": "ERROR",
+    "labels": {
+      "instanceId": "00147782960dc593e0b3c5fa3eed5d0e64089ad89b2c4bd2ca362d9ca0a5cf7be032b264e492d749e3c2db8e704951d438c50d10bf2c14078ebedb442a05e92ad4c876796578a6746e6058f5a5f65b"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Fvarlog%2Fsystem",
+    "receiveTimestamp": "2025-12-04T13:22:36.886101009Z"
+  },
+  {
+    "protoPayload": {
+      "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+      "status": {
+        "code": 9,
+        "message": "Ready condition status changed to False for Revision volunteer-register-00001-hls with message: The user-provided container failed to start and listen on the port defined provided by the PORT=8080 environment variable within the allocated timeout. This can happen when the container port is misconfigured or if the timeout is too short. The health check timeout can be extended. Logs for this revision might contain more information.\n\nLogs URL: https://console.cloud.google.com/logs/viewer?project=azimuth-menu&resource=cloud_run_revision/service_name/volunteer-register/revision_name/volunteer-register-00001-hls&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22volunteer-register%22%0Aresource.labels.revision_name%3D%22volunteer-register-00001-hls%22 \nFor more troubleshooting guidance, see https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start"
+      },
+      "serviceName": "run.googleapis.com",
+      "methodName": "/Services.CreateService",
+      "resourceName": "namespaces/azimuth-menu/revisions/volunteer-register-00001-hls",
+      "response": {
+        "metadata": {
+          "name": "volunteer-register-00001-hls",
+          "namespace": "393889560496",
+          "selfLink": "/apis/serving.knative.dev/v1/namespaces/393889560496/revisions/volunteer-register-00001-hls",
+          "uid": "2ac7cb1e-e970-4483-b0a4-e3d0cb8ac335",
+          "resourceVersion": "AAZFIDjxBLE",
+          "generation": 1,
+          "creationTimestamp": "2025-12-04T13:21:47.528309Z",
+          "labels": {
+            "serving.knative.dev/configuration": "volunteer-register",
+            "serving.knative.dev/configurationGeneration": "1",
+            "serving.knative.dev/service": "volunteer-register",
+            "serving.knative.dev/serviceUid": "91f55421-414c-4a59-bb07-1a744852e3d9",
+            "serving.knative.dev/route": "volunteer-register",
+            "cloud.googleapis.com/location": "europe-west1",
+            "run.googleapis.com/startupProbeType": "Default"
+          },
+          "annotations": {
+            "run.googleapis.com/client-name": "cloud-console",
+            "autoscaling.knative.dev/maxScale": "3",
+            "serving.knative.dev/creator": "azimuthdevco@gmail.com",
+            "run.googleapis.com/execution-environment": "gen2",
+            "run.googleapis.com/operation-id": "ca4765b1-35db-4c14-9579-f9a047baecb4",
+            "run.googleapis.com/startup-cpu-boost": "true"
+          },
+          "ownerReferences": [
+            {
+              "kind": "Configuration",
+              "name": "volunteer-register",
+              "uid": "31211ac0-cedc-4634-8b0b-3fc288327f1f",
+              "apiVersion": "serving.knative.dev/v1",
+              "controller": true,
+              "blockOwnerDeletion": true
+            }
+          ]
+        },
+        "apiVersion": "serving.knative.dev/v1",
+        "kind": "Revision",
+        "spec": {
+          "containerConcurrency": 80,
+          "timeoutSeconds": 300,
+          "serviceAccountName": "393889560496-compute@developer.gserviceaccount.com",
+          "containers": [
+            {
+              "name": "volunteer-register-1",
+              "image": "gcr.io/azimuth-menu/volunteer-register@sha256:d01d85a8dbe5adfcdb634f3621987563dc06c1447187cef9b2640402a291fc7a",
+              "ports": [
+                {
+                  "name": "http1",
+                  "containerPort": 8080
+                }
+              ],
+              "env": [
+                {
+                  "name": "DATA_DIR",
+                  "value": "/data"
+                }
+              ],
+              "resources": {
+                "limits": {
+                  "cpu": "1000m",
+                  "memory": "512Mi"
+                }
+              },
+              "volumeMounts": [
+                {
+                  "name": "data-volume",
+                  "mountPath": "/data"
+                }
+              ],
+              "startupProbe": {
+                "timeoutSeconds": 240,
+                "periodSeconds": 240,
+                "failureThreshold": 1,
+                "tcpSocket": {
+                  "port": 8080
+                }
+              }
+            }
+          ],
+          "volumes": [
+            {
+              "name": "data-volume",
+              "csi": {
+                "driver": "gcsfuse.run.googleapis.com",
+                "volumeAttributes": {
+                  "bucketName": "volunteer-register-data"
+                }
+              }
+            }
+          ]
+        },
+        "status": {
+          "observedGeneration": 1,
+          "conditions": [
+            {
+              "type": "Ready",
+              "status": "False",
+              "reason": "HealthCheckContainerError",
+              "message": "The user-provided container failed to start and listen on the port defined provided by the PORT=8080 environment variable within the allocated timeout. This can happen when the container port is misconfigured or if the timeout is too short. The health check timeout can be extended. Logs for this revision might contain more information.\n\nLogs URL: https://console.cloud.google.com/logs/viewer?project=azimuth-menu&resource=cloud_run_revision/service_name/volunteer-register/revision_name/volunteer-register-00001-hls&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22volunteer-register%22%0Aresource.labels.revision_name%3D%22volunteer-register-00001-hls%22 \nFor more troubleshooting guidance, see https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start",
+              "lastTransitionTime": "2025-12-04T13:22:36.853425Z"
+            },
+            {
+              "type": "ContainerHealthy",
+              "status": "False",
+              "reason": "HealthCheckContainerError",
+              "message": "The user-provided container failed to start and listen on the port defined provided by the PORT=8080 environment variable within the allocated timeout. This can happen when the container port is misconfigured or if the timeout is too short. The health check timeout can be extended. Logs for this revision might contain more information.\n\nLogs URL: https://console.cloud.google.com/logs/viewer?project=azimuth-menu&resource=cloud_run_revision/service_name/volunteer-register/revision_name/volunteer-register-00001-hls&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22volunteer-register%22%0Aresource.labels.revision_name%3D%22volunteer-register-00001-hls%22 \nFor more troubleshooting guidance, see https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start",
+              "lastTransitionTime": "2025-12-04T13:22:36.853425Z"
+            },
+            {
+              "type": "ContainerReady",
+              "status": "True",
+              "message": "Container image import completed in 12.71s.",
+              "lastTransitionTime": "2025-12-04T13:22:01.440746Z"
+            },
+            {
+              "type": "ResourcesAvailable",
+              "status": "True",
+              "message": "Provisioning imported containers completed in 27.36s. Checking container health. This will wait for up to 4m for the configured startup probe, including an initial delay of 0s.",
+              "lastTransitionTime": "2025-12-04T13:22:28.804198Z"
+            },
+            {
+              "type": "Retry",
+              "status": "True",
+              "reason": "ImmediateRetry",
+              "message": "System will retry after 0:00:00 from lastTransitionTime for attempt 0.",
+              "lastTransitionTime": "2025-12-04T13:22:28.804198Z",
+              "severity": "Info"
+            }
+          ],
+          "logUrl": "https://console.cloud.google.com/logs/viewer?project=azimuth-menu&resource=cloud_run_revision/service_name/volunteer-register/revision_name/volunteer-register-00001-hls&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22volunteer-register%22%0Aresource.labels.revision_name%3D%22volunteer-register-00001-hls%22",
+          "imageDigest": "gcr.io/azimuth-menu/volunteer-register@sha256:d01d85a8dbe5adfcdb634f3621987563dc06c1447187cef9b2640402a291fc7a",
+          "containerStatuses": [
+            {
+              "name": "volunteer-register-1",
+              "imageDigest": "gcr.io/azimuth-menu/volunteer-register@sha256:d01d85a8dbe5adfcdb634f3621987563dc06c1447187cef9b2640402a291fc7a"
+            }
+          ]
+        },
+        "@type": "type.googleapis.com/google.cloud.run.v1.Revision"
+      }
+    },
+    "insertId": "-zhk0ooe3bzg8",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "azimuth-menu",
+        "configuration_name": "volunteer-register",
+        "revision_name": "volunteer-register-00001-hls",
+        "service_name": "volunteer-register",
+        "location": "europe-west1"
+      }
+    },
+    "timestamp": "2025-12-04T13:22:36.862393Z",
+    "severity": "ERROR",
+    "logName": "projects/azimuth-menu/logs/cloudaudit.googleapis.com%2Fsystem_event",
+    "receiveTimestamp": "2025-12-04T13:22:39.358953509Z"
+  },
+  {
+    "protoPayload": {
+      "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+      "status": {
+        "code": 9,
+        "message": "Ready condition status changed to False for Service volunteer-register with message: The user-provided container failed to start and listen on the port defined provided by the PORT=8080 environment variable within the allocated timeout. This can happen when the container port is misconfigured or if the timeout is too short. The health check timeout can be extended. Logs for this revision might contain more information.\n\nLogs URL: https://console.cloud.google.com/logs/viewer?project=azimuth-menu&resource=cloud_run_revision/service_name/volunteer-register/revision_name/volunteer-register-00001-hls&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22volunteer-register%22%0Aresource.labels.revision_name%3D%22volunteer-register-00001-hls%22 \nFor more troubleshooting guidance, see https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start"
+      },
+      "serviceName": "run.googleapis.com",
+      "methodName": "/Services.CreateService",
+      "resourceName": "namespaces/azimuth-menu/services/volunteer-register",
+      "response": {
+        "metadata": {
+          "name": "volunteer-register",
+          "namespace": "393889560496",
+          "selfLink": "/apis/serving.knative.dev/v1/namespaces/393889560496/services/volunteer-register",
+          "uid": "91f55421-414c-4a59-bb07-1a744852e3d9",
+          "resourceVersion": "AAZFIDjyG9g",
+          "generation": 1,
+          "creationTimestamp": "2025-12-04T13:21:47.368605Z",
+          "labels": {
+            "cloud.googleapis.com/location": "europe-west1"
+          },
+          "annotations": {
+            "run.googleapis.com/client-name": "cloud-console",
+            "serving.knative.dev/creator": "azimuthdevco@gmail.com",
+            "serving.knative.dev/lastModifier": "azimuthdevco@gmail.com",
+            "run.googleapis.com/operation-id": "ca4765b1-35db-4c14-9579-f9a047baecb4",
+            "run.googleapis.com/ingress": "all",
+            "run.googleapis.com/ingress-status": "all",
+            "run.googleapis.com/invoker-iam-disabled": "true",
+            "run.googleapis.com/urls": "[\"https://volunteer-register-393889560496.europe-west1.run.app\"]"
+          }
+        },
+        "apiVersion": "serving.knative.dev/v1",
+        "kind": "Service",
+        "spec": {
+          "template": {
+            "metadata": {
+              "labels": {
+                "run.googleapis.com/startupProbeType": "Default"
+              },
+              "annotations": {
+                "run.googleapis.com/client-name": "cloud-console",
+                "autoscaling.knative.dev/maxScale": "3",
+                "run.googleapis.com/startup-cpu-boost": "true"
+              }
+            },
+            "spec": {
+              "containerConcurrency": 80,
+              "timeoutSeconds": 300,
+              "serviceAccountName": "393889560496-compute@developer.gserviceaccount.com",
+              "containers": [
+                {
+                  "name": "volunteer-register-1",
+                  "image": "gcr.io/azimuth-menu/volunteer-register@sha256:e79a48d467ca6245bd8fafa7ee0b93fb43d86b978b15642dcd15b90013086005",
+                  "ports": [
+                    {
+                      "name": "http1",
+                      "containerPort": 8080
+                    }
+                  ],
+                  "env": [
+                    {
+                      "name": "DATA_DIR",
+                      "value": "/data"
+                    }
+                  ],
+                  "resources": {
+                    "limits": {
+                      "cpu": "1000m",
+                      "memory": "512Mi"
+                    }
+                  },
+                  "volumeMounts": [
+                    {
+                      "name": "data-volume",
+                      "mountPath": "/data"
+                    }
+                  ],
+                  "startupProbe": {
+                    "timeoutSeconds": 240,
+                    "periodSeconds": 240,
+                    "failureThreshold": 1,
+                    "tcpSocket": {
+                      "port": 8080
+                    }
+                  }
+                }
+              ],
+              "volumes": [
+                {
+                  "name": "data-volume",
+                  "csi": {
+                    "driver": "gcsfuse.run.googleapis.com",
+                    "volumeAttributes": {
+                      "bucketName": "volunteer-register-data"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "traffic": [
+            {
+              "percent": 100,
+              "latestRevision": true
+            }
+          ]
+        },
+        "status": {
+          "observedGeneration": 1,
+          "conditions": [
+            {
+              "type": "Ready",
+              "status": "False",
+              "reason": "HealthCheckContainerError",
+              "message": "The user-provided container failed to start and listen on the port defined provided by the PORT=8080 environment variable within the allocated timeout. This can happen when the container port is misconfigured or if the timeout is too short. The health check timeout can be extended. Logs for this revision might contain more information.\n\nLogs URL: https://console.cloud.google.com/logs/viewer?project=azimuth-menu&resource=cloud_run_revision/service_name/volunteer-register/revision_name/volunteer-register-00001-hls&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22volunteer-register%22%0Aresource.labels.revision_name%3D%22volunteer-register-00001-hls%22 \nFor more troubleshooting guidance, see https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start",
+              "lastTransitionTime": "2025-12-04T13:22:36.887708Z"
+            },
+            {
+              "type": "ConfigurationsReady",
+              "status": "False",
+              "reason": "HealthCheckContainerError",
+              "message": "The user-provided container failed to start and listen on the port defined provided by the PORT=8080 environment variable within the allocated timeout. This can happen when the container port is misconfigured or if the timeout is too short. The health check timeout can be extended. Logs for this revision might contain more information.\n\nLogs URL: https://console.cloud.google.com/logs/viewer?project=azimuth-menu&resource=cloud_run_revision/service_name/volunteer-register/revision_name/volunteer-register-00001-hls&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22volunteer-register%22%0Aresource.labels.revision_name%3D%22volunteer-register-00001-hls%22 \nFor more troubleshooting guidance, see https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start",
+              "lastTransitionTime": "2025-12-04T13:22:36.887708Z"
+            },
+            {
+              "type": "RoutesReady",
+              "status": "Unknown",
+              "message": "Provisioning revision instances to receive traffic.",
+              "lastTransitionTime": "2025-12-04T13:22:01.550810Z"
+            }
+          ],
+          "latestCreatedRevisionName": "volunteer-register-00001-hls"
+        },
+        "@type": "type.googleapis.com/google.cloud.run.v1.Service"
+      }
+    },
+    "insertId": "-gv08x9dwwxi",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "configuration_name": "",
+        "service_name": "volunteer-register",
+        "location": "europe-west1",
+        "revision_name": "",
+        "project_id": "azimuth-menu"
+      }
+    },
+    "timestamp": "2025-12-04T13:22:36.944243Z",
+    "severity": "ERROR",
+    "logName": "projects/azimuth-menu/logs/cloudaudit.googleapis.com%2Fsystem_event",
+    "receiveTimestamp": "2025-12-04T13:22:40.863418384Z"
+  }
+]

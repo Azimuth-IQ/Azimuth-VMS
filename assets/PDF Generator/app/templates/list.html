@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-white">
+        <div class="row align-items-center">
+            <div class="col">
+                <h4 class="mb-0">قائمة الاستمارات</h4>
+            </div>
+            <div class="col-auto">
+                <a href="/new" class="btn btn-primary">إضافة استمارة</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <form method="get" action="/" class="row g-3 mb-4">
+            <div class="col-md-10">
+                <input type="text" name="q" class="form-control" placeholder="بحث..." value="{{ query }}">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-secondary w-100">بحث</button>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>رقم الاستمارة</th>
+                        <th>الاسم الرباعي واللقب</th>
+                        <th>رقم الموبايل</th>
+                        <th>العنوان الحالي</th>
+                        <th>إجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for v in volunteers %}
+                    <tr>
+                        <td>{{ v.id }}</td>
+                        <td>{{ v.text1 }}</td>
+                        <td>{{ v.text3 }}</td>
+                        <td>{{ v.text9 }}</td>
+                        <td>{{ v.text10 }}</td>
+                        <td>
+                            <a href="/edit/{{ v.id }}" class="btn btn-sm btn-warning">تعديل</a>
+                            <a href="/pdf/{{ v.id }}" class="btn btn-sm btn-success" target="_blank">طباعة PDF</a>
+                            <a href="/download-folder/{{ v.id }}" class="btn btn-sm btn-info"
+                                title="تحميل جميع الملفات">
+                                <i class="bi bi-download"></i>
+                            </a>
+                            <form action="/delete/{{ v.id }}" method="post" style="display: inline;"
+                                onsubmit="return confirm('هل أنت متأكد من حذف هذه الاستمارة وجميع ملفاتها؟');">
+                                <button type="submit" class="btn btn-sm btn-danger">حذف</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

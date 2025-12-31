@@ -1,0 +1,1440 @@
+[
+  {
+    "textPayload": "time=\"08/12/2025 02:09:48.146203\" severity=ERROR message=\"BufferedWriteHandler.OutOfOrderError for object: volunteers_v2.db-journal, expectedOffset: 4616, actualOffset: 0\"",
+    "insertId": "6936dc2c00023cd366a8fad3",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "revision_name": "volunteer-register-00012-m6w",
+        "location": "europe-west1",
+        "project_id": "azimuth-menu",
+        "service_name": "volunteer-register",
+        "configuration_name": "volunteer-register"
+      }
+    },
+    "timestamp": "2025-12-08T14:09:48.146643Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:09:48.257034997Z"
+  },
+  {
+    "textPayload": "time=\"08/12/2025 02:09:48.146277\" severity=INFO message=\"Falling back to staged writes on disk for file volunteers_v2.db-journal (inode 8) due to err: outOfOrder write detected.\"",
+    "insertId": "6936dc2c00023eb0b205b5fd",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "service_name": "volunteer-register",
+        "project_id": "azimuth-menu",
+        "revision_name": "volunteer-register-00012-m6w",
+        "location": "europe-west1",
+        "configuration_name": "volunteer-register"
+      }
+    },
+    "timestamp": "2025-12-08T14:09:48.147120Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:09:48.257034997Z"
+  },
+  {
+    "textPayload": "time=\"08/12/2025 02:09:48.242267\" severity=INFO message=\"Falling back to staged write for 'volunteers_v2.db-journal'. Streaming write is limited to sequential writes on new/empty files.\"",
+    "insertId": "6936dc2c0003b3acb5b1622d",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "configuration_name": "volunteer-register",
+        "location": "europe-west1",
+        "service_name": "volunteer-register",
+        "revision_name": "volunteer-register-00012-m6w",
+        "project_id": "azimuth-menu"
+      }
+    },
+    "timestamp": "2025-12-08T14:09:48.242604Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:09:48.257034997Z"
+  },
+  {
+    "textPayload": "time=\"08/12/2025 02:09:48.383130\" severity=INFO message=\"Falling back to staged write for 'volunteers_v2.db'. Streaming write is limited to sequential writes on new/empty files.\"",
+    "insertId": "6936dc2c0005da32c77fd15b",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "location": "europe-west1",
+        "project_id": "azimuth-menu",
+        "revision_name": "volunteer-register-00012-m6w",
+        "configuration_name": "volunteer-register",
+        "service_name": "volunteer-register"
+      }
+    },
+    "timestamp": "2025-12-08T14:09:48.383538Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:09:48.589636831Z"
+  },
+  {
+    "textPayload": "time=\"08/12/2025 02:09:48.584297\" severity=ERROR message=\"BufferedWriteHandler.OutOfOrderError for object: volunteers_v2.db-journal, expectedOffset: 4616, actualOffset: 0\"",
+    "insertId": "6936dc2c0008ebd2b9f359ac",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "service_name": "volunteer-register",
+        "project_id": "azimuth-menu",
+        "configuration_name": "volunteer-register",
+        "location": "europe-west1",
+        "revision_name": "volunteer-register-00012-m6w"
+      }
+    },
+    "timestamp": "2025-12-08T14:09:48.584658Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:09:48.589636831Z"
+  },
+  {
+    "textPayload": "time=\"08/12/2025 02:09:48.584374\" severity=INFO message=\"Falling back to staged writes on disk for file volunteers_v2.db-journal (inode 9) due to err: outOfOrder write detected.\"",
+    "insertId": "6936dc2c0008edf37ad37846",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "service_name": "volunteer-register",
+        "configuration_name": "volunteer-register",
+        "revision_name": "volunteer-register-00012-m6w",
+        "project_id": "azimuth-menu",
+        "location": "europe-west1"
+      }
+    },
+    "timestamp": "2025-12-08T14:09:48.585203Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:09:48.589636831Z"
+  },
+  {
+    "textPayload": "time=\"08/12/2025 02:09:48.670241\" severity=INFO message=\"Falling back to staged write for 'volunteers_v2.db-journal'. Streaming write is limited to sequential writes on new/empty files.\"",
+    "insertId": "6936dc2c000a3b98ce598b17",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "location": "europe-west1",
+        "configuration_name": "volunteer-register",
+        "service_name": "volunteer-register",
+        "project_id": "azimuth-menu",
+        "revision_name": "volunteer-register-00012-m6w"
+      }
+    },
+    "timestamp": "2025-12-08T14:09:48.670616Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:09:48.920652735Z"
+  },
+  {
+    "textPayload": "time=\"08/12/2025 02:09:48.824786\" severity=INFO message=\"Falling back to staged write for 'volunteers_v2.db'. Streaming write is limited to sequential writes on new/empty files.\"",
+    "insertId": "6936dc2c000c97eb8b8ba7ec",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "service_name": "volunteer-register",
+        "revision_name": "volunteer-register-00012-m6w",
+        "project_id": "azimuth-menu",
+        "configuration_name": "volunteer-register",
+        "location": "europe-west1"
+      }
+    },
+    "timestamp": "2025-12-08T14:09:48.825323Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:09:48.920652735Z"
+  },
+  {
+    "textPayload": "time=\"08/12/2025 02:09:49.025636\" severity=ERROR message=\"BufferedWriteHandler.OutOfOrderError for object: volunteers_v2.db-journal, expectedOffset: 4616, actualOffset: 0\"",
+    "insertId": "6936dc2d000065f071a12cf9",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "revision_name": "volunteer-register-00012-m6w",
+        "project_id": "azimuth-menu",
+        "configuration_name": "volunteer-register",
+        "service_name": "volunteer-register",
+        "location": "europe-west1"
+      }
+    },
+    "timestamp": "2025-12-08T14:09:49.026096Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:09:49.256768850Z"
+  },
+  {
+    "textPayload": "time=\"08/12/2025 02:09:49.025691\" severity=INFO message=\"Falling back to staged writes on disk for file volunteers_v2.db-journal (inode 10) due to err: outOfOrder write detected.\"",
+    "insertId": "6936dc2d00006808c29cda86",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "azimuth-menu",
+        "service_name": "volunteer-register",
+        "location": "europe-west1",
+        "configuration_name": "volunteer-register",
+        "revision_name": "volunteer-register-00012-m6w"
+      }
+    },
+    "timestamp": "2025-12-08T14:09:49.026632Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:09:49.256768850Z"
+  },
+  {
+    "textPayload": "time=\"08/12/2025 02:09:49.107173\" severity=INFO message=\"Falling back to staged write for 'volunteers_v2.db-journal'. Streaming write is limited to sequential writes on new/empty files.\"",
+    "insertId": "6936dc2d0001a5231ba8131b",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "revision_name": "volunteer-register-00012-m6w",
+        "location": "europe-west1",
+        "service_name": "volunteer-register",
+        "configuration_name": "volunteer-register",
+        "project_id": "azimuth-menu"
+      }
+    },
+    "timestamp": "2025-12-08T14:09:49.107811Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:09:49.256768850Z"
+  },
+  {
+    "textPayload": "time=\"08/12/2025 02:09:49.256569\" severity=INFO message=\"Falling back to staged write for 'volunteers_v2.db'. Streaming write is limited to sequential writes on new/empty files.\"",
+    "insertId": "6936dc2d0003ecf6adf7db6d",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "revision_name": "volunteer-register-00012-m6w",
+        "project_id": "azimuth-menu",
+        "configuration_name": "volunteer-register",
+        "service_name": "volunteer-register",
+        "location": "europe-west1"
+      }
+    },
+    "timestamp": "2025-12-08T14:09:49.257270Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:09:49.587981445Z"
+  },
+  {
+    "textPayload": "time=\"08/12/2025 02:09:49.486558\" severity=ERROR message=\"BufferedWriteHandler.OutOfOrderError for object: volunteers_v2.db-journal, expectedOffset: 16928, actualOffset: 0\"",
+    "insertId": "6936dc2d00076ec8fa6e503c",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "location": "europe-west1",
+        "project_id": "azimuth-menu",
+        "revision_name": "volunteer-register-00012-m6w",
+        "service_name": "volunteer-register",
+        "configuration_name": "volunteer-register"
+      }
+    },
+    "timestamp": "2025-12-08T14:09:49.487112Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:09:49.587981445Z"
+  },
+  {
+    "textPayload": "time=\"08/12/2025 02:09:49.486614\" severity=INFO message=\"Falling back to staged writes on disk for file volunteers_v2.db-journal (inode 11) due to err: outOfOrder write detected.\"",
+    "insertId": "6936dc2d000770f0983ebd06",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "configuration_name": "volunteer-register",
+        "project_id": "azimuth-menu",
+        "revision_name": "volunteer-register-00012-m6w",
+        "location": "europe-west1",
+        "service_name": "volunteer-register"
+      }
+    },
+    "timestamp": "2025-12-08T14:09:49.487664Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:09:49.587981445Z"
+  },
+  {
+    "textPayload": "time=\"08/12/2025 02:09:49.546669\" severity=WARNING message=\"Retrying for the error: googleapi: got HTTP response code 429 with body: \"",
+    "insertId": "6936dc2d000859a746edd506",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "location": "europe-west1",
+        "project_id": "azimuth-menu",
+        "service_name": "volunteer-register",
+        "configuration_name": "volunteer-register",
+        "revision_name": "volunteer-register-00012-m6w"
+      }
+    },
+    "timestamp": "2025-12-08T14:09:49.547239Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:09:49.587981445Z"
+  },
+  {
+    "textPayload": "time=\"08/12/2025 02:09:49.731223\" severity=WARNING message=\"Retrying for the error: googleapi: got HTTP response code 429 with body: \"",
+    "insertId": "6936dc2d000b2a60c3fdc001",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "revision_name": "volunteer-register-00012-m6w",
+        "location": "europe-west1",
+        "project_id": "azimuth-menu",
+        "service_name": "volunteer-register",
+        "configuration_name": "volunteer-register"
+      }
+    },
+    "timestamp": "2025-12-08T14:09:49.731744Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:09:49.919490610Z"
+  },
+  {
+    "textPayload": "time=\"08/12/2025 02:09:51.735079\" severity=WARNING message=\"Retrying for the error: googleapi: got HTTP response code 429 with body: \"",
+    "insertId": "6936dc2f000b3b56552da4e4",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "revision_name": "volunteer-register-00012-m6w",
+        "project_id": "azimuth-menu",
+        "location": "europe-west1",
+        "configuration_name": "volunteer-register",
+        "service_name": "volunteer-register"
+      }
+    },
+    "timestamp": "2025-12-08T14:09:51.736086Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:09:51.919517987Z"
+  },
+  {
+    "textPayload": "time=\"08/12/2025 02:09:52.424291\" severity=WARNING message=\"Retrying for the error: googleapi: got HTTP response code 429 with body: \"",
+    "insertId": "6936dc3000067bb885399630",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "service_name": "volunteer-register",
+        "location": "europe-west1",
+        "configuration_name": "volunteer-register",
+        "project_id": "azimuth-menu",
+        "revision_name": "volunteer-register-00012-m6w"
+      }
+    },
+    "timestamp": "2025-12-08T14:09:52.424888Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:09:52.584246255Z"
+  },
+  {
+    "textPayload": "time=\"08/12/2025 02:09:57.099291\" severity=INFO message=\"Falling back to staged write for 'volunteers_v2.db-journal'. Streaming write is limited to sequential writes on new/empty files.\"",
+    "insertId": "6936dc35000187a09b98b610",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "service_name": "volunteer-register",
+        "project_id": "azimuth-menu",
+        "configuration_name": "volunteer-register",
+        "location": "europe-west1",
+        "revision_name": "volunteer-register-00012-m6w"
+      }
+    },
+    "timestamp": "2025-12-08T14:09:57.100256Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:09:57.248016288Z"
+  },
+  {
+    "textPayload": "time=\"08/12/2025 02:09:57.237272\" severity=INFO message=\"Falling back to staged write for 'volunteers_v2.db'. Streaming write is limited to sequential writes on new/empty files.\"",
+    "insertId": "6936dc350003a15637a267cb",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "service_name": "volunteer-register",
+        "configuration_name": "volunteer-register",
+        "revision_name": "volunteer-register-00012-m6w",
+        "location": "europe-west1",
+        "project_id": "azimuth-menu"
+      }
+    },
+    "timestamp": "2025-12-08T14:09:57.237910Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:09:57.248016288Z"
+  },
+  {
+    "textPayload": "Root user created: 07705371953 / root",
+    "insertId": "6936dc350005eb1ab5a9248f",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "location": "europe-west1",
+        "configuration_name": "volunteer-register",
+        "service_name": "volunteer-register",
+        "project_id": "azimuth-menu",
+        "revision_name": "volunteer-register-00012-m6w"
+      }
+    },
+    "timestamp": "2025-12-08T14:09:57.387866Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2025-12-08T14:09:57.389700778Z"
+  },
+  {
+    "textPayload": "App imported successfully",
+    "insertId": "6936dc3500063c6ab39f1ec8",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "service_name": "volunteer-register",
+        "location": "europe-west1",
+        "configuration_name": "volunteer-register",
+        "project_id": "azimuth-menu",
+        "revision_name": "volunteer-register-00012-m6w"
+      }
+    },
+    "timestamp": "2025-12-08T14:09:57.408682Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2025-12-08T14:09:57.724216063Z"
+  },
+  {
+    "textPayload": "INFO:     Started server process [13]",
+    "insertId": "6936dc38000378eba8227d63",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "configuration_name": "volunteer-register",
+        "location": "europe-west1",
+        "project_id": "azimuth-menu",
+        "service_name": "volunteer-register",
+        "revision_name": "volunteer-register-00012-m6w"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:00.227563Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Fstderr",
+    "receiveTimestamp": "2025-12-08T14:10:00.230347945Z"
+  },
+  {
+    "textPayload": "INFO:     Waiting for application startup.",
+    "insertId": "6936dc380003790347019059",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "azimuth-menu",
+        "location": "europe-west1",
+        "service_name": "volunteer-register",
+        "revision_name": "volunteer-register-00012-m6w",
+        "configuration_name": "volunteer-register"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:00.227587Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Fstderr",
+    "receiveTimestamp": "2025-12-08T14:10:00.230347945Z"
+  },
+  {
+    "textPayload": "INFO:     Application startup complete.",
+    "insertId": "6936dc38000379071ce8047e",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "configuration_name": "volunteer-register",
+        "location": "europe-west1",
+        "project_id": "azimuth-menu",
+        "service_name": "volunteer-register",
+        "revision_name": "volunteer-register-00012-m6w"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:00.227591Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Fstderr",
+    "receiveTimestamp": "2025-12-08T14:10:00.230347945Z"
+  },
+  {
+    "textPayload": "INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)",
+    "insertId": "6936dc38000379b51c8a1d77",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "configuration_name": "volunteer-register",
+        "project_id": "azimuth-menu",
+        "revision_name": "volunteer-register-00012-m6w",
+        "service_name": "volunteer-register",
+        "location": "europe-west1"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:00.227765Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Fstderr",
+    "receiveTimestamp": "2025-12-08T14:10:00.565085Z"
+  },
+  {
+    "textPayload": "Default STARTUP TCP probe succeeded after 1 attempt for container \"volunteer-register-1\" on port 8080.",
+    "insertId": "6936dc3800037da1a03d30b3",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "azimuth-menu",
+        "configuration_name": "volunteer-register",
+        "service_name": "volunteer-register",
+        "revision_name": "volunteer-register-00012-m6w",
+        "location": "europe-west1"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:00.228769Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Fvarlog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:10:00.232288430Z"
+  },
+  {
+    "protoPayload": {
+      "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+      "status": {
+        "message": "Ready condition status changed to True for Revision volunteer-register-00012-m6w with message: Deploying revision succeeded in 24.06s."
+      },
+      "serviceName": "run.googleapis.com",
+      "methodName": "/Services.ReplaceService",
+      "resourceName": "namespaces/azimuth-menu/revisions/volunteer-register-00012-m6w",
+      "response": {
+        "metadata": {
+          "name": "volunteer-register-00012-m6w",
+          "namespace": "393889560496",
+          "selfLink": "/apis/serving.knative.dev/v1/namespaces/393889560496/revisions/volunteer-register-00012-m6w",
+          "uid": "054b00d5-c2d7-4ec7-a05d-12fba404f7c3",
+          "resourceVersion": "AAZFcVnKM2E",
+          "generation": 1,
+          "creationTimestamp": "2025-12-08T14:09:36.245731Z",
+          "labels": {
+            "client.knative.dev/nonce": "28660bb2-b88d-4990-97fc-2d48c93c8d81",
+            "serving.knative.dev/configuration": "volunteer-register",
+            "serving.knative.dev/configurationGeneration": "12",
+            "serving.knative.dev/service": "volunteer-register",
+            "serving.knative.dev/serviceUid": "91f55421-414c-4a59-bb07-1a744852e3d9",
+            "serving.knative.dev/route": "volunteer-register",
+            "cloud.googleapis.com/location": "europe-west1",
+            "run.googleapis.com/startupProbeType": "Default"
+          },
+          "annotations": {
+            "run.googleapis.com/client-name": "cloud-console",
+            "autoscaling.knative.dev/maxScale": "3",
+            "serving.knative.dev/creator": "azimuthdevco@gmail.com",
+            "run.googleapis.com/execution-environment": "gen2",
+            "run.googleapis.com/operation-id": "ad78c4c4-021e-42ba-9eba-a74bf9c300be",
+            "run.googleapis.com/startup-cpu-boost": "true"
+          },
+          "ownerReferences": [
+            {
+              "kind": "Configuration",
+              "name": "volunteer-register",
+              "uid": "31211ac0-cedc-4634-8b0b-3fc288327f1f",
+              "apiVersion": "serving.knative.dev/v1",
+              "controller": true,
+              "blockOwnerDeletion": true
+            }
+          ]
+        },
+        "apiVersion": "serving.knative.dev/v1",
+        "kind": "Revision",
+        "spec": {
+          "containerConcurrency": 80,
+          "timeoutSeconds": 300,
+          "serviceAccountName": "393889560496-compute@developer.gserviceaccount.com",
+          "containers": [
+            {
+              "name": "volunteer-register-1",
+              "image": "gcr.io/azimuth-menu/volunteer-register@sha256:6db1ca444664536ada3a802e74e81afd80f865bd54c8907d01aac52f78b954a3",
+              "ports": [
+                {
+                  "name": "http1",
+                  "containerPort": 8080
+                }
+              ],
+              "env": [
+                {
+                  "name": "DATA_DIR",
+                  "value": "/data"
+                }
+              ],
+              "resources": {
+                "limits": {
+                  "cpu": "1000m",
+                  "memory": "512Mi"
+                }
+              },
+              "volumeMounts": [
+                {
+                  "name": "data-volume",
+                  "mountPath": "/data"
+                }
+              ],
+              "startupProbe": {
+                "timeoutSeconds": 240,
+                "periodSeconds": 240,
+                "failureThreshold": 1,
+                "tcpSocket": {
+                  "port": 8080
+                }
+              }
+            }
+          ],
+          "volumes": [
+            {
+              "name": "data-volume",
+              "csi": {
+                "driver": "gcsfuse.run.googleapis.com",
+                "volumeAttributes": {
+                  "bucketName": "volunteer-register-data"
+                }
+              }
+            }
+          ]
+        },
+        "status": {
+          "observedGeneration": 1,
+          "conditions": [
+            {
+              "type": "Ready",
+              "status": "True",
+              "message": "Deploying revision succeeded in 24.06s.",
+              "lastTransitionTime": "2025-12-08T14:10:00.308577Z"
+            },
+            {
+              "type": "ContainerHealthy",
+              "status": "True",
+              "message": "Containers became healthy in 21.35s.",
+              "lastTransitionTime": "2025-12-08T14:10:00.252078Z"
+            },
+            {
+              "type": "ContainerReady",
+              "status": "True",
+              "message": "Container image import completed.",
+              "lastTransitionTime": "2025-12-08T14:09:37.361930Z"
+            },
+            {
+              "type": "ResourcesAvailable",
+              "status": "True",
+              "message": "Provisioning imported containers completed in 1.37s. Checking container health. This will wait for up to 4m for the configured startup probe, including an initial delay of 0s.",
+              "lastTransitionTime": "2025-12-08T14:09:38.738454Z"
+            }
+          ],
+          "logUrl": "https://console.cloud.google.com/logs/viewer?project=azimuth-menu&resource=cloud_run_revision/service_name/volunteer-register/revision_name/volunteer-register-00012-m6w&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22volunteer-register%22%0Aresource.labels.revision_name%3D%22volunteer-register-00012-m6w%22",
+          "imageDigest": "gcr.io/azimuth-menu/volunteer-register@sha256:6db1ca444664536ada3a802e74e81afd80f865bd54c8907d01aac52f78b954a3",
+          "containerStatuses": [
+            {
+              "name": "volunteer-register-1",
+              "imageDigest": "gcr.io/azimuth-menu/volunteer-register@sha256:6db1ca444664536ada3a802e74e81afd80f865bd54c8907d01aac52f78b954a3"
+            }
+          ]
+        },
+        "@type": "type.googleapis.com/google.cloud.run.v1.Revision"
+      }
+    },
+    "insertId": "-yeg3qdd8xaw",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "location": "europe-west1",
+        "project_id": "azimuth-menu",
+        "revision_name": "volunteer-register-00012-m6w",
+        "service_name": "volunteer-register",
+        "configuration_name": "volunteer-register"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:00.317156Z",
+    "severity": "INFO",
+    "logName": "projects/azimuth-menu/logs/cloudaudit.googleapis.com%2Fsystem_event",
+    "receiveTimestamp": "2025-12-08T14:10:01.066687280Z"
+  },
+  {
+    "protoPayload": {
+      "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+      "status": {
+        "message": "Ready condition status changed to True for Service volunteer-register."
+      },
+      "serviceName": "run.googleapis.com",
+      "methodName": "/Services.ReplaceService",
+      "resourceName": "namespaces/azimuth-menu/services/volunteer-register",
+      "response": {
+        "metadata": {
+          "name": "volunteer-register",
+          "namespace": "393889560496",
+          "selfLink": "/apis/serving.knative.dev/v1/namespaces/393889560496/services/volunteer-register",
+          "uid": "91f55421-414c-4a59-bb07-1a744852e3d9",
+          "resourceVersion": "AAZFcVneLN4",
+          "generation": 12,
+          "creationTimestamp": "2025-12-04T13:21:47.368605Z",
+          "labels": {
+            "cloud.googleapis.com/location": "europe-west1"
+          },
+          "annotations": {
+            "serving.knative.dev/creator": "azimuthdevco@gmail.com",
+            "serving.knative.dev/lastModifier": "azimuthdevco@gmail.com",
+            "run.googleapis.com/client-name": "cloud-console",
+            "run.googleapis.com/operation-id": "ad78c4c4-021e-42ba-9eba-a74bf9c300be",
+            "run.googleapis.com/ingress": "all",
+            "run.googleapis.com/ingress-status": "all",
+            "run.googleapis.com/invoker-iam-disabled": "true",
+            "run.googleapis.com/urls": "[\"https://volunteer-register-393889560496.europe-west1.run.app\",\"https://volunteer-register-taevdbuemq-ew.a.run.app\"]"
+          }
+        },
+        "apiVersion": "serving.knative.dev/v1",
+        "kind": "Service",
+        "spec": {
+          "template": {
+            "metadata": {
+              "labels": {
+                "client.knative.dev/nonce": "28660bb2-b88d-4990-97fc-2d48c93c8d81",
+                "run.googleapis.com/startupProbeType": "Default"
+              },
+              "annotations": {
+                "run.googleapis.com/client-name": "cloud-console",
+                "autoscaling.knative.dev/maxScale": "3",
+                "run.googleapis.com/startup-cpu-boost": "true"
+              }
+            },
+            "spec": {
+              "containerConcurrency": 80,
+              "timeoutSeconds": 300,
+              "serviceAccountName": "393889560496-compute@developer.gserviceaccount.com",
+              "containers": [
+                {
+                  "name": "volunteer-register-1",
+                  "image": "gcr.io/azimuth-menu/volunteer-register@sha256:faf7b29407a6b3fb4ef4881a939e31b2c903a520562c4fd6778dda6622f24395",
+                  "ports": [
+                    {
+                      "name": "http1",
+                      "containerPort": 8080
+                    }
+                  ],
+                  "env": [
+                    {
+                      "name": "DATA_DIR",
+                      "value": "/data"
+                    }
+                  ],
+                  "resources": {
+                    "limits": {
+                      "cpu": "1000m",
+                      "memory": "512Mi"
+                    }
+                  },
+                  "volumeMounts": [
+                    {
+                      "name": "data-volume",
+                      "mountPath": "/data"
+                    }
+                  ],
+                  "startupProbe": {
+                    "timeoutSeconds": 240,
+                    "periodSeconds": 240,
+                    "failureThreshold": 1,
+                    "tcpSocket": {
+                      "port": 8080
+                    }
+                  }
+                }
+              ],
+              "volumes": [
+                {
+                  "name": "data-volume",
+                  "csi": {
+                    "driver": "gcsfuse.run.googleapis.com",
+                    "volumeAttributes": {
+                      "bucketName": "volunteer-register-data"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "traffic": [
+            {
+              "percent": 100,
+              "latestRevision": true
+            }
+          ]
+        },
+        "status": {
+          "observedGeneration": 12,
+          "conditions": [
+            {
+              "type": "Ready",
+              "status": "True",
+              "lastTransitionTime": "2025-12-08T14:10:01.617630Z"
+            },
+            {
+              "type": "ConfigurationsReady",
+              "status": "True",
+              "lastTransitionTime": "2025-12-08T14:09:37.442844Z"
+            },
+            {
+              "type": "RoutesReady",
+              "status": "True",
+              "lastTransitionTime": "2025-12-08T14:10:01.579386Z"
+            }
+          ],
+          "latestReadyRevisionName": "volunteer-register-00012-m6w",
+          "latestCreatedRevisionName": "volunteer-register-00012-m6w",
+          "traffic": [
+            {
+              "revisionName": "volunteer-register-00012-m6w",
+              "percent": 100,
+              "latestRevision": true
+            }
+          ],
+          "url": "https://volunteer-register-taevdbuemq-ew.a.run.app",
+          "address": {
+            "url": "https://volunteer-register-taevdbuemq-ew.a.run.app"
+          }
+        },
+        "@type": "type.googleapis.com/google.cloud.run.v1.Service"
+      }
+    },
+    "insertId": "-vbex8td7jow",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "location": "europe-west1",
+        "project_id": "azimuth-menu",
+        "configuration_name": "",
+        "service_name": "volunteer-register",
+        "revision_name": ""
+      }
+    },
+    "timestamp": "2025-12-08T14:10:01.634394Z",
+    "severity": "INFO",
+    "logName": "projects/azimuth-menu/logs/cloudaudit.googleapis.com%2Fsystem_event",
+    "receiveTimestamp": "2025-12-08T14:10:02.138360464Z"
+  },
+  {
+    "insertId": "6936dc4600052e88429d045f",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://volunteer-register-393889560496.europe-west1.run.app/",
+      "requestSize": "958",
+      "status": 200,
+      "responseSize": "6812",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+      "remoteIp": "195.133.221.218",
+      "serverIp": "34.143.73.2",
+      "latency": "0.122980399s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "revision_name": "volunteer-register-00012-m6w",
+        "project_id": "azimuth-menu",
+        "location": "europe-west1",
+        "configuration_name": "volunteer-register",
+        "service_name": "volunteer-register"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:14.214713Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/azimuth-menu/traces/e7a9a3158592b6e9cb302893acfa907d",
+    "receiveTimestamp": "2025-12-08T14:10:14.341886145Z",
+    "spanId": "269fa7e579d13ddc",
+    "traceSampled": true
+  },
+  {
+    "textPayload": "INFO:     169.254.169.126:30298 - \"GET / HTTP/1.1\" 200 OK",
+    "insertId": "6936dc4600052b7d7199d509",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "configuration_name": "volunteer-register",
+        "service_name": "volunteer-register",
+        "project_id": "azimuth-menu",
+        "revision_name": "volunteer-register-00012-m6w",
+        "location": "europe-west1"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:14.338813Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2025-12-08T14:10:14.341533374Z"
+  },
+  {
+    "insertId": "6936dc4e00093d83b6680cdf",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://volunteer-register-393889560496.europe-west1.run.app/new",
+      "requestSize": "1272",
+      "status": 200,
+      "responseSize": "21826",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+      "remoteIp": "195.133.221.218",
+      "referer": "https://volunteer-register-393889560496.europe-west1.run.app/",
+      "serverIp": "34.143.73.2",
+      "latency": "0.077099899s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "configuration_name": "volunteer-register",
+        "project_id": "azimuth-menu",
+        "location": "europe-west1",
+        "service_name": "volunteer-register",
+        "revision_name": "volunteer-register-00012-m6w"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:22.526759Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/azimuth-menu/traces/1d8d5fcf8a4bd125e1d178eda6c51bbc",
+    "receiveTimestamp": "2025-12-08T14:10:22.667707023Z",
+    "spanId": "f64decddb501d03c"
+  },
+  {
+    "textPayload": "INFO:     169.254.169.126:30306 - \"GET /new HTTP/1.1\" 200 OK",
+    "insertId": "6936dc4e00093c80f004e7c1",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "revision_name": "volunteer-register-00012-m6w",
+        "location": "europe-west1",
+        "service_name": "volunteer-register",
+        "configuration_name": "volunteer-register",
+        "project_id": "azimuth-menu"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:22.605312Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2025-12-08T14:10:22.667494175Z"
+  },
+  {
+    "insertId": "6936dc5f000e76aaabcad3cc",
+    "httpRequest": {
+      "requestMethod": "POST",
+      "requestUrl": "https://volunteer-register-393889560496.europe-west1.run.app/new",
+      "requestSize": "4684",
+      "status": 303,
+      "responseSize": "208",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+      "remoteIp": "195.133.221.218",
+      "referer": "https://volunteer-register-393889560496.europe-west1.run.app/new",
+      "serverIp": "34.143.73.2",
+      "latency": "0.680369620s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "location": "europe-west1",
+        "configuration_name": "volunteer-register",
+        "project_id": "azimuth-menu",
+        "revision_name": "volunteer-register-00012-m6w",
+        "service_name": "volunteer-register"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:39.265527Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/azimuth-menu/traces/953760c1c3af02c64351f58cd2d8a36b",
+    "receiveTimestamp": "2025-12-08T14:10:39.951288843Z",
+    "spanId": "8fb1db6ed328310f",
+    "traceSampled": true
+  },
+  {
+    "textPayload": "time=\"08/12/2025 02:10:39.404204\" severity=ERROR message=\"BufferedWriteHandler.OutOfOrderError for object: volunteers_v2.db-journal, expectedOffset: 12824, actualOffset: 0\"",
+    "insertId": "6936dc5f000632878a1e4247",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "location": "europe-west1",
+        "configuration_name": "volunteer-register",
+        "service_name": "volunteer-register",
+        "revision_name": "volunteer-register-00012-m6w",
+        "project_id": "azimuth-menu"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:39.406151Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:10:39.412553404Z"
+  },
+  {
+    "textPayload": "time=\"08/12/2025 02:10:39.404284\" severity=INFO message=\"Falling back to staged writes on disk for file volunteers_v2.db-journal (inode 12) due to err: outOfOrder write detected.\"",
+    "insertId": "6936dc5f000641fae44af636",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "azimuth-menu",
+        "location": "europe-west1",
+        "service_name": "volunteer-register",
+        "revision_name": "volunteer-register-00012-m6w",
+        "configuration_name": "volunteer-register"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:39.410106Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:10:39.744683217Z"
+  },
+  {
+    "textPayload": "time=\"08/12/2025 02:10:39.496011\" severity=INFO message=\"Falling back to staged write for 'volunteers_v2.db-journal'. Streaming write is limited to sequential writes on new/empty files.\"",
+    "insertId": "6936dc5f000795b5d3a2553e",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "location": "europe-west1",
+        "configuration_name": "volunteer-register",
+        "project_id": "azimuth-menu",
+        "revision_name": "volunteer-register-00012-m6w",
+        "service_name": "volunteer-register"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:39.497077Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:10:39.744683217Z"
+  },
+  {
+    "textPayload": "time=\"08/12/2025 02:10:39.678618\" severity=INFO message=\"Falling back to staged write for 'volunteers_v2.db'. Streaming write is limited to sequential writes on new/empty files.\"",
+    "insertId": "6936dc5f000a5e7a9c1ed712",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "configuration_name": "volunteer-register",
+        "location": "europe-west1",
+        "service_name": "volunteer-register",
+        "project_id": "azimuth-menu",
+        "revision_name": "volunteer-register-00012-m6w"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:39.679546Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2F%2Fvar%2Flog%2Fsystem",
+    "receiveTimestamp": "2025-12-08T14:10:39.744683217Z"
+  },
+  {
+    "textPayload": "INFO:     169.254.169.126:52948 - \"POST /new HTTP/1.1\" 303 See Other",
+    "insertId": "6936dc5f000e77ee4523f60a",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "service_name": "volunteer-register",
+        "project_id": "azimuth-menu",
+        "revision_name": "volunteer-register-00012-m6w",
+        "location": "europe-west1",
+        "configuration_name": "volunteer-register"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:39.948206Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2025-12-08T14:10:39.950645147Z"
+  },
+  {
+    "insertId": "6936dc600003523a3b89edd8",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://volunteer-register-393889560496.europe-west1.run.app/edit/1",
+      "requestSize": "1303",
+      "status": 200,
+      "responseSize": "24672",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+      "remoteIp": "195.133.221.218",
+      "referer": "https://volunteer-register-393889560496.europe-west1.run.app/new",
+      "serverIp": "34.143.73.2",
+      "latency": "0.141406102s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "azimuth-menu",
+        "revision_name": "volunteer-register-00012-m6w",
+        "configuration_name": "volunteer-register",
+        "location": "europe-west1",
+        "service_name": "volunteer-register"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:40.074321Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/azimuth-menu/traces/fca6e52aab5f38244351f58cd2d8a991",
+    "receiveTimestamp": "2025-12-08T14:10:40.285535289Z",
+    "spanId": "02c8a5433365790c"
+  },
+  {
+    "textPayload": "INFO:     169.254.169.126:52954 - \"GET /edit/1 HTTP/1.1\" 200 OK",
+    "insertId": "6936dc6000034f32a7284265",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "service_name": "volunteer-register",
+        "revision_name": "volunteer-register-00012-m6w",
+        "location": "europe-west1",
+        "configuration_name": "volunteer-register",
+        "project_id": "azimuth-menu"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:40.216882Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2025-12-08T14:10:40.283428168Z"
+  },
+  {
+    "insertId": "6936dc61000f42081756e95c",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://volunteer-register-393889560496.europe-west1.run.app/",
+      "requestSize": "1275",
+      "status": 200,
+      "responseSize": "8007",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+      "remoteIp": "195.133.221.218",
+      "referer": "https://volunteer-register-393889560496.europe-west1.run.app/edit/1",
+      "serverIp": "34.143.73.2",
+      "latency": "0.120663567s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "azimuth-menu",
+        "configuration_name": "volunteer-register",
+        "service_name": "volunteer-register",
+        "location": "europe-west1",
+        "revision_name": "volunteer-register-00012-m6w"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:41.877574Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/azimuth-menu/traces/ee8b794cd3e288f53f2a7f76d547323e",
+    "receiveTimestamp": "2025-12-08T14:10:42.283909689Z",
+    "spanId": "52ba92b74e690ea1"
+  },
+  {
+    "textPayload": "INFO:     169.254.169.126:52960 - \"GET / HTTP/1.1\" 200 OK",
+    "insertId": "6936dc61000f408a97ae9e21",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "location": "europe-west1",
+        "revision_name": "volunteer-register-00012-m6w",
+        "service_name": "volunteer-register",
+        "project_id": "azimuth-menu",
+        "configuration_name": "volunteer-register"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:41.999562Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2025-12-08T14:10:42.281368814Z"
+  },
+  {
+    "insertId": "6936dc630003d27cf1c8fd7c",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://volunteer-register-393889560496.europe-west1.run.app/edit/1",
+      "requestSize": "1273",
+      "status": 200,
+      "responseSize": "24672",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+      "remoteIp": "195.133.221.218",
+      "referer": "https://volunteer-register-393889560496.europe-west1.run.app/",
+      "serverIp": "34.143.73.2",
+      "latency": "0.147624598s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "service_name": "volunteer-register",
+        "revision_name": "volunteer-register-00012-m6w",
+        "project_id": "azimuth-menu",
+        "location": "europe-west1",
+        "configuration_name": "volunteer-register"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:43.101479Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/azimuth-menu/traces/690aca7813a796073f2a7f76d54730c5",
+    "receiveTimestamp": "2025-12-08T14:10:43.283781392Z",
+    "spanId": "64256c279af9fbdc"
+  },
+  {
+    "textPayload": "INFO:     169.254.169.126:13828 - \"GET /edit/1 HTTP/1.1\" 200 OK",
+    "insertId": "6936dc630003d0b21d199e14",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "revision_name": "volunteer-register-00012-m6w",
+        "location": "europe-west1",
+        "configuration_name": "volunteer-register",
+        "project_id": "azimuth-menu",
+        "service_name": "volunteer-register"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:43.250034Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2025-12-08T14:10:43.280575886Z"
+  },
+  {
+    "insertId": "6936dc6d000b875cdc9e3278",
+    "httpRequest": {
+      "requestMethod": "POST",
+      "requestUrl": "https://volunteer-register-393889560496.europe-west1.run.app/edit/1",
+      "requestSize": "168517",
+      "status": 303,
+      "responseSize": "208",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+      "remoteIp": "195.133.221.218",
+      "referer": "https://volunteer-register-393889560496.europe-west1.run.app/edit/1",
+      "serverIp": "34.143.73.2",
+      "latency": "0.124945392s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "service_name": "volunteer-register",
+        "project_id": "azimuth-menu",
+        "configuration_name": "volunteer-register",
+        "revision_name": "volunteer-register-00012-m6w",
+        "location": "europe-west1"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:53.628563Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/azimuth-menu/traces/92b3acfc7de97af9b17ced19d49ba281",
+    "receiveTimestamp": "2025-12-08T14:10:53.937839908Z",
+    "spanId": "4cd706b78763d6e5",
+    "traceSampled": true
+  },
+  {
+    "textPayload": "INFO:     169.254.169.126:30578 - \"POST /edit/1 HTTP/1.1\" 303 See Other",
+    "insertId": "6936dc6d000b91b308ffc794",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "configuration_name": "volunteer-register",
+        "project_id": "azimuth-menu",
+        "revision_name": "volunteer-register-00012-m6w",
+        "location": "europe-west1",
+        "service_name": "volunteer-register"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:53.758195Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2025-12-08T14:10:53.937262613Z"
+  },
+  {
+    "insertId": "6936dc6e000060367340ddce",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://volunteer-register-393889560496.europe-west1.run.app/edit/1",
+      "requestSize": "1307",
+      "status": 200,
+      "responseSize": "24672",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+      "remoteIp": "195.133.221.218",
+      "referer": "https://volunteer-register-393889560496.europe-west1.run.app/edit/1",
+      "serverIp": "34.143.73.2",
+      "latency": "0.141952720s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "revision_name": "volunteer-register-00012-m6w",
+        "project_id": "azimuth-menu",
+        "service_name": "volunteer-register",
+        "location": "europe-west1",
+        "configuration_name": "volunteer-register"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:53.880896Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/azimuth-menu/traces/f24bae28acfeb323b17ced19d49ba1d8",
+    "receiveTimestamp": "2025-12-08T14:10:54.270219563Z",
+    "spanId": "7a883a2ee4c075e7"
+  },
+  {
+    "textPayload": "INFO:     169.254.169.126:30592 - \"GET /edit/1 HTTP/1.1\" 200 OK",
+    "insertId": "6936dc6e00005e0f68ca3144",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "service_name": "volunteer-register",
+        "location": "europe-west1",
+        "project_id": "azimuth-menu",
+        "configuration_name": "volunteer-register",
+        "revision_name": "volunteer-register-00012-m6w"
+      }
+    },
+    "timestamp": "2025-12-08T14:10:54.024079Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2025-12-08T14:10:54.272106838Z"
+  },
+  {
+    "insertId": "6936dc75000d4ed3f0c0b202",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://volunteer-register-393889560496.europe-west1.run.app/",
+      "requestSize": "1275",
+      "status": 200,
+      "responseSize": "8007",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+      "remoteIp": "195.133.221.218",
+      "referer": "https://volunteer-register-393889560496.europe-west1.run.app/edit/1",
+      "serverIp": "34.143.73.2",
+      "latency": "0.121645669s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "revision_name": "volunteer-register-00012-m6w",
+        "service_name": "volunteer-register",
+        "location": "europe-west1",
+        "project_id": "azimuth-menu",
+        "configuration_name": "volunteer-register"
+      }
+    },
+    "timestamp": "2025-12-08T14:11:01.749045Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/azimuth-menu/traces/a4806cde8f39e8c06f58d6bc47b8d976",
+    "receiveTimestamp": "2025-12-08T14:11:01.931062384Z",
+    "spanId": "2af00c89a4b7faba"
+  },
+  {
+    "textPayload": "INFO:     169.254.169.126:30606 - \"GET / HTTP/1.1\" 200 OK",
+    "insertId": "6936dc75000d4cbe3dbfde95",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "service_name": "volunteer-register",
+        "configuration_name": "volunteer-register",
+        "revision_name": "volunteer-register-00012-m6w",
+        "location": "europe-west1",
+        "project_id": "azimuth-menu"
+      }
+    },
+    "timestamp": "2025-12-08T14:11:01.871614Z",
+    "labels": {
+      "instanceId": "0007e26d684fc91191ca6cc45e869ebcdfcb92f8f6c4287976b2084cdee710a409db618653b5ae30d38b9fe5ee453f96e4c9634cd66788e01d822c0607ade066741e4824b4cd7f62daf7034f6dd95a"
+    },
+    "logName": "projects/azimuth-menu/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2025-12-08T14:11:01.930106656Z"
+  }
+]

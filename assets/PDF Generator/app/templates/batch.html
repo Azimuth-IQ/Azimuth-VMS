@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card shadow" style="max-width: 800px; margin: 0 auto;">
+    <div class="card-header bg-white">
+        <h4 class="mb-0">إدخال متعدد (Batch Upload)</h4>
+    </div>
+    <div class="card-body">
+        <p class="text-muted">
+            قم برفع ملف Excel (.xlsx) يحتوي على الأعمدة التالية (بالترتيب أو بالاسم):
+            <br>
+            <small>
+                رقم الاستمارة, اسم المجموعة والرمز, اسم المجموعة والرمز, التحصيل الدراسي, المواليد, الحالة الاجتماعية,
+                عدد الابناء, الحالة الاجتماعية, رقم الموبايل, العنوان الحال, عدد الابناء, الحالة الاجتماعية, دائرة
+                الاحوال, العنوان السابق, عدد المشاركات في الخدمة التطوعية في العتبة, العنوان السابق, العنوان الوظيفي,
+                أسم الدائرة, الانتماء السياسي, الموهبة او الخبرة, اللغات التي يجيدها, الموهبة او الخبرة, السجل, الصحيفة,
+                رقم البطاقة التموينية, السجل, رقم مركز التموين, رقم بطاقة السكن, السجل, أصحاب الحسين
+            </small>
+            <br><br>
+            <a href="/download-template" class="btn btn-sm btn-outline-primary">تحميل ملف القالب</a>
+        </p>
+        <form method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label">ملف Excel</label>
+                <input type="file" name="file" class="form-control" accept=".xlsx, .xls" required>
+            </div>
+            <button type="submit" class="btn btn-success w-100">رفع ومعالجة</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

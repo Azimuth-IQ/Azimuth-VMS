@@ -1,0 +1,463 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .form-section {
+        margin-bottom: 30px;
+        padding: 20px;
+        border: 1px solid #e9ecef;
+        border-radius: 10px;
+        background: #fafafa;
+    }
+
+    .form-section h5 {
+        color: #3498db;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .camera-preview {
+        width: 100%;
+        max-width: 300px;
+        height: 225px;
+        background: #000;
+        margin: 10px auto;
+        display: none;
+    }
+
+    .photo-preview {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 2px solid #ddd;
+        margin-top: 10px;
+    }
+
+    .field-number {
+        font-size: 0.7rem;
+        color: #999;
+    }
+
+    .attachment-preview {
+        width: 100%;
+        max-width: 150px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+    }
+
+    .attachment-thumbnail {
+        width: 60px;
+        height: 45px;
+        object-fit: cover;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+    }
+
+    .pdf-preview {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+    }
+
+    .btn-group form {
+        display: inline;
+    }
+
+    .btn-group form button {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+</style>
+
+<div class="card shadow">
+    <div class="card-header bg-white">
+        <h4 class="mb-0">{{ "تعديل استمارة" if volunteer else "إضافة استمارة جديدة" }}</h4>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data" id="volunteerForm">
+
+            <!-- Section 1: Basic Info -->
+            <div class="form-section">
+                <h5>المعلومات الأساسية</h5>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">رقم الاستمارة <span class="field-number">(Text1)</span></label>
+                        <input type="text" name="text1" class="form-control"
+                            value="{{ volunteer.text1 if volunteer else '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">اسم المجموعة والرمز <span class="field-number">(Text2)</span></label>
+                        <input type="text" name="text2" class="form-control"
+                            value="{{ volunteer.text2 if volunteer else '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">NO <span class="field-number">(Text30)</span></label>
+                        <input type="text" name="text30" class="form-control"
+                            value="{{ volunteer.text30 if volunteer else '' }}">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Personal Info -->
+            <div class="form-section">
+                <h5>المعلومات الشخصية</h5>
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">الاسم الرباعي واللقب <span class="field-number">(Text3)</span></label>
+                        <input type="text" name="text3" class="form-control"
+                            value="{{ volunteer.text3 if volunteer else '' }}"
+                            placeholder="مثال: احمد محمد علي حسين الموسوي">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">المواليد <span class="field-number">(Text5)</span></label>
+                        <input type="text" name="text5" class="form-control"
+                            value="{{ volunteer.text5 if volunteer else '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">الحالة الاجتماعية <span class="field-number">(Text6)</span></label>
+                        <input type="text" name="text6" class="form-control"
+                            value="{{ volunteer.text6 if volunteer else '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">عدد الابناء <span class="field-number">(Text7)</span></label>
+                        <input type="text" name="text7" class="form-control"
+                            value="{{ volunteer.text7 if volunteer else '' }}">
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">اسم الام الثلاثي واللقب <span
+                                class="field-number">(Text8)</span></label>
+                        <input type="text" name="text8" class="form-control"
+                            value="{{ volunteer.text8 if volunteer else '' }}"
+                            placeholder="مثال: فاطمة علي حسين الكاظمي">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Contact & Address -->
+            <div class="form-section">
+                <h5>السكن والاتصال</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">رقم الموبايل <span class="field-number">(Text9)</span></label>
+                        <input type="text" name="text9" class="form-control"
+                            value="{{ volunteer.text9 if volunteer else '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">العنوان الحالي <span class="field-number">(Text10)</span></label>
+                        <input type="text" name="text10" class="form-control"
+                            value="{{ volunteer.text10 if volunteer else '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">اقرب نقطة دالة <span class="field-number">(Text11)</span></label>
+                        <input type="text" name="text11" class="form-control"
+                            value="{{ volunteer.text11 if volunteer else '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">اسم المختار ومسؤول المجلس البلدي <span
+                                class="field-number">(Text12)</span></label>
+                        <input type="text" name="text12" class="form-control"
+                            value="{{ volunteer.text12 if volunteer else '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">العنوان السابق <span class="field-number">(Text14)</span></label>
+                        <input type="text" name="text14" class="form-control"
+                            value="{{ volunteer.text14 if volunteer else '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">رقم بطاقة السكن <span class="field-number">(Text28)</span></label>
+                        <input type="text" name="text28" class="form-control"
+                            value="{{ volunteer.text28 if volunteer else '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">جهة اصدارها <span class="field-number">(Text29)</span></label>
+                        <input type="text" name="text29" class="form-control"
+                            value="{{ volunteer.text29 if volunteer else '' }}">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 4: Education & Work -->
+            <div class="form-section">
+                <h5>التعليم والعمل</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">التحصيل الدراسي <span class="field-number">(Text4)</span></label>
+                        <input type="text" name="text4" class="form-control"
+                            value="{{ volunteer.text4 if volunteer else '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">المهنة <span class="field-number">(Text16)</span></label>
+                        <input type="text" name="text16" class="form-control"
+                            value="{{ volunteer.text16 if volunteer else '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">العنوان الوظيفي <span class="field-number">(Text17)</span></label>
+                        <input type="text" name="text17" class="form-control"
+                            value="{{ volunteer.text17 if volunteer else '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">اسم الدائرة <span class="field-number">(Text18)</span></label>
+                        <input type="text" name="text18" class="form-control"
+                            value="{{ volunteer.text18 if volunteer else '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">الموهبة والخبرة <span class="field-number">(Text20)</span></label>
+                        <input type="text" name="text20" class="form-control"
+                            value="{{ volunteer.text20 if volunteer else '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">اللغات التي يجيدها <span class="field-number">(Text21)</span></label>
+                        <input type="text" name="text21" class="form-control"
+                            value="{{ volunteer.text21 if volunteer else '' }}">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 5: Official Documents -->
+            <div class="form-section">
+                <h5>المستمسكات الرسمية</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">رقم الهوية او البطاقة الوطنية <span
+                                class="field-number">(Text22)</span></label>
+                        <input type="text" name="text22" class="form-control"
+                            value="{{ volunteer.text22 if volunteer else '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">دائرة الاحوال <span class="field-number">(Text13)</span></label>
+                        <input type="text" name="text13" class="form-control"
+                            value="{{ volunteer.text13 if volunteer else '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">السجل <span class="field-number">(Text23)</span></label>
+                        <input type="text" name="text23" class="form-control"
+                            value="{{ volunteer.text23 if volunteer else '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">الصحيفة <span class="field-number">(Text24)</span></label>
+                        <input type="text" name="text24" class="form-control"
+                            value="{{ volunteer.text24 if volunteer else '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">رقم البطاقة التموينية <span
+                                class="field-number">(Text25)</span></label>
+                        <input type="text" name="text25" class="form-control"
+                            value="{{ volunteer.text25 if volunteer else '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">اسم الوكيل <span class="field-number">(Text26)</span></label>
+                        <input type="text" name="text26" class="form-control"
+                            value="{{ volunteer.text26 if volunteer else '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">رقم مركز التموين <span class="field-number">(Text27)</span></label>
+                        <input type="text" name="text27" class="form-control"
+                            value="{{ volunteer.text27 if volunteer else '' }}">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 6: Volunteer Info -->
+            <div class="form-section">
+                <h5>معلومات التطوع</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">عدد المشاركات في الخدمة التطوعية في العتبة <span
+                                class="field-number">(Text15)</span></label>
+                        <input type="text" name="text15" class="form-control"
+                            value="{{ volunteer.text15 if volunteer else '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">الانتماء السياسي <span class="field-number">(Text19)</span></label>
+                        <input type="text" name="text19" class="form-control"
+                            value="{{ volunteer.text19 if volunteer else '' }}">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 7: Photo -->
+            <div class="form-section">
+                <h5>الصورة الشخصية</h5>
+                <div class="text-center">
+                    {% if volunteer and volunteer.photo_path %}
+                    <img src="/uploads/{{ volunteer.photo_path }}" class="photo-preview mb-3" id="currentPhoto">
+                    {% else %}
+                    <img src="https://via.placeholder.com/150" class="photo-preview mb-3" id="currentPhoto">
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label class="form-label">رفع صورة</label>
+                        <input type="file" name="photo" class="form-control" accept="image/*"
+                            onchange="previewImage(this)">
+                    </div>
+
+                    <div class="mb-3">
+                        <p>أو التقاط صورة</p>
+                        <button type="button" class="btn btn-outline-primary" onclick="startCamera()">
+                            <i class="bi bi-camera"></i> فتح الكاميرا
+                        </button>
+                        <video id="camera" class="camera-preview" autoplay playsinline></video>
+                        <canvas id="canvas" style="display:none;"></canvas>
+                        <button type="button" id="captureBtn" class="btn btn-success mt-2" style="display:none;"
+                            onclick="capturePhoto()">
+                            <i class="bi bi-camera-fill"></i> التقاط
+                        </button>
+                        <input type="hidden" name="camera_image" id="cameraInput">
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        {% if volunteer %}
+        <!-- Section 8: Attachments (only shown when editing) -->
+        <div class="form-section">
+            <h5>المرفقات (صور الهوية، جواز السفر، إلخ)</h5>
+
+            <!-- Upload new attachment -->
+            <div class="mb-4">
+                <form action="/upload-attachment/{{ volunteer.id }}" method="post" enctype="multipart/form-data">
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-4">
+                            <label class="form-label">اسم المرفق</label>
+                            <input type="text" name="attachment_name" class="form-control"
+                                placeholder="مثل: البطاقة الوطنية، جواز السفر" required>
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label">الملف (صورة أو PDF)</label>
+                            <input type="file" name="attachment" class="form-control" accept="image/*,.pdf" required>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-upload"></i> رفع المرفق
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Existing attachments -->
+            {% if attachments and attachments|length > 0 %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 50px;">#</th>
+                            <th>اسم المرفق</th>
+                            <th style="width: 120px;">معاينة</th>
+                            <th style="width: 150px;">إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for att in attachments %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><strong>{{ att.name }}</strong></td>
+                            <td class="text-center">
+                                {% if att.file_path.endswith('.pdf') %}
+                                <i class="bi bi-file-pdf" style="font-size: 2rem; color: #dc3545;"></i>
+                                {% else %}
+                                <img src="/uploads/{{ att.file_path }}" class="attachment-thumbnail"
+                                    alt="{{ att.name }}">
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="/uploads/{{ att.file_path }}" target="_blank"
+                                        class="btn btn-outline-primary" title="عرض">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <form action="/delete-attachment/{{ volunteer.id }}/{{ att.id }}" method="post"
+                                        style="display: inline;" onsubmit="return confirm('هل تريد حذف هذا المرفق؟');">
+                                        <button type="submit" class="btn btn-outline-danger" title="حذف">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-muted small"><i class="bi bi-info-circle"></i> كل مرفق سيظهر كصفحة منفصلة في ملف PDF مع
+                عنوانه</p>
+            {% else %}
+            <p class="text-muted text-center">لا توجد مرفقات حالياً</p>
+            {% endif %}
+        </div>
+
+        <!-- Section 9: Folder Management -->
+        <div class="form-section">
+            <h5>إدارة ملفات المتطوع</h5>
+            <div class="d-flex gap-2 justify-content-center flex-wrap">
+                <a href="/download-folder/{{ volunteer.id }}" class="btn btn-success">
+                    <i class="bi bi-download"></i> تحميل جميع الملفات (ZIP)
+                </a>
+                <form action="/delete-folder/{{ volunteer.id }}" method="post" style="display: inline;"
+                    onsubmit="return confirm('هل تريد حذف جميع ملفات هذا المتطوع؟ سيتم الاحتفاظ ببيانات الاستمارة.');">
+                    <button type="submit" class="btn btn-warning">
+                        <i class="bi bi-folder-x"></i> حذف جميع الملفات
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="text-center mt-4">
+            <button type="submit" form="volunteerForm" class="btn btn-success btn-lg px-5">
+                <i class="bi bi-check-circle"></i> حفظ الاستمارة
+            </button>
+            <a href="/" class="btn btn-secondary btn-lg px-4 ms-2">إلغاء</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('currentPhoto').src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    let stream;
+    async function startCamera() {
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const video = document.getElementById('camera');
+            video.srcObject = stream;
+            video.style.display = 'block';
+            document.getElementById('captureBtn').style.display = 'inline-block';
+        } catch (err) {
+            alert("Could not access camera: " + err);
+        }
+    }
+
+    function capturePhoto() {
+        const video = document.getElementById('camera');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        const dataURL = canvas.toDataURL('image/jpeg');
+        document.getElementById('currentPhoto').src = dataURL;
+        document.getElementById('cameraInput').value = dataURL;
+
+        stream.getTracks().forEach(track => track.stop());
+        video.style.display = 'none';
+        document.getElementById('captureBtn').style.display = 'none';
+    }
+</script>
+{% endblock %}

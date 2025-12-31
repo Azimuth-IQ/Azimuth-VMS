@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <h3 class="mb-4">مسح QR Code</h3>
+            <div id="reader" style="width: 100%"></div>
+            <div id="result" class="mt-3"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<script>
+    function onScanSuccess(decodedText, decodedResult) {
+        // Handle the scanned code as you like, for example:
+        console.log(`Code matched = ${decodedText}`, decodedResult);
+
+        // Assuming the QR code contains the Volunteer ID or URL
+        // If it's a URL, redirect:
+        if (decodedText.startsWith('http')) {
+            window.location.href = decodedText;
+        } else {
+            // If it's just an ID, redirect to edit page
+            window.location.href = "/edit/" + decodedText;
+        }
+
+        html5QrcodeScanner.clear();
+    }
+
+    function onScanFailure(error) {
+        // handle scan failure, usually better to ignore and keep scanning.
+        // console.warn(`Code scan error = ${error}`);
+    }
+
+    let html5QrcodeScanner = new Html5QrcodeScanner(
+        "reader",
+        { fps: 10, qrbox: { width: 250, height: 250 } },
+        /* verbose= */ false);
+    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+</script>
+{% endblock %}

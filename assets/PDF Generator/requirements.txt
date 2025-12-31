@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+sqlalchemy
+pymupdf
+python-multipart
+jinja2
+pandas
+openpyxl
+aiofiles
+itsdangerous
+qrcode
+pillow
+arabic-reshaper
+python-bidi
