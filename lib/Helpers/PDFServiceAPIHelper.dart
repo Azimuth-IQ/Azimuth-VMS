@@ -18,10 +18,17 @@ class PDFServiceAPIHelper {
       print('🔐 [PDF AUTH] URL: $_baseUrl/login');
       print('🔐 [PDF AUTH] Phone: $_loginPhone');
 
+      // Properly encode form data
+      final formData = 'phone=${Uri.encodeComponent(_loginPhone)}&password=${Uri.encodeComponent(_loginPassword)}';
+      print('🔐 [PDF AUTH] Form data: $formData');
+
       final response = await http.post(
         Uri.parse('$_baseUrl/login'),
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: {'phone': _loginPhone, 'password': _loginPassword},
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': '*/*',
+        },
+        body: formData,
       );
 
       print('🔐 [PDF AUTH] Response Status: ${response.statusCode}');
