@@ -7,9 +7,9 @@
 ## 📊 Quick Summary
 
 - **Total Bugs Identified:** 19
-- **Completed:** 12 (Bugs 1-3, 8-13, 15, 18-19)
+- **Completed:** 13 (Bugs 1-3, 7-13, 15, 18-19)
 - **In Progress:** 1 (PDF Generation)
-- **Pending:** 6 (Bugs 4-7, 14, 16-17)
+- **Pending:** 5 (Bugs 4-6, 14, 16-17)
 
 ---
 
@@ -152,7 +152,7 @@
 
 ## 🐛 Pending Bugs
 
-### Medium Priority (Bugs 4-7, 14, 16-17)
+### Medium Priority (Bugs 4-6, 14, 16-17)
 
 ### Bug 4: Bilingual Photo Upload Hint
 
@@ -177,21 +177,33 @@
 - **Status:** Not Started
 - **Affected Screen:** Volunteer form image upload
 
-### Bug 7: Review Automatic Notifications
+### Bug 7: Review Automatic Notifications ✅
 
 - **Issue:** Document what automatic notifications are implemented
 - **Details:** Check what more notifications to send automatically
 - **Priority:** Low
-- **Status:** Not Started
+- **Status:** COMPLETED
 - **Type:** Review/Documentation
-
-### Bug 8: Firebase Web Auth Key
-
-- **Issue:** Implement Firebase web auth key for push notifications
-- **Details:** Key: `BDEQjN1UbATEWI8TY1tTHakqvCw5EpryE6OGIirk4hqBG7CCLO-0O0eL97nVmEAKa6Ms7EoI9MaezpKndlgeOHs`
-- **Priority:** High
-- **Status:** Not Started
-- **Files:** `web/firebase-messaging-sw.js`, notification helpers
+- **Documentation:** See [AUTOMATIC_NOTIFICATIONS.md](AUTOMATIC_NOTIFICATIONS.md)
+- **Summary:**
+  - **6 automatic notifications currently implemented:**
+    1. Volunteer shift assignment
+    2. Leave request submitted (to team leader)
+    3. Leave request approved
+    4. Leave request rejected
+    5. Location reassignment
+    6. Team leader event assignment (method exists but not called)
+  - **1 notification method defined but not used:**
+    - Presence check reminder
+  - **13 high/medium priority notifications missing:**
+    - Form approval/rejection notifications (HIGH PRIORITY)
+    - Event update/cancel notifications (HIGH PRIORITY)
+    - Event reminders 24h before (HIGH PRIORITY)
+    - Presence check started notification (HIGH PRIORITY)
+    - New event created notification
+    - Missed check-in alerts
+    - Rating/feedback notifications (when implemented)
+  - **Recommended Implementation Plan:** See AUTOMATIC_NOTIFICATIONS.md → Phase 1-4 roadmap
 
 ### Bug 14: Carousel Slider Inconsistency
 
