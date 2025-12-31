@@ -15,6 +15,33 @@ git commit -m "Pre-edit checkpoint: [brief description of upcoming changes]"
 
 ---
 
+## Multi-Language Support (Arabic & English)
+
+- **ALL UI text must be bilingual** - Never use hardcoded English/Arabic strings
+- **Always use AppLocalizations** for any user-facing text:
+  ```dart
+  Text(AppLocalizations.of(context)!.keyName)
+  ```
+- **Add missing keys** to both `lib/l10n/app_en.arb` and `lib/l10n/app_ar.arb`
+- **Button labels, titles, descriptions** - Everything visible to users must be localized
+- **Check existing keys first** before adding new ones to avoid duplicates
+- Pattern for new keys:
+
+  ```json
+  // app_en.arb
+  "keyName": "English Text",
+
+  // app_ar.arb
+  "keyName": "النص العربي",
+  ```
+
+- **Never use:**
+  - `const Text('Hardcoded English')`
+  - `Text('Hard coded text')`
+  - Mixed language in single widget
+
+---
+
 ## State Management
 
 - **Use Provider pattern exclusively** - No StatefulWidgets for UI state management
@@ -139,8 +166,9 @@ Think of README.md as the **complete product manual** that anyone can use to und
 
 ## UI/UX Preferences
 
+- **All text must be bilingual** using AppLocalizations
 - Show loading indicators during async operations
-- Provide clear error messages to users
+- Provide clear error messages to users (localized)
 - Use confirmation dialogs for destructive actions
 - Keep forms clean with proper validation
 - Use icons to improve visual clarity

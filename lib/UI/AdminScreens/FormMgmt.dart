@@ -285,22 +285,12 @@ class _FormMgmtState extends State<FormMgmt> {
                         end: Alignment.bottomRight,
                       ),
                       borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: theme.colorScheme.primary.withOpacity(0.3),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
+                      boxShadow: [BoxShadow(color: theme.colorScheme.primary.withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 2))],
                     ),
                     child: Center(
                       child: Text(
                         form.fullName?.substring(0, 1).toUpperCase() ?? '?',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.onPrimary,
-                        ),
+                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: theme.colorScheme.onPrimary),
                       ),
                     ),
                   ),
@@ -315,11 +305,7 @@ class _FormMgmtState extends State<FormMgmt> {
                             Expanded(
                               child: Text(
                                 form.fullName ?? 'Unknown',
-                                style: TextStyle(
-                                  fontSize: Breakpoints.isMobile(context) ? 14 : 18,
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: -0.5,
-                                ),
+                                style: TextStyle(fontSize: Breakpoints.isMobile(context) ? 14 : 18, fontWeight: FontWeight.w700, letterSpacing: -0.5),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -335,11 +321,7 @@ class _FormMgmtState extends State<FormMgmt> {
                             const SizedBox(width: 6),
                             Text(
                               form.mobileNumber ?? 'N/A',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7),
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: TextStyle(fontSize: 14, color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7), fontWeight: FontWeight.w500),
                             ),
                           ],
                         ),
@@ -350,28 +332,16 @@ class _FormMgmtState extends State<FormMgmt> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          _getStatusColor(form.status).withOpacity(0.15),
-                          _getStatusColor(form.status).withOpacity(0.05),
-                        ],
-                      ),
+                      gradient: LinearGradient(colors: [_getStatusColor(form.status).withOpacity(0.15), _getStatusColor(form.status).withOpacity(0.05)]),
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: _getStatusColor(form.status).withOpacity(0.4),
-                        width: 1.5,
-                      ),
+                      border: Border.all(color: _getStatusColor(form.status).withOpacity(0.4), width: 1.5),
                     ),
                     child: DropdownButton<VolunteerFormStatus>(
                       value: form.status,
                       underline: const SizedBox(),
                       isDense: true,
                       icon: Icon(Icons.arrow_drop_down_rounded, color: _getStatusColor(form.status), size: 20),
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                        color: _getStatusColor(form.status),
-                      ),
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: _getStatusColor(form.status)),
                       items: VolunteerFormStatus.values.map((status) {
                         return DropdownMenuItem(value: status, child: Text(_getStatusLabel(status)));
                       }).toList(),
@@ -449,7 +419,7 @@ class _FormMgmtState extends State<FormMgmt> {
                       Navigator.pushNamed(context, '/admin-form-fill', arguments: form).then((_) => _loadForms());
                     },
                     icon: const Icon(Icons.edit_rounded, size: 18),
-                    label: const Text('Edit Form'),
+                    label: Text(AppLocalizations.of(context)!.editVolunteerForm),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: theme.colorScheme.primary,
                       foregroundColor: theme.colorScheme.onPrimary,
@@ -462,25 +432,16 @@ class _FormMgmtState extends State<FormMgmt> {
                   FilledButton.tonalIcon(
                     onPressed: () async {
                       try {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(AppLocalizations.of(context)!.generatingPdf),
-                            duration: const Duration(seconds: 1),
-                          ),
-                        );
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.generatingPdf), duration: const Duration(seconds: 1)));
                         await PdfGeneratorHelper.generateAndDownloadPdf(form);
                         if (mounted) {
                           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(AppLocalizations.of(context)!.pdfDownloaded)),
-                          );
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.pdfDownloaded)));
                         }
                       } catch (e) {
                         print('Error generating PDF: $e');
                         if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('${AppLocalizations.of(context)!.error}: $e')),
-                          );
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${AppLocalizations.of(context)!.error}: $e')));
                         }
                       }
                     },
@@ -495,25 +456,16 @@ class _FormMgmtState extends State<FormMgmt> {
                   FilledButton.tonalIcon(
                     onPressed: () async {
                       try {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(AppLocalizations.of(context)!.generatingPdf),
-                            duration: const Duration(seconds: 1),
-                          ),
-                        );
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.generatingPdf), duration: const Duration(seconds: 1)));
                         await PdfGeneratorHelper.generateAndDownloadPdf(form);
                         if (mounted) {
                           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(AppLocalizations.of(context)!.readyToPrint)),
-                          );
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.readyToPrint)));
                         }
                       } catch (e) {
                         print('Error generating PDF: $e');
                         if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('${AppLocalizations.of(context)!.error}: $e')),
-                          );
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${AppLocalizations.of(context)!.error}: $e')));
                         }
                       }
                     },
@@ -535,11 +487,7 @@ class _FormMgmtState extends State<FormMgmt> {
                     const SizedBox(width: 6),
                     Text(
                       AppLocalizations.of(context)!.formNumber(form.formNumber ?? ''),
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7),
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: TextStyle(fontSize: 13, color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7), fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(width: 16),
                   ],
