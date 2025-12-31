@@ -1,6 +1,7 @@
 import 'package:azimuth_vms/Helpers/VolunteerFormHelperFirebase.dart';
 import 'package:azimuth_vms/Models/VolunteerForm.dart';
 import 'package:azimuth_vms/UI/Theme/Breakpoints.dart';
+import 'package:azimuth_vms/UI/Widgets/ImageOptimizationDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
@@ -178,14 +179,23 @@ class _FormFillPageState extends State<FormFillPage> {
 
       final Uint8List imageData = reader.result as Uint8List;
 
+      // If image is larger than 500KB, open optimization dialog
       if (imageData.lengthInBytes > 500 * 1024) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Image size should not exceed 500 KB.')));
-        }
-        return;
-      }
+        if (!mounted) return;
 
-      onImagePicked(imageData);
+        final optimizedImageData = await showDialog<Uint8List>(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => ImageOptimizationDialog(originalImageData: imageData, imageName: files[0].name),
+        );
+
+        if (optimizedImageData != null) {
+          onImagePicked(optimizedImageData);
+        }
+      } else {
+        // Image is already under 500KB, use it directly
+        onImagePicked(imageData);
+      }
     } catch (e) {
       print('Error picking image: $e');
       if (mounted) {
