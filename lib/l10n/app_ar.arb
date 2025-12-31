@@ -849,5 +849,13 @@
   "adminResponse": "رد المسؤول:",
   "inProgress": "قيد المعالجة",
   "resolved": "تم الحل",
-  "closed": "مغلق"
+  "closed": "مغلق",
+  "generatePDF": "إنشاء ملف PDF",
+  "regeneratePDF": "إعادة إنشاء ملف PDF",
+  "downloadPDF": "تحميل ملف PDF",
+  "generatingPDF": "جاري إنشاء ملف PDF...",
+  "pdfGeneratedSuccessfully": "تم إنشاء ملف PDF بنجاح",
+  "errorGeneratingPDF": "خطأ في إنشاء ملف PDF",
+  "viewPDF": "عرض ملف PDF",
+  "pdfNotGenerated": "لم يتم إنشاء ملف PDF بعد"
 }

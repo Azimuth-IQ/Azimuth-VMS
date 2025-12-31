@@ -4117,6 +4117,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Admin Response:'**
   String get adminResponse;
+
+  /// No description provided for @generatePDF.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate PDF'**
+  String get generatePDF;
+
+  /// No description provided for @regeneratePDF.
+  ///
+  /// In en, this message translates to:
+  /// **'Regenerate PDF'**
+  String get regeneratePDF;
+
+  /// No description provided for @downloadPDF.
+  ///
+  /// In en, this message translates to:
+  /// **'Download PDF'**
+  String get downloadPDF;
+
+  /// No description provided for @generatingPDF.
+  ///
+  /// In en, this message translates to:
+  /// **'Generating PDF...'**
+  String get generatingPDF;
+
+  /// No description provided for @pdfGeneratedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF generated successfully'**
+  String get pdfGeneratedSuccessfully;
+
+  /// No description provided for @errorGeneratingPDF.
+  ///
+  /// In en, this message translates to:
+  /// **'Error generating PDF'**
+  String get errorGeneratingPDF;
+
+  /// No description provided for @viewPDF.
+  ///
+  /// In en, this message translates to:
+  /// **'View PDF'**
+  String get viewPDF;
+
+  /// No description provided for @pdfNotGenerated.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF not generated yet'**
+  String get pdfNotGenerated;
 }
 
 class _AppLocalizationsDelegate

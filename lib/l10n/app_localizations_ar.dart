@@ -2209,4 +2209,28 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get adminResponse => 'رد المسؤول:';
+
+  @override
+  String get generatePDF => 'إنشاء ملف PDF';
+
+  @override
+  String get regeneratePDF => 'إعادة إنشاء ملف PDF';
+
+  @override
+  String get downloadPDF => 'تحميل ملف PDF';
+
+  @override
+  String get generatingPDF => 'جاري إنشاء ملف PDF...';
+
+  @override
+  String get pdfGeneratedSuccessfully => 'تم إنشاء ملف PDF بنجاح';
+
+  @override
+  String get errorGeneratingPDF => 'خطأ في إنشاء ملف PDF';
+
+  @override
+  String get viewPDF => 'عرض ملف PDF';
+
+  @override
+  String get pdfNotGenerated => 'لم يتم إنشاء ملف PDF بعد';
 }

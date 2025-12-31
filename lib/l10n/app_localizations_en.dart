@@ -2228,4 +2228,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get adminResponse => 'Admin Response:';
+
+  @override
+  String get generatePDF => 'Generate PDF';
+
+  @override
+  String get regeneratePDF => 'Regenerate PDF';
+
+  @override
+  String get downloadPDF => 'Download PDF';
+
+  @override
+  String get generatingPDF => 'Generating PDF...';
+
+  @override
+  String get pdfGeneratedSuccessfully => 'PDF generated successfully';
+
+  @override
+  String get errorGeneratingPDF => 'Error generating PDF';
+
+  @override
+  String get viewPDF => 'View PDF';
+
+  @override
+  String get pdfNotGenerated => 'PDF not generated yet';
 }

@@ -38,6 +38,7 @@ class VolunteerForm {
   String? idBackPath; // National ID back image path
   String? residenceFrontPath; // Residency card front image path
   String? residenceBackPath; // Residency card back image path
+  String? generatedPdfUrl; // Firebase Storage URL for generated PDF
   VolunteerFormStatus? status;
   bool archived;
 
@@ -79,6 +80,7 @@ class VolunteerForm {
     this.idBackPath,
     this.residenceFrontPath,
     this.residenceBackPath,
+    this.generatedPdfUrl,
     this.status,
     this.archived = false,
   });
@@ -138,6 +140,7 @@ class VolunteerForm {
       idFrontPath: getStringValue('idFrontPath'),
       idBackPath: getStringValue('idBackPath'),
       residenceFrontPath: getStringValue('residenceFrontPath'),
+      generatedPdfUrl: getStringValue('generatedPdfUrl'),
       residenceBackPath: getStringValue('residenceBackPath'),
       status: getStatus(),
       archived: snapshot.child('archived').value as bool? ?? false,
@@ -182,6 +185,7 @@ class VolunteerForm {
       'idFrontPath': idFrontPath,
       'idBackPath': idBackPath,
       'residenceFrontPath': residenceFrontPath,
+      'generatedPdfUrl': generatedPdfUrl,
       'residenceBackPath': residenceBackPath,
       'status': status?.toString().split('.').last,
       'archived': archived,

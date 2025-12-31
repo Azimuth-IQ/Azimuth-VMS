@@ -1473,5 +1473,13 @@
   "adminResponse": "Admin Response:",
   "inProgress": "In Progress",
   "resolved": "Resolved",
-  "closed": "Closed"
+  "closed": "Closed",
+  "generatePDF": "Generate PDF",
+  "regeneratePDF": "Regenerate PDF",
+  "downloadPDF": "Download PDF",
+  "generatingPDF": "Generating PDF...",
+  "pdfGeneratedSuccessfully": "PDF generated successfully",
+  "errorGeneratingPDF": "Error generating PDF",
+  "viewPDF": "View PDF",
+  "pdfNotGenerated": "PDF not generated yet"
 }
