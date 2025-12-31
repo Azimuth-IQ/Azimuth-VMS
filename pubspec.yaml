@@ -84,9 +84,6 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/pdfs/form1.pdf
-    - assets/pdfs/form2.pdf
-    - assets/pdfs/form3.pdf
-    - assets/pdfs/form4.pdf
     - assets/fonts/
 
   # An image asset can refer to one or more resolution-specific "variants", see

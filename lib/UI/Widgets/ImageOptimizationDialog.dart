@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
@@ -24,6 +25,7 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
   int _processedSize = 0;
   bool _isProcessing = false;
   String? _errorMessage;
+  Timer? _debounceTimer;
 
   @override
   void initState() {
@@ -70,6 +72,22 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
       print('Error decoding image: $e');
       return null;
     }
+  }
+
+  @override
+  void dispose() {
+    _debounceTimer?.cancel();
+    super.dispose();
+  }
+
+  void _onSliderChanged() {
+    // Cancel any existing timer
+    _debounceTimer?.cancel();
+
+    // Start a new timer - process image after user stops sliding for 300ms
+    _debounceTimer = Timer(const Duration(milliseconds: 300), () {
+      _processImage();
+    });
   }
 
   Future<void> _processImage() async {
@@ -305,10 +323,12 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
                               divisions: 90,
                               label: '${_quality.round()}%',
                               activeColor: theme.colorScheme.primary,
-                              onChanged: (value) {
-                                setState(() => _quality = value);
-                                _processImage();
-                              },
+                              onChanged: _isProcessing
+                                  ? null
+                                  : (value) {
+                                      setState(() => _quality = value);
+                                      _onSliderChanged();
+                                    },
                             ),
                           ),
                           SizedBox(
@@ -348,10 +368,12 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
                               divisions: 80,
                               label: '${(_scale * 100).round()}%',
                               activeColor: theme.colorScheme.primary,
-                              onChanged: (value) {
-                                setState(() => _scale = value);
-                                _processImage();
-                              },
+                              onChanged: _isProcessing
+                                  ? null
+                                  : (value) {
+                                      setState(() => _scale = value);
+                                      _onSliderChanged();
+                                    },
                             ),
                           ),
                           SizedBox(
