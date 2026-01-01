@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:azimuth_vms/Models/VolunteerForm.dart';
@@ -13,16 +12,14 @@ class PDFServiceAPIHelper {
     try {
       print('🏥 [HEALTH CHECK] Checking API health...');
       final response = await http.get(Uri.parse('$_baseUrl/health'));
-      
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final isHealthy = data['status'] == 'healthy' && data['template_available'] == true;
-        print(isHealthy 
-          ? '✅ [HEALTH CHECK] API is healthy!' 
-          : '⚠️ [HEALTH CHECK] API responded but not healthy');
+        print(isHealthy ? '✅ [HEALTH CHECK] API is healthy!' : '⚠️ [HEALTH CHECK] API responded but not healthy');
         return isHealthy;
       }
-      
+
       print('❌ [HEALTH CHECK] API returned ${response.statusCode}');
       return false;
     } catch (e) {
@@ -31,132 +28,118 @@ class PDFServiceAPIHelper {
     }
   }
 
-  /// Map VolunteerForm to API format (Text1-Text30)
-  static Map<String, String> _mapFormToAPIFormat(VolunteerForm form) {
+  /// Map VolunteerForm to JSON for new API
+  static Map<String, dynamic> _mapFormToJSON(VolunteerForm form) {
     return {
-      'text1': form.formNumber ?? '',
-      'text2': form.groupNameAndCode ?? '',
-      'text3': form.fullName ?? '',
-      'text4': form.education ?? '',
-      'text5': form.birthDate ?? '',
-      'text6': form.maritalStatus ?? '',
-      'text7': form.numberOfChildren ?? '',
-      'text8': form.motherName ?? '',
-      'text9': form.mobileNumber ?? '',
-      'text10': form.currentAddress ?? '',
-      'text11': form.nearestLandmark ?? '',
-      'text12': form.mukhtarName ?? '',
-      'text13': form.civilStatusDirectorate ?? '',
-      'text14': form.previousAddress ?? '',
-      'text15': form.volunteerParticipationCount ?? '',
-      'text16': form.profession ?? '',
-      'text17': form.jobTitle ?? '',
-      'text18': form.departmentName ?? '',
-      'text19': form.politicalAffiliation ?? '',
-      'text20': form.talentAndExperience ?? '',
-      'text21': form.languages ?? '',
-      'text22': form.idCardNumber ?? '',
-      'text23': form.recordNumber ?? '',
-      'text24': form.pageNumber ?? '',
-      'text25': form.rationCardNumber ?? '',
-      'text26': form.agentName ?? '',
-      'text27': form.supplyCenterNumber ?? '',
-      'text28': form.residenceCardNumber ?? '',
-      'text29': form.issuer ?? '',
-      'text30': form.no ?? '',
+      'fullName': form.fullName ?? '',
+      'formNumber': form.formNumber ?? '',
+      'groupNameAndCode': form.groupNameAndCode ?? '',
+      'education': form.education ?? '',
+      'birthDate': form.birthDate ?? '',
+      'maritalStatus': form.maritalStatus ?? '',
+      'numberOfChildren': form.numberOfChildren ?? '',
+      'motherName': form.motherName ?? '',
+      'phoneNumber': form.mobileNumber ?? '',
+      'currentAddress': form.currentAddress ?? '',
+      'nearestLandmark': form.nearestLandmark ?? '',
+      'mukhtarName': form.mukhtarName ?? '',
+      'civilStatusDirectorate': form.civilStatusDirectorate ?? '',
+      'previousAddress': form.previousAddress ?? '',
+      'volunteerParticipationCount': form.volunteerParticipationCount ?? '',
+      'profession': form.profession ?? '',
+      'jobTitle': form.jobTitle ?? '',
+      'departmentName': form.departmentName ?? '',
+      'politicalAffiliation': form.politicalAffiliation ?? '',
+      'talentAndExperience': form.talentAndExperience ?? '',
+      'languages': form.languages ?? '',
+      'idCardNumber': form.idCardNumber ?? '',
+      'recordNumber': form.recordNumber ?? '',
+      'pageNumber': form.pageNumber ?? '',
+      'rationCardNumber': form.rationCardNumber ?? '',
+      'agentName': form.agentName ?? '',
+      'supplyCenterNumber': form.supplyCenterNumber ?? '',
+      'residenceCardNumber': form.residenceCardNumber ?? '',
+      'issuer': form.issuer ?? '',
+      'no': form.no ?? '',
     };
   }
 
-  /// Create a new volunteer in the PDF service and get the ID
-  static Future<int?> _createVolunteerInAPI(VolunteerForm form) async {
+  /// Generate PDF using new simplified API
+  static Future<Map<String, dynamic>?> _generatePDFFromAPI(VolunteerForm form) async {
     try {
-      print('👤 [CREATE VOLUNTEER] Starting volunteer creation...');
-      print('👤 [CREATE VOLUNTEER] Name: ${form.fullName}, Mobile: ${form.mobileNumber}');
-
-      // Ensure authenticated
-      if (_sessionCookie == null) {
-        print('👤 [CREATE VOLUNTEER] No session cookie, authenticating...');
-        final authenticated = await _authenticate();
-        if (!authenticated) {
-          print('❌ [CREATE VOLUNTEER] Authentication failed');
-          return null;
-        }
-      }
-
-      final formData = _mapFormToAPIFormat(form);
-      print('👤 [CREATE VOLUNTEER] Form data fields: ${formData.keys.length}');
+      print('📄 [PDF API] Starting PDF generation...');
+      print('📄 [PDF API] Name: ${form.fullName}, Mobile: ${form.mobileNumber}');
 
       // Create multipart request
-      var request = http.MultipartRequest('POST', Uri.parse('$_baseUrl/new'));
-      request.headers['Cookie'] = _sessionCookie!;
+      var request = http.MultipartRequest('POST', Uri.parse('$_baseUrl/generate-pdf'));
 
-      // Add all form fields
-      formData.forEach((key, value) {
-        request.fields[key] = value;
-      });
+      // Add volunteer data as JSON string
+      final volunteerData = _mapFormToJSON(form);
+      request.fields['volunteer_data'] = jsonEncode(volunteerData);
+      
+      print('📄 [PDF API] Volunteer data: ${jsonEncode(volunteerData).substring(0, 200)}...');
 
-      print('👤 [CREATE VOLUNTEER] Sending POST request to $_baseUrl/new');
+      // TODO: Add photo if available in VolunteerForm
+      // if (form.photoPath != null && form.photoPath!.isNotEmpty) {
+      //   final photoFile = File(form.photoPath!);
+      //   if (await photoFile.exists()) {
+      //     request.files.add(await http.MultipartFile.fromPath('photo', form.photoPath!));
+      //     print('📄 [PDF API] Added photo: ${form.photoPath}');
+      //   }
+      // }
+
+      print('📄 [PDF API] Sending POST request to $_baseUrl/generate-pdf');
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
 
-      print('👤 [CREATE VOLUNTEER] Response Status: ${response.statusCode}');
-      print('👤 [CREATE VOLUNTEER] Response Headers: ${response.headers}');
-
-      if (response.statusCode == 303 || response.statusCode == 200) {
-        // Extract volunteer ID from redirect location
-        final location = response.headers['location'];
-        print('👤 [CREATE VOLUNTEER] Redirect location: $location');
-
-        if (location != null && location.contains('/edit/')) {
-          final idStr = location.split('/edit/').last;
-          final id = int.tryParse(idStr);
-          print('✅ [CREATE VOLUNTEER] Created successfully with ID: $id');
-          return id;
-        }
-      }
-
-      print('❌ [CREATE VOLUNTEER] Failed: ${response.statusCode}');
-      print('❌ [CREATE VOLUNTEER] Response body: ${response.body}');
-      return null;
-    } catch (e, stackTrace) {
-      print('❌ [CREATE VOLUNTEER] Error: $e');
-      print('❌ [CREATE VOLUNTEER] Stack trace: $stackTrace');
-      return null;
-    }
-  }
-
-  /// Generate PDF from the API service
-  static Future<Uint8List?> _downloadPDFFromAPI(int volunteerId) async {
-    try {
-      print('📄 [DOWNLOAD PDF] Starting PDF download for volunteer ID: $volunteerId');
-
-      // Ensure authenticated
-      if (_sessionCookie == null) {
-        print('📄 [DOWNLOAD PDF] No session cookie, authenticating...');
-        final authenticated = await _authenticate();
-        if (!authenticated) {
-          print('❌ [DOWNLOAD PDF] Authentication failed');
-          return null;
-        }
-      }
-
-      print('📄 [DOWNLOAD PDF] Requesting: $_baseUrl/pdf/$volunteerId');
-      final response = await http.get(Uri.parse('$_baseUrl/pdf/$volunteerId'), headers: {'Cookie': _sessionCookie!});
-
-      print('📄 [DOWNLOAD PDF] Response Status: ${response.statusCode}');
-      print('📄 [DOWNLOAD PDF] Response Size: ${response.bodyBytes.length} bytes');
+      print('📄 [PDF API] Response Status: ${response.statusCode}');
+      print('📄 [PDF API] Response Size: ${response.body.length} bytes');
 
       if (response.statusCode == 200) {
-        print('✅ [DOWNLOAD PDF] PDF downloaded successfully (${(response.bodyBytes.length / 1024).toStringAsFixed(2)} KB)');
-        return response.bodyBytes;
+        final result = jsonDecode(response.body);
+        
+        if (result['success'] == true && result['pdf_base64'] != null) {
+          print('✅ [PDF API] PDF generated successfully!');
+          print('✅ [PDF API] Filename: ${result['filename']}');
+          print('✅ [PDF API] Size: ${(result['file_size_bytes'] / 1024).toStringAsFixed(2)} KB');
+          
+          return {
+            'success': true,
+            'pdfBytes': base64Decode(result['pdf_base64']),
+            'filename': result['filename'],
+            'fileSize': result['file_size_bytes'],
+            'generatedAt': result['generated_at'],
+          };
+        }
       }
 
-      print('❌ [DOWNLOAD PDF] Failed: ${response.statusCode}');
-      return null;
+      // Handle error response
+      try {
+        final error = jsonDecode(response.body);
+        print('❌ [PDF API] Error: ${error['error']}');
+        print('❌ [PDF API] Error Code: ${error['error_code']}');
+        return {
+          'success': false,
+          'error': error['error'] ?? 'Unknown error',
+          'errorCode': error['error_code'] ?? 'UNKNOWN',
+        };
+      } catch (_) {
+        print('❌ [PDF API] Failed: ${response.statusCode}');
+        print('❌ [PDF API] Body: ${response.body}');
+        return {
+          'success': false,
+          'error': 'HTTP ${response.statusCode}',
+          'errorCode': 'HTTP_ERROR',
+        };
+      }
     } catch (e, stackTrace) {
-      print('❌ [DOWNLOAD PDF] Error: $e');
-      print('❌ [DOWNLOAD PDF] Stack trace: $stackTrace');
-      return null;
+      print('❌ [PDF API] Error: $e');
+      print('❌ [PDF API] Stack trace: $stackTrace');
+      return {
+        'success': false,
+        'error': e.toString(),
+        'errorCode': 'NETWORK_ERROR',
+      };
     }
   }
 
@@ -171,12 +154,7 @@ class PDFServiceAPIHelper {
       final pdfRef = storageRef.child('pdfs/$fileName');
 
       // Upload with metadata
-      final metadata = SettableMetadata(
-        contentType: 'application/pdf',
-        customMetadata: {
-          'generatedAt': DateTime.now().toIso8601String(),
-        },
-      );
+      final metadata = SettableMetadata(contentType: 'application/pdf', customMetadata: {'generatedAt': DateTime.now().toIso8601String()});
 
       print('☁️ [FIREBASE] Uploading to path: pdfs/$fileName');
       await pdfRef.putData(pdfBytes, metadata);
