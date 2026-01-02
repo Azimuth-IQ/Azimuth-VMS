@@ -4,7 +4,6 @@ import 'package:azimuth_vms/UI/Theme/Breakpoints.dart';
 import 'package:azimuth_vms/UI/Widgets/ImageOptimizationDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:azimuth_vms/l10n/app_localizations.dart';
 import 'dart:html' as html;
@@ -17,8 +16,6 @@ class FormFillPage extends StatefulWidget {
 }
 
 class _FormFillPageState extends State<FormFillPage> {
-  PdfDocument? _document;
-  Uint8List? _pdfBytes;
   bool _isLoading = false;
   String? _errorMessage;
 
@@ -44,7 +41,6 @@ class _FormFillPageState extends State<FormFillPage> {
   void initState() {
     super.initState();
     _initializeControllers();
-    _loadPdfForm();
   }
 
   @override
@@ -136,30 +132,13 @@ class _FormFillPageState extends State<FormFillPage> {
     for (var controller in _controllers.values) {
       controller.dispose();
     }
-    _document?.dispose();
     super.dispose();
   }
 
-  Future<void> _loadPdfForm() async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      final ByteData data = await rootBundle.load('assets/pdfs/form1.pdf');
-      final Uint8List bytes = data.buffer.asUint8List();
-      _document = PdfDocument(inputBytes: bytes);
-
-      setState(() {
-        _isLoading = false;
-      });
-    } catch (e) {
-      print('Error loading PDF form: $e');
-      setState(() {
-        _errorMessage = 'Error loading PDF form: $e';
-        _isLoading = false;
-      });
+  Future<void> _saveAndReturn() async {
+    await _saveFormToDatabase();
+    if (mounted && !_isLoading) {
+      Navigator.of(context).pop();
     }
   }
 
@@ -200,177 +179,6 @@ class _FormFillPageState extends State<FormFillPage> {
       print('Error picking image: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error picking image: $e')));
-      }
-    }
-  }
-
-  Future<void> _fillAndFlattenForm() async {
-    if (_document == null) return;
-    if (!_formKey.currentState!.validate()) return;
-
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      // Access the PDF form
-      final PdfForm form = _document!.form;
-
-      // Debug: Print all available fields in the PDF
-      print('=== PDF Form Fields Debug ===');
-      print('Total fields: ${form.fields.count}');
-      for (int i = 0; i < form.fields.count; i++) {
-        final field = form.fields[i];
-        print('Field $i: Name="${field.name}", Type=${field.runtimeType}');
-      }
-      print('=========================');
-
-      // Helper function to set field value by name
-      void setFieldValue(String fieldName, String? value) {
-        if (value != null && value.isNotEmpty) {
-          try {
-            PdfField? field;
-            for (int i = 0; i < form.fields.count; i++) {
-              if (form.fields[i].name == fieldName) {
-                field = form.fields[i];
-                break;
-              }
-            }
-            if (field != null && field is PdfTextBoxField) {
-              field.text = value;
-              print('✓ Filled field: $fieldName = $value');
-            } else if (field != null) {
-              print('✗ Field found but not a text box: $fieldName (${field.runtimeType})');
-            } else {
-              print('✗ Field not found: $fieldName');
-            }
-          } catch (e) {
-            print('✗ Error with field $fieldName: $e');
-          }
-        }
-      }
-
-      // Fill form fields - mapping controller keys to PDF field names (Text1-Text30)
-      setFieldValue('Text1', _controllers['formNumber']?.text);
-      setFieldValue('Text2', _controllers['groupNameAndCode']?.text);
-      setFieldValue('Text3', _controllers['fullName']?.text);
-      setFieldValue('Text4', _controllers['education']?.text);
-      setFieldValue('Text5', _controllers['birthDate']?.text);
-      setFieldValue('Text6', _controllers['maritalStatus']?.text);
-      setFieldValue('Text7', _controllers['numberOfChildren']?.text);
-      setFieldValue('Text8', _controllers['motherName']?.text);
-      setFieldValue('Text9', _controllers['mobileNumber']?.text);
-      setFieldValue('Text10', _controllers['currentAddress']?.text);
-      setFieldValue('Text11', _controllers['nearestLandmark']?.text);
-      setFieldValue('Text12', _controllers['mukhtarName']?.text);
-      setFieldValue('Text13', _controllers['civilStatusDirectorate']?.text);
-      setFieldValue('Text14', _controllers['previousAddress']?.text);
-      setFieldValue('Text15', _controllers['volunteerParticipationCount']?.text);
-      setFieldValue('Text16', _controllers['profession']?.text);
-      setFieldValue('Text17', _controllers['jobTitle']?.text);
-      setFieldValue('Text18', _controllers['departmentName']?.text);
-      setFieldValue('Text19', _controllers['politicalAffiliation']?.text);
-      setFieldValue('Text20', _controllers['talentAndExperience']?.text);
-      setFieldValue('Text21', _controllers['languages']?.text);
-      setFieldValue('Text22', _controllers['idCardNumber']?.text);
-      setFieldValue('Text23', _controllers['recordNumber']?.text);
-      setFieldValue('Text24', _controllers['pageNumber']?.text);
-      setFieldValue('Text25', _controllers['rationCardNumber']?.text);
-      setFieldValue('Text26', _controllers['agentName']?.text);
-      setFieldValue('Text27', _controllers['supplyCenterNumber']?.text);
-      setFieldValue('Text28', _controllers['residenceCardNumber']?.text);
-      setFieldValue('Text29', _controllers['issuer']?.text);
-      setFieldValue('Text30', _controllers['no']?.text);
-
-      // Add user photo if provided (to Image1_af_image field)
-      if (_userPhoto != null) {
-        try {
-          PdfField? imageField;
-          for (int i = 0; i < form.fields.count; i++) {
-            if (form.fields[i].name == 'Image1_af_image') {
-              imageField = form.fields[i];
-              break;
-            }
-          }
-          if (imageField != null && imageField is PdfButtonField) {
-            final PdfBitmap image = PdfBitmap(_userPhoto!);
-            // Get the bounds of the button field
-            final bounds = imageField.bounds;
-            // Get the page where the field is located
-            final page = imageField.page;
-            if (page != null) {
-              // Draw the image at the field's location
-              page.graphics.drawImage(image, bounds);
-              print('✓ Added user photo to Image1_af_image field at bounds: $bounds');
-            }
-          }
-        } catch (e) {
-          print('✗ Error adding image to field: $e');
-        }
-      }
-
-      // Flatten the form to make it non-editable
-      form.flattenAllFields();
-
-      // Use standard font for document labels
-      final PdfFont labelFont = PdfStandardFont(PdfFontFamily.helvetica, 12, style: PdfFontStyle.bold);
-      final PdfFont titleFont = PdfStandardFont(PdfFontFamily.helvetica, 16, style: PdfFontStyle.bold);
-
-      if (_nationalIdFront != null || _nationalIdBack != null || _residencyCardFront != null || _residencyCardBack != null) {
-        final PdfPage docsPage = _document!.pages.add();
-        final PdfGraphics docsGraphics = docsPage.graphics;
-        const double leftMargin = 50;
-        double docYPos = 50;
-
-        docsGraphics.drawString('Attached Documents', titleFont, bounds: Rect.fromLTWH(leftMargin, 20, 500, 30));
-
-        if (_nationalIdFront != null) {
-          docsGraphics.drawString('National ID - Front', labelFont, bounds: Rect.fromLTWH(leftMargin, docYPos, 300, 20));
-          final PdfBitmap img = PdfBitmap(_nationalIdFront!);
-          docsGraphics.drawImage(img, Rect.fromLTWH(leftMargin, docYPos + 25, 250, 150));
-          docYPos += 185;
-        }
-        if (_nationalIdBack != null) {
-          docsGraphics.drawString('National ID - Back', labelFont, bounds: Rect.fromLTWH(leftMargin, docYPos, 300, 20));
-          final PdfBitmap img = PdfBitmap(_nationalIdBack!);
-          docsGraphics.drawImage(img, Rect.fromLTWH(leftMargin, docYPos + 25, 250, 150));
-          docYPos += 185;
-        }
-
-        if (_residencyCardFront != null) {
-          docsGraphics.drawString('Residency Card - Front', labelFont, bounds: Rect.fromLTWH(leftMargin, docYPos, 300, 20));
-          final PdfBitmap img = PdfBitmap(_residencyCardFront!);
-          docsGraphics.drawImage(img, Rect.fromLTWH(leftMargin, docYPos + 25, 250, 150));
-          docYPos += 185;
-        }
-
-        if (_residencyCardBack != null && docYPos < 600) {
-          docsGraphics.drawString('Residency Card - Back', labelFont, bounds: Rect.fromLTWH(leftMargin, docYPos, 300, 20));
-          final PdfBitmap img = PdfBitmap(_residencyCardBack!);
-          docsGraphics.drawImage(img, Rect.fromLTWH(leftMargin, docYPos + 25, 250, 150));
-        }
-      }
-
-      final List<int> bytes = await _document!.save();
-      _pdfBytes = Uint8List.fromList(bytes);
-
-      setState(() {
-        _isLoading = false;
-      });
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تم ملء وإنشاء النموذج بنجاح!')));
-      }
-    } catch (e) {
-      print('Error filling form: $e');
-      setState(() {
-        _errorMessage = 'Error processing form: $e';
-        _isLoading = false;
-      });
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     }
   }
@@ -505,77 +313,14 @@ class _FormFillPageState extends State<FormFillPage> {
     }
   }
 
-  void _downloadPdf() {
-    if (_pdfBytes == null) return;
-
-    try {
-      final blob = html.Blob([_pdfBytes!], 'application/pdf');
-      final url = html.Url.createObjectUrlFromBlob(blob);
-      final anchor = html.AnchorElement(href: url)..setAttribute('download', 'volunteer_form_${DateTime.now().millisecondsSinceEpoch}.pdf');
-      html.document.body?.append(anchor);
-      anchor.click();
-      anchor.remove();
-      html.Url.revokeObjectUrl(url);
-
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تم تحميل ملف PDF بنجاح!')));
-    } catch (e) {
-      print('Error downloading PDF: $e');
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error downloading: $e')));
-    }
-  }
-
-  void _printPdf() {
-    if (_pdfBytes == null) return;
-
-    try {
-      final blob = html.Blob([_pdfBytes!], 'application/pdf');
-      final url = html.Url.createObjectUrlFromBlob(blob);
-      html.window.open(url, '_blank');
-      // Don't revoke URL immediately to allow printing
-      Future.delayed(const Duration(seconds: 5), () {
-        html.Url.revokeObjectUrl(url);
-      });
-    } catch (e) {
-      print('Error printing PDF: $e');
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error printing: $e')));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: Text(_isEditMode ? 'Edit Volunteer Form / تعديل استمارة المتطوع' : 'Volunteer Form / استمارة المتطوع'),
-        actions: [
-          if (_pdfBytes != null) ...[
-            IconButton(icon: const Icon(Icons.download), tooltip: 'Download PDF / تحميل', onPressed: _downloadPdf),
-            IconButton(icon: const Icon(Icons.print), tooltip: 'Print / طباعة', onPressed: _printPdf),
-          ],
-        ],
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _errorMessage != null
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text(
-                    _errorMessage!,
-                    style: const TextStyle(color: Colors.red),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(onPressed: _loadPdfForm, child: const Text('Retry')),
-                ],
-              ),
-            )
-          : _buildStepperForm(),
+      appBar: AppBar(title: Text(_isEditMode ? 'Edit Volunteer Form / تعديل استمارة المتطوع' : 'Volunteer Form / استمارة المتطوع')),
+      body: _isLoading ? const Center(child: CircularProgressIndicator()) : _buildStepperForm(),
     );
   }
 
@@ -590,8 +335,7 @@ class _FormFillPageState extends State<FormFillPage> {
           if (_currentStep < 4) {
             setState(() => _currentStep++);
           } else {
-            _fillAndFlattenForm();
-            _saveFormToDatabase();
+            _saveAndReturn();
           }
         },
         onStepCancel: () {
@@ -607,14 +351,14 @@ class _FormFillPageState extends State<FormFillPage> {
                 ElevatedButton(
                   onPressed: details.onStepContinue,
                   style: ElevatedButton.styleFrom(backgroundColor: theme.colorScheme.primary, foregroundColor: theme.colorScheme.onPrimary),
-                  child: Text(_currentStep == 4 ? 'إنشاء PDF' : 'التالي'),
+                  child: Text(_currentStep == 4 ? 'Save Form / حفظ الاستمارة' : 'Next / التالي'),
                 ),
                 const SizedBox(width: 12),
                 if (_currentStep > 0)
                   TextButton(
                     onPressed: details.onStepCancel,
                     style: TextButton.styleFrom(foregroundColor: theme.colorScheme.primary),
-                    child: const Text('السابق'),
+                    child: const Text('Back / السابق'),
                   ),
               ],
             ),
