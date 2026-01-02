@@ -45,6 +45,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get submit => 'إرسال';
 
   @override
+  String get saveForm => 'حفظ الاستمارة';
+
+  @override
   String get close => 'إغلاق';
 
   @override

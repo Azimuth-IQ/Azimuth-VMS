@@ -13,6 +13,8 @@
   "add": "Add",
   "update": "Update",
   "submit": "Submit",
+  "save": "Save",
+  "saveForm": "Save Form",
   "close": "Close",
   "confirm": "Confirm",
   "back": "Back",

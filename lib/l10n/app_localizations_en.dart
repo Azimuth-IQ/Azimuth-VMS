@@ -45,6 +45,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get submit => 'Submit';
 
   @override
+  String get saveForm => 'Save Form';
+
+  @override
   String get close => 'Close';
 
   @override

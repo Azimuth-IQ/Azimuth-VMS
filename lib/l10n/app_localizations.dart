@@ -170,6 +170,12 @@ abstract class AppLocalizations {
   /// **'Submit'**
   String get submit;
 
+  /// No description provided for @saveForm.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Form'**
+  String get saveForm;
+
   /// No description provided for @close.
   ///
   /// In en, this message translates to:
