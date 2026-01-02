@@ -599,6 +599,7 @@ class _FormFillPageState extends State<FormFillPage> {
   }
 
   Widget _buildImageUploadCard(String label, Uint8List? imageData, VoidCallback onTap, IconData icon, {String? hint}) {
+    final theme = Theme.of(context);
     // Check if we're in edit mode and have an image path for this field
     bool hasExistingImage = false;
     String? existingImageUrl;
@@ -633,7 +634,7 @@ class _FormFillPageState extends State<FormFillPage> {
               children: [
                 Row(
                   children: [
-                    Icon(icon, size: 20, color: Colors.blue),
+                    Icon(icon, size: 20, color: theme.colorScheme.primary),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
@@ -659,9 +660,9 @@ class _FormFillPageState extends State<FormFillPage> {
                     if (hasExistingImage && imageData == null) ...[
                       const SizedBox(width: 8),
                       Chip(
-                        avatar: const Icon(Icons.cloud_done, size: 16, color: Colors.blue),
+                        avatar: Icon(Icons.cloud_done, size: 16, color: theme.colorScheme.primary),
                         label: const Text('Existing image / صورة موجودة', style: TextStyle(fontSize: 11)),
-                        backgroundColor: Colors.blue.shade50,
+                        backgroundColor: theme.colorScheme.primaryContainer,
                         padding: const EdgeInsets.all(4),
                       ),
                     ],
@@ -695,9 +696,9 @@ class _FormFillPageState extends State<FormFillPage> {
                 width: 80,
                 height: 80,
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blue.shade200),
+                  border: Border.all(color: theme.colorScheme.primary.withOpacity(0.3)),
                   borderRadius: BorderRadius.circular(8),
-                  color: Colors.blue.shade50,
+                  color: theme.colorScheme.primaryContainer,
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
