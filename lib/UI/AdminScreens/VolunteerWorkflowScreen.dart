@@ -65,7 +65,7 @@ class _VolunteerWorkflowScreenState extends State<VolunteerWorkflowScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Volunteer Workflow'), backgroundColor: Theme.of(context).colorScheme.inversePrimary),
+      appBar: AppBar(title: const Text('Volunteer Workflow')),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
@@ -79,6 +79,7 @@ class _VolunteerWorkflowScreenState extends State<VolunteerWorkflowScreen> {
   }
 
   Widget _buildHeader() {
+    final theme = Theme.of(context);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -86,10 +87,10 @@ class _VolunteerWorkflowScreenState extends State<VolunteerWorkflowScreen> {
           children: [
             CircleAvatar(
               radius: 30,
-              backgroundColor: Colors.blue.shade100,
+              backgroundColor: theme.colorScheme.primaryContainer,
               child: Text(
                 _form.fullName?.substring(0, 1).toUpperCase() ?? '?',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue.shade700),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: theme.colorScheme.onPrimaryContainer),
               ),
             ),
             const SizedBox(width: 16),
@@ -97,9 +98,9 @@ class _VolunteerWorkflowScreenState extends State<VolunteerWorkflowScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(_form.fullName ?? 'Unknown Name', style: Theme.of(context).textTheme.titleLarge),
+                  Text(_form.fullName ?? 'Unknown Name', style: theme.textTheme.titleLarge),
                   const SizedBox(height: 4),
-                  Text(_form.mobileNumber ?? 'No Phone', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600])),
+                  Text(_form.mobileNumber ?? 'No Phone', style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
                   const SizedBox(height: 4),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -206,15 +207,16 @@ class _VolunteerWorkflowScreenState extends State<VolunteerWorkflowScreen> {
   }
 
   Widget _buildActionPanel() {
+    final theme = Theme.of(context);
     if (_form.status == VolunteerFormStatus.Completed) {
-      return const Card(
-        color: Colors.green,
+      return Card(
+        color: theme.colorScheme.primaryContainer,
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Center(
             child: Text(
               'Registration Completed',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              style: TextStyle(color: theme.colorScheme.onPrimaryContainer, fontWeight: FontWeight.bold),
             ),
           ),
         ),
@@ -227,7 +229,7 @@ class _VolunteerWorkflowScreenState extends State<VolunteerWorkflowScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Actions', style: Theme.of(context).textTheme.titleMedium),
+            Text('Actions', style: theme.textTheme.titleMedium),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -237,7 +239,7 @@ class _VolunteerWorkflowScreenState extends State<VolunteerWorkflowScreen> {
                       onPressed: () => _updateStatus(VolunteerFormStatus.Approved1),
                       icon: const Icon(Icons.check),
                       label: const Text('Approve (L1)'),
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white),
+                      style: ElevatedButton.styleFrom(backgroundColor: theme.colorScheme.primary, foregroundColor: theme.colorScheme.onPrimary),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -246,7 +248,7 @@ class _VolunteerWorkflowScreenState extends State<VolunteerWorkflowScreen> {
                       onPressed: () => _updateStatus(VolunteerFormStatus.Rejected1),
                       icon: const Icon(Icons.close),
                       label: const Text('Reject'),
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+                      style: ElevatedButton.styleFrom(backgroundColor: theme.colorScheme.error, foregroundColor: theme.colorScheme.onError),
                     ),
                   ),
                 ] else if (_form.status == VolunteerFormStatus.Approved1) ...[
@@ -255,7 +257,7 @@ class _VolunteerWorkflowScreenState extends State<VolunteerWorkflowScreen> {
                       onPressed: () => _updateStatus(VolunteerFormStatus.Approved2),
                       icon: const Icon(Icons.check_circle),
                       label: const Text('Approve (L2)'),
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white),
+                      style: ElevatedButton.styleFrom(backgroundColor: theme.colorScheme.primary, foregroundColor: theme.colorScheme.onPrimary),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -264,7 +266,7 @@ class _VolunteerWorkflowScreenState extends State<VolunteerWorkflowScreen> {
                       onPressed: () => _updateStatus(VolunteerFormStatus.Rejected2),
                       icon: const Icon(Icons.close),
                       label: const Text('Reject'),
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+                      style: ElevatedButton.styleFrom(backgroundColor: theme.colorScheme.error, foregroundColor: theme.colorScheme.onError),
                     ),
                   ),
                 ] else if (_form.status == VolunteerFormStatus.Approved2) ...[
@@ -273,7 +275,7 @@ class _VolunteerWorkflowScreenState extends State<VolunteerWorkflowScreen> {
                       onPressed: () => _updateStatus(VolunteerFormStatus.Completed),
                       icon: const Icon(Icons.verified),
                       label: const Text('Complete'),
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white),
+                      style: ElevatedButton.styleFrom(backgroundColor: theme.colorScheme.primary, foregroundColor: theme.colorScheme.onPrimary),
                     ),
                   ),
                 ] else if (_form.status == VolunteerFormStatus.Rejected1 || _form.status == VolunteerFormStatus.Rejected2) ...[
@@ -282,7 +284,7 @@ class _VolunteerWorkflowScreenState extends State<VolunteerWorkflowScreen> {
                       onPressed: () => _updateStatus(VolunteerFormStatus.Pending),
                       icon: const Icon(Icons.refresh),
                       label: const Text('Re-evaluate'),
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.orange, foregroundColor: Colors.white),
+                      style: ElevatedButton.styleFrom(backgroundColor: theme.colorScheme.tertiary, foregroundColor: theme.colorScheme.onTertiary),
                     ),
                   ),
                 ],
