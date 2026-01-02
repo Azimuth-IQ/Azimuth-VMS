@@ -32,7 +32,7 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
     _originalSize = widget.originalImageData.lengthInBytes;
     _currentImageData = widget.originalImageData;
     _currentSize = _originalSize;
-    
+
     // Defer heavy processing to allow UI to build first
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeAndOptimize();
