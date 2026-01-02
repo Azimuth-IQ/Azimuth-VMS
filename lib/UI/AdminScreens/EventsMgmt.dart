@@ -244,23 +244,21 @@ class EventFormDialog extends StatelessWidget {
   void _showShiftForm(BuildContext context, {EventShift? shift, int? index}) async {
     EventsProvider eventsProvider = context.read<EventsProvider>();
 
-    // Ensure data is loaded before showing dialog
-    if (eventsProvider.locations.isEmpty || eventsProvider.teams.isEmpty) {
-      print('📦 Loading required data for shift form...');
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const Center(child: CircularProgressIndicator()),
-      );
+    // ALWAYS reload locations to pick up new sublocations
+    print('📦 Reloading data for shift form...');
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
 
-      await Future.wait([
-        if (eventsProvider.locations.isEmpty) eventsProvider.loadLocations(),
-        if (eventsProvider.teams.isEmpty) eventsProvider.loadTeams(),
-        if (eventsProvider.systemUsers.isEmpty) eventsProvider.loadSystemUsers(),
-      ]);
+    await Future.wait([
+      eventsProvider.loadLocations(), // Always reload to get fresh sublocations
+      if (eventsProvider.teams.isEmpty) eventsProvider.loadTeams(),
+      if (eventsProvider.systemUsers.isEmpty) eventsProvider.loadSystemUsers(),
+    ]);
 
-      if (context.mounted) Navigator.pop(context); // Close loading dialog
-    }
+    if (context.mounted) Navigator.pop(context); // Close loading dialog
 
     EventShift? result = await showDialog<EventShift>(
       context: context,
@@ -912,8 +910,9 @@ class ShiftFormDialog extends StatelessWidget {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) {
+          final l10n = AppLocalizations.of(context)!;
           return AlertDialog(
-            title: Text(AppLocalizations.of(context)!.createTeam),
+            title: Text(l10n.createTeam),
             content: SizedBox(
               width: double.maxFinite,
               child: SingleChildScrollView(
@@ -922,7 +921,7 @@ class ShiftFormDialog extends StatelessWidget {
                   children: [
                     DropdownButtonFormField<String>(
                       initialValue: selectedLeaderId.isEmpty ? null : selectedLeaderId,
-                      decoration: const InputDecoration(labelText: 'Team Leader *', border: OutlineInputBorder(), prefixIcon: Icon(Icons.person)),
+                      decoration: InputDecoration(labelText: l10n.teamLeaderRequired, border: const OutlineInputBorder(), prefixIcon: const Icon(Icons.person)),
                       items: eventsProvider.teamLeaders.map((leader) {
                         return DropdownMenuItem<String>(value: leader.phone, child: Text('${leader.name} (${leader.phone})'));
                       }).toList(),
@@ -936,7 +935,7 @@ class ShiftFormDialog extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(AppLocalizations.of(context)!.teamMembers, style: const TextStyle(fontWeight: FontWeight.bold)),
+                        Text(l10n.teamMembers, style: const TextStyle(fontWeight: FontWeight.bold)),
                         TextButton.icon(
                           onPressed: () async {
                             final memberId = await _selectMember(context, eventsProvider, selectedMemberIds);
@@ -945,17 +944,17 @@ class ShiftFormDialog extends StatelessWidget {
                             }
                           },
                           icon: const Icon(Icons.add),
-                          label: Text(AppLocalizations.of(context)!.add),
+                          label: Text(l10n.add),
                         ),
                       ],
                     ),
                     const SizedBox(height: 8),
                     if (selectedMemberIds.isEmpty)
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          'No members added',
-                          style: TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
+                          l10n.noMembersAdded,
+                          style: const TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
                         ),
                       )
                     else
@@ -1010,6 +1009,7 @@ class ShiftFormDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     GlobalKey<FormState> formKey = GlobalKey<FormState>();
     EventsProvider eventsProvider = context.read<EventsProvider>();
+    final l10n = AppLocalizations.of(context)!;
 
     return Consumer<ShiftFormProvider>(
       builder: (context, provider, child) {
@@ -1023,7 +1023,7 @@ class ShiftFormDialog extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Text(isEdit ? 'Edit Shift' : 'Add New Shift', style: Theme.of(context).textTheme.headlineSmall),
+                  child: Text(isEdit ? l10n.editShift : l10n.addNewShift, style: Theme.of(context).textTheme.headlineSmall),
                 ),
                 Expanded(
                   child: SingleChildScrollView(
@@ -1039,17 +1039,17 @@ class ShiftFormDialog extends StatelessWidget {
                                 Expanded(
                                   child: TextFormField(
                                     controller: TextEditingController(text: provider.startTime),
-                                    decoration: const InputDecoration(
-                                      labelText: 'Start Time *',
-                                      border: OutlineInputBorder(),
-                                      prefixIcon: Icon(Icons.access_time),
-                                      hintText: 'HH:mm',
+                                    decoration: InputDecoration(
+                                      labelText: l10n.startTimeRequired,
+                                      border: const OutlineInputBorder(),
+                                      prefixIcon: const Icon(Icons.access_time),
+                                      hintText: l10n.timeFormatHint,
                                     ),
                                     readOnly: true,
-                                    onTap: () => _pickTime(context, 'Start Time', provider.updateStartTime),
+                                    onTap: () => _pickTime(context, l10n.startTimeRequired, provider.updateStartTime),
                                     validator: (value) {
                                       if (value == null || value.trim().isEmpty) {
-                                        return 'Required';
+                                        return l10n.required;
                                       }
                                       return null;
                                     },
@@ -1059,17 +1059,17 @@ class ShiftFormDialog extends StatelessWidget {
                                 Expanded(
                                   child: TextFormField(
                                     controller: TextEditingController(text: provider.endTime),
-                                    decoration: const InputDecoration(
-                                      labelText: 'End Time *',
-                                      border: OutlineInputBorder(),
-                                      prefixIcon: Icon(Icons.access_time),
-                                      hintText: 'HH:mm',
+                                    decoration: InputDecoration(
+                                      labelText: l10n.endTimeRequired,
+                                      border: const OutlineInputBorder(),
+                                      prefixIcon: const Icon(Icons.access_time),
+                                      hintText: l10n.timeFormatHint,
                                     ),
                                     readOnly: true,
-                                    onTap: () => _pickTime(context, 'End Time', provider.updateEndTime),
+                                    onTap: () => _pickTime(context, l10n.endTimeRequired, provider.updateEndTime),
                                     validator: (value) {
                                       if (value == null || value.trim().isEmpty) {
-                                        return 'Required';
+                                        return l10n.required;
                                       }
                                       return null;
                                     },
@@ -1085,11 +1085,11 @@ class ShiftFormDialog extends StatelessWidget {
                                   return TextFormField(
                                     enabled: false,
                                     decoration: InputDecoration(
-                                      labelText: 'Location *',
+                                      labelText: l10n.locationRequired,
                                       border: const OutlineInputBorder(),
                                       prefixIcon: const Icon(Icons.location_on),
-                                      hintText: 'Loading locations...',
-                                      helperText: 'No locations loaded. Please wait or refresh.',
+                                      hintText: l10n.loadingLocations,
+                                      helperText: l10n.noLocationsLoaded,
                                     ),
                                   );
                                 }
@@ -1102,11 +1102,11 @@ class ShiftFormDialog extends StatelessWidget {
 
                                 return DropdownButtonFormField<String>(
                                   initialValue: validLocationId,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Location *',
-                                    border: OutlineInputBorder(),
-                                    prefixIcon: Icon(Icons.location_on),
-                                    hintText: 'Select location',
+                                  decoration: InputDecoration(
+                                    labelText: l10n.locationRequired,
+                                    border: const OutlineInputBorder(),
+                                    prefixIcon: const Icon(Icons.location_on),
+                                    hintText: l10n.selectLocation,
                                   ),
                                   items: locationItems,
                                   onChanged: (value) {
@@ -1116,7 +1116,7 @@ class ShiftFormDialog extends StatelessWidget {
                                   },
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Please select a location';
+                                      return l10n.pleaseSelectLocation;
                                     }
                                     return null;
                                   },
@@ -1148,11 +1148,11 @@ class ShiftFormDialog extends StatelessWidget {
                                     return TextFormField(
                                       enabled: false,
                                       decoration: InputDecoration(
-                                        labelText: 'Team (Optional)',
+                                        labelText: l10n.teamOptional,
                                         border: const OutlineInputBorder(),
                                         prefixIcon: const Icon(Icons.groups),
-                                        hintText: 'Loading teams...',
-                                        helperText: 'No teams loaded. Please wait or refresh.',
+                                        hintText: l10n.loadingTeams,
+                                        helperText: l10n.noTeamsLoaded,
                                       ),
                                     );
                                   }
@@ -1168,11 +1168,11 @@ class ShiftFormDialog extends StatelessWidget {
 
                                   return DropdownButtonFormField<String>(
                                     initialValue: validTeamId,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Team (Optional)',
-                                      border: OutlineInputBorder(),
-                                      prefixIcon: Icon(Icons.groups),
-                                      hintText: 'Select team',
+                                    decoration: InputDecoration(
+                                      labelText: l10n.teamOptional,
+                                      border: const OutlineInputBorder(),
+                                      prefixIcon: const Icon(Icons.groups),
+                                      hintText: l10n.selectTeam,
                                     ),
                                     items: teamItems,
                                     onChanged: provider.updateTeamId,
@@ -1197,12 +1197,12 @@ class ShiftFormDialog extends StatelessWidget {
                             ),
                             const SizedBox(height: 8),
                             if (provider.subLocations.isEmpty)
-                              const Center(
+                              Center(
                                 child: Padding(
-                                  padding: EdgeInsets.all(16.0),
+                                  padding: const EdgeInsets.all(16.0),
                                   child: Text(
-                                    'No sublocations added',
-                                    style: TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
+                                    l10n.noSublocationsAdded,
+                                    style: const TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
                                   ),
                                 ),
                               )
@@ -1210,7 +1210,7 @@ class ShiftFormDialog extends StatelessWidget {
                               ...provider.subLocations.asMap().entries.map((entry) {
                                 int index = entry.key;
                                 ShiftSubLocation subLoc = entry.value;
-                                String subLocationName = selectedLocation?.subLocations?.where((s) => s.id == subLoc.subLocationId).firstOrNull?.name ?? 'Unknown';
+                                String subLocationName = selectedLocation?.subLocations?.where((s) => s.id == subLoc.subLocationId).firstOrNull?.name ?? l10n.unknown;
                                 String? teamName = eventsProvider.teams.where((t) => t.id == subLoc.teamId).firstOrNull?.name;
 
                                 return Card(

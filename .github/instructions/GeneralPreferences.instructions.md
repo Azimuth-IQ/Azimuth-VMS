@@ -40,6 +40,18 @@ git commit -m "Pre-edit checkpoint: [brief description of upcoming changes]"
   - `Text('Hard coded text')`
   - Mixed language in single widget
 
+### ⚡ CRITICAL: After Adding Localization Keys
+
+**ALWAYS run these two steps after adding new keys to .arb files:**
+
+1. **Add keys to BOTH files** - `lib/l10n/app_en.arb` AND `lib/l10n/app_ar.arb`
+2. **Regenerate localization classes** - Run this command:
+   ```bash
+   flutter gen-l10n
+   ```
+
+Without running `flutter gen-l10n`, the new keys won't be available in `AppLocalizations` and you'll get "undefined getter" errors.
+
 ---
 
 ## State Management

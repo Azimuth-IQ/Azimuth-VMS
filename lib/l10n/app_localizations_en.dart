@@ -168,7 +168,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get imageExceedsLimit => '⚠ Image exceeds 500KB - adjust settings';
 
   @override
-  String get useOptimizedImage => 'Use Optimized Image';
+  String get useOptimizedImage => 'Use Image';
+
+  @override
+  String get cropImage => 'Crop Image';
+
+  @override
+  String get rotateImage => 'Rotate';
+
+  @override
+  String get rotateLeft => 'Rotate Left';
+
+  @override
+  String get rotateRight => 'Rotate Right';
+
+  @override
+  String get resetImage => 'Reset';
+
+  @override
+  String get autoOptimizing => 'Auto-optimizing to 500KB...';
+
+  @override
+  String get optimizingImage => 'Optimizing image...';
+
+  @override
+  String get currentSize => 'Current Size';
+
+  @override
+  String get targetSize => 'Target: <500KB';
 
   @override
   String get dashboard => 'Dashboard';
@@ -759,7 +786,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get teamOptional => 'Team (Optional)';
 
   @override
-  String get selectTeam => 'Select Team';
+  String get selectTeam => 'Select team';
 
   @override
   String get none => 'None';
@@ -916,7 +943,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noLocations => 'No locations found';
 
   @override
-  String get selectLocation => 'Select Location';
+  String get selectLocation => 'Select location';
 
   @override
   String get assignMyTeam => 'Assign My Team';
@@ -1462,7 +1489,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get subLocationsColon2 => 'Sub-locations:';
 
   @override
-  String get noSublocationsAdded => 'No sub-locations added';
+  String get noSublocationsAdded => 'No sublocations added';
 
   @override
   String get carouselManagement => 'Carousel Management';
@@ -2252,4 +2279,81 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pdfNotGenerated => 'PDF not generated yet';
+
+  @override
+  String get workflowStepPlanning => 'Planning';
+
+  @override
+  String get workflowStepPlanningSubtitle => 'Event created and scheduled';
+
+  @override
+  String get workflowStepPlanningContent =>
+      'Event is in planning phase. You can assign shifts and volunteers.';
+
+  @override
+  String get workflowStepActive => 'Active';
+
+  @override
+  String get workflowStepActiveSubtitle => 'Event is currently running';
+
+  @override
+  String get workflowStepActiveContent =>
+      'Event is active. Volunteers can check in/out.';
+
+  @override
+  String get workflowStepCompleted => 'Completed';
+
+  @override
+  String get workflowStepCompletedSubtitle => 'Event date has passed';
+
+  @override
+  String get workflowStepCompletedContent =>
+      'Event has ended. You can review attendance and feedback.';
+
+  @override
+  String get workflowStepArchived => 'Archived';
+
+  @override
+  String get workflowStepArchivedSubtitle => 'Event is archived';
+
+  @override
+  String get workflowStepArchivedContent =>
+      'Event is archived and hidden from main lists.';
+
+  @override
+  String get editShift => 'Edit Shift';
+
+  @override
+  String get addNewShift => 'Add New Shift';
+
+  @override
+  String get startTimeRequired => 'Start Time *';
+
+  @override
+  String get endTimeRequired => 'End Time *';
+
+  @override
+  String get timeFormatHint => 'HH:mm';
+
+  @override
+  String get locationRequired => 'Location *';
+
+  @override
+  String get loadingLocations => 'Loading locations...';
+
+  @override
+  String get noLocationsLoaded =>
+      'No locations loaded. Please wait or refresh.';
+
+  @override
+  String get pleaseSelectLocation => 'Please select a location';
+
+  @override
+  String get loadingTeams => 'Loading teams...';
+
+  @override
+  String get noTeamsLoaded => 'No teams loaded. Please wait or refresh.';
+
+  @override
+  String get teamLeaderRequired => 'Team Leader *';
 }

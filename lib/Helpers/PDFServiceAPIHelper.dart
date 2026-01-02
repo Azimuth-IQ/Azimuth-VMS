@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:azimuth_vms/Models/VolunteerForm.dart';
 
@@ -64,7 +66,7 @@ class PDFServiceAPIHelper {
     };
   }
 
-  /// Generate PDF using new simplified API
+  /// Generate PDF using new simplified API with photo and attachments support
   static Future<Map<String, dynamic>?> _generatePDFFromAPI(VolunteerForm form) async {
     try {
       print('📄 [PDF API] Starting PDF generation...');
@@ -76,17 +78,58 @@ class PDFServiceAPIHelper {
       // Add volunteer data as JSON string
       final volunteerData = _mapFormToJSON(form);
       request.fields['volunteer_data'] = jsonEncode(volunteerData);
-      
-      print('📄 [PDF API] Volunteer data: ${jsonEncode(volunteerData).substring(0, 200)}...');
 
-      // TODO: Add photo if available in VolunteerForm
-      // if (form.photoPath != null && form.photoPath!.isNotEmpty) {
-      //   final photoFile = File(form.photoPath!);
-      //   if (await photoFile.exists()) {
-      //     request.files.add(await http.MultipartFile.fromPath('photo', form.photoPath!));
-      //     print('📄 [PDF API] Added photo: ${form.photoPath}');
-      //   }
-      // }
+      print('📄 [PDF API] Volunteer data: ${jsonEncode(volunteerData)}');
+
+      // Helper function to add file (web-safe: supports URLs and local files)
+      Future<void> addFileIfExists(String parameterName, String? filePath, String description) async {
+        if (filePath == null || filePath.isEmpty) return;
+
+        try {
+          // Check if it's a URL (Firebase Storage or HTTP/HTTPS)
+          if (filePath.startsWith('http://') || filePath.startsWith('https://')) {
+            print('📄 [PDF API] Downloading $description from URL: ${filePath.substring(0, 100)}...');
+
+            final response = await http.get(Uri.parse(filePath));
+            if (response.statusCode == 200) {
+              final bytes = response.bodyBytes;
+              final filename = filePath.split('/').last.split('?').first; // Extract filename from URL
+
+              request.files.add(http.MultipartFile.fromBytes(parameterName, bytes, filename: filename.isEmpty ? 'image.jpg' : filename));
+
+              print('✅ [PDF API] Added $description from URL (${(bytes.length / 1024).toStringAsFixed(2)} KB)');
+            } else {
+              print('⚠️ [PDF API] Failed to download $description: HTTP ${response.statusCode}');
+            }
+            return;
+          }
+
+          // On web with local paths, we can't access files
+          if (kIsWeb) {
+            print('⚠️ [PDF API] Web platform: Local file path not supported for $description');
+            print('💡 [PDF API] Tip: Use Firebase Storage URL instead of local path');
+            return;
+          }
+
+          // On non-web platforms, check if local file exists
+          final file = File(filePath);
+          if (await file.exists()) {
+            request.files.add(await http.MultipartFile.fromPath(parameterName, filePath));
+            print('📄 [PDF API] Added $description: $filePath');
+          } else {
+            print('⚠️ [PDF API] $description file not found: $filePath');
+          }
+        } catch (e) {
+          print('⚠️ [PDF API] Error adding $description: $e');
+        }
+      }
+
+      // Add all optional files
+      await addFileIfExists('photo', form.photoPath, 'profile photo');
+      await addFileIfExists('id_front', form.idFrontPath, 'ID front');
+      await addFileIfExists('id_back', form.idBackPath, 'ID back');
+      await addFileIfExists('residency_front', form.residenceFrontPath, 'residency front');
+      await addFileIfExists('residency_back', form.residenceBackPath, 'residency back');
 
       print('📄 [PDF API] Sending POST request to $_baseUrl/generate-pdf');
       final streamedResponse = await request.send();
@@ -97,12 +140,12 @@ class PDFServiceAPIHelper {
 
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
-        
+
         if (result['success'] == true && result['pdf_base64'] != null) {
           print('✅ [PDF API] PDF generated successfully!');
           print('✅ [PDF API] Filename: ${result['filename']}');
           print('✅ [PDF API] Size: ${(result['file_size_bytes'] / 1024).toStringAsFixed(2)} KB');
-          
+
           return {
             'success': true,
             'pdfBytes': base64Decode(result['pdf_base64']),
@@ -118,28 +161,16 @@ class PDFServiceAPIHelper {
         final error = jsonDecode(response.body);
         print('❌ [PDF API] Error: ${error['error']}');
         print('❌ [PDF API] Error Code: ${error['error_code']}');
-        return {
-          'success': false,
-          'error': error['error'] ?? 'Unknown error',
-          'errorCode': error['error_code'] ?? 'UNKNOWN',
-        };
+        return {'success': false, 'error': error['error'] ?? 'Unknown error', 'errorCode': error['error_code'] ?? 'UNKNOWN'};
       } catch (_) {
         print('❌ [PDF API] Failed: ${response.statusCode}');
         print('❌ [PDF API] Body: ${response.body}');
-        return {
-          'success': false,
-          'error': 'HTTP ${response.statusCode}',
-          'errorCode': 'HTTP_ERROR',
-        };
+        return {'success': false, 'error': 'HTTP ${response.statusCode}', 'errorCode': 'HTTP_ERROR'};
       }
     } catch (e, stackTrace) {
       print('❌ [PDF API] Error: $e');
       print('❌ [PDF API] Stack trace: $stackTrace');
-      return {
-        'success': false,
-        'error': e.toString(),
-        'errorCode': 'NETWORK_ERROR',
-      };
+      return {'success': false, 'error': e.toString(), 'errorCode': 'NETWORK_ERROR'};
     }
   }
 

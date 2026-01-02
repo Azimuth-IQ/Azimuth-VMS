@@ -419,8 +419,62 @@ abstract class AppLocalizations {
   /// No description provided for @useOptimizedImage.
   ///
   /// In en, this message translates to:
-  /// **'Use Optimized Image'**
+  /// **'Use Image'**
   String get useOptimizedImage;
+
+  /// No description provided for @cropImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Crop Image'**
+  String get cropImage;
+
+  /// No description provided for @rotateImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Rotate'**
+  String get rotateImage;
+
+  /// No description provided for @rotateLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Rotate Left'**
+  String get rotateLeft;
+
+  /// No description provided for @rotateRight.
+  ///
+  /// In en, this message translates to:
+  /// **'Rotate Right'**
+  String get rotateRight;
+
+  /// No description provided for @resetImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get resetImage;
+
+  /// No description provided for @autoOptimizing.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-optimizing to 500KB...'**
+  String get autoOptimizing;
+
+  /// No description provided for @optimizingImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Optimizing image...'**
+  String get optimizingImage;
+
+  /// No description provided for @currentSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Size'**
+  String get currentSize;
+
+  /// No description provided for @targetSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Target: <500KB'**
+  String get targetSize;
 
   /// No description provided for @dashboard.
   ///
@@ -1541,7 +1595,7 @@ abstract class AppLocalizations {
   /// No description provided for @selectTeam.
   ///
   /// In en, this message translates to:
-  /// **'Select Team'**
+  /// **'Select team'**
   String get selectTeam;
 
   /// No description provided for @none.
@@ -1835,7 +1889,7 @@ abstract class AppLocalizations {
   /// No description provided for @selectLocation.
   ///
   /// In en, this message translates to:
-  /// **'Select Location'**
+  /// **'Select location'**
   String get selectLocation;
 
   /// No description provided for @assignMyTeam.
@@ -2807,7 +2861,7 @@ abstract class AppLocalizations {
   /// No description provided for @noSublocationsAdded.
   ///
   /// In en, this message translates to:
-  /// **'No sub-locations added'**
+  /// **'No sublocations added'**
   String get noSublocationsAdded;
 
   /// No description provided for @carouselManagement.
@@ -4165,6 +4219,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'PDF not generated yet'**
   String get pdfNotGenerated;
+
+  /// No description provided for @workflowStepPlanning.
+  ///
+  /// In en, this message translates to:
+  /// **'Planning'**
+  String get workflowStepPlanning;
+
+  /// No description provided for @workflowStepPlanningSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Event created and scheduled'**
+  String get workflowStepPlanningSubtitle;
+
+  /// No description provided for @workflowStepPlanningContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Event is in planning phase. You can assign shifts and volunteers.'**
+  String get workflowStepPlanningContent;
+
+  /// No description provided for @workflowStepActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get workflowStepActive;
+
+  /// No description provided for @workflowStepActiveSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Event is currently running'**
+  String get workflowStepActiveSubtitle;
+
+  /// No description provided for @workflowStepActiveContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Event is active. Volunteers can check in/out.'**
+  String get workflowStepActiveContent;
+
+  /// No description provided for @workflowStepCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get workflowStepCompleted;
+
+  /// No description provided for @workflowStepCompletedSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Event date has passed'**
+  String get workflowStepCompletedSubtitle;
+
+  /// No description provided for @workflowStepCompletedContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Event has ended. You can review attendance and feedback.'**
+  String get workflowStepCompletedContent;
+
+  /// No description provided for @workflowStepArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get workflowStepArchived;
+
+  /// No description provided for @workflowStepArchivedSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Event is archived'**
+  String get workflowStepArchivedSubtitle;
+
+  /// No description provided for @workflowStepArchivedContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Event is archived and hidden from main lists.'**
+  String get workflowStepArchivedContent;
+
+  /// No description provided for @editShift.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Shift'**
+  String get editShift;
+
+  /// No description provided for @addNewShift.
+  ///
+  /// In en, this message translates to:
+  /// **'Add New Shift'**
+  String get addNewShift;
+
+  /// No description provided for @startTimeRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Time *'**
+  String get startTimeRequired;
+
+  /// No description provided for @endTimeRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'End Time *'**
+  String get endTimeRequired;
+
+  /// No description provided for @timeFormatHint.
+  ///
+  /// In en, this message translates to:
+  /// **'HH:mm'**
+  String get timeFormatHint;
+
+  /// No description provided for @locationRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Location *'**
+  String get locationRequired;
+
+  /// No description provided for @loadingLocations.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading locations...'**
+  String get loadingLocations;
+
+  /// No description provided for @noLocationsLoaded.
+  ///
+  /// In en, this message translates to:
+  /// **'No locations loaded. Please wait or refresh.'**
+  String get noLocationsLoaded;
+
+  /// No description provided for @pleaseSelectLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a location'**
+  String get pleaseSelectLocation;
+
+  /// No description provided for @loadingTeams.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading teams...'**
+  String get loadingTeams;
+
+  /// No description provided for @noTeamsLoaded.
+  ///
+  /// In en, this message translates to:
+  /// **'No teams loaded. Please wait or refresh.'**
+  String get noTeamsLoaded;
+
+  /// No description provided for @teamLeaderRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Team Leader *'**
+  String get teamLeaderRequired;
 }
 
 class _AppLocalizationsDelegate

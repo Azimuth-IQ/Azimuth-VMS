@@ -169,7 +169,34 @@ class AppLocalizationsAr extends AppLocalizations {
       '⚠ الصورة تتجاوز 500 كيلوبايت - اضبط الإعدادات';
 
   @override
-  String get useOptimizedImage => 'استخدام الصورة المحسّنة';
+  String get useOptimizedImage => 'استخدام الصورة';
+
+  @override
+  String get cropImage => 'قص الصورة';
+
+  @override
+  String get rotateImage => 'تدوير';
+
+  @override
+  String get rotateLeft => 'تدوير لليسار';
+
+  @override
+  String get rotateRight => 'تدوير لليمين';
+
+  @override
+  String get resetImage => 'إعادة تعيين';
+
+  @override
+  String get autoOptimizing => 'التحسين التلقائي إلى 500 كيلوبايت...';
+
+  @override
+  String get optimizingImage => 'جاري تحسين الصورة...';
+
+  @override
+  String get currentSize => 'الحجم الحالي';
+
+  @override
+  String get targetSize => 'الهدف: <500 كيلوبايت';
 
   @override
   String get dashboard => 'لوحة التحكم';
@@ -1364,7 +1391,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get tapPlusToAddTeam => 'اضغط + لإضافة فريق جديد';
 
   @override
-  String get noMembersAdded => 'لم تتم إضافة أعضاء';
+  String get noMembersAdded => 'لم يتم إضافة أعضاء';
 
   @override
   String get addTeamMember => 'إضافة عضو للفريق';
@@ -1452,7 +1479,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get subLocationsColon2 => 'المواقع الفرعية:';
 
   @override
-  String get noSublocationsAdded => 'لم تتم إضافة مواقع فرعية';
+  String get noSublocationsAdded => 'لم يتم إضافة مواقع فرعية';
 
   @override
   String get carouselManagement => 'إدارة الشرائح';
@@ -2233,4 +2260,81 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get pdfNotGenerated => 'لم يتم إنشاء ملف PDF بعد';
+
+  @override
+  String get workflowStepPlanning => 'التخطيط';
+
+  @override
+  String get workflowStepPlanningSubtitle => 'تم إنشاء وجدولة الفعالية';
+
+  @override
+  String get workflowStepPlanningContent =>
+      'الفعالية في مرحلة التخطيط. يمكنك تعيين الورديات والمتطوعين.';
+
+  @override
+  String get workflowStepActive => 'نشطة';
+
+  @override
+  String get workflowStepActiveSubtitle => 'الفعالية قيد التشغيل حالياً';
+
+  @override
+  String get workflowStepActiveContent =>
+      'الفعالية نشطة. يمكن للمتطوعين تسجيل الحضور والانصراف.';
+
+  @override
+  String get workflowStepCompleted => 'مكتملة';
+
+  @override
+  String get workflowStepCompletedSubtitle => 'انتهى تاريخ الفعالية';
+
+  @override
+  String get workflowStepCompletedContent =>
+      'انتهت الفعالية. يمكنك مراجعة الحضور والملاحظات.';
+
+  @override
+  String get workflowStepArchived => 'مؤرشفة';
+
+  @override
+  String get workflowStepArchivedSubtitle => 'الفعالية مؤرشفة';
+
+  @override
+  String get workflowStepArchivedContent =>
+      'الفعالية مؤرشفة ومخفية من القوائم الرئيسية.';
+
+  @override
+  String get editShift => 'تعديل الوردية';
+
+  @override
+  String get addNewShift => 'إضافة وردية جديدة';
+
+  @override
+  String get startTimeRequired => 'وقت البدء *';
+
+  @override
+  String get endTimeRequired => 'وقت الانتهاء *';
+
+  @override
+  String get timeFormatHint => 'ساعة:دقيقة';
+
+  @override
+  String get locationRequired => 'الموقع *';
+
+  @override
+  String get loadingLocations => 'جاري تحميل المواقع...';
+
+  @override
+  String get noLocationsLoaded =>
+      'لم يتم تحميل المواقع. يرجى الانتظار أو التحديث.';
+
+  @override
+  String get pleaseSelectLocation => 'يرجى اختيار موقع';
+
+  @override
+  String get loadingTeams => 'جاري تحميل الفرق...';
+
+  @override
+  String get noTeamsLoaded => 'لم يتم تحميل الفرق. يرجى الانتظار أو التحديث.';
+
+  @override
+  String get teamLeaderRequired => 'قائد الفريق *';
 }
