@@ -4363,6 +4363,270 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Team Leader *'**
   String get teamLeaderRequired;
+
+  /// No description provided for @volunteerFormBasicInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic Information'**
+  String get volunteerFormBasicInfo;
+
+  /// No description provided for @volunteerFormContactInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Information'**
+  String get volunteerFormContactInfo;
+
+  /// No description provided for @volunteerFormProfessionalInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Professional Information'**
+  String get volunteerFormProfessionalInfo;
+
+  /// No description provided for @volunteerFormDocumentInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Document Information'**
+  String get volunteerFormDocumentInfo;
+
+  /// No description provided for @volunteerFormAttachments.
+  ///
+  /// In en, this message translates to:
+  /// **'Attachments'**
+  String get volunteerFormAttachments;
+
+  /// No description provided for @volunteerFormSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Form'**
+  String get volunteerFormSave;
+
+  /// No description provided for @formNumberLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Form Number'**
+  String get formNumberLabel;
+
+  /// No description provided for @groupNameAndCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Group Name & Code'**
+  String get groupNameAndCodeLabel;
+
+  /// No description provided for @fullNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get fullNameLabel;
+
+  /// No description provided for @fullNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name is required'**
+  String get fullNameRequired;
+
+  /// No description provided for @educationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Education'**
+  String get educationLabel;
+
+  /// No description provided for @birthDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Birth Date'**
+  String get birthDateLabel;
+
+  /// No description provided for @maritalStatusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Marital Status'**
+  String get maritalStatusLabel;
+
+  /// No description provided for @numberOfChildrenLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of Children'**
+  String get numberOfChildrenLabel;
+
+  /// No description provided for @motherNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Mother\'s Full Name'**
+  String get motherNameLabel;
+
+  /// No description provided for @mobileNumberLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile Number'**
+  String get mobileNumberLabel;
+
+  /// No description provided for @mobileNumberRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile number is required'**
+  String get mobileNumberRequired;
+
+  /// No description provided for @currentAddressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Address'**
+  String get currentAddressLabel;
+
+  /// No description provided for @nearestLandmarkLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Nearest Landmark'**
+  String get nearestLandmarkLabel;
+
+  /// No description provided for @mukhtarNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Mukhtar Name'**
+  String get mukhtarNameLabel;
+
+  /// No description provided for @civilStatusDirectorateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Civil Status Directorate'**
+  String get civilStatusDirectorateLabel;
+
+  /// No description provided for @previousAddressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous Address'**
+  String get previousAddressLabel;
+
+  /// No description provided for @volunteerParticipationCountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Volunteer Participation Count'**
+  String get volunteerParticipationCountLabel;
+
+  /// No description provided for @professionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Profession'**
+  String get professionLabel;
+
+  /// No description provided for @jobTitleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Title'**
+  String get jobTitleLabel;
+
+  /// No description provided for @departmentNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Department Name'**
+  String get departmentNameLabel;
+
+  /// No description provided for @politicalAffiliationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Political Affiliation'**
+  String get politicalAffiliationLabel;
+
+  /// No description provided for @talentAndExperienceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Talent & Experience'**
+  String get talentAndExperienceLabel;
+
+  /// No description provided for @languagesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Languages'**
+  String get languagesLabel;
+
+  /// No description provided for @idCardNumberLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'ID Card Number'**
+  String get idCardNumberLabel;
+
+  /// No description provided for @recordNumberLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Record Number'**
+  String get recordNumberLabel;
+
+  /// No description provided for @pageNumberLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Page Number'**
+  String get pageNumberLabel;
+
+  /// No description provided for @rationCardNumberLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Ration Card Number'**
+  String get rationCardNumberLabel;
+
+  /// No description provided for @agentNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Agent Name'**
+  String get agentNameLabel;
+
+  /// No description provided for @supplyCenterNumberLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Supply Center Number'**
+  String get supplyCenterNumberLabel;
+
+  /// No description provided for @residenceCardNumberLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Residence Card Number'**
+  String get residenceCardNumberLabel;
+
+  /// No description provided for @issuerLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Issuer'**
+  String get issuerLabel;
+
+  /// No description provided for @noLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Number'**
+  String get noLabel;
+
+  /// No description provided for @userPhotoLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Photo'**
+  String get userPhotoLabel;
+
+  /// No description provided for @nationalIdFrontLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'National ID - Front'**
+  String get nationalIdFrontLabel;
+
+  /// No description provided for @nationalIdBackLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'National ID - Back'**
+  String get nationalIdBackLabel;
+
+  /// No description provided for @residenceCardFrontLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Residence Card - Front'**
+  String get residenceCardFrontLabel;
+
+  /// No description provided for @residenceCardBackLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Residence Card - Back'**
+  String get residenceCardBackLabel;
+
+  /// No description provided for @fieldRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get fieldRequired;
 }
 
 class _AppLocalizationsDelegate

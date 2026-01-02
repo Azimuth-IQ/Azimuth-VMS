@@ -2337,4 +2337,137 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get teamLeaderRequired => 'قائد الفريق *';
+
+  @override
+  String get volunteerFormBasicInfo => 'المعلومات الأساسية';
+
+  @override
+  String get volunteerFormContactInfo => 'معلومات الاتصال';
+
+  @override
+  String get volunteerFormProfessionalInfo => 'المعلومات المهنية';
+
+  @override
+  String get volunteerFormDocumentInfo => 'معلومات الوثائق';
+
+  @override
+  String get volunteerFormAttachments => 'المرفقات';
+
+  @override
+  String get volunteerFormSave => 'حفظ الاستمارة';
+
+  @override
+  String get formNumberLabel => 'رقم الاستمارة';
+
+  @override
+  String get groupNameAndCodeLabel => 'اسم المجموعة والرمز';
+
+  @override
+  String get fullNameLabel => 'الاسم الرباعي واللقب';
+
+  @override
+  String get fullNameRequired => 'الاسم الكامل مطلوب';
+
+  @override
+  String get educationLabel => 'التحصيل الدراسي';
+
+  @override
+  String get birthDateLabel => 'المواليد';
+
+  @override
+  String get maritalStatusLabel => 'الحالة الاجتماعية';
+
+  @override
+  String get numberOfChildrenLabel => 'عدد الأبناء';
+
+  @override
+  String get motherNameLabel => 'اسم الأم الثلاثي واللقب';
+
+  @override
+  String get mobileNumberLabel => 'رقم الموبايل';
+
+  @override
+  String get mobileNumberRequired => 'رقم الموبايل مطلوب';
+
+  @override
+  String get currentAddressLabel => 'العنوان الحالي';
+
+  @override
+  String get nearestLandmarkLabel => 'أقرب نقطة دالة';
+
+  @override
+  String get mukhtarNameLabel => 'اسم المختار ومسؤول المجلس البلدي';
+
+  @override
+  String get civilStatusDirectorateLabel => 'دائرة الأحوال';
+
+  @override
+  String get previousAddressLabel => 'العنوان السابق';
+
+  @override
+  String get volunteerParticipationCountLabel =>
+      'عدد المشاركات في الخدمة التطوعية';
+
+  @override
+  String get professionLabel => 'المهنة';
+
+  @override
+  String get jobTitleLabel => 'العنوان الوظيفي';
+
+  @override
+  String get departmentNameLabel => 'اسم الدائرة';
+
+  @override
+  String get politicalAffiliationLabel => 'الانتماء السياسي';
+
+  @override
+  String get talentAndExperienceLabel => 'الموهبة والخبرة';
+
+  @override
+  String get languagesLabel => 'اللغات التي يجيدها';
+
+  @override
+  String get idCardNumberLabel => 'رقم الهوية أو البطاقة الوطنية';
+
+  @override
+  String get recordNumberLabel => 'السجل';
+
+  @override
+  String get pageNumberLabel => 'الصحيفة';
+
+  @override
+  String get rationCardNumberLabel => 'رقم البطاقة التموينية';
+
+  @override
+  String get agentNameLabel => 'اسم الوكيل';
+
+  @override
+  String get supplyCenterNumberLabel => 'رقم مركز التموين';
+
+  @override
+  String get residenceCardNumberLabel => 'رقم بطاقة السكن';
+
+  @override
+  String get issuerLabel => 'جهة إصدارها';
+
+  @override
+  String get noLabel => 'الرقم';
+
+  @override
+  String get userPhotoLabel => 'الصورة الشخصية';
+
+  @override
+  String get nationalIdFrontLabel => 'الهوية الوطنية - الوجه الأمامي';
+
+  @override
+  String get nationalIdBackLabel => 'الهوية الوطنية - الوجه الخلفي';
+
+  @override
+  String get residenceCardFrontLabel => 'بطاقة السكن - الوجه الأمامي';
+
+  @override
+  String get residenceCardBackLabel => 'بطاقة السكن - الوجه الخلفي';
+
+  @override
+  String get fieldRequired => 'هذا الحقل مطلوب';
 }

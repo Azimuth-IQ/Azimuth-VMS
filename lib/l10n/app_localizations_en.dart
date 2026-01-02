@@ -2356,4 +2356,137 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get teamLeaderRequired => 'Team Leader *';
+
+  @override
+  String get volunteerFormBasicInfo => 'Basic Information';
+
+  @override
+  String get volunteerFormContactInfo => 'Contact Information';
+
+  @override
+  String get volunteerFormProfessionalInfo => 'Professional Information';
+
+  @override
+  String get volunteerFormDocumentInfo => 'Document Information';
+
+  @override
+  String get volunteerFormAttachments => 'Attachments';
+
+  @override
+  String get volunteerFormSave => 'Save Form';
+
+  @override
+  String get formNumberLabel => 'Form Number';
+
+  @override
+  String get groupNameAndCodeLabel => 'Group Name & Code';
+
+  @override
+  String get fullNameLabel => 'Full Name';
+
+  @override
+  String get fullNameRequired => 'Full name is required';
+
+  @override
+  String get educationLabel => 'Education';
+
+  @override
+  String get birthDateLabel => 'Birth Date';
+
+  @override
+  String get maritalStatusLabel => 'Marital Status';
+
+  @override
+  String get numberOfChildrenLabel => 'Number of Children';
+
+  @override
+  String get motherNameLabel => 'Mother\'s Full Name';
+
+  @override
+  String get mobileNumberLabel => 'Mobile Number';
+
+  @override
+  String get mobileNumberRequired => 'Mobile number is required';
+
+  @override
+  String get currentAddressLabel => 'Current Address';
+
+  @override
+  String get nearestLandmarkLabel => 'Nearest Landmark';
+
+  @override
+  String get mukhtarNameLabel => 'Mukhtar Name';
+
+  @override
+  String get civilStatusDirectorateLabel => 'Civil Status Directorate';
+
+  @override
+  String get previousAddressLabel => 'Previous Address';
+
+  @override
+  String get volunteerParticipationCountLabel =>
+      'Volunteer Participation Count';
+
+  @override
+  String get professionLabel => 'Profession';
+
+  @override
+  String get jobTitleLabel => 'Job Title';
+
+  @override
+  String get departmentNameLabel => 'Department Name';
+
+  @override
+  String get politicalAffiliationLabel => 'Political Affiliation';
+
+  @override
+  String get talentAndExperienceLabel => 'Talent & Experience';
+
+  @override
+  String get languagesLabel => 'Languages';
+
+  @override
+  String get idCardNumberLabel => 'ID Card Number';
+
+  @override
+  String get recordNumberLabel => 'Record Number';
+
+  @override
+  String get pageNumberLabel => 'Page Number';
+
+  @override
+  String get rationCardNumberLabel => 'Ration Card Number';
+
+  @override
+  String get agentNameLabel => 'Agent Name';
+
+  @override
+  String get supplyCenterNumberLabel => 'Supply Center Number';
+
+  @override
+  String get residenceCardNumberLabel => 'Residence Card Number';
+
+  @override
+  String get issuerLabel => 'Issuer';
+
+  @override
+  String get noLabel => 'Number';
+
+  @override
+  String get userPhotoLabel => 'Personal Photo';
+
+  @override
+  String get nationalIdFrontLabel => 'National ID - Front';
+
+  @override
+  String get nationalIdBackLabel => 'National ID - Back';
+
+  @override
+  String get residenceCardFrontLabel => 'Residence Card - Front';
+
+  @override
+  String get residenceCardBackLabel => 'Residence Card - Back';
+
+  @override
+  String get fieldRequired => 'This field is required';
 }
