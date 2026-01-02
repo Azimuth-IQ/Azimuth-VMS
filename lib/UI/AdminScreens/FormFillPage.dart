@@ -559,6 +559,7 @@ class _FormFillPageState extends State<FormFillPage> {
 
   Widget _buildImageUploadCard(String field, String label, Uint8List? imageData, VoidCallback onTap, IconData icon) {
     final theme = Theme.of(context);
+    final isMobile = Breakpoints.isMobile(context);
     // Check if we're in edit mode and have an image path for this field
     bool hasExistingImage = false;
     String? existingImageUrl;
@@ -588,26 +589,49 @@ class _FormFillPageState extends State<FormFillPage> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: theme.colorScheme.outline),
+        borderRadius: BorderRadius.circular(12),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+          Row(
+            children: [
+              Icon(icon, size: 20, color: theme.colorScheme.primary),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          // Buttons and chips - wrap in Column on mobile
+          isMobile
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Icon(icon, size: 20, color: theme.colorScheme.primary),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
+                    ElevatedButton.icon(
+                      onPressed: onTap,
+                      icon: Icon(imageData == null ? Icons.upload_file : Icons.check_circle, size: 18),
+                      label: Text(imageData == null ? 'Upload / تحميل' : 'Uploaded / تم التحميل'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: imageData == null ? null : Colors.green,
+                        foregroundColor: imageData == null ? null : Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
                     ),
+                    if (hasExistingImage && imageData == null) ...[
+                      const SizedBox(height: 8),
+                      Chip(
+                        avatar: Icon(Icons.cloud_done, size: 16, color: theme.colorScheme.primary),
+                        label: const Text('Existing image / صورة موجودة', style: TextStyle(fontSize: 11)),
+                        backgroundColor: theme.colorScheme.primaryContainer,
+                        padding: const EdgeInsets.all(4),
+                      ),
+                    ],
                   ],
-                ),
-                const SizedBox(height: 12),
-                Row(
+                )
+              : Row(
                   children: [
                     ElevatedButton.icon(
                       onPressed: onTap,
@@ -626,70 +650,67 @@ class _FormFillPageState extends State<FormFillPage> {
                     ],
                   ],
                 ),
-              ],
-            ),
-          ),
-          if (imageData != null) ...[
-            const SizedBox(width: 16),
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade400),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.memory(imageData, fit: BoxFit.cover),
-              ),
-            ),
-          ] else if (hasExistingImage && existingImageUrl != null) ...[
-            const SizedBox(width: 16),
-            InkWell(
-              onTap: () {
-                // Open image in new tab
-                html.window.open(existingImageUrl!, '_blank');
-              },
-              child: Container(
-                width: 80,
-                height: 80,
+          // Image preview
+          if (imageData != null || (hasExistingImage && existingImageUrl != null)) ...[
+            const SizedBox(height: 12),
+            if (imageData != null)
+              Container(
+                width: double.infinity,
+                height: 200,
                 decoration: BoxDecoration(
-                  border: Border.all(color: theme.colorScheme.primary.withOpacity(0.3)),
+                  border: Border.all(color: Colors.grey.shade400),
                   borderRadius: BorderRadius.circular(8),
-                  color: theme.colorScheme.primaryContainer,
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    existingImageUrl,
-                    fit: BoxFit.cover,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                        child: SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes! : null,
+                  child: Image.memory(imageData, fit: BoxFit.cover),
+                ),
+              )
+            else if (hasExistingImage && existingImageUrl != null)
+              InkWell(
+                onTap: () {
+                  html.window.open(existingImageUrl!, '_blank');
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: theme.colorScheme.primary.withOpacity(0.3)),
+                    borderRadius: BorderRadius.circular(8),
+                    color: theme.colorScheme.primaryContainer,
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      existingImageUrl,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes! : null,
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                    errorBuilder: (context, error, stackTrace) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.broken_image, color: Colors.red.shade400, size: 24),
-                          const SizedBox(height: 4),
-                          Text('Error', style: TextStyle(fontSize: 8, color: Colors.red.shade700)),
-                        ],
-                      );
-                    },
+                        );
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.broken_image, color: Colors.red.shade400, size: 24),
+                            const SizedBox(height: 4),
+                            Text('Error', style: TextStyle(fontSize: 8, color: Colors.red.shade700)),
+                          ],
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
-            ),
           ],
         ],
       ),
