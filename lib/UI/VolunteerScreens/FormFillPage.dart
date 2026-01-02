@@ -17,7 +17,6 @@ class FormFillPage extends StatefulWidget {
 
 class _FormFillPageState extends State<FormFillPage> {
   bool _isLoading = false;
-  String? _errorMessage;
 
   // Stepper state
   int _currentStep = 0;

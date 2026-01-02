@@ -16,7 +16,6 @@ class FormFillPage extends StatefulWidget {
 
 class _FormFillPageState extends State<FormFillPage> {
   bool _isLoading = false;
-  String? _errorMessage;
 
   // Stepper state
   int _currentStep = 0;
@@ -132,13 +131,6 @@ class _FormFillPageState extends State<FormFillPage> {
       controller.dispose();
     }
     super.dispose();
-  }
-
-  Future<void> _saveAndReturn() async {
-    await _saveFormToDatabase();
-    if (mounted && !_isLoading) {
-      Navigator.of(context).pop();
-    }
   }
 
   Future<void> _pickImage(Function(Uint8List?) onImagePicked) async {
