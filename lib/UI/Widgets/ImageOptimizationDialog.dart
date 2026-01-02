@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import '../../l10n/app_localizations.dart';
@@ -31,7 +32,11 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
     _originalSize = widget.originalImageData.lengthInBytes;
     _currentImageData = widget.originalImageData;
     _currentSize = _originalSize;
-    _initializeAndOptimize();
+    
+    // Defer heavy processing to allow UI to build first
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeAndOptimize();
+    });
   }
 
   Future<void> _initializeAndOptimize() async {
@@ -68,11 +73,15 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
 
   Future<img.Image?> _decodeImageAsync(Uint8List data) async {
     try {
-      return await Future.microtask(() => img.decodeImage(data));
+      return await compute(_decodeImage, data);
     } catch (e) {
       print('Error decoding image: $e');
       return null;
     }
+  }
+
+  static img.Image? _decodeImage(Uint8List data) {
+    return img.decodeImage(data);
   }
 
   Future<void> _autoOptimize() async {
@@ -86,53 +95,79 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
       return;
     }
 
-    int quality = 85;
-    double scale = 1.0;
-    Uint8List? bestResult;
-    int bestSize = _originalSize;
+    try {
+      // Run optimization in isolate to avoid blocking UI
+      final result = await compute(_optimizeImageInIsolate, _OptimizeParams(image: _originalImage!, targetSize: targetSize));
 
-    // Reduce scale if needed
-    while (bestSize > targetSize && scale > 0.3) {
-      final scaledWidth = (_originalImage!.width * scale).round();
-      final scaledHeight = (_originalImage!.height * scale).round();
-      final resized = img.copyResize(_originalImage!, width: scaledWidth, height: scaledHeight, interpolation: img.Interpolation.linear);
-      final encoded = Uint8List.fromList(img.encodeJpg(resized, quality: quality));
-
-      if (encoded.lengthInBytes <= targetSize) {
-        bestResult = encoded;
-        bestSize = encoded.lengthInBytes;
-        break;
+      if (result != null) {
+        _optimizedImageData = result;
+        _currentImageData = result;
+        _currentSize = result.lengthInBytes;
+      } else {
+        // Fallback: just encode with lower quality
+        final fallback = await compute(_encodeImage, _EncodeParams(image: _originalImage!, quality: 60));
+        _optimizedImageData = fallback;
+        _currentImageData = fallback;
+        _currentSize = fallback.lengthInBytes;
       }
-      scale -= 0.1;
-    }
-
-    // Reduce quality if needed
-    if (bestSize > targetSize) {
-      quality = 75;
-      while (quality >= 40 && bestSize > targetSize) {
-        final scaledWidth = (_originalImage!.width * scale).round();
-        final scaledHeight = (_originalImage!.height * scale).round();
-        final resized = img.copyResize(_originalImage!, width: scaledWidth, height: scaledHeight, interpolation: img.Interpolation.linear);
-        final encoded = Uint8List.fromList(img.encodeJpg(resized, quality: quality));
-
-        if (encoded.lengthInBytes <= targetSize) {
-          bestResult = encoded;
-          bestSize = encoded.lengthInBytes;
-          break;
-        }
-        quality -= 5;
-      }
-    }
-
-    if (bestResult != null) {
-      _optimizedImageData = bestResult;
-      _currentImageData = bestResult;
-      _currentSize = bestSize;
-    } else {
+    } catch (e) {
+      print('Error during auto-optimization: $e');
+      // Use original if optimization fails
       _optimizedImageData = widget.originalImageData;
       _currentImageData = widget.originalImageData;
       _currentSize = _originalSize;
     }
+  }
+
+  static Uint8List? _optimizeImageInIsolate(_OptimizeParams params) {
+    const int targetSize = 500 * 1024;
+    int quality = 85;
+    double scale = 1.0;
+    Uint8List? bestResult;
+    int bestSize = params.image.lengthInBytes;
+
+    // Reduce scale if needed (with larger steps for faster processing)
+    while (bestSize > targetSize && scale > 0.25) {
+      final scaledWidth = (params.image.width * scale).round();
+      final scaledHeight = (params.image.height * scale).round();
+      final resized = img.copyResize(params.image, width: scaledWidth, height: scaledHeight, interpolation: img.Interpolation.linear);
+      final encoded = Uint8List.fromList(img.encodeJpg(resized, quality: quality));
+
+      bestResult = encoded;
+      bestSize = encoded.lengthInBytes;
+
+      if (bestSize <= targetSize) {
+        return bestResult;
+      }
+
+      scale -= 0.15; // Larger steps for faster convergence
+    }
+
+    // Reduce quality if still too large
+    if (bestSize > targetSize) {
+      quality = 70;
+      while (quality >= 30 && bestSize > targetSize) {
+        final scaledWidth = (params.image.width * scale).round();
+        final scaledHeight = (params.image.height * scale).round();
+        final resized = img.copyResize(params.image, width: scaledWidth, height: scaledHeight, interpolation: img.Interpolation.linear);
+        final encoded = Uint8List.fromList(img.encodeJpg(resized, quality: quality));
+
+        bestResult = encoded;
+        bestSize = encoded.lengthInBytes;
+
+        if (bestSize <= targetSize) {
+          return bestResult;
+        }
+
+        quality -= 10; // Larger steps
+      }
+    }
+
+    return bestResult;
+  }
+
+  static Uint8List _encodeImage(_EncodeParams params) {
+    return Uint8List.fromList(img.encodeJpg(params.image, quality: params.quality));
   }
 
   void _rotateLeft() async {
@@ -141,10 +176,13 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
 
     try {
       final decoded = await _decodeImageAsync(_currentImageData!);
-      if (decoded == null) return;
+      if (decoded == null) {
+        setState(() => _isProcessing = false);
+        return;
+      }
 
-      final rotated = img.copyRotate(decoded, angle: -90);
-      final encoded = Uint8List.fromList(img.encodeJpg(rotated, quality: 85));
+      final rotated = await compute(_rotateImageLeft, decoded);
+      final encoded = await compute(_encodeImage, _EncodeParams(image: rotated, quality: 85));
 
       if (encoded.lengthInBytes > 500 * 1024) {
         _originalImage = rotated;
@@ -168,10 +206,13 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
 
     try {
       final decoded = await _decodeImageAsync(_currentImageData!);
-      if (decoded == null) return;
+      if (decoded == null) {
+        setState(() => _isProcessing = false);
+        return;
+      }
 
-      final rotated = img.copyRotate(decoded, angle: 90);
-      final encoded = Uint8List.fromList(img.encodeJpg(rotated, quality: 85));
+      final rotated = await compute(_rotateImageRight, decoded);
+      final encoded = await compute(_encodeImage, _EncodeParams(image: rotated, quality: 85));
 
       if (encoded.lengthInBytes > 500 * 1024) {
         _originalImage = rotated;
@@ -187,6 +228,14 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
     } finally {
       setState(() => _isProcessing = false);
     }
+  }
+
+  static img.Image _rotateImageLeft(img.Image image) {
+    return img.copyRotate(image, angle: -90);
+  }
+
+  static img.Image _rotateImageRight(img.Image image) {
+    return img.copyRotate(image, angle: 90);
   }
 
   void _reset() {
@@ -442,4 +491,19 @@ class _ImageOptimizationDialogState extends State<ImageOptimizationDialog> {
       ),
     );
   }
+}
+
+// Helper classes for compute isolate parameters
+class _OptimizeParams {
+  final img.Image image;
+  final int targetSize;
+
+  _OptimizeParams({required this.image, required this.targetSize});
+}
+
+class _EncodeParams {
+  final img.Image image;
+  final int quality;
+
+  _EncodeParams({required this.image, required this.quality});
 }
