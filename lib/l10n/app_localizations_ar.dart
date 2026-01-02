@@ -494,7 +494,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get generatingPdf => 'جاري إنشاء ملف PDF...';
 
   @override
-  String get pdfDownloaded => 'تم تحميل ملف PDF';
+  String get pdfDownloaded => 'تم تنزيل ملف PDF';
 
   @override
   String get initialApproval => 'الموافقة الأولية';
@@ -506,7 +506,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get formPassedInitialReview => 'اجتاز النموذج المراجعة الأولية.';
 
   @override
-  String get approveL1 => 'موافقة (م1)';
+  String get approveL1 => 'الموافقة (المستوى 1)';
 
   @override
   String get finalApproval => 'الموافقة النهائية';
@@ -518,7 +518,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get formPassedFinalReview => 'اجتاز النموذج المراجعة النهائية.';
 
   @override
-  String get approveL2 => 'موافقة (م2)';
+  String get approveL2 => 'الموافقة (المستوى 2)';
 
   @override
   String get processFinished => 'انتهت العملية';
@@ -2285,14 +2285,13 @@ class AppLocalizationsAr extends AppLocalizations {
       'الفعالية نشطة. يمكن للمتطوعين تسجيل الحضور والانصراف.';
 
   @override
-  String get workflowStepCompleted => 'مكتملة';
+  String get workflowStepCompleted => 'مكتمل';
 
   @override
-  String get workflowStepCompletedSubtitle => 'انتهى تاريخ الفعالية';
+  String get workflowStepCompletedSubtitle => 'انتهت العملية';
 
   @override
-  String get workflowStepCompletedContent =>
-      'انتهت الفعالية. يمكنك مراجعة الحضور والملاحظات.';
+  String get workflowStepCompletedContent => 'اكتمل تسجيل المتطوع.';
 
   @override
   String get workflowStepArchived => 'مؤرشفة';
@@ -2473,4 +2472,47 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get fieldRequired => 'هذا الحقل مطلوب';
+
+  @override
+  String get registrationCompleted => 'اكتمل التسجيل';
+
+  @override
+  String get workflowStepSent => 'تم الإرسال';
+
+  @override
+  String get workflowStepSentSubtitle => 'في انتظار قيام المتطوع بملء البيانات';
+
+  @override
+  String get workflowStepSentContent => 'تم إرسال رابط النموذج إلى المتطوع.';
+
+  @override
+  String get workflowStepPendingReview => 'قيد المراجعة';
+
+  @override
+  String get workflowStepPendingSubtitle =>
+      'يقوم المسؤول بفحص النموذج والمرفقات';
+
+  @override
+  String get workflowStepPendingContent =>
+      'يرجى مراجعة بيانات النموذج والمرفقات.';
+
+  @override
+  String get workflowStepInitialApproval => 'الموافقة الأولية';
+
+  @override
+  String get workflowStepInitialApprovalSubtitle => 'موافقة المستوى الأول';
+
+  @override
+  String get workflowStepInitialApprovalContent =>
+      'اجتاز النموذج المراجعة الأولية.';
+
+  @override
+  String get workflowStepFinalApproval => 'الموافقة النهائية';
+
+  @override
+  String get workflowStepFinalApprovalSubtitle => 'موافقة المستوى الثاني';
+
+  @override
+  String get workflowStepFinalApprovalContent =>
+      'اجتاز النموذج المراجعة النهائية.';
 }

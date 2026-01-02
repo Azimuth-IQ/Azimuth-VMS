@@ -1570,5 +1570,44 @@
   "nationalIdBackLabel": "National ID - Back",
   "residenceCardFrontLabel": "Residence Card - Front",
   "residenceCardBackLabel": "Residence Card - Back",
-  "fieldRequired": "This field is required"
+  "fieldRequired": "This field is required",
+
+  "volunteerWorkflow": "Volunteer Workflow",
+  "unknownName": "Unknown Name",
+  "noPhone": "No Phone",
+  "unknown": "Unknown",
+  "actions": "Actions",
+  "approveL1": "Approve (L1)",
+  "approveL2": "Approve (L2)",
+  "complete": "Complete",
+  "reEvaluate": "Re-evaluate",
+  "registrationCompleted": "Registration Completed",
+  "statusUpdatedTo": "Status updated to {status}",
+  "@statusUpdatedTo": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+
+  "workflowStepSent": "Sent",
+  "workflowStepSentSubtitle": "Waiting for volunteer to fill data",
+  "workflowStepSentContent": "Form link has been sent to the volunteer.",
+  "workflowStepPendingReview": "Pending Review",
+  "workflowStepPendingSubtitle": "Admin checks form and attachments",
+  "workflowStepPendingContent": "Please review the form data and attachments.",
+  "workflowStepInitialApproval": "Initial Approval",
+  "workflowStepInitialApprovalSubtitle": "First level approval",
+  "workflowStepInitialApprovalContent": "Form has passed initial review.",
+  "workflowStepFinalApproval": "Final Approval",
+  "workflowStepFinalApprovalSubtitle": "Second level approval",
+  "workflowStepFinalApprovalContent": "Form has passed final review.",
+  "workflowStepCompleted": "Completed",
+  "workflowStepCompletedSubtitle": "Process finished",
+  "workflowStepCompletedContent": "Volunteer registration is complete.",
+
+  "viewForm": "View Form",
+  "generatingPdf": "Generating PDF...",
+  "pdfDownloaded": "PDF Downloaded"
 }

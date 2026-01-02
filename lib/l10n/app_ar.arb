@@ -946,5 +946,37 @@
   "nationalIdBackLabel": "الهوية الوطنية - الوجه الخلفي",
   "residenceCardFrontLabel": "بطاقة السكن - الوجه الأمامي",
   "residenceCardBackLabel": "بطاقة السكن - الوجه الخلفي",
-  "fieldRequired": "هذا الحقل مطلوب"
+  "fieldRequired": "هذا الحقل مطلوب",
+
+  "volunteerWorkflow": "سير عمل المتطوع",
+  "unknownName": "اسم غير معروف",
+  "noPhone": "لا يوجد هاتف",
+  "unknown": "غير معروف",
+  "actions": "الإجراءات",
+  "approveL1": "الموافقة (المستوى 1)",
+  "approveL2": "الموافقة (المستوى 2)",
+  "complete": "إكمال",
+  "reEvaluate": "إعادة التقييم",
+  "registrationCompleted": "اكتمل التسجيل",
+  "statusUpdatedTo": "تم تحديث الحالة إلى {status}",
+
+  "workflowStepSent": "تم الإرسال",
+  "workflowStepSentSubtitle": "في انتظار قيام المتطوع بملء البيانات",
+  "workflowStepSentContent": "تم إرسال رابط النموذج إلى المتطوع.",
+  "workflowStepPendingReview": "قيد المراجعة",
+  "workflowStepPendingSubtitle": "يقوم المسؤول بفحص النموذج والمرفقات",
+  "workflowStepPendingContent": "يرجى مراجعة بيانات النموذج والمرفقات.",
+  "workflowStepInitialApproval": "الموافقة الأولية",
+  "workflowStepInitialApprovalSubtitle": "موافقة المستوى الأول",
+  "workflowStepInitialApprovalContent": "اجتاز النموذج المراجعة الأولية.",
+  "workflowStepFinalApproval": "الموافقة النهائية",
+  "workflowStepFinalApprovalSubtitle": "موافقة المستوى الثاني",
+  "workflowStepFinalApprovalContent": "اجتاز النموذج المراجعة النهائية.",
+  "workflowStepCompleted": "مكتمل",
+  "workflowStepCompletedSubtitle": "انتهت العملية",
+  "workflowStepCompletedContent": "اكتمل تسجيل المتطوع.",
+
+  "viewForm": "عرض النموذج",
+  "generatingPdf": "جاري إنشاء ملف PDF...",
+  "pdfDownloaded": "تم تنزيل ملف PDF"
 }

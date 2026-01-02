@@ -2307,11 +2307,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workflowStepCompleted => 'Completed';
 
   @override
-  String get workflowStepCompletedSubtitle => 'Event date has passed';
+  String get workflowStepCompletedSubtitle => 'Process finished';
 
   @override
   String get workflowStepCompletedContent =>
-      'Event has ended. You can review attendance and feedback.';
+      'Volunteer registration is complete.';
 
   @override
   String get workflowStepArchived => 'Archived';
@@ -2492,4 +2492,47 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fieldRequired => 'This field is required';
+
+  @override
+  String get registrationCompleted => 'Registration Completed';
+
+  @override
+  String get workflowStepSent => 'Sent';
+
+  @override
+  String get workflowStepSentSubtitle => 'Waiting for volunteer to fill data';
+
+  @override
+  String get workflowStepSentContent =>
+      'Form link has been sent to the volunteer.';
+
+  @override
+  String get workflowStepPendingReview => 'Pending Review';
+
+  @override
+  String get workflowStepPendingSubtitle => 'Admin checks form and attachments';
+
+  @override
+  String get workflowStepPendingContent =>
+      'Please review the form data and attachments.';
+
+  @override
+  String get workflowStepInitialApproval => 'Initial Approval';
+
+  @override
+  String get workflowStepInitialApprovalSubtitle => 'First level approval';
+
+  @override
+  String get workflowStepInitialApprovalContent =>
+      'Form has passed initial review.';
+
+  @override
+  String get workflowStepFinalApproval => 'Final Approval';
+
+  @override
+  String get workflowStepFinalApprovalSubtitle => 'Second level approval';
+
+  @override
+  String get workflowStepFinalApprovalContent =>
+      'Form has passed final review.';
 }

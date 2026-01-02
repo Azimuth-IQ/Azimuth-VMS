@@ -4271,13 +4271,13 @@ abstract class AppLocalizations {
   /// No description provided for @workflowStepCompletedSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Event date has passed'**
+  /// **'Process finished'**
   String get workflowStepCompletedSubtitle;
 
   /// No description provided for @workflowStepCompletedContent.
   ///
   /// In en, this message translates to:
-  /// **'Event has ended. You can review attendance and feedback.'**
+  /// **'Volunteer registration is complete.'**
   String get workflowStepCompletedContent;
 
   /// No description provided for @workflowStepArchived.
@@ -4633,6 +4633,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This field is required'**
   String get fieldRequired;
+
+  /// No description provided for @registrationCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration Completed'**
+  String get registrationCompleted;
+
+  /// No description provided for @workflowStepSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent'**
+  String get workflowStepSent;
+
+  /// No description provided for @workflowStepSentSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for volunteer to fill data'**
+  String get workflowStepSentSubtitle;
+
+  /// No description provided for @workflowStepSentContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Form link has been sent to the volunteer.'**
+  String get workflowStepSentContent;
+
+  /// No description provided for @workflowStepPendingReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Review'**
+  String get workflowStepPendingReview;
+
+  /// No description provided for @workflowStepPendingSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin checks form and attachments'**
+  String get workflowStepPendingSubtitle;
+
+  /// No description provided for @workflowStepPendingContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Please review the form data and attachments.'**
+  String get workflowStepPendingContent;
+
+  /// No description provided for @workflowStepInitialApproval.
+  ///
+  /// In en, this message translates to:
+  /// **'Initial Approval'**
+  String get workflowStepInitialApproval;
+
+  /// No description provided for @workflowStepInitialApprovalSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'First level approval'**
+  String get workflowStepInitialApprovalSubtitle;
+
+  /// No description provided for @workflowStepInitialApprovalContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Form has passed initial review.'**
+  String get workflowStepInitialApprovalContent;
+
+  /// No description provided for @workflowStepFinalApproval.
+  ///
+  /// In en, this message translates to:
+  /// **'Final Approval'**
+  String get workflowStepFinalApproval;
+
+  /// No description provided for @workflowStepFinalApprovalSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Second level approval'**
+  String get workflowStepFinalApprovalSubtitle;
+
+  /// No description provided for @workflowStepFinalApprovalContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Form has passed final review.'**
+  String get workflowStepFinalApprovalContent;
 }
 
 class _AppLocalizationsDelegate
