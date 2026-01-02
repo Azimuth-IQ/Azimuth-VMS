@@ -661,14 +661,14 @@ class _FormFillPageState extends State<FormFillPage> {
                     ElevatedButton.icon(
                       onPressed: onTap,
                       icon: Icon(imageData == null ? Icons.upload_file : Icons.check_circle, size: 18),
-                      label: Text(imageData == null ? 'Upload' : 'Uploaded'),
+                      label: Text(imageData == null ? 'Upload / تحميل' : 'Uploaded / تم التحميل'),
                       style: ElevatedButton.styleFrom(backgroundColor: imageData == null ? null : Colors.green, foregroundColor: imageData == null ? null : Colors.white),
                     ),
                     if (hasExistingImage && imageData == null) ...[
                       const SizedBox(width: 8),
                       Chip(
                         avatar: const Icon(Icons.cloud_done, size: 16, color: Colors.blue),
-                        label: const Text('Existing image', style: TextStyle(fontSize: 11)),
+                        label: const Text('Existing image / صورة موجودة', style: TextStyle(fontSize: 11)),
                         backgroundColor: Colors.blue.shade50,
                         padding: const EdgeInsets.all(4),
                       ),
