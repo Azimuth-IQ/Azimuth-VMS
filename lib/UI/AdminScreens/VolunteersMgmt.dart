@@ -35,6 +35,14 @@ class VolunteersMgmtView extends StatefulWidget {
 
 class _VolunteersMgmtViewState extends State<VolunteersMgmtView> {
   bool _showArchived = false;
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   void _showVolunteerForm(BuildContext context, {SystemUser? volunteer}) async {
     final result = await showDialog<SystemUser>(
@@ -96,7 +104,15 @@ class _VolunteersMgmtViewState extends State<VolunteersMgmtView> {
           });
         }
 
-        final displayVolunteers = _showArchived ? provider.archivedVolunteers : provider.activeVolunteers;
+        final allVolunteers = _showArchived ? provider.archivedVolunteers : provider.activeVolunteers;
+
+        // Filter volunteers based on search query
+        final displayVolunteers = _searchQuery.isEmpty
+            ? allVolunteers
+            : allVolunteers.where((volunteer) {
+                final query = _searchQuery.toLowerCase();
+                return volunteer.name.toLowerCase().contains(query) || volunteer.phone.toLowerCase().contains(query);
+              }).toList();
 
         final l10n = AppLocalizations.of(context)!;
         return Scaffold(
@@ -109,6 +125,29 @@ class _VolunteersMgmtViewState extends State<VolunteersMgmtView> {
               : Column(
                   children: [
                     ShowArchivedToggle(showArchived: _showArchived, onChanged: (value) => setState(() => _showArchived = value), archivedCount: provider.archivedVolunteers.length),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      child: TextField(
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          hintText: l10n.searchVolunteers,
+                          prefixIcon: const Icon(Icons.search),
+                          suffixIcon: _searchQuery.isNotEmpty
+                              ? IconButton(
+                                  icon: const Icon(Icons.clear),
+                                  onPressed: () {
+                                    _searchController.clear();
+                                    setState(() => _searchQuery = '');
+                                  },
+                                )
+                              : null,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          filled: true,
+                          fillColor: Theme.of(context).colorScheme.surface,
+                        ),
+                        onChanged: (value) => setState(() => _searchQuery = value),
+                      ),
+                    ),
                     Expanded(
                       child: displayVolunteers.isEmpty
                           ? Center(

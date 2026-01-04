@@ -482,6 +482,33 @@ class _ApprovedDashboardView extends StatelessWidget {
                     );
                   },
                 ),
+                // Profile Menu
+                PopupMenuButton<String>(
+                  icon: const Icon(Icons.account_circle_outlined),
+                  onSelected: (value) {
+                    if (value == 'profile') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => VolunteerProfileScreen(form: form, userPhone: userPhone),
+                        ),
+                      );
+                    } else if (value == 'logout') {
+                      _showLogoutDialog(context);
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: 'profile',
+                      child: Row(children: [const Icon(Icons.person, size: 20), const SizedBox(width: 8), Text(l10n.profile)]),
+                    ),
+                    PopupMenuItem(
+                      value: 'logout',
+                      child: Row(children: [const Icon(Icons.logout, size: 20), const SizedBox(width: 8), Text(l10n.signOut)]),
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 8),
               ],
             ),
             body: body,
@@ -520,12 +547,6 @@ class _ApprovedDashboardView extends StatelessWidget {
           case 3:
             Navigator.pushNamed(context, '/submit-feedback');
             break;
-          case 4:
-            _showLanguageDialog(context);
-            break;
-          case 5:
-            _showLogoutDialog(context);
-            break;
         }
       },
       items: const [
@@ -533,8 +554,6 @@ class _ApprovedDashboardView extends StatelessWidget {
         BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: ''),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
         BottomNavigationBarItem(icon: Icon(Icons.feedback), label: ''),
-        BottomNavigationBarItem(icon: Icon(Icons.language), label: ''),
-        BottomNavigationBarItem(icon: Icon(Icons.logout), label: ''),
       ],
     );
   }

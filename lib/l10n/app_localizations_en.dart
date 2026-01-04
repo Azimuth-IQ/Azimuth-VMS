@@ -213,10 +213,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get volunteers => 'Volunteers';
 
   @override
+  String get searchVolunteers => 'Search volunteers by name or phone';
+
+  @override
   String get leaders => 'Leaders';
 
   @override
   String get teamLeaders => 'Team Leaders';
+
+  @override
+  String get searchTeamLeaders => 'Search team leaders by name or phone';
 
   @override
   String get teams => 'Teams';

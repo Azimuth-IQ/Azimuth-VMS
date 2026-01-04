@@ -164,23 +164,62 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
       return;
     }
 
+    // Get existing assignments for this shift and location
+    final ShiftAssignmentProvider assignmentProvider = context.read<ShiftAssignmentProvider>();
+    final List<ShiftAssignment> existingAssignments = assignmentProvider.assignments.where((assignment) {
+      if (assignment.shiftId != _selectedShift!.id) return false;
+      if (_isMainLocation) {
+        return assignment.sublocationId == null;
+      } else {
+        return assignment.sublocationId == _selectedLocationId;
+      }
+    }).toList();
+
+    final Set<String> alreadyAssignedVolunteerIds = existingAssignments.map((a) => a.volunteerId).toSet();
+
     // Show selection dialog
     final List<SystemUser>? selectedVolunteers = await showDialog<List<SystemUser>>(
       context: context,
-      builder: (context) => _VolunteerSelectionDialog(volunteers: volunteers),
+      builder: (context) => _VolunteerSelectionDialog(volunteers: volunteers, alreadyAssignedVolunteerIds: alreadyAssignedVolunteerIds),
     );
 
-    if (selectedVolunteers != null && selectedVolunteers.isNotEmpty) {
-      await _createAssignments(context, selectedVolunteers, _selectedEvent!, _selectedShift!, _isMainLocation ? null : _selectedLocationId);
+    if (selectedVolunteers != null) {
+      await _createAssignments(
+        context,
+        selectedVolunteers,
+        _selectedEvent!,
+        _selectedShift!,
+        _isMainLocation ? null : _selectedLocationId,
+        alreadyAssignedVolunteerIds,
+        existingAssignments,
+      );
     }
   }
 
-  Future<void> _createAssignments(BuildContext context, List<SystemUser> volunteers, Event event, EventShift shift, String? sublocationId) async {
+  Future<void> _createAssignments(
+    BuildContext context,
+    List<SystemUser> selectedVolunteers,
+    Event event,
+    EventShift shift,
+    String? sublocationId,
+    Set<String> alreadyAssignedVolunteerIds,
+    List<ShiftAssignment> existingAssignments,
+  ) async {
     try {
       final ShiftAssignmentHelperFirebase helper = ShiftAssignmentHelperFirebase();
       final NotificationHelperFirebase notifHelper = NotificationHelperFirebase();
 
-      for (SystemUser volunteer in volunteers) {
+      // Get IDs of currently selected volunteers
+      final selectedVolunteerIds = selectedVolunteers.map((v) => v.phone).toSet();
+
+      // Find volunteers to assign (newly selected)
+      final volunteersToAssign = selectedVolunteers.where((v) => !alreadyAssignedVolunteerIds.contains(v.phone)).toList();
+
+      // Find volunteers to unassign (previously assigned but now unchecked)
+      final volunteersToUnassign = existingAssignments.where((assignment) => !selectedVolunteerIds.contains(assignment.volunteerId)).toList();
+
+      // Create new assignments
+      for (SystemUser volunteer in volunteersToAssign) {
         final ShiftAssignment assignment = ShiftAssignment(
           id: const Uuid().v4(),
           volunteerId: volunteer.phone,
@@ -199,10 +238,27 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
         notifHelper.sendVolunteerAssignmentNotification(volunteer.phone, event.name, '${shift.startTime} - ${shift.endTime}$locationInfo');
       }
 
+      // Delete unassigned volunteers
+      for (ShiftAssignment assignment in volunteersToUnassign) {
+        helper.DeleteShiftAssignment(event.id, assignment.id);
+      }
+
       if (!context.mounted) return;
       final l10n = AppLocalizations.of(context)!;
-      final message = sublocationId != null ? l10n.assignedVolunteersToSubLocation(volunteers.length) : l10n.assignedVolunteersSuccessfully(volunteers.length);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+
+      // Show appropriate message
+      if (volunteersToAssign.isNotEmpty && volunteersToUnassign.isEmpty) {
+        final message = sublocationId != null ? l10n.assignedVolunteersToSubLocation(volunteersToAssign.length) : l10n.assignedVolunteersSuccessfully(volunteersToAssign.length);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.green));
+      } else if (volunteersToAssign.isEmpty && volunteersToUnassign.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Removed ${volunteersToUnassign.length} volunteer(s) from shift'), backgroundColor: Colors.orange));
+      } else if (volunteersToAssign.isNotEmpty && volunteersToUnassign.isNotEmpty) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Added ${volunteersToAssign.length}, removed ${volunteersToUnassign.length} volunteer(s)'), backgroundColor: Colors.blue));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('No changes made')));
+      }
 
       // Reset selection
       setState(() {
@@ -632,16 +688,24 @@ class _TeamLeaderShiftManagementViewState extends State<TeamLeaderShiftManagemen
 
 class _VolunteerSelectionDialog extends StatefulWidget {
   final List<SystemUser> volunteers;
+  final Set<String> alreadyAssignedVolunteerIds;
 
-  const _VolunteerSelectionDialog({required this.volunteers});
+  const _VolunteerSelectionDialog({required this.volunteers, required this.alreadyAssignedVolunteerIds});
 
   @override
   State<_VolunteerSelectionDialog> createState() => __VolunteerSelectionDialogState();
 }
 
 class __VolunteerSelectionDialogState extends State<_VolunteerSelectionDialog> {
-  final Set<String> _selectedIds = {};
+  late Set<String> _selectedIds;
   String _searchQuery = '';
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize with already assigned volunteers
+    _selectedIds = Set.from(widget.alreadyAssignedVolunteerIds);
+  }
 
   List<SystemUser> get _filteredVolunteers {
     if (_searchQuery.isEmpty) {
@@ -690,6 +754,7 @@ class __VolunteerSelectionDialogState extends State<_VolunteerSelectionDialog> {
                       itemBuilder: (context, index) {
                         final volunteer = filteredVolunteers[index];
                         final isSelected = _selectedIds.contains(volunteer.phone);
+                        final wasAlreadyAssigned = widget.alreadyAssignedVolunteerIds.contains(volunteer.phone);
 
                         return CheckboxListTile(
                           value: isSelected,
@@ -702,7 +767,31 @@ class __VolunteerSelectionDialogState extends State<_VolunteerSelectionDialog> {
                               }
                             });
                           },
-                          title: Text(volunteer.name),
+                          title: Row(
+                            children: [
+                              Expanded(child: Text(volunteer.name)),
+                              if (wasAlreadyAssigned)
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: Colors.green.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(color: Colors.green.withOpacity(0.3)),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.check_circle, size: 14, color: Colors.green),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        'Assigned',
+                                        style: TextStyle(fontSize: 11, color: Colors.green, fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                            ],
+                          ),
                           subtitle: Text(volunteer.phone),
                         );
                       },

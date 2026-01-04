@@ -29,6 +29,14 @@ class TeamLeadersMgmtView extends StatefulWidget {
 
 class _TeamLeadersMgmtViewState extends State<TeamLeadersMgmtView> {
   bool _showArchived = false;
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   void _showTeamLeaderForm(BuildContext context, {SystemUser? teamLeader}) async {
     final result = await showDialog<SystemUser>(
@@ -59,11 +67,20 @@ class _TeamLeadersMgmtViewState extends State<TeamLeadersMgmtView> {
           });
         }
 
-        final displayTeamLeaders = _showArchived ? provider.archivedTeamLeaders : provider.activeTeamLeaders;
+        final allTeamLeaders = _showArchived ? provider.archivedTeamLeaders : provider.activeTeamLeaders;
 
+        // Filter team leaders based on search query
+        final displayTeamLeaders = _searchQuery.isEmpty
+            ? allTeamLeaders
+            : allTeamLeaders.where((teamLeader) {
+                final query = _searchQuery.toLowerCase();
+                return teamLeader.name.toLowerCase().contains(query) || teamLeader.phone.toLowerCase().contains(query);
+              }).toList();
+
+        final l10n = AppLocalizations.of(context)!;
         return Scaffold(
           appBar: AppBar(
-            title: Text(AppLocalizations.of(context)!.teamLeadersManagement),
+            title: Text(l10n.teamLeadersManagement),
             actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: () => provider.loadTeamLeaders())],
           ),
           body: provider.isLoading
@@ -74,6 +91,29 @@ class _TeamLeadersMgmtViewState extends State<TeamLeadersMgmtView> {
                       showArchived: _showArchived,
                       onChanged: (value) => setState(() => _showArchived = value),
                       archivedCount: provider.archivedTeamLeaders.length,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      child: TextField(
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          hintText: l10n.searchTeamLeaders,
+                          prefixIcon: const Icon(Icons.search),
+                          suffixIcon: _searchQuery.isNotEmpty
+                              ? IconButton(
+                                  icon: const Icon(Icons.clear),
+                                  onPressed: () {
+                                    _searchController.clear();
+                                    setState(() => _searchQuery = '');
+                                  },
+                                )
+                              : null,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          filled: true,
+                          fillColor: Theme.of(context).colorScheme.surface,
+                        ),
+                        onChanged: (value) => setState(() => _searchQuery = value),
+                      ),
                     ),
                     Expanded(
                       child: displayTeamLeaders.isEmpty

@@ -506,6 +506,12 @@ abstract class AppLocalizations {
   /// **'Volunteers'**
   String get volunteers;
 
+  /// No description provided for @searchVolunteers.
+  ///
+  /// In en, this message translates to:
+  /// **'Search volunteers by name or phone'**
+  String get searchVolunteers;
+
   /// No description provided for @leaders.
   ///
   /// In en, this message translates to:
@@ -517,6 +523,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Team Leaders'**
   String get teamLeaders;
+
+  /// No description provided for @searchTeamLeaders.
+  ///
+  /// In en, this message translates to:
+  /// **'Search team leaders by name or phone'**
+  String get searchTeamLeaders;
 
   /// No description provided for @teams.
   ///

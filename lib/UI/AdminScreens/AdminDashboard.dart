@@ -539,6 +539,30 @@ class _DashboardHome extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     return LayoutBuilder(
       builder: (context, constraints) {
+        final isMobile = constraints.maxWidth <= 600;
+
+        if (isMobile) {
+          return Column(
+            children: [
+              _ScenarioCard(
+                title: l10n.volunteerRegistration,
+                description: l10n.volunteerRegistrationDescription,
+                icon: Icons.person_add,
+                color: Colors.blue,
+                onTap: () => Navigator.pushNamed(context, '/form-mgmt'),
+              ),
+              const SizedBox(height: 16),
+              _ScenarioCard(
+                title: l10n.eventManagement,
+                description: l10n.eventManagementDescription,
+                icon: Icons.event,
+                color: Colors.purple,
+                onTap: () => onNavigate(1), // Switch to Events tab
+              ),
+            ],
+          );
+        }
+
         return Row(
           children: [
             Expanded(
@@ -550,18 +574,16 @@ class _DashboardHome extends StatelessWidget {
                 onTap: () => Navigator.pushNamed(context, '/form-mgmt'),
               ),
             ),
-            if (constraints.maxWidth > 600) ...[
-              const SizedBox(width: 16),
-              Expanded(
-                child: _ScenarioCard(
-                  title: l10n.eventManagement,
-                  description: l10n.eventManagementDescription,
-                  icon: Icons.event,
-                  color: Colors.purple,
-                  onTap: () => onNavigate(1), // Switch to Events tab
-                ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: _ScenarioCard(
+                title: l10n.eventManagement,
+                description: l10n.eventManagementDescription,
+                icon: Icons.event,
+                color: Colors.purple,
+                onTap: () => onNavigate(1), // Switch to Events tab
               ),
-            ],
+            ),
           ],
         );
       },

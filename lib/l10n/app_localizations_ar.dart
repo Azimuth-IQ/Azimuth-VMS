@@ -214,10 +214,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get volunteers => 'المتطوعون';
 
   @override
+  String get searchVolunteers => 'بحث عن متطوعين بالاسم أو رقم الهاتف';
+
+  @override
   String get leaders => 'القادة';
 
   @override
   String get teamLeaders => 'قادة الفرق';
+
+  @override
+  String get searchTeamLeaders => 'بحث عن قادة الفرق بالاسم أو رقم الهاتف';
 
   @override
   String get teams => 'الفرق';
